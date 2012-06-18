@@ -1,0 +1,99 @@
+body {
+  background-image: url('../img/granite.jpg');
+  background-repeat: repeat;
+}
+
+blockquote {
+  font-size: 13px;
+  margin: 6px 15px 6px;
+  border-left: none;
+}
+
+a {
+  border: none;
+  color: #40D040;
+  text-decoration: none;
+}
+
+textarea {
+  background: #0F0F1A;
+  border: 1px solid #404040;
+  color: #EEE;
+
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+input {
+  background: #0F0F1A;
+  border: 1px solid #404040;
+  color: #EEE;
+
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.well {
+  background-color: #2A2A2A;
+}
+
+.content-center {
+  margin: 0 auto;
+  float: none;
+
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+.thread {
+  color: #D0D0D0;
+  padding: 2px;
+  padding-bottom: 3px;
+  margin: 4px 0;
+  overflow: hidden;
+}
+
+.post {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background: #404040;
+  color: #D0D0D0;
+  padding: 0;
+  padding-bottom: 3px;
+}
+
+.post .posthead {
+  color: #AAA;
+  background: #3A3A3C;
+  padding-right: 4px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.author {
+  color: #40AA80;
+  font-weight: 800;
+  margin-left: 5px;
+}
+
+.title {
+  color: #D0CC40;
+  font-size: 1.2em;
+  text-shadow: 1px 1px 1px black;
+}
+
+.reflink a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.thumb {
+  float: left;
+  margin: 0 15px 8px;
+}

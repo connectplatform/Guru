@@ -15,7 +15,8 @@
       "vein":"*"
    },
    "devDependencies":{
-      "node-log":"*"
+      "node-log":"*",
+      "jaded":"*"
    },
    "engines":{
       "node":">= 0.4.0"

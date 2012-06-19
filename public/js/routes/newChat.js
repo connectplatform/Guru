@@ -3,9 +3,9 @@
 
   define(["guru/server", "templates/newChat"], function(server, newChat) {
     return function(_, templ) {
+      $("#content").html(templ());
       return server.ready(function() {
-        $("#content").html(templ);
-        return $("#submit").click(function() {
+        return $("#newChat-form").submit(function() {
           var username;
           username = $("#username").val();
           return server.newChat({

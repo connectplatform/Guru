@@ -1,10 +1,8 @@
-#newChat-modal.modal.fade.small-modal
-	.modal-header
-		h3 New Chat
+.well
+	.page-header: h1 newChat
 
 	form#newChat-form
-		.modal-body
-			input#username.small-modal-box(type="text")
+		.control-group: input#username(type="text")
 
-		.modal-footer
-			button.btn(type="submit") Enter Chat
+		.form-actions
+			button.btn.btn-primary(type="submit") Enter Chat

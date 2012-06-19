@@ -1,6 +1,6 @@
 define ["dermis"], (dermis) ->
 #  dermis.route '/'
   dermis.route '/newChat'
-  dermis.route '/chat/:id'
+  dermis.route '/visitorChat/:id'
 
   dermis.init()

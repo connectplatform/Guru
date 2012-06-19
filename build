@@ -14,6 +14,9 @@ coffee -o ./public/js/ -c ./client/js/
 # TODO - process that minifies all js
 # uglifyjs -nc --unsafe -mt -o ./public/js/main.min.js ./public/js/main.js
 
+# Vein 
+cp ./node_modules/vein/vein.js ./client/js/ext/vein.js
+
 # Non-built files
 cp ./client/*.html ./public
 cp -R ./client/js/ext/* ./public/js/ext

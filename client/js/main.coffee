@@ -1,4 +1,4 @@
-define ["chan/server", "chan/routes", "chan/notify"], (server, routes, notify) ->
+define ["guru/server", "guru/routes", "guru/notify"], (server, routes, notify) ->
 
   server.ready (services) ->
     console.log "Connected - Available services: #{services}"

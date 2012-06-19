@@ -1,5 +1,5 @@
 define ["dermis"], (dermis) ->
-  dermis.route '/'
+  ###
   dermis.route '/boards'
 
   dermis.route '/board/:id'
@@ -7,5 +7,10 @@ define ["dermis"], (dermis) ->
 
   dermis.route '/thread/:id'
   dermis.route '/thread/:id/:post'
+  ###
+
+#  dermis.route '/'
+  dermis.route '/newChat'
+#  dermis.route '/chat/:id'
 
   dermis.init()

@@ -11,7 +11,7 @@ module.exports = (port) ->
   app.use connect.responseTime()
   app.use connect.favicon()
   app.use connect.staticCache()
-  app.use connect.static __dirname + '/public/'
+  app.use connect.static __dirname + '/../public/'
 
   server = app.listen port
 

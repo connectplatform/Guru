@@ -3,7 +3,7 @@ mongo = require './mongo'
 md5 = require 'md5'
 User = mongo.model 'User'
 
-Operators = [
+operators = [
   email: 'god@torchlightsoftware.com'
   password: 'foobar'
   role: 'admin'
@@ -30,9 +30,9 @@ Operators = [
 mongo.wipe ->
   createUser = (user, cb) ->
     user.password = md5 user.password
-    User.create user, -> cb()
+    User.create user, cb
 
-  async.forEach boards, createBoard, (err) ->
+  async.forEach operators, createUser, (err) ->
     console.log 'Error: ', err if err?
     console.log 'Done'
     process.exit()

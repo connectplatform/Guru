@@ -8,7 +8,6 @@ db.connect config.mongo.host
 loadModel "User"
 
 db.wipe = (cb) ->
-  #console.log (m.remove.toString() for _, m of db.models)
   async.parallel (m.remove.bind m, null for _, m of db.models), cb
 
 module.exports = db

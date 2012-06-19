@@ -9,7 +9,7 @@ module.exports = (veinServer)->
           rand = -> (((1 + Math.random()) * 0x10000000) | 0).toString 16
           "service#{rand()+rand()+rand()}"
         channelName = getId()
-        channelName = getId() while veinServer.services[channelName]? 
+        channelName = getId() while veinServer.services[channelName]?
 
         createChannel channelName, veinServer
 
@@ -17,9 +17,9 @@ module.exports = (veinServer)->
         res.cookie 'username', username
         res.cookie 'channel', channelName
 
-      data = 
-        username: res.cookie 'username' 
-        channel: res.cookie 'channel' 
+      data =
+        username: res.cookie 'username'
+        channel: res.cookie 'channel'
 
       err = undefined #TODO use this for actual check
       res.send err, data

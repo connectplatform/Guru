@@ -1,62 +1,38 @@
 async = require 'async'
-mongo = require './lib/mongo'
-Board = mongo.model 'Board'
+mongo = require './mongo'
+md5 = require 'md5'
+User = mongo.model 'User'
 
-boards = [
-  name: 'Random'
-  id: 'b'
-  category: 'Misc.'
+Operators = [
+  email: 'god@torchlightsoftware.com'
+  password: 'foobar'
+  role: 'admin'
+  firstName: 'God'
 ,
-  name: 'Video Games'
-  id: 'v'
-  category: 'Interests'
+  email: 'guru1@torchlightsoftware.com'
+  password: 'foobar'
+  role: 'Operator'
+  firstName: 'First'
+  lastName: 'Guru'
 ,
-  name: 'Comics & Cartoons'
-  id: 'co'
-  category: 'Interests'
+  email: 'guru2@torchlightsoftware.com'
+  password: 'foobar'
+  role: 'Operator'
+  websites: 'test.com'
 ,
-  name: 'Technology'
-  id: 'g'
-  category: 'Interests'
-,
-  name: 'Television & Film'
-  id: 'tv'
-  category: 'Interests'
-,
-  name: 'Weapons'
-  id: 'k'
-  category: 'Interests'
-,
-  name: 'Auto'
-  id: 'o'
-  category: 'Interests'
-,
-  name: 'Animals & Nature'
-  id: 'an'
-  category: 'Interests'
-,
-  name: 'Traditional Games'
-  id: 'tg'
-  category: 'Interests'
-,
-  name: 'Sports'
-  id: 'sp'
-  category: 'Interests'
-,
-  name: 'Science & Math'
-  id: 'sci'
-  category: 'Interests'
-,
-  name: 'International'
-  id: 'int'
-  category: 'Interests'
+  email: 'guru3@torchlightsoftware.com'
+  password: 'foobar'
+  role: 'Operator'
+  websites: 'test.com'
+  departments: 'Sales'
 ]
 
 mongo.wipe ->
-  createBoard = (board, cb) ->
-    Board.create board, -> cb()
+  createUser = (user, cb) ->
+    user.password = md5 user.password
+    User.create user, -> cb()
 
   async.forEach boards, createBoard, (err) ->
-    console.log err if err?
+    console.log 'Error: ', err if err?
     console.log 'Done'
-    #process.exit()
+    process.exit()

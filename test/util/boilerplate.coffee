@@ -1,18 +1,17 @@
-# this shit basically initializes the app and sets up a test environment
+
+# pick a port that server and client will run on
+testPort = Math.floor(Math.random() * 1000) + 8000
+
+# initialize app server
 app = require '../../server/app'
-app()
+app(testPort)
 
+# initialize vein client
 http = require 'http'
-{inspect} = require 'util'
-
-globals = {}
-
-#initialize vein server
 Vein = require 'vein'
-randomPort = -> Math.floor(Math.random() * 1000) + 8000
-port = randomPort()
-serv = new Vein http.createServer().listen port
-globals.getClient = -> new Vein.Client port: port, transports: ['websocket']
+
+globals =
+  getClient: -> new Vein.Client port: testPort, transports: ['websocket']
 
 module.exports = (testName, tests) ->
 
@@ -27,9 +26,11 @@ module.exports = (testName, tests) ->
       done()
 
     beforeEach (done) ->
-      db.wipe done
+      db.wipe ->
+        done()
 
     after (done) ->
-      db.wipe done
+      db.wipe ->
+        done()
 
     tests(globals)

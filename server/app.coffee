@@ -18,5 +18,9 @@ module.exports = ->
   vein = new Vein server
   vein.addFolder __dirname + '/services/'
 
+  #refactor me out
+  newChat = require './util/newChat'
+  newChat vein
+
   console.log "Server started on #{config.app.port}"
   console.log "Using database #{config.mongo.host}"

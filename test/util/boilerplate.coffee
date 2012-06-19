@@ -1,3 +1,4 @@
+db = require '../../server/mongo'
 
 # pick a port that server and client will run on
 testPort = Math.floor(Math.random() * 1000) + 8000
@@ -15,10 +16,6 @@ globals =
 
 module.exports = (testName, tests) ->
 
-  {join} = require 'path'
-  connect = require 'connect'
-  db = require '../../server/mongo'
-
   describe testName, (done)->
 
     before (done) ->
@@ -26,11 +23,9 @@ module.exports = (testName, tests) ->
       done()
 
     beforeEach (done) ->
-      db.wipe ->
-        done()
+      db.wipe done
 
     after (done) ->
-      db.wipe ->
-        done()
+      db.wipe done
 
     tests(globals)

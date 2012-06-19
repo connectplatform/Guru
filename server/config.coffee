@@ -5,14 +5,14 @@ config =
     app:
       port: 4000
     mongo:
-      host: 'localhost'
+      host: 'mongodb://localhost:27017/guru-dev'
       database: 'guru-dev'
 
   production:
     app:
       port: 80
     mongo:
-      host: 'localhost'
+      host: 'mongodb://localhost:27017/guru-dev'
       database: 'guru-dev'
 
 module.exports = config[environment]

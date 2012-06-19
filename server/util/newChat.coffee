@@ -4,7 +4,7 @@ module.exports = (veinServer)->
   unless veinServer.services["newChat"]?
     veinServer.add 'newChat', (res, data)->
       username = if data.username? then data.username else 'anonymous'
-      unless res.cookie('login') is true and res.cookie('username')? and veinServer.services[res.cookie('channel')]?
+      unless res.cookie('login') is 'true' and res.cookie('username')? and veinServer.services[res.cookie('channel')]?
         getId = ->
           rand = -> (((1 + Math.random()) * 0x10000000) | 0).toString 16
           "service#{rand()+rand()+rand()}"

@@ -7,4 +7,5 @@ boiler 'Service - Send Message', (globals) ->
     veinClient = globals.getClient()
     veinClient.ready (services) ->
       services.should.include 'sendMessage'
+      veinClient.disconnect()
       done()

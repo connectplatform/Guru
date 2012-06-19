@@ -7,4 +7,5 @@ boiler 'Service - Accept Chat', (globals) ->
     veinClient = globals.getClient()
     veinClient.ready (services) ->
       services.should.include 'acceptChat'
+      veinClient.disconnect()
       done()

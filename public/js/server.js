@@ -3,7 +3,8 @@
 
   define(["ext/vein"], function(Vein) {
     return new Vein({
-      transports: ["polling"]
+      transports: ["websocket"],
+      port: 4000
     });
   });
 

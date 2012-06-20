@@ -3,6 +3,7 @@
 
   define(["dermis"], function(dermis) {
     dermis.route('/newChat');
+    dermis.route('/visitorChat/:id');
     return dermis.init();
   });
 

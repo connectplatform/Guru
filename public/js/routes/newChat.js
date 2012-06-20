@@ -3,16 +3,21 @@
 
   define(["guru/server", "templates/newChat"], function(server, newChat) {
     return function(_, templ) {
-      $("#content").html(templ());
-      return server.ready(function() {
+      $("#content").html("Loading...");
+      return server.refresh(function() {
+        $("#content").html(templ());
         return $("#newChat-form").submit(function() {
           var username;
-          username = $("#username").val();
-          return server.newChat({
+          username = $("#newChat-form #username").val();
+          console.log("username:" + username);
+          server.newChat({
             username: username
           }, function(err, data) {
-            return window.location.hash = "/chat/" + data.channel;
+            return window.location.hash = "/visitorChat/" + data.channel;
           });
+          $("#newChat-form").hide();
+          $("#content").html("Connecting to chat...");
+          return false;
         });
       });
     };

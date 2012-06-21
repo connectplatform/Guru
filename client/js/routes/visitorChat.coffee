@@ -8,6 +8,7 @@ define ["guru/server", "templates/newChat"], (server, newChat) ->
         message = $("#message").val()
         server[id] message, (err, data) ->
           console.log err if err and console?
+        $("#message").val("")
         false
 
       server.subscribe[id] (err, data)->

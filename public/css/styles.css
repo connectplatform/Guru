@@ -102,3 +102,11 @@ input {
   height: 100%;
   overflow: scroll;
 }
+
+.small-modal {
+  width: 330px;
+}
+
+.small-modal-box {
+  width: 280px;
+}

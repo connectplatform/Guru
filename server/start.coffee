@@ -1,2 +1,2 @@
 app = require './app'
-app()
+app(process.env.GURU_PORT)

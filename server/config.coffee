@@ -6,13 +6,11 @@ config =
       port: 4000
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
-      database: 'guru-dev'
 
   production:
     app:
       port: 80
     mongo:
-      host: 'mongodb://localhost:27017/guru-dev'
-      database: 'guru-dev'
+      host: 'mongodb://guru:oIO7=1_85-7y||~@ds033767.mongolab.com:33767/guru-prod'
 
 module.exports = config[environment]

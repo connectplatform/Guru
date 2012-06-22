@@ -4,7 +4,6 @@
   define(["destiny/server", "destiny/notify"], function(server, notify, templ) {
     return function() {
       server.cookie('login', null);
-      $('#sidebar').hide();
       return window.location = '/';
     };
   });

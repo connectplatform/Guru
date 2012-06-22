@@ -4,11 +4,11 @@
   define(["dermis"], function(dermis) {
     dermis.route('/newChat');
     dermis.route('/visitorChat/:id');
-    dermis.route('/');
+    dermis.route('/', 'routes/index');
     dermis.route('/login');
     dermis.route('/logout');
-    dermis.route('/signup');
     dermis.route('/dashboard');
+    dermis.route('/userAdmin');
     dermis.route('/operatorChat');
     return dermis.init();
   });

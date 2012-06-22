@@ -1,4 +1,4 @@
-define ["guru/server", "guru/notify", "templates/login"], (server, notify, templ) ->
+define ["guru/server", "guru/notify"], (server, notify) ->
   (args, templ) ->
     $('#content').append templ()
     $('#login-modal').modal()

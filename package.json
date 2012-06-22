@@ -1,24 +1,27 @@
 {
-   "name":"Guru",
-   "description":"Live chat system for website support.",
-   "version":"0.0.1",
-   "author":"Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
-   "main":"server/start.coffee",
-
-   "dependencies":{
-      "coffee-script":"*",
-      "md5":"*",
-      "mongoose":"*",
-      "async":"*",
-      "should":"*",
-      "connect":"*",
-      "vein":"*"
-   },
-   "devDependencies":{
-      "node-log":"*",
-      "jaded":"*"
-   },
-   "engines":{
-      "node":">= 0.4.0"
-   }
+  "name": "Guru",
+  "description": "Live chat system for website support.",
+  "version": "0.0.1",
+  "author": "Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
+  "main": "server/start.coffee",
+  "dependencies": {
+    "coffee-script": "*",
+    "md5": "*",
+    "mongoose": "*",
+    "async": "*",
+    "should": "*",
+    "connect": "*",
+    "vein": "*"
+  },
+  "devDependencies": {
+    "node-log": "*",
+    "jaded": "*"
+  },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "subdomain": "guru",
+  "scripts": {
+    "start": "server/start.coffee"
+  }
 }

@@ -1,0 +1,1 @@
+define(["jade"],function(jade){return function anonymous(locals,attrs,escape,rethrow,merge){var attrs=jade.attrs,escape=jade.escape,rethrow=jade.rethrow,merge=jade.merge,buf=[];with(locals||{}){var interp;buf.push('<div class="well"><p>Guru Operator Login</p></div>')}return buf.join("")}})

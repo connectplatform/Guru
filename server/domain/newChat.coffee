@@ -1,24 +1,23 @@
 createChannel = require './createChannel'
 
-module.exports = (veinServer)->
+module.exports = (veinServer) ->
   unless veinServer.services["newChat"]?
-    veinServer.add 'newChat', (res, data)->
+    veinServer.add 'newChat', (res, data) ->
       res.cookie 'username', data.username or 'anonymous'
-      unless res.cookie('login') is 'true' and res.cookie('username')? and veinServer.services[res.cookie('channel')]?
+
+      unless veinServer.services[res.cookie 'channel']?
         getId = ->
-          rand = -> (((1 + Math.random()) * 0x10000000) | 0).toString 16
-          "service#{rand()+rand()+rand()}"
+          "testChat"
+          #rand = -> (((1 + Math.random()) * 0x10000000) | 0).toString 16
+          #"service#{rand()+rand()+rand()}"
+
         channelName = getId()
-        channelName = getId() while veinServer.services[channelName]?
 
         createChannel channelName, veinServer
 
-        res.cookie 'login', 'true'
         res.cookie 'channel', channelName
+        res.send null, channel: channelName
 
-      data =
-        username: res.cookie 'username'
-        channel: res.cookie 'channel'
+      else
+        res.send null, channel: res.cookie 'channel'
 
-      err = undefined #TODO use this for actual check
-      res.send err, data

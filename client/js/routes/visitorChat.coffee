@@ -6,6 +6,7 @@ define ["guru/server", "templates/newChat"], (server, newChat) ->
     server.refresh (services)->
       console.log "username: #{server.cookie 'username'}"
       console.log "services: #{services}"
+
       $("#message-form").submit ->
         unless $("#message").val() is ""
           message = $("#message").val()

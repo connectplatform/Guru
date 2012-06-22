@@ -1,6 +1,7 @@
 define ["guru/server", "templates/newChat"], (server, newChat) ->
   ({id}, templ) ->
     $("#content").html templ()
+    $("#message-form #message").focus()
 
     server.refresh (services)->
       console.log "username: #{server.cookie 'username'}"

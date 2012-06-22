@@ -6,6 +6,7 @@
       var id;
       id = _arg.id;
       $("#content").html(templ());
+      $("#message-form #message").focus();
       return server.refresh(function(services) {
         console.log("username: " + (server.cookie('username')));
         console.log("services: " + services);

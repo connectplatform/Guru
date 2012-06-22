@@ -121,7 +121,7 @@ input {
   left: 0;
   right: 0;
   bottom: 30px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .message-entry {

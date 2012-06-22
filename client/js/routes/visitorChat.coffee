@@ -11,6 +11,7 @@ define ["guru/server", "templates/newChat"], (server, newChat) ->
           server[id] message, (err, data) ->
             console.log err if err and console?
           $("#message").val("")
+          $("#chat-display-box").scrollTop($("#chat-display-box").prop("scrollHeight"))
         false
 
       server.subscribe[id] (err, data)->

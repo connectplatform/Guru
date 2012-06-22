@@ -19,6 +19,7 @@
               }
             });
             $("#message").val("");
+            $("#chat-display-box").scrollTop($("#chat-display-box").prop("scrollHeight"));
           }
           return false;
         });

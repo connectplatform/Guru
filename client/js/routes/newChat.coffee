@@ -3,6 +3,7 @@ define ["guru/server", "templates/newChat"], (server, newChat) ->
     $("#content").html "Loading..."
     server.refresh -> 
       $("#content").html templ()
+      $("#newChat-form #username").focus()
 
       $("#newChat-form").submit ->
         username = $("#newChat-form #username").val()

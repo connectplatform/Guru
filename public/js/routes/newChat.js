@@ -6,6 +6,7 @@
       $("#content").html("Loading...");
       return server.refresh(function() {
         $("#content").html(templ());
+        $("#newChat-form #username").focus();
         return $("#newChat-form").submit(function() {
           var username;
           username = $("#newChat-form #username").val();

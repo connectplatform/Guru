@@ -6,20 +6,27 @@
       var id;
       id = _arg.id;
       $("#content").html(templ());
+      $("#message-form #message").focus();
       return server.refresh(function(services) {
+        console.log("username: " + (server.cookie('username')));
         console.log("services: " + services);
         $("#message-form").submit(function() {
           var message;
-          message = $("#message").val();
-          server[id](message, function(err, data) {
-            if (err && (typeof console !== "undefined" && console !== null)) {
-              return console.log(err);
-            }
-          });
+          if ($("#message").val() !== "") {
+            message = $("#message").val();
+            server[id](message, function(err, data) {
+              if (err && (typeof console !== "undefined" && console !== null)) {
+                return console.log(err);
+              }
+            });
+            $("#message").val("");
+            $("#chat-display-box").scrollTop($("#chat-display-box").prop("scrollHeight"));
+          }
           return false;
         });
         return server.subscribe[id](function(err, data) {
-          return $("#displayBox").append("<p>" + data.username + ": " + data.message + "</p>");
+          console.log("recieved from user: " + data.username);
+          return $("#chat-display-box").append("<p>" + (unescape(data.username)) + ": " + data.message + "</p>");
         });
       });
     };

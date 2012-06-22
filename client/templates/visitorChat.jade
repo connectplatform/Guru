@@ -1,9 +1,8 @@
-div
-	#displayBox.well.chatBox
+.chatPage#chat-outer-div
+	.chat-box.well#chat-display-box
 
-	div
-		form#message-form 
-			.control-group: input#message(type="text")
+	.message-entry
+		form.form-inline#message-form
+			input.span12(type="text", value="")#message
 
-			.form-actions
-				button.btn.btn-primary(type="submit")
+			button.btn.btn-primary(type="submit") Send

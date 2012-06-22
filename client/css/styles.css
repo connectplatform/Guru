@@ -22,8 +22,12 @@ blockquote {
   width: 280px;
 }
 
-.icon-chat {
-  background-image:url("../img/chat.png");
+.img-chat {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  opacity: 0.67;
+  background-image:url("/img/chat.png");
 }
 
 .chatPage {
@@ -52,4 +56,8 @@ blockquote {
 #message-form input {
   width: 300px;
   margin-right: 4px;
+}
+
+.page-content {
+  margin-top: 15px;
 }

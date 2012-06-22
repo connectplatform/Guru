@@ -2,10 +2,7 @@
 (function() {
 
   define(["ext/vein"], function(Vein) {
-    return new Vein({
-      transports: ["websocket"],
-      port: 4000
-    });
+    return new Vein;
   });
 
 }).call(this);

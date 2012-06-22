@@ -4,7 +4,7 @@
   define(["guru/server", "guru/notify"], function(server, notify) {
     return function(_, templ) {
       $("#content").html("Loading...");
-      return server.refresh(function() {
+      return server.ready(function() {
         $("#content").html(templ());
         $("#newChat-form #username").focus();
         return $("#newChat-form").submit(function() {

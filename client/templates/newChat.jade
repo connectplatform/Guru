@@ -1,8 +1,7 @@
 .well
-	.page-header: h1 newChat
+	.page-header: h1 Create a new chat 
 
-	form#newChat-form
-		.control-group: input#username(type="text", value="")
-
-		.form-actions
-			button.btn.btn-primary(type="submit") Enter Chat
+	br
+	form.form-inline#newChat-form
+		input(type="text", value="", placeholder="Username (optional)")#username
+		button.btn.btn-primary(type="submit") Enter Chat

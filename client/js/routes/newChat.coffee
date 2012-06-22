@@ -1,7 +1,7 @@
 define ["guru/server", "guru/notify"], (server, notify) ->
   (_, templ) ->
     $("#content").html "Loading..."
-    server.refresh ->
+    server.ready ->
       $("#content").html templ()
       $("#newChat-form #username").focus()
 

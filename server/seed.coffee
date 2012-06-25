@@ -1,6 +1,6 @@
 async = require 'async'
 mongo = require './mongo'
-md5 = require 'md5'
+{digest_s} = require 'md5'
 User = mongo.model 'User'
 
 operators = [
@@ -29,7 +29,7 @@ operators = [
 
 mongo.wipe ->
   createUser = (user, cb) ->
-    user.password = md5 user.password
+    user.password = digest_s user.password
     User.create user, cb
 
   async.forEach operators, createUser, (err) ->

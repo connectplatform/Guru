@@ -10,9 +10,12 @@ define ["dermis"], (dermis) ->
   dermis.route '/logout'
   #dermis.route '/signup' # don't allow until phase 3?
 
-  # workflow for backend users
+  # main screens for backend users
   dermis.route '/dashboard'
   dermis.route '/userAdmin'
   dermis.route '/operatorChat'
+
+  # chat actions
+  dermis.route '/joinChat/:id'
 
   dermis.init()

@@ -33,6 +33,44 @@
           out += " " + seconds + " seconds";
         }
         return out;
+      },
+      elapsed: function(time) {
+        var hrs, min, ms, remaining, sec;
+        ms = new Date - new Date(time);
+        hrs = Math.floor(ms / (1000 * 60 * 60));
+        remaining = ms % (1000 * 60 * 60);
+        min = Math.floor(remaining / (1000 * 60));
+        remaining = ms % (1000 * 60);
+        sec = Math.floor(remaining / 1000);
+        return {
+          hours: hrs,
+          minutes: min,
+          seconds: sec
+        };
+      },
+      elapsedDisplay: function(time) {
+        var e, hours;
+        e = this.elapsed(time);
+        hours = hours > 0 ? "" + e.hours + "h : " : "";
+        return "" + hours + e.minutes + "m : " + e.seconds + "s";
+      },
+      autotimer: function(selector) {
+        var updateCounters,
+          _this = this;
+        if (this.updating == null) {
+          this.updating = {};
+        }
+        if (this.updating[selector]) {
+          return;
+        }
+        updateCounters = function() {
+          return $(selector).each(function(_, item) {
+            return $(item).html(_this.elapsedDisplay($(item).attr('started')));
+          });
+        };
+        updateCounters();
+        setInterval(updateCounters, 1000);
+        return this.updating[selector] = true;
       }
     };
   });

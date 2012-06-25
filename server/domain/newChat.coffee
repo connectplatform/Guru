@@ -8,8 +8,6 @@ module.exports = (veinServer) ->
       unless veinServer.services[res.cookie 'channel']?
         getId = ->
           "testChat"
-          #rand = -> (((1 + Math.random()) * 0x10000000) | 0).toString 16
-          #"service#{rand()+rand()+rand()}"
 
         channelName = getId()
 

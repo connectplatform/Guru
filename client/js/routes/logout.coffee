@@ -1,4 +1,4 @@
-define ["destiny/server", "destiny/notify"], (server, notify, templ) ->
+define ["guru/server"], (server) ->
   ->
     server.cookie 'login', null # delete login cookie
     window.location = '/'

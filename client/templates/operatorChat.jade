@@ -1,0 +1,19 @@
+.well
+
+  ul#chatTabs.nav.nav-tabs
+
+    for chat in chats
+      li: a(href="#chat_#{chat.id}", data-toggle="tab") #{chat.visitor.name}
+
+  .tab-content.operatorChat
+
+    for chat in chats
+      .tab-pane.chatWindow(id="chat_#{chat.id}")
+        .chat-box.well#chat-display-box
+          for msg in chat.history
+            p #{msg.name}: #{msg.message}
+
+        form#message-form.form-inline
+          input(type="text", value="")#message
+
+          button.btn.btn-primary(type="submit") Send

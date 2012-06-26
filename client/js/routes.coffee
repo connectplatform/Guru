@@ -7,7 +7,7 @@ define ["dermis"], (dermis) ->
   # login for backend users
   dermis.route '/', 'routes/index'
   dermis.route '/login'
-  dermis.route '/logout'
+  dermis.route '/logout', 'routes/logout', 'routes/logout'
   #dermis.route '/signup' # don't allow until phase 3?
 
   # main screens for backend users

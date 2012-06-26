@@ -1,4 +1,4 @@
-define ["destiny/server", "destiny/notify", "templates/signup"], (server, notify, templ) ->
+define ["guru/server", "guru/notify", "templates/signup"], (server, notify, templ) ->
   ->
     $('#content').append templ()
     $('#signup-modal').modal()

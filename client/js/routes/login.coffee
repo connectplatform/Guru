@@ -1,5 +1,8 @@
 define ["guru/server", "guru/notify"], (server, notify) ->
   (args, templ) ->
+    $('#content').html ''
+    $('#sidebar').html ''
+
     $('#content').append templ()
     $('#login-modal').modal()
     $('#login-modal #email').focus()
@@ -12,14 +15,14 @@ define ["guru/server", "guru/notify"], (server, notify) ->
         email: $('#login-form #email').val()
         password: $('#login-form #password').val()
 
-      server.login fields, (err, user) ->
-        return notify.error "Error logging in: #{err}" if err?
-        $('#login-modal').modal 'hide'
-        window.location.hash = '#/home'
+      server.ready ->
+        server.login fields, (err, user) ->
+          return notify.error "Error logging in: #{err}" if err?
+          $('#login-modal').modal 'hide'
+          window.location.hash = '#/dashboard'
 
       return false
 
     $('#login-cancel-button').click ->
       $('#login-modal').modal 'hide'
       window.location.hash = '#/'
-

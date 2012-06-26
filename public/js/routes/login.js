@@ -3,6 +3,8 @@
 
   define(["guru/server", "guru/notify"], function(server, notify) {
     return function(args, templ) {
+      $('#content').html('');
+      $('#sidebar').html('');
       $('#content').append(templ());
       $('#login-modal').modal();
       $('#login-modal #email').focus();
@@ -15,12 +17,14 @@
           email: $('#login-form #email').val(),
           password: $('#login-form #password').val()
         };
-        server.login(fields, function(err, user) {
-          if (err != null) {
-            return notify.error("Error logging in: " + err);
-          }
-          $('#login-modal').modal('hide');
-          return window.location.hash = '#/home';
+        server.ready(function() {
+          return server.login(fields, function(err, user) {
+            if (err != null) {
+              return notify.error("Error logging in: " + err);
+            }
+            $('#login-modal').modal('hide');
+            return window.location.hash = '#/dashboard';
+          });
         });
         return false;
       });

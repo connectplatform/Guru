@@ -55,7 +55,7 @@
         return "" + hours + e.minutes + "m : " + e.seconds + "s";
       },
       autotimer: function(selector) {
-        var updateCounters,
+        var id, updateCounters,
           _this = this;
         if (this.updating == null) {
           this.updating = {};
@@ -69,8 +69,19 @@
           });
         };
         updateCounters();
-        setInterval(updateCounters, 1000);
-        return this.updating[selector] = true;
+        id = setInterval(updateCounters, 1000);
+        return this.updating[selector] = id;
+      },
+      cleartimers: function() {
+        var id, sel, _ref, _results;
+        console.log("clearing: ", this.updating);
+        _ref = this.updating;
+        _results = [];
+        for (sel in _ref) {
+          id = _ref[sel];
+          _results.push(clearInterval(id));
+        }
+        return _results;
       }
     };
   });

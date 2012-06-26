@@ -44,5 +44,9 @@ define ->
       $(item).html @elapsedDisplay($(item).attr 'started')
 
     updateCounters()
-    setInterval updateCounters, 1000
-    @updating[selector] = true
+    id = setInterval updateCounters, 1000
+    @updating[selector] = id
+
+  cleartimers: ->
+    console.log "clearing: ", @updating
+    clearInterval id for sel, id of @updating

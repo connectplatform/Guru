@@ -1,7 +1,7 @@
 {
   "name": "Guru",
   "description": "Live chat system for website support.",
-  "version": "0.0.1-11",
+  "version": "0.0.1-13",
   "author": "Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
   "main": "server/start.coffee",
   "dependencies": {

@@ -1,9 +1,12 @@
-redback = require('redback').createClient()
-async = require 'async'
-config = require './config'
 
-loadModel = (name) -> redback.addStructure name, require "./domain/_cache/#{name}"
+chats = require './domain/_cache/chats'
 
-loadModel "ChatHistory"
+module.exports = (cb)->
+  redisClient = require('redis').createClient()
+  
+  redisClient.on 'ready', ->
 
-module.exports = redback
+    redis = client: redisClient
+    redis.chats = chats redisClient
+
+    cb redis

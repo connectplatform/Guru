@@ -1,4 +1,4 @@
-define ["guru/server", "guru/notify", "routes/sidebar", "templates/sidebar", "guru/util"],
+define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util"],
   (server, notify, sidebar, sbTemp, util) ->
     (args, templ) ->
       window.location = '/' unless server.cookie 'login'

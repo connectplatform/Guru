@@ -1,4 +1,4 @@
-define ["guru/server", "guru/notify"], (server, notify) ->
+define ["app/server", "app/notify"], (server, notify) ->
   (args, templ) ->
     $('#content').html ''
     $('#sidebar').html ''

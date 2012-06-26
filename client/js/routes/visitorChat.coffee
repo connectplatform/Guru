@@ -1,4 +1,4 @@
-define ["guru/server", "templates/newChat", "templates/chatBox"], (server, newChat, chatBox) ->
+define ["app/server", "templates/newChat", "templates/chatBox"], (server, newChat, chatBox) ->
   ({id}, templ) ->
     $("#content").html templ()
     $("#message-form #message").focus()
@@ -6,7 +6,7 @@ define ["guru/server", "templates/newChat", "templates/chatBox"], (server, newCh
     server.refresh (services)->
       console.log "username: #{server.cookie 'username'}"
       console.log "services: #{services}"
-      
+
       $("#message-form").submit ->
         unless $("#message").val() is ""
           message = $("#message").val()

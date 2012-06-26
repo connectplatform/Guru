@@ -11,6 +11,7 @@ define ["guru/server", "guru/notify"], (server, notify) ->
         server.cookie 'username', username
 
         server.newChat username: username, (err, data) ->
+          console.log "data: #{data}"
           if err?
             $("#content").html templ()
             notify.error "Error logging in: #{err}"

@@ -7,8 +7,8 @@ boiler 'Cache - ChatHistory', (globals) ->
     redisFactory (redis)->
       redis.chats.create (id)->
         input = {name: "Brandon", timestamp: new Date, message: "Hello!"}
-        redis.chats.add id, input, ->
-          redis.chats.get id, (err, data)->
+        redis.chats.addMessage id, input, ->
+          redis.chats.history id, (err, data)->
             false.should.eql err?
             data[0].should.eql JSON.parse JSON.stringify input
             redis.chats.getChatIds (err, data)->

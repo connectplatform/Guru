@@ -14,6 +14,7 @@
           server.newChat({
             username: username
           }, function(err, data) {
+            console.log("data: " + data);
             if (err != null) {
               $("#content").html(templ());
               return notify.error("Error logging in: " + err);

@@ -18,7 +18,7 @@ module.exports = (port) ->
   # Vein
   vein = new Vein server
   vein.use (req, res, next) ->
-    if req.service in ['login', 'signup', 'newChat', ''] or req.service.match /^chat/
+    if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory'] or req.service.match /^chat/
       next()
     else
       if res.cookie('login')? #TODO: verify this

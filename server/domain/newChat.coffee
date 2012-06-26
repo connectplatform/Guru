@@ -6,17 +6,13 @@ module.exports = (veinServer) ->
     veinServer.add 'newChat', (res, data) ->
       res.cookie 'username', data.username or 'anonymous'
 
-      unless veinServer.services[res.cookie 'channel']?
-        getId = ->
-          "testChat"
+      existingChannel = unescape res.cookie 'channel'
 
+      unless veinServer.services[existingChannel]?
         redisFactory (redis)->
           redis.chats.create (channelName)->
-
-            createChannel channelName, veinServer
-
-            res.cookie 'channel', channelName
-            res.send null, channel: channelName
-
+            createChannel channelName, veinServer, ->
+              res.cookie 'channel', channelName
+              res.send null, channel: channelName
       else
-        res.send null, channel: res.cookie 'channel'
+        res.send null, channel: existingChannel

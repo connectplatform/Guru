@@ -1,4 +1,5 @@
 createChannel = require './createChannel'
+redisFactory = require '../redis'
 
 module.exports = (veinServer) ->
   unless veinServer.services["newChat"]?
@@ -9,13 +10,13 @@ module.exports = (veinServer) ->
         getId = ->
           "testChat"
 
-        channelName = getId()
+        redisFactory (redis)->
+          redis.chats.create (channelName)->
 
-        createChannel channelName, veinServer
+            createChannel channelName, veinServer
 
-        res.cookie 'channel', channelName
-        res.send null, channel: channelName
+            res.cookie 'channel', channelName
+            res.send null, channel: channelName
 
       else
         res.send null, channel: res.cookie 'channel'
-

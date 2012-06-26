@@ -6,10 +6,11 @@
     dermis.route('/visitorChat/:id');
     dermis.route('/', 'routes/index');
     dermis.route('/login');
-    dermis.route('/logout');
+    dermis.route('/logout', 'routes/logout', 'routes/logout');
     dermis.route('/dashboard');
     dermis.route('/userAdmin');
     dermis.route('/operatorChat');
+    dermis.route('/joinChat/:id');
     return dermis.init();
   });
 

@@ -1,4 +1,26 @@
 #home.well
   .page-header: h1 Dashboard
 
-  p.description List current chats here.
+  p.description Currently active chats.
+
+  table.table.table-striped
+    thead: tr
+      th Visitor
+      th Operator
+      th Duration
+      th Website
+      th Department
+      th Actions
+
+    tbody
+      each chat in chats
+        tr
+          td= chat.visitor
+          td= chat.operator
+          td.counter(started='#{chat.started}')
+          td= chat.website
+          td= chat.department
+          td
+            a(href="#/joinChat/#{chat.id}") Join
+            &nbsp;|&nbsp;
+            a(href="#/joinChat/#{chat.id}?watch=true") Watch

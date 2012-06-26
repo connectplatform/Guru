@@ -17,6 +17,15 @@ module.exports = (port) ->
 
   # Vein
   vein = new Vein server
+  vein.use (req, res, next) ->
+    if req.service in ['login', 'signup', '']
+      next()
+    else
+      if res.cookie('login')? #TODO: check vs sessions in redis
+        next()
+      else
+        next('not authorized')
+
   vein.addFolder __dirname + '/domain/_services/'
 
   #refactor me out

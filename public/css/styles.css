@@ -31,10 +31,15 @@ blockquote {
 }
 
 .chatPage {
+  width: 550px;
+  height: 600px;
+}
+
+.chatWindow {
   padding: 0;
   margin: 0;
-  width: 550px;
-  height: 400px;
+  width: 95%;
+  height: 80%;
 }
 
 .chat-box {
@@ -60,4 +65,8 @@ blockquote {
 
 .page-content {
   margin-top: 15px;
+}
+
+.operatorChat {
+  height: 500px;
 }

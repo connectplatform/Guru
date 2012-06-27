@@ -26,7 +26,7 @@ module.exports = (client) ->
                 visitorPresent: visitorPresent,
                 operators: operators,
                 creationDate: creationDate
-              cb err5, chat
+              cb err1 or err2 or err3 or err4 or err5, chat
 
   addMessage: (id, data, cb)->
     client.rpush "#{id}:history", JSON.stringify(data), cb

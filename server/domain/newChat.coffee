@@ -9,7 +9,13 @@ module.exports = (veinServer) ->
       redisFactory (redis)->
         redis.chats.create (channelName)->
 
-          redis.chats.setVisitorMeta channelName, username: res.cookie('username'), (err, data)->
+
+          visitorMeta =
+            username: res.cookie('username') 
+            website: null
+            department: null
+
+          redis.chats.setVisitorMeta channelName, visitorMeta, (err, data)->
             console.log "error setting visitorMeta in newChat: #{err}" if err
 
             redis.chats.visitorArrived channelName, (err, data)->

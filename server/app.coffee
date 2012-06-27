@@ -17,8 +17,8 @@ module.exports = (port) ->
 
   # Vein
   vein = new Vein server
-  vein.use (req, res, next) ->
-    if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory'] or req.service.match /^chat/
+  vein.use (req, res, next) -> #TODO: refactor this
+    if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'shouldReconnectToChat'] or req.service.match /^chat/
       next()
     else
       if res.cookie('login')? #TODO: verify this
@@ -31,6 +31,8 @@ module.exports = (port) ->
   #refactor me out
   newChat = require './domain/newChat'
   newChat vein
+  shouldReconnect = require './domain/shouldReconnectToChat'
+  shouldReconnect vein
 
   console.log "Server started on #{port}"
   console.log "Using database #{config.mongo.host}"

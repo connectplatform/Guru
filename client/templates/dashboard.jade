@@ -5,21 +5,25 @@
 
   table.table.table-striped
     thead: tr
+      //th Dump
       th Visitor
-      th Operator
-      th Duration
-      th Website
-      th Department
+      th Operators
+      //th Duration
+      th Creation Date
+      //th Website
+      //th Department
       th Actions
 
     tbody
       each chat in chats
         tr
-          td= chat.visitor
-          td= chat.operator
-          td.counter(started='#{chat.started}')
-          td= chat.website
-          td= chat.department
+          //td= chat
+          td= chat.visitor.username
+          td= chat.operators
+          //td.counter(started='#{chat.creationDate}')
+          td= chat.creationDate
+          //td= chat.website
+          //td= chat.department
           td
             a(href="#/joinChat/#{chat.id}") Join
             &nbsp;|&nbsp;

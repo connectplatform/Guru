@@ -5,8 +5,12 @@ define ["guru/server", "guru/notify", "routes/sidebar", "templates/sidebar", "gu
 
       server.ready ->
         server.getActiveChats (err, chats) ->
+          console.log "err retrieving chats: #{err}" if err
+          #console.log "active chats: #{JSON.stringify chats}"
           sidebar {}, sbTemp
 
+          $('#content').html templ chats: chats #(JSON.stringify chat for chat in chats) 
+          ###
           $('#content').html templ chats: [
               id: 'abc123'
               visitor: 'Bob'
@@ -22,7 +26,7 @@ define ["guru/server", "guru/notify", "routes/sidebar", "templates/sidebar", "gu
               website: 'reddit.com'
               department: 'clowns'
           ]
-
+###
           util.autotimer '.counter'
 
           $(window).bind 'hashchange', ->

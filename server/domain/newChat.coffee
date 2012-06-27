@@ -6,13 +6,15 @@ module.exports = (veinServer) ->
     veinServer.add 'newChat', (res, data) ->
       res.cookie 'username', data.username or 'anonymous'
 
-      existingChannel = unescape res.cookie 'channel'
+      redisFactory (redis)->
+        redis.chats.create (channelName)->
 
-      unless veinServer.services[existingChannel]?
-        redisFactory (redis)->
-          redis.chats.create (channelName)->
-            createChannel channelName, veinServer, ->
-              res.cookie 'channel', channelName
-              res.send null, channel: channelName
-      else
-        res.send null, channel: existingChannel
+          redis.chats.setVisitorMeta channelName, username: res.cookie('username'), (err, data)->
+            console.log "error setting visitorMeta in newChat: #{err}" if err
+
+            redis.chats.visitorArrived channelName, (err, data)->
+              console.log "error setting visitorArrived in newChat: #{err}" if err
+              
+              createChannel channelName, veinServer, ->
+                res.cookie 'channel', channelName
+                res.send null, channel: channelName

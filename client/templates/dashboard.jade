@@ -8,8 +8,8 @@
       th Visitor
       th Visitor Present
       th Operators
-      //th Duration
-      th Creation Date
+      th Duration
+      //th Creation Date
       th Website
       th Department
       th Actions
@@ -20,8 +20,8 @@
           td= chat.visitor.username
           td= chat.visitorPresent
           td= chat.operators
-          //td.counter(started='#{chat.creationDate}')
-          td= chat.creationDate
+          td.counter(started='#{chat.creationDate}')
+          //td= chat.creationDate
           td= chat.visitor.website
           td= chat.visitor.department
           td

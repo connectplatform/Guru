@@ -21,11 +21,12 @@ module.exports = (client) ->
           self.operators id, (err4, operators)->
             self.creationDate id, (err5, creationDate)->
               chat =
+                id: id,
                 history: history,
                 visitor: visitor,
                 visitorPresent: visitorPresent,
                 operators: operators,
-                creationDate: creationDate
+                creationDate: new Date parseInt creationDate
               cb err1 or err2 or err3 or err4 or err5, chat
 
   addMessage: (id, data, cb)->

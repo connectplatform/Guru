@@ -6,5 +6,9 @@ module.exports = (res, fields) ->
   User.findOne search, (err, user) ->
     return res.send err.message if err?
     return res.send 'Invalid user or password.' unless user?
-    res.cookie 'login', user.id
-    res.send null, user
+    #add to redis here, use return value of login for cookieo
+    redisFactory = require '../../redis'
+    redisFactory (redis)->
+      redis.operators.login user.id, (id)->
+        res.cookie 'login', id
+        res.send null, user

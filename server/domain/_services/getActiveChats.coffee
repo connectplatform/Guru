@@ -4,10 +4,8 @@ module.exports = (res) ->
   redisFactory (redis)->
     redis.chats.getChatIds (err, rawData)->
       data = rawData.filter (element)->
-        element != 'true' #this is a bogus item added by the redis query
+        element != 'true' #this is a bogus item added by the redis query TODO: should I worry about this?
         
-      {inspect} = require 'util'
-      console.log "found chats: #{inspect data}"
       res.send err, null if err
       chats = []
 

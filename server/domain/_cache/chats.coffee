@@ -1,5 +1,6 @@
 rand = require '../../../lib/rand'
 module.exports = (client) -> 
+
   create: (cb)->
     id = "chat:#{rand()}"
     console.log "about to add chat #{id} to cache"
@@ -56,7 +57,7 @@ module.exports = (client) ->
 
   visitor: (id, cb)->
     client.get "#{id}:visitor", (err, data)->
-      cb err, undefined if err
+      cb err, null if err
       cb null, JSON.parse data
 
   operatorArrived: (id, data, cb)->

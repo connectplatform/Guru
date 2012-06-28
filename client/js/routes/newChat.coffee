@@ -4,7 +4,7 @@ define ["guru/server", "guru/notify"], (server, notify) ->
     server.ready ->
 
       server.shouldReconnectToChat (err, data)->
-        window.location.hash = "/visitorChat/#{data.channel}" if data?
+        window.location.hash = "/visitorChat/#{data.channel}" if data? and !!data
 
         $("#content").html templ()
         $("#newChat-form #username").focus()
@@ -12,7 +12,6 @@ define ["guru/server", "guru/notify"], (server, notify) ->
         $("#newChat-form").submit ->
 
           username = $("#newChat-form #username").val()
-          server.cookie 'username', username
 
           server.newChat username: username, (err, data) ->
             console.log "data: #{data}"

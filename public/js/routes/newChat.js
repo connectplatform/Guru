@@ -6,7 +6,7 @@
       $("#content").html("Loading...");
       return server.ready(function() {
         return server.shouldReconnectToChat(function(err, data) {
-          if (data != null) {
+          if ((data != null) && !!data) {
             window.location.hash = "/visitorChat/" + data.channel;
           }
           $("#content").html(templ());
@@ -14,7 +14,6 @@
           return $("#newChat-form").submit(function() {
             var username;
             username = $("#newChat-form #username").val();
-            server.cookie('username', username);
             server.newChat({
               username: username
             }, function(err, data) {

@@ -1,12 +1,9 @@
-define ["app/server", "templates/newChat", "templates/chatBox"], (server, newChat, chatBox) ->
+define ["app/server", "app/notify", "templates/newChat", "templates/chatMessage"], (server, notify, newChat, chatMessage) ->
   ({id}, templ) ->
     $("#content").html templ()
     $("#message-form #message").focus()
 
     server.refresh (services)->
-      console.log "username: #{server.cookie 'username'}"
-      console.log "services: #{services}"
-
       $("#message-form").submit ->
         unless $("#message").val() is ""
           message = $("#message").val()
@@ -17,9 +14,12 @@ define ["app/server", "templates/newChat", "templates/chatBox"], (server, newCha
           $("#chat-display-box").scrollTop($("#chat-display-box").prop("scrollHeight"))
         false
 
-      server.getChatHistory server.cookie('channel'), (err, data)->
-        $("#chat-display-box").html chatBox history: data if data and not err
+      appendChat = (err, data)->
+        console.log "Error appending chat: #{err}" if err
+        $("#chat-display-box").append chatMessage data
 
-        server.subscribe[id] (err, data)->
-          #TODO: use a jade partial here instead of <p> tags
-          $("#chat-display-box").append "<p>#{unescape(data.username)}: #{data.message}</p>"
+      server.getChatHistory server.cookie('channel'), (err, history)->
+        notify.error "Error loading chat history: #{err}" if err
+        appendChat null, msg for msg in history
+
+        server.subscribe[id] appendChat

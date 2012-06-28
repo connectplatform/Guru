@@ -5,23 +5,10 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
 
       server.ready ->
         server.getActiveChats (err, chats) ->
+          console.log "err retrieving chats: #{err}" if err
           sidebar {}, sbTemp
 
-          $('#content').html templ chats: [
-              id: 'abc123'
-              visitor: 'Bob'
-              operator: 'Frank S'
-              started: new Date()
-              website: 'google.com'
-              department: 'catering'
-            ,
-              id: 'bcf482'
-              visitor: 'Chris'
-              operator: 'Sally P'
-              started: new Date()
-              website: 'reddit.com'
-              department: 'clowns'
-          ]
+          $('#content').html templ chats: chats
 
           util.autotimer '.counter'
 

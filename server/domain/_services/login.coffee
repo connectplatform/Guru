@@ -9,6 +9,8 @@ module.exports = (res, fields) ->
     #add to redis here, use return value of login for cookieo
     redisFactory = require '../../redis'
     redisFactory (redis)->
-      redis.operators.login user.id, (id)->
-        res.cookie 'session', id
-        res.send null, user
+      redis.sessions.create 'operator', user.id, (id)->
+        username = if user.lastName? then "#{user.firstName} #{user.lastName}" else "#{user.firstName}"
+        redis.sessions.setChatName id, username, ->
+          res.cookie 'session', id
+          res.send null, user

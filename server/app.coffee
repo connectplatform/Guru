@@ -24,8 +24,8 @@ module.exports = (port) ->
       if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'shouldReconnectToChat'] or req.service.match /^chat/
         next()
       else
-        redis.operators.getId unescape(res.cookie('session')), (err, data)->
-          if data
+        redis.sessions.role unescape(res.cookie('session')), (err, data)->
+          if data is 'operator'
             next()
           else
             next('not authorized')

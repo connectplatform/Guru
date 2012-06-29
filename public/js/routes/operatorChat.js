@@ -6,11 +6,10 @@
       if (!server.cookie('session')) {
         window.location = '/';
       }
-      console.log("waiting for server to be ready");
-      return server.ready(function() {
-        console.log("server is ready");
+      return server.ready(function(services) {
+        console.log("server is ready-- services availible: " + services);
         return server.getMyChats(function(err, chats) {
-          var appendChat, chat, id, _i, _j, _len, _len1, _results;
+          var appendChat, chat, id, _i, _j, _len, _len1;
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = chat.id.replace(/:/g, '-');
@@ -24,7 +23,6 @@
             return $(this).tab('show');
           });
           $('#chatTabs a:first').tab('show');
-          _results = [];
           for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
             chat = chats[_j];
             id = chat.id;
@@ -50,9 +48,20 @@
               }
               return $("#" + chat.renderedId + " .chat-display-box").append(chatMessage(data));
             };
-            _results.push(server.subscribe[id](appendChat));
+            console.log(server.subscribe[id].listeners);
+            if (server.subscribe[id].listeners.length === 0) {
+              server.subscribe[id](appendChat);
+            }
           }
-          return _results;
+          return $(window).bind('hashchange', function() {
+            var _k, _len2, _results;
+            _results = [];
+            for (_k = 0, _len2 = chats.length; _k < _len2; _k++) {
+              chat = chats[_k];
+              _results.push(server.subscribe[id](function() {}));
+            }
+            return _results;
+          });
         });
       });
     };

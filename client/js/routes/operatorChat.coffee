@@ -3,9 +3,8 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
     (args, templ) ->
       window.location = '/' unless server.cookie 'session'
 
-      console.log "waiting for server to be ready"
-      server.ready ->
-        console.log "server is ready"
+      server.ready (services)->
+        console.log "server is ready-- services availible: #{services}"
         server.getMyChats (err, chats) ->
           chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
 
@@ -18,9 +17,10 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
             $(this).tab 'show'
 
           $('#chatTabs a:first').tab 'show'
- 
+
           for chat in chats
             id = chat.id
+            console.log "attatching methods to ##{chat.renderedId}"
             $("##{chat.renderedId} .message-form").submit (evt)->
               evt.preventDefault()
               message = $("##{chat.renderedId} .message-form .message").val()
@@ -35,4 +35,10 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
               console.log "Error appending chat: #{err}" if err
               $("##{chat.renderedId} .chat-display-box").append chatMessage data
 
-            server.subscribe[id] appendChat
+            console.log server.subscribe[id].listeners
+            if server.subscribe[id].listeners.length is 0
+              server.subscribe[id] appendChat
+
+          $(window).bind 'hashchange', ->
+            for chat in chats
+              server.subscribe[id] ->

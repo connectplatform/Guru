@@ -1,7 +1,6 @@
 redisFactory = require '../redis'
 
 module.exports = (serviceName, veinServer, cb)->
-  console.log "about to create channel"
   unless veinServer.services[serviceName]?
     redisFactory (redis)->
       veinServer.add serviceName, (res, message)->
@@ -19,5 +18,5 @@ module.exports = (serviceName, veinServer, cb)->
 
           res.publish null, data
 
-      console.log "created channel"
+      console.log "created channel #{serviceName}"
       cb()

@@ -1,37 +1,38 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar"],
-  (server, notify, sidebar, sbTemp) ->
+define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "templates/chatMessage"],
+  (server, notify, sidebar, sbTemp, chatMessage) ->
     (args, templ) ->
-      window.location = '/' unless server.cookie 'login'
+      window.location = '/' unless server.cookie 'session'
 
+      console.log "waiting for server to be ready"
       server.ready ->
+        console.log "server is ready"
         server.getMyChats (err, chats) ->
+          chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
+
           sidebar {}, sbTemp
-          $('#content').html templ chats: [
-            id: 'abc'
-            visitor:
-              name: "Brandon"
-              website: 'reddit.com'
-            operators: []
-            history: [
-              {name: "Brandon", timestamp: new Date, message: "Hello!"}
-              {name: "John", timestamp: new Date, message: "Hi, how can I help you?"}
-              {name: "Brandon", timestamp: new Date, message: "I'm having trouble logging in."}
-            ]
-          ,
-            id: 'bcd'
-            visitor:
-              name: "Jack"
-              website: 'blockbuster.com'
-            operators: [{id: 4, name: "Jill"}]
-            history: [
-              {name: "Jill", timestamp: new Date, message: "Hi, welcome to blockbuster.com!"}
-              {name: "Jack", timestamp: new Date, message: "Hi."}
-              {name: "Jill", timestamp: new Date, message: "Anything I can help you with?"}
-            ]
-          ]
+
+          $('#content').html templ chats: chats
 
           $('#chatTabs').click (e) ->
             e.preventDefault()
             $(this).tab 'show'
 
           $('#chatTabs a:first').tab 'show'
+ 
+          for chat in chats
+            id = chat.id
+            $("##{chat.renderedId} .message-form").submit (evt)->
+              evt.preventDefault()
+              message = $("##{chat.renderedId} .message-form .message").val()
+              unless message is ""
+                server[id] message, (err, data) ->
+                  console.log err if err and console?
+                $("##{chat.renderedId} .message-form .message").val("")
+                $("##{chat.renderedId} .chat-display-box").scrollTop($("##{chat.renderedId} .chat-display-box").prop("scrollHeight"))
+              false
+
+            appendChat = (err, data)->
+              console.log "Error appending chat: #{err}" if err
+              $("##{chat.renderedId} .chat-display-box").append chatMessage data
+
+            server.subscribe[id] appendChat

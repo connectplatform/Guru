@@ -1,7 +1,7 @@
 define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util"],
   (server, notify, sidebar, sbTemp, util) ->
     (args, templ) ->
-      window.location = '/' unless server.cookie 'login'
+      #window.location = '/' unless server.cookie 'session' #TODO: should this be clientside?
 
       server.ready ->
         server.getActiveChats (err, chats) ->
@@ -9,6 +9,13 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
           sidebar {}, sbTemp
 
           $('#content').html templ chats: chats
+
+          $('.joinChat').click (evt)->
+            chatId = $(this).attr 'chatId'
+            server.joinChat chatId, {}, (err, data)->
+              console.log "Error joining chat: #{err}" if err
+              window.location.hash = '/operatorChat' if data
+            false
 
           util.autotimer '.counter'
 

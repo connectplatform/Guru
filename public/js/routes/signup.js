@@ -7,7 +7,7 @@
       $('#signup-modal').modal();
       $('#signup-modal #first').focus();
       $('#signup-modal').on('hide', function() {
-        return window.location.hash = '#/';
+        return window.location.hash = '/';
       });
       $('#signup-form').submit(function() {
         var fields;
@@ -22,13 +22,13 @@
             return notify.error("Error during signup: " + err);
           }
           $('#signup-modal').modal('hide');
-          return window.location.hash = '#/home';
+          return window.location.hash = '/home';
         });
         return false;
       });
       return $('#signup-cancel-button').click(function() {
         $('#signup-modal').modal('hide');
-        return window.location.hash = '#/';
+        return window.location.hash = '/';
       });
     };
   });

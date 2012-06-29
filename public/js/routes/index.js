@@ -4,9 +4,9 @@
   define(["app/server", "app/notify"], function(server, notify) {
     return function(args, templ) {
       if ((server.cookie('login')) != null) {
-        return window.location.hash = '#/dashboard';
+        return window.location.hash = '/dashboard';
       } else {
-        return window.location.hash = '#/login';
+        return window.location.hash = '/login';
       }
     };
   });

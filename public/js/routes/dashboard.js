@@ -3,9 +3,6 @@
 
   define(["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util"], function(server, notify, sidebar, sbTemp, util) {
     return function(args, templ) {
-      if (!server.cookie('login')) {
-        window.location = '/';
-      }
       return server.ready(function() {
         return server.getActiveChats(function(err, chats) {
           if (err) {
@@ -15,6 +12,19 @@
           $('#content').html(templ({
             chats: chats
           }));
+          $('.joinChat').click(function(evt) {
+            var chatId;
+            chatId = $(this).attr('chatId');
+            server.joinChat(chatId, {}, function(err, data) {
+              if (err) {
+                console.log("Error joining chat: " + err);
+              }
+              if (data) {
+                return window.location.hash = '/operatorChat';
+              }
+            });
+            return false;
+          });
           util.autotimer('.counter');
           return $(window).bind('hashchange', function() {
             return util.cleartimers();

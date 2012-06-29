@@ -9,7 +9,7 @@
       $('#login-modal').modal();
       $('#login-modal #email').focus();
       $('#login-modal').on('hide', function() {
-        return window.location.hash = '#/';
+        return window.location.hash = '/';
       });
       $('#login-form').submit(function() {
         var fields;
@@ -23,14 +23,14 @@
               return notify.error("Error logging in: " + err);
             }
             $('#login-modal').modal('hide');
-            return window.location.hash = '#/dashboard';
+            return window.location.hash = '/dashboard';
           });
         });
         return false;
       });
       return $('#login-cancel-button').click(function() {
         $('#login-modal').modal('hide');
-        return window.location.hash = '#/';
+        return window.location.hash = '/';
       });
     };
   });

@@ -10,5 +10,5 @@ module.exports = (res, fields) ->
     redisFactory = require '../../redis'
     redisFactory (redis)->
       redis.operators.login user.id, (id)->
-        res.cookie 'login', id
+        res.cookie 'session', id
         res.send null, user

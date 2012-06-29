@@ -3,17 +3,17 @@
   ul#chatTabs.nav.nav-tabs
 
     for chat in chats
-      li: a(href="#chat_#{chat.id}", data-toggle="tab") #{chat.visitor.name}
+      li: a(href="##{chat.renderedId}", data-toggle="tab") #{chat.visitor.username}
 
   .tab-content.operatorChat
 
     for chat in chats
-      .tab-pane.chatWindow(id="chat_#{chat.id}")
-        .chat-box.well#chat-display-box
+      .tab-pane.chatWindow(id="#{chat.renderedId}", chatId="#{chat.id}")
+        .chat-box.well.chat-display-box
           for msg in chat.history
-            p #{msg.name}: #{msg.message}
+            p #{msg.username}: #{msg.message}
 
-        form#message-form.form-inline
-          input(type="text", value="")#message
+        form.message-form.form-inline
+          input(type="text", value="").message
 
-          button.btn.btn-primary(type="submit") Send
+          button.btn.btn-primary(type="submit").submit-button Send

@@ -2,6 +2,7 @@ connect = require "connect"
 Vein = require "vein"
 mongo = require "./mongo"
 config = require './config'
+redisFactory = require './redis'
 
 module.exports = (port) ->
   port ?= config.app.port
@@ -15,24 +16,31 @@ module.exports = (port) ->
 
   server = app.listen port
 
-  # Vein
-  vein = new Vein server
-  vein.use (req, res, next) -> #TODO: refactor this
-    if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'shouldReconnectToChat'] or req.service.match /^chat/
-      next()
-    else
-      if res.cookie('login')? #TODO: verify this
+  redisFactory (redis)->
+
+    # Vein
+    vein = new Vein server
+    vein.use (req, res, next) -> #TODO: refactor this
+      if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'shouldReconnectToChat'] or req.service.match /^chat/
         next()
       else
-        next('not authorized')
+        redis.operators.getId unescape(res.cookie('session')), (err, data)->
+          if data
+            next()
+          else
+            next('not authorized')
 
-  vein.addFolder __dirname + '/domain/_services/'
+    vein.addFolder __dirname + '/domain/_services/'
 
-  #refactor me out
-  newChat = require './domain/newChat'
-  newChat vein
-  shouldReconnect = require './domain/shouldReconnectToChat'
-  shouldReconnect vein
+    #flush cache
+    {exec} = require 'child_process'
+    exec "redis-cli FLUSHALL", ->
 
-  console.log "Server started on #{port}"
-  console.log "Using database #{config.mongo.host}"
+      #refactor me out
+      newChat = require './domain/newChat'
+      newChat vein
+      shouldReconnect = require './domain/shouldReconnectToChat'
+      shouldReconnect vein
+
+      console.log "Server started on #{port}"
+      console.log "Using database #{config.mongo.host}"

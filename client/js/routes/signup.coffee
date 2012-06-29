@@ -5,7 +5,7 @@ define ["app/server", "app/notify", "templates/signup"], (server, notify, templ)
     $('#signup-modal #first').focus()
 
     $('#signup-modal').on 'hide', ->
-      window.location.hash = '#/'
+      window.location.hash = '/'
 
     $('#signup-form').submit ->
       fields =
@@ -17,11 +17,11 @@ define ["app/server", "app/notify", "templates/signup"], (server, notify, templ)
       server.signup fields, (err, okay) ->
         return notify.error "Error during signup: #{err}" if err?
         $('#signup-modal').modal 'hide'
-        window.location.hash = '#/home'
+        window.location.hash = '/home'
 
       return false
 
     $('#signup-cancel-button').click ->
       $('#signup-modal').modal 'hide'
-      window.location.hash = '#/'
+      window.location.hash = '/'
 

@@ -9,18 +9,17 @@
       $("#message-form #message").focus();
       return server.refresh(function(services) {
         var appendChat;
-        $("#message-form").submit(function() {
+        $(".message-form").submit(function() {
           var message;
-          if ($("#message").val() !== "") {
-            message = $("#message").val();
-            console.log("sent: " + message);
+          if ($(".message").val() !== "") {
+            message = $(".message").val();
             server[id](message, function(err, data) {
               if (err && (typeof console !== "undefined" && console !== null)) {
                 return console.log(err);
               }
             });
-            $("#message").val("");
-            $("#chat-display-box").scrollTop($("#chat-display-box").prop("scrollHeight"));
+            $(".message").val("");
+            $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"));
           }
           return false;
         });
@@ -28,7 +27,7 @@
           if (err) {
             console.log("Error appending chat: " + err);
           }
-          return $("#chat-display-box").append(chatMessage(data));
+          return $(".chat-display-box").append(chatMessage(data));
         };
         return server.getChatHistory(server.cookie('channel'), function(err, history) {
           var msg, _i, _len;

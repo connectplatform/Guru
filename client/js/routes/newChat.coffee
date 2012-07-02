@@ -3,7 +3,7 @@ define ["app/server", "app/notify"], (server, notify) ->
     $("#content").html "Loading..."
     server.ready ->
 
-      server.shouldReconnectToChat (err, data)->
+      server.getExistingChatChannel (err, data)->
         window.location.hash = "/visitorChat/#{data.channel}" if data? and !!data
 
         $("#content").html templ()

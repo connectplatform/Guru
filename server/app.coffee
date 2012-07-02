@@ -4,7 +4,7 @@ mongo = require "./mongo"
 config = require './config'
 redisFactory = require './redis'
 
-module.exports = (port) ->
+module.exports = (port, cb) ->
   port ?= config.app.port
 
   # Web server
@@ -21,7 +21,7 @@ module.exports = (port) ->
     # Vein
     vein = new Vein server
     vein.use (req, res, next) -> #TODO: refactor this
-      if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'shouldReconnectToChat'] or req.service.match /^chat/
+      if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
         next()
       else
         redis.sessions.role unescape(res.cookie('session')), (err, data)->
@@ -30,17 +30,17 @@ module.exports = (port) ->
           else
             next('not authorized')
 
+    #refactor me out
+    newChat = require './domain/newChat'
+    newChat vein
+    getExistingChatChannel = require './domain/getExistingChatChannel'
+    getExistingChatChannel vein
+ 
     vein.addFolder __dirname + '/domain/_services/'
 
     #flush cache
     {exec} = require 'child_process'
-    exec "redis-cli FLUSHALL", ->
-
-      #refactor me out
-      newChat = require './domain/newChat'
-      newChat vein
-      shouldReconnect = require './domain/shouldReconnectToChat'
-      shouldReconnect vein
-
+    exec "redis-cli FLUSH", ->
       console.log "Server started on #{port}"
       console.log "Using database #{config.mongo.host}"
+      cb()

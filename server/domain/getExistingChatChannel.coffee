@@ -1,8 +1,10 @@
 redisFactory = require '../redis'
 
 module.exports = (veinServer)->
-  unless veinServer.services["shouldReconnectToChat"]?
-    veinServer.add 'shouldReconnectToChat', (res) ->
+  console.log veinServer.services
+  unless veinServer.services["getExistingChatChannel"]?
+    console.log "adding getExistingChatChannel"
+    veinServer.add 'getExistingChatChannel', (res) ->
 
       existingChannel = unescape res.cookie 'channel'
       if existingChannel? and veinServer.services[existingChannel]?

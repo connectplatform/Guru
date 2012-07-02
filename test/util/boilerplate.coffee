@@ -1,4 +1,5 @@
 db = require '../../server/mongo'
+flushCache = require '../../lib/flushCache'
 
 # pick a port that server and client will run on
 testPort = Math.floor(Math.random() * 1000) + 8000
@@ -25,9 +26,11 @@ module.exports = (testName, tests) ->
         initApp done
 
     beforeEach (done) ->
-      db.wipe done
+      flushCache ->
+        db.wipe done
 
     after (done) ->
-      db.wipe done
+      flushCache ->
+        db.wipe done
 
     tests(globals)

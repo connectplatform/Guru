@@ -3,6 +3,7 @@ Vein = require "vein"
 mongo = require "./mongo"
 config = require './config'
 redisFactory = require './redis'
+flushCache = require '../lib/flushCache'
 
 module.exports = (port, cb) ->
   port ?= config.app.port
@@ -39,8 +40,7 @@ module.exports = (port, cb) ->
     vein.addFolder __dirname + '/domain/_services/'
 
     #flush cache
-    {exec} = require 'child_process'
-    exec "redis-cli FLUSH", ->
+    flushCache ->
       console.log "Server started on #{port}"
       console.log "Using database #{config.mongo.host}"
       cb()

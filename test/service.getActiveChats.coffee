@@ -28,7 +28,6 @@ boiler 'Service - Get Active Chats', (globals) ->
               client2.disconnect()
               false.should.eql err?
               chatData = data[0]
-              {inspect} = require 'util'
               chatData.visitor.username.should.eql 'foo'
               chatData.visitorPresent.should.eql true
               new Date chatData.creationDate #just need this to not cause an error

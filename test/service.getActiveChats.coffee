@@ -1,7 +1,11 @@
 require 'should'
+seed = require './util/seedMongo'
 boiler = require './util/boilerplate'
 
 boiler 'Service - Get Active Chats', (globals) ->
+
+  beforeEach (done)->
+    seed done
 
   it 'should exist', (done) ->
     client = globals.getClient()
@@ -10,14 +14,25 @@ boiler 'Service - Get Active Chats', (globals) ->
       client.disconnect()
       done()
 
-###TODO: this needs login setup
-
   it 'should return data on all existing chats', (done)->
     client = globals.getClient()
     client.ready ->
       data = {username: 'foo'}
       client.newChat data, (err, data)->
-        client.getActiveChats (err, data)->
-          console.log "got data: #{data}"
-          client.disconnect()
-          done()
+        client.disconnect()
+
+        loginData =
+          email: 'god@torchlightsoftware.com'
+          password: 'foobar'
+        client2 = globals.getClient()
+        client2.ready ->
+          client2.login loginData, ->
+            client2.getActiveChats (err, data)->
+              client2.disconnect()
+              false.should.eql err?
+              chatData = data[0]
+              {inspect} = require 'util'
+              chatData.visitor.username.should.eql 'foo'
+              chatData.visitorPresent.should.eql true
+              new Date chatData.creationDate #just need this to not cause an error
+              done()

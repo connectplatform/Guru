@@ -1,5 +1,4 @@
 require 'should'
-seed = require './util/seedMongo'
 boiler = require './util/boilerplate'
 
 boiler 'Service - Get Active Chats', (globals) ->

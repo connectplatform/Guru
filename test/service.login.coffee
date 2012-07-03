@@ -5,9 +5,6 @@ redisFactory = require '../server/redis'
 
 boiler 'Service - Login', (globals) ->
 
-  beforeEach (done)->
-    seed done
-
   it 'should exist', (done) ->
     client = globals.getClient()
     client.ready (services) ->

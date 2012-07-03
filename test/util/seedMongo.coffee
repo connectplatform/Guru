@@ -3,5 +3,15 @@ mongo = require '../../server/mongo'
 User = mongo.model 'User'
 
 module.exports = (cb)->
-  {exec} = require 'child_process'
-  exec "coffee server/seed.coffee", cb
+  mongo.wipe ->
+    createUser = (user, cb) ->
+      user.password = digest_s user.password
+      User.create user, cb
+
+    operator = 
+      email: 'god@torchlightsoftware.com'
+      password: 'foobar'
+      role: 'admin'
+      firstName: 'God'
+
+    createUser operator, cb

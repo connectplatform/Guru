@@ -4,9 +4,6 @@ boiler = require './util/boilerplate'
 
 boiler 'Service - Get Active Chats', (globals) ->
 
-  beforeEach (done)->
-    seed done
-
   it 'should exist', (done) ->
     client = globals.getClient()
     client.ready (services) ->

@@ -28,7 +28,7 @@ module.exports = (testName, tests) ->
 
     beforeEach (done) ->
       flushCache ->
-        db.wipe done
+        seedMongo done
 
     after (done) ->
       flushCache ->

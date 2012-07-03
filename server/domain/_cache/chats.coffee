@@ -3,7 +3,6 @@ module.exports = (client) ->
 
   create: (cb)->
     id = "chat:#{rand()}"
-    console.log "about to add chat #{id} to cache"
     client.set "#{id}:creationDate", Date.now(), ->
       client.sadd "chat:allChats", id, cb id
 

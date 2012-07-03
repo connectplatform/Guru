@@ -24,5 +24,4 @@ boiler 'Service - New Chat', (globals) ->
             done()
 
           client[data.channel] 'hello from the test', (err, data)->
-            console.log err
             false.should.eql err?

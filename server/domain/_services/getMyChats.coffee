@@ -18,5 +18,4 @@ module.exports = (res) ->
           cb()
 
       async.forEach data, pushChat, ->
-        console.log "myChats is returning #{inspect chats, false, 4}"
         res.send null, chats

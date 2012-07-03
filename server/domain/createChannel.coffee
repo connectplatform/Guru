@@ -4,9 +4,7 @@ module.exports = (serviceName, veinServer, cb)->
   unless veinServer.services[serviceName]?
     redisFactory (redis)->
       veinServer.add serviceName, (res, message)->
-        console.log "session: #{res.cookie('session')}"
         redis.sessions.chatName unescape(res.cookie('session')), (err, username)->
-          console.log "username found in cache: #{username}"
           console.log "Error getting chat name from cache: #{err}" if err
           data =
             message: message
@@ -18,5 +16,4 @@ module.exports = (serviceName, veinServer, cb)->
 
           res.publish null, data
 
-      console.log "created channel #{serviceName}"
       cb()

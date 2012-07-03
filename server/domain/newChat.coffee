@@ -11,9 +11,7 @@ module.exports = (veinServer) ->
         redis.chats.create (channelName)->
 
           #TODO: move this up to middleware
-          console.log "about to create session"
           redis.sessions.create 'visitor', channelName, (sessionId)->
-            console.log "sessionId: #{sessionId}, username: #{username}"
             redis.sessions.setChatName sessionId, username, (err)->
               console.log "error setting session chatname in newChat: #{err}" if err
               res.cookie 'session', sessionId

@@ -15,5 +15,6 @@ module.exports = (serviceName, veinServer, cb)->
             console.log "error caching message: #{err}" if err
 
           res.publish null, data
+          res.send null, "ack"
 
       cb()

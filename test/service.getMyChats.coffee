@@ -1,7 +1,7 @@
 require 'should'
 boiler = require './util/boilerplate'
 
-boiler 'Service - Get Active Chats', (globals) ->
+boiler 'Service - Get My Chats', (globals) ->
   it "should return data on all of a particular operator's chats", (done)->
     client = globals.getClient()
     client.ready ->

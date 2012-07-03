@@ -1,6 +1,6 @@
 require 'should'
 boiler = require './util/boilerplate'
-redisFactory = require '../server/redis'
+redis = require '../server/redis'
 
 boiler 'Service - Get My Chats', (globals) ->
 
@@ -19,14 +19,13 @@ boiler 'Service - Get My Chats', (globals) ->
           operatorClient.login loginData, (err, data)->
             operatorClient.joinChat channel, (err, data)->
               false.should.eql err?
-              redisFactory (redis)->
-                id = operatorClient.cookie('session')
-                redis.operators.chats id, (err, data)->
+              id = operatorClient.cookie('session')
+              redis.operators.chats id, (err, data)->
+                false.should.eql err?
+                {inspect} = require 'util'
+                data.should.includeEql channel
+                redis.chats.operators channel, (err, data)->
                   false.should.eql err?
-                  {inspect} = require 'util'
-                  data.should.includeEql channel
-                  redis.chats.operators channel, (err, data)->
-                    false.should.eql err?
-                    data.should.includeEql id
-                    operatorClient.disconnect()
-                    done()
+                  data.should.includeEql id
+                  operatorClient.disconnect()
+                  done()

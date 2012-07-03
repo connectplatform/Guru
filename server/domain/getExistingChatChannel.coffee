@@ -1,4 +1,4 @@
-redisFactory = require '../redis'
+redis = require '../redis'
 
 module.exports = (veinServer)->
   unless veinServer.services["getExistingChatChannel"]?
@@ -6,10 +6,9 @@ module.exports = (veinServer)->
 
       existingChannel = unescape res.cookie 'channel'
       if existingChannel? and veinServer.services[existingChannel]?
-        redisFactory (redis)->
-          redis.chats.exists existingChannel, (err, data)->
-            console.log "error checking if chat exists: #{err}" if err?
-            if data is 1 or '1'
-              res.send null, channel: existingChannel
+        redis.chats.exists existingChannel, (err, data)->
+          console.log "error checking if chat exists: #{err}" if err?
+          if data is 1 or '1'
+            res.send null, channel: existingChannel
       else        
         res.send null, null

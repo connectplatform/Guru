@@ -2,7 +2,7 @@ connect = require "connect"
 Vein = require "vein"
 mongo = require "./mongo"
 config = require './config'
-redisFactory = require './redis'
+redis = require './redis'
 flushCache = require '../lib/flushCache'
 
 module.exports = (port, cb) ->
@@ -17,30 +17,28 @@ module.exports = (port, cb) ->
 
   server = app.listen port
 
-  redisFactory (redis)->
+  # Vein
+  vein = new Vein server
+  vein.use (req, res, next) -> #TODO: refactor this
+    if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
+      next()
+    else
+      redis.sessions.role unescape(res.cookie('session')), (err, data)->
+        if data is 'operator'
+          next()
+        else
+          next('not authorized')
 
-    # Vein
-    vein = new Vein server
-    vein.use (req, res, next) -> #TODO: refactor this
-      if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
-        next()
-      else
-        redis.sessions.role unescape(res.cookie('session')), (err, data)->
-          if data is 'operator'
-            next()
-          else
-            next('not authorized')
+  #refactor me out
+  newChat = require './domain/newChat'
+  newChat vein
+  getExistingChatChannel = require './domain/getExistingChatChannel'
+  getExistingChatChannel vein
 
-    #refactor me out
-    newChat = require './domain/newChat'
-    newChat vein
-    getExistingChatChannel = require './domain/getExistingChatChannel'
-    getExistingChatChannel vein
- 
-    vein.addFolder __dirname + '/domain/_services/'
+  vein.addFolder __dirname + '/domain/_services/'
 
-    #flush cache
-    flushCache ->
-      console.log "Server started on #{port}"
-      console.log "Using database #{config.mongo.host}"
-      cb()
+  #flush cache
+  flushCache ->
+    console.log "Server started on #{port}"
+    console.log "Using database #{config.mongo.host}"
+    cb()

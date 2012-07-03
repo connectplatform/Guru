@@ -1,7 +1,7 @@
 require 'should'
 boiler = require './util/boilerplate'
 seed = require './util/seedMongo'
-redisFactory = require '../server/redis'
+redis = require '../server/redis'
 
 boiler 'Service - Login', (globals) ->
 
@@ -22,9 +22,8 @@ boiler 'Service - Login', (globals) ->
       client.login data, (err, data)->
         client.disconnect()
         false.should.eql err?
-        redisFactory (redis)->
-          id = client.cookie('session')
-          redis.sessions.chatName id, (err, data)->
-            false.should.eql err?
-            data.should.eql "God"
-            done()
+        id = client.cookie('session')
+        redis.sessions.chatName id, (err, data)->
+          false.should.eql err?
+          data.should.eql "God"
+          done()

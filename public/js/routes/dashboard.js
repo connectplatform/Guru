@@ -3,6 +3,9 @@
 
   define(["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util"], function(server, notify, sidebar, sbTemp, util) {
     return function(args, templ) {
+      if (!server.cookie('session')) {
+        return window.location.hash = '/';
+      }
       return server.ready(function() {
         return server.getActiveChats(function(err, chats) {
           if (err) {

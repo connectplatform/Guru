@@ -5,7 +5,7 @@
     return function(_, templ) {
       $("#content").html("Loading...");
       return server.ready(function() {
-        return server.shouldReconnectToChat(function(err, data) {
+        return server.getExistingChatChannel(function(err, data) {
           if ((data != null) && !!data) {
             window.location.hash = "/visitorChat/" + data.channel;
           }

@@ -5,6 +5,8 @@ config = require './config'
 redis = require './redis'
 flushCache = require '../lib/flushCache'
 
+redgoose = require 'redgoose'
+
 module.exports = (port, cb) ->
   port ?= config.app.port
 
@@ -29,7 +31,12 @@ module.exports = (port, cb) ->
         else
           next('not authorized')
 
-  #refactor me out
+  # Redgoose
+  redgoose.createClient()
+  operator = require './domain/_cache/operators'
+  redgoose.load operator
+
+  #TODO: refactor me out
   newChat = require './domain/newChat'
   newChat vein
   getExistingChatChannel = require './domain/getExistingChatChannel'

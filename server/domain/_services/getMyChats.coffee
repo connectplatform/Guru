@@ -1,5 +1,9 @@
 module.exports = (res) ->
-  redis = require '../../redis'
+  redgoose = require 'redgoose'
   sendChatsFromIdList = require '../sendChatsFromIdList'
-  redis.operators.chats unescape(res.cookie 'session'), (err, rawData)-> 
+
+  operatorId = unescape(res.cookie 'session')
+
+  {Operator} = redgoose.models
+  Operator.get(operatorId).chats.all (err, rawData)->
     sendChatsFromIdList res, err, rawData

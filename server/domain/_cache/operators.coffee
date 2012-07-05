@@ -1,10 +1,24 @@
-rand = require '../../../lib/rand'
-module.exports = (client) -> 
-  addChat: (id, chatId, cb)->
-    client.sadd "operators:#{id}:chats", chatId, cb
+i = 0
+rand = -> i += 1
 
-  removeChat: (id, chatId, cb)->
-    client.srem "operators:#{id}:chats", chatId, cb
+face = (decorators) ->
+  {operator: {chats, allOperators}} = decorators
 
-  chats: (id, cb)->
-    client.smembers "operators:#{id}:chats", cb
+  faceValue =
+
+    get: (id)->
+      operator = id: id
+      chats operator
+      return operator
+
+  allOperators faceValue
+
+  return faceValue
+
+schema =
+  'operator:!{id}':
+    chats: 'Set'
+  operator:
+    allOperators: 'Set'
+
+module.exports = ['Operator', face, schema]

@@ -19,22 +19,25 @@ module.exports = (port, cb) ->
 
   server = app.listen port
 
+  # Redgoose
+  redgoose.createClient()
+  operator = require './domain/_cache/operators'
+  session = require './domain/_cache/sessions'
+  redgoose.load operator
+  redgoose.load session
+
   # Vein
   vein = new Vein server
   vein.use (req, res, next) -> #TODO: refactor this
     if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
       next()
     else
-      redis.sessions.role unescape(res.cookie('session')), (err, data)->
+      {Session} = redgoose.models
+      Session.get(unescape(res.cookie('session'))).role.get (err, data)->
         if data is 'operator'
           next()
         else
           next('not authorized')
-
-  # Redgoose
-  redgoose.createClient()
-  operator = require './domain/_cache/operators'
-  redgoose.load operator
 
   #TODO: refactor me out
   newChat = require './domain/newChat'

@@ -1,18 +1,32 @@
 rand = require '../../../lib/rand'
-module.exports = (client)->
-  create: (role, foreignKey, cb)->
-    id = "#{rand()}"
-    client.set "sessions:#{id}:role", role, (err, data)->
-      console.log "error caching session role: #{err}" if err
-      client.set "sessions:#{id}:foreignKey", foreignKey, (err, data)->
-        console.log "error caching session foreignKey: #{err}" if err
-        cb id
 
-  setChatName: (id, chatName, cb)->
-    client.set "sessions:#{id}:chatName", chatName, cb
+face = (decorators) ->
+  {session: {role, chatName, allSessions}} = decorators
 
-  chatName: (id, cb)->
-    client.get "sessions:#{id}:chatName", cb
+  faceValue =
+    create:  (fields, cb)->
+      id = rand()
+      session = @get id
+      session.role.set fields.role, (err)=>
+        session.chatName.set fields.chatName, (err1)=>
+          @allSessions.add id, (err2)->
+            cb err or err1 or err2, session
 
-  role: (id, cb)->
-    client.get "sessions:#{id}:role", cb
+    get: (id)->
+      session = id: id
+      role session
+      chatName session
+      return session
+
+  allSessions faceValue
+
+  return faceValue
+
+schema =
+  'session:!{id}':
+    role: 'Cache'
+    chatName: 'Cache'
+  session:
+    allSessions: 'Set'
+
+module.exports = ['Session', face, schema]

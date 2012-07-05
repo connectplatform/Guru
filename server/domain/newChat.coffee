@@ -1,5 +1,6 @@
 createChannel = require './createChannel'
 redis = require '../redis'
+redgoose = require 'redgoose'
 
 module.exports = (veinServer) ->
   unless veinServer.services["newChat"]?
@@ -9,23 +10,26 @@ module.exports = (veinServer) ->
 
       redis.chats.create (channelName)->
 
+        sessionId = unescape(res.cookie('session'))
+        {Session} = redgoose.models
+
         #TODO: move this up to middleware
-        redis.sessions.create 'visitor', channelName, (sessionId)->
-          redis.sessions.setChatName sessionId, username, (err)->
-            console.log "error setting session chatname in newChat: #{err}" if err
-            res.cookie 'session', sessionId
+        Session.create {role: 'visitor', chatName: username}, (err, session)->
+          console.log "error creating session: #{err}" if err
+          sessionId = session.id
+          res.cookie 'session', sessionId
 
-            visitorMeta =
-              username: username
-              website: null 
-              department: null
+          visitorMeta =
+            username: username
+            website: null 
+            department: null
 
-            redis.chats.setVisitorMeta channelName, visitorMeta, (err, data)->
-              console.log "error setting visitorMeta in newChat: #{err}" if err
+          redis.chats.setVisitorMeta channelName, visitorMeta, (err, data)->
+            console.log "error setting visitorMeta in newChat: #{err}" if err
 
-              redis.chats.visitorArrived channelName, (err, data)->
-                console.log "error setting visitorArrived in newChat: #{err}" if err
-                
-                createChannel channelName, veinServer, ->
-                  res.cookie 'channel', channelName
-                  res.send null, channel: channelName
+            redis.chats.visitorArrived channelName, (err, data)->
+              console.log "error setting visitorArrived in newChat: #{err}" if err
+              
+              createChannel channelName, veinServer, ->
+                res.cookie 'channel', channelName
+                res.send null, channel: channelName

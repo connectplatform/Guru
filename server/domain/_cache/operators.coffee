@@ -1,6 +1,3 @@
-i = 0
-rand = -> i += 1
-
 face = (decorators) ->
   {operator: {chats, allOperators}} = decorators
 

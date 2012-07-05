@@ -1,9 +1,14 @@
 redis = require '../redis'
+redgoose = require 'redgoose'
 
 module.exports = (serviceName, veinServer, cb)->
   unless veinServer.services[serviceName]?
     veinServer.add serviceName, (res, message)->
-      redis.sessions.chatName unescape(res.cookie('session')), (err, username)->
+
+      sessionId = unescape(res.cookie('session'))
+      {Session} = redgoose.models
+      Session.get(sessionId).chatName.get (err, username)->
+
         console.log "Error getting chat name from cache: #{err}" if err
         data =
           message: message

@@ -10,25 +10,31 @@ boiler 'Service - Join Chat', ->
       email: 'god@torchlightsoftware.com'
       password: 'foobar'
 
-    visitorClient = @getClient()
-    visitorClient.ready =>
-      visitorClient.newChat {username: 'foo'}, (err, data) =>
-        channel = visitorClient.cookie 'channel'
-        visitorClient.disconnect()
-        operatorClient = @getClient()
-        operatorClient.ready ->
-          operatorClient.login loginData, (err, data) ->
-            operatorClient.joinChat channel, (err, data) ->
+    # visitor starts a new chat
+    @client.newChat {username: 'foo'}, (err, data) =>
+      channel = @client.cookie 'channel'
+
+      # operator logs in
+      operatorClient = @getClient()
+      operatorClient.ready ->
+        operatorClient.login loginData, (err, data) ->
+
+          # operator joins chat channel
+          operatorClient.joinChat channel, (err, data) ->
+            false.should.eql err?
+            id = operatorClient.cookie('session')
+
+            #TODO: move everything below this into a unit test
+            {Operator} = redgoose.models
+
+            # ensure the chat channel was saved in redis
+            Operator.get(id).chats.all (err, data) ->
               false.should.eql err?
-              id = operatorClient.cookie('session')
+              data.should.includeEql channel
 
-              {Operator} = redgoose.models
-              Operator.get(id).chats.all (err, data) ->
-
+              # ensure that the operator was added to the channel in redis
+              redis.chats.operators channel, (err, data) ->
                 false.should.eql err?
-                data.should.includeEql channel
-                redis.chats.operators channel, (err, data) ->
-                  false.should.eql err?
-                  data.should.includeEql id
-                  operatorClient.disconnect()
-                  done()
+                data.should.includeEql id
+                operatorClient.disconnect()
+                done()

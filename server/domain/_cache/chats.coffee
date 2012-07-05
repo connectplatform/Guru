@@ -1,5 +1,5 @@
 rand = require '../../../lib/rand'
-module.exports = (client) -> 
+module.exports = (client) ->
 
   create: (cb)->
     id = "chat:#{rand()}"
@@ -41,10 +41,10 @@ module.exports = (client) ->
     client.smembers "chat:allChats", cb
 
   visitorArrived: (id, cb)->
-   client.set "#{id}:visitorPresent", "true", cb   
+   client.set "#{id}:visitorPresent", "true", cb
 
   visitorLeft: (id, cb)->
-   client.set "#{id}:visitorPresent", "false", cb   
+   client.set "#{id}:visitorPresent", "false", cb
 
   visitorPresent: (id, cb)->
     client.get "#{id}:visitorPresent", (err, data)->
@@ -52,7 +52,7 @@ module.exports = (client) ->
       cb null, data is "true" ? true : false
 
   setVisitorMeta: (id, data, cb)->
-    client.set "#{id}:visitor", JSON.stringify(data), cb 
+    client.set "#{id}:visitor", JSON.stringify(data), cb
 
   visitor: (id, cb)->
     client.get "#{id}:visitor", (err, data)->

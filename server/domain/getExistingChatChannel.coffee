@@ -4,11 +4,13 @@ module.exports = (veinServer)->
   unless veinServer.services["getExistingChatChannel"]?
     veinServer.add 'getExistingChatChannel', (res) ->
 
-      existingChannel = unescape res.cookie 'channel'
-      if existingChannel? and veinServer.services[existingChannel]?
-        redis.chats.exists existingChannel, (err, data)->
+      userChannel = unescape res.cookie 'channel'
+      # if client cookie exists and also exists server side
+      if userChannel? and veinServer.services[userChannel]?
+        redis.chats.exists userChannel, (err, data)->
           console.log "error checking if chat exists: #{err}" if err?
-          if data is 1 or data is '1'
-            res.send null, channel: existingChannel
-      else        
+          return res.send null, channel: userChannel if data is 1 or data is '1'
+          return res.send null, null
+
+      else
         res.send null, null

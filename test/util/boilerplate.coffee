@@ -9,9 +9,6 @@ testPort = Math.floor(Math.random() * 1000) + 8000
 http = require 'http'
 Vein = require 'vein'
 
-globals =
-  getClient: -> new Vein.Client port: testPort, transports: ['websocket']
-
 # initialize app server
 initApp = (cb) ->
   return cb() if @app?
@@ -23,15 +20,24 @@ module.exports = (testName, tests) ->
   describe testName, (done)->
 
     before (done) ->
-        globals.db = db
-        initApp done
+      @getClient = -> new Vein.Client port: testPort, transports: ['websocket']
+      @db = db
+      initApp done
 
     beforeEach (done) ->
-      flushCache ->
-        seedMongo done
+      @client = @getClient()
+      @client.ready ->
+        flushCache ->
+          seedMongo done
+
+    afterEach (done) ->
+      @client.cookie 'session', null
+      @client.cookie 'channel', null
+      @client.disconnect()
+      done()
 
     after (done) ->
       flushCache ->
         db.wipe done
 
-    tests(globals)
+    tests()

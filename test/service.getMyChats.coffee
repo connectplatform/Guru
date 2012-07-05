@@ -1,32 +1,32 @@
 require 'should'
 boiler = require './util/boilerplate'
 
-boiler 'Service - Get My Chats', (globals) ->
-  it "should return data on all of a particular operator's chats", (done)->
-    client = globals.getClient()
-    client.ready ->
+boiler 'Service - Get My Chats', ->
+  it "should return data on all of a particular operator's chats", (done) ->
+    client = @getClient()
+    client.ready =>
       data = {username: 'joinMe'}
-      client.newChat data, (err, data)->
+      client.newChat data, (err, data) =>
         channel = client.cookie 'channel'
         client.cookie 'channel', null
         client.cookie 'session', null
         client.disconnect()
 
-        client2 = globals.getClient()
-        client2.ready ->
+        client2 = @getClient()
+        client2.ready =>
           data = {username: 'butNotMe'}
-          client2.newChat data, (err, data)->
+          client2.newChat data, (err, data) =>
             client2.disconnect()
 
             loginData =
               email: 'god@torchlightsoftware.com'
               password: 'foobar'
-            client3 = globals.getClient()
+            client3 = @getClient()
             client3.ready ->
               client3.login loginData, ->
-                client3.joinChat channel, (err, data)->
+                client3.joinChat channel, (err, data) ->
 
-                  client3.getMyChats (err, data)->
+                  client3.getMyChats (err, data) ->
                     client3.disconnect()
                     false.should.eql err?
                     data.length.should.eql 1

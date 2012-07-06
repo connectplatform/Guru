@@ -24,8 +24,8 @@ face = (decorators) ->
 
 schema =
   'session:!{id}':
-    role: 'Cache'
-    chatName: 'Cache'
+    role: 'String'
+    chatName: 'String'
   session:
     allSessions: 'Set'
 

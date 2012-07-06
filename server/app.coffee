@@ -19,7 +19,7 @@ module.exports = (port, cb) ->
   server = app.listen port
 
   # Redgoose
-  redgoose.createClient()
+  redgoose.init()
   operator = require './domain/_cache/operators'
   session = require './domain/_cache/sessions'
   chat = require './domain/_cache/chats'

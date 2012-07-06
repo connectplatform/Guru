@@ -70,11 +70,11 @@ face = (decorators) ->
 
 schema =
   'chat:!{id}':
-    visitor: 'Cache' #TODO make this a type that JSON.parses automatically
-    visitorPresent: 'Cache'
+    visitor: 'String' #TODO make this a type that JSON.parses automatically
+    visitorPresent: 'String'
     operators: 'Set'
     history: 'List'
-    creationDate: 'Cache'
+    creationDate: 'String'
   chat:
     allChats: 'Set'
 

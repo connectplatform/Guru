@@ -13,7 +13,8 @@
     "async": "*",
     "should": "*",
     "connect": "*",
-    "vein": "*"
+    "async": "*",
+    "vein": "0.3.1"
   },
   "devDependencies": {
     "node-log": "*",

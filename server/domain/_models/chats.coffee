@@ -1,3 +1,4 @@
+async = require 'async'
 rand = require '../../../lib/rand'
 
 face = (decorators) ->
@@ -42,19 +43,17 @@ face = (decorators) ->
           cb err, (JSON.parse(item) for item in data)
 
       chat.dump = (cb) ->
-        chat.visitor.out (err1, visitor) ->
-          chat.visitorPresent.get (err2, visitorPresent) ->
-            chat.operators.all (err3, operators) ->
-              chat.history.get (err4, history) ->
-                chat.creationDate.get (err5, creationDate)->
-                  chat =
-                    id: id,
-                    history: history,
-                    visitor: visitor,
-                    visitorPresent: visitorPresent,
-                    operators: operators,
-                    creationDate: new Date parseInt creationDate
-                  cb err1 or err2 or err3 or err4 or err5, chat
+
+        async.parallel {
+          visitor: chat.visitor.out
+          visitorPresent: chat.visitorPresent.get
+          operators: chat.operators.all
+          history: chat.history.get
+          creationDate: chat.creationDate.get
+        }, (err, chat) ->
+          chat.id = id
+          chat.creationDate = new Date parseInt creationDate
+          cb err, chat
 
       return chat
 

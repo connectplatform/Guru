@@ -32,12 +32,14 @@ module.exports = (port, cb) ->
     if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
       next()
     else
+      userSession = unescape res.cookie 'session'
       {Session} = redgoose.models
-      Session.get(unescape(res.cookie('session'))).role.get (err, data)->
-        if data is 'operator'
+      Session.get(userSession).role.get (err, role) ->
+        if role is 'operator'
           next()
         else
-          next('not authorized')
+          res.cookie 'session', null
+          next "#{req.service} not authorized"
 
   #TODO: refactor me out
   newChat = require './domain/newChat'

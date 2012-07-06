@@ -1,9 +1,7 @@
 define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util"],
   (server, notify, sidebar, sbTemp, util) ->
     (args, templ) ->
-      return window.location.hash = '/' unless server.cookie 'session' 
-      #TODO: any time this would redirect, we get a middleware error instead 
-        #May be linked to a non-operator session cookie
+      return window.location.hash = '/' unless server.cookie 'session'
 
       server.ready ->
         server.getActiveChats (err, chats) ->

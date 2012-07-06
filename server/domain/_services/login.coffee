@@ -1,5 +1,4 @@
 module.exports = (res, fields) ->
-  redis = require '../../redis'
   redgoose = require 'redgoose'
   {digest_s} = require 'md5'
   db = require '../../mongo'

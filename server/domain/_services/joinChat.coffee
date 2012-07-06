@@ -1,6 +1,6 @@
 module.exports = (res, chatId, options) ->
-  redis = require '../../redis'
   redgoose = require 'redgoose'
+<<<<<<< HEAD
   operatorId = unescape res.cookie('session')
 
   # add operator to chat list
@@ -11,5 +11,13 @@ module.exports = (res, chatId, options) ->
     {Operator} = redgoose.models
     Operator.get(operatorId).chats.add chatId, (err, data) ->
 
+=======
+  operatorId = unescape(res.cookie('session'))
+  {Chat, Operator} = redgoose.models
+  chat = Chat.get(chatId)
+  chat.operators.add operatorId, (err, data)->
+    console.log "Error adding operator in joinChat: #{err}" if err
+    Operator.get(operatorId).chats.add chatId, (err, data)->
+>>>>>>> unstable
       console.log "Error adding chat to operator in joinChat: #{err}" if err
       res.send null, true

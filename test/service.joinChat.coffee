@@ -1,6 +1,5 @@
 require 'should'
 boiler = require './util/boilerplate'
-redis = require '../server/redis'
 redgoose = require 'redgoose'
 
 boiler 'Service - Join Chat', ->
@@ -22,12 +21,12 @@ boiler 'Service - Join Chat', ->
               false.should.eql err?
               id = operatorClient.cookie('session')
 
-              {Operator} = redgoose.models
+              {Operator, Chat} = redgoose.models
               Operator.get(id).chats.all (err, data) ->
 
                 false.should.eql err?
                 data.should.includeEql channel
-                redis.chats.operators channel, (err, data) ->
+                Chat.get(channel).operators.all (err, data)->
                   false.should.eql err?
                   data.should.includeEql id
                   operatorClient.disconnect()

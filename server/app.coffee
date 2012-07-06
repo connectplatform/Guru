@@ -2,7 +2,6 @@ connect = require "connect"
 Vein = require "vein"
 mongo = require "./mongo"
 config = require './config'
-redis = require './redis'
 flushCache = require '../lib/flushCache'
 
 redgoose = require 'redgoose'
@@ -23,8 +22,10 @@ module.exports = (port, cb) ->
   redgoose.createClient()
   operator = require './domain/_cache/operators'
   session = require './domain/_cache/sessions'
+  chat = require './domain/_cache/chats'
   redgoose.load operator
   redgoose.load session
+  redgoose.load chat
 
   # Vein
   vein = new Vein server

@@ -1,5 +1,7 @@
 module.exports = (res) ->
-  redis = require '../../redis'
   sendChatsFromIdList = require '../sendChatsFromIdList'
-  redis.chats.getChatIds (err, rawData)->
+  redgoose = require 'redgoose'
+  {Chat} = redgoose.models
+
+  Chat.allChats.all (err, rawData) ->
     sendChatsFromIdList res, err, rawData

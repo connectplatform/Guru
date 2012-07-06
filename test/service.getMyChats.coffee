@@ -8,6 +8,7 @@ boiler 'Service - Get My Chats', ->
       data = {username: 'joinMe'}
       client.newChat data, (err, data) =>
         channel = client.cookie 'channel'
+        console.log "first channel: #{channel}"
         client.cookie 'channel', null
         client.cookie 'session', null
         client.disconnect()
@@ -16,6 +17,7 @@ boiler 'Service - Get My Chats', ->
         client2.ready =>
           data = {username: 'butNotMe'}
           client2.newChat data, (err, data) =>
+            console.log "second channel: #{client2.cookie 'channel'}"
             client2.disconnect()
 
             loginData =

@@ -6,14 +6,12 @@ module.exports = (veinServer) ->
     veinServer.add 'newChat', (res, data) ->
       username = data.username or 'anonymous'
 
-      console.log "username: #{username}"
 
       {Chat, Session} = redgoose.models
       Chat.create (err, chat)->
         console.log "error creating chat: #{err}" if err
         channelName = chat.id
 
-        console.log "chat id: #{chat.id}"
 
         sessionId = unescape(res.cookie('session'))
 

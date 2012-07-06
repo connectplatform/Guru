@@ -14,8 +14,6 @@ module.exports = (res, err, list) ->
       console.log "Error getting chat from cache: data:#{data}, error:#{err}" if err
       message.timestamp = new Date(parseInt(message.timestamp)) for message in data.history
       chats.push data
-      {inspect} = require 'util'
-      console.log "pushingData #{inspect data}"
       cb()
 
   async.forEach data, pushChat, ->

@@ -26,25 +26,19 @@ face = (decorators) ->
       history chat
 
       #TODO replace these 'in' and 'out' methods
-      {inspect} = require 'util'
       chat.visitor.in = (json, cb) ->
-        console.log "adding visitor data: #{inspect json} to chat #{chat.id}"
         chat.visitor.set JSON.stringify(json), cb
 
       chat.visitor.out = (cb) ->
         chat.visitor.get (err, data)->
-          console.log "getting out #{inspect data} for chat #{chat.id}"
           cb err, JSON.parse data
 
       chat.history.add = (json, cb) ->
-        console.log "adding to history: #{json}"
         chat.history.rpush JSON.stringify(json), (err, data)->
-          console.log "pushing to history has err:#{err} data:#{data}"
           cb err, data
 
       chat.history.get = (cb) ->
         chat.history.all (err, data) ->
-          console.log "chat.history.get has err:#{err} data:#{data}"
           cb err, (JSON.parse(item) for item in data)
 
       chat.dump = (cb) ->

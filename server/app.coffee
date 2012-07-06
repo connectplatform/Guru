@@ -20,12 +20,11 @@ module.exports = (port, cb) ->
 
   # Redgoose
   redgoose.init()
-  operator = require './domain/_cache/operators'
-  session = require './domain/_cache/sessions'
-  chat = require './domain/_cache/chats'
-  redgoose.load operator
-  redgoose.load session
-  redgoose.load chat
+  redgoose.load require model for model in [
+    './domain/_models/operators'
+    './domain/_models/sessions'
+    './domain/_models/chats'
+  ]
 
   # Vein
   vein = new Vein server

@@ -1,11 +1,11 @@
+#TODO does this even need to exist?  It may be able to be folded into session.
 face = (decorators) ->
-  {operator: {chats, allOperators}} = decorators
+  {operator: {allOperators}} = decorators
 
   faceValue =
 
     get: (id)->
       operator = id: id
-      chats operator
       return operator
 
   allOperators faceValue
@@ -14,7 +14,7 @@ face = (decorators) ->
 
 schema =
   'operator:!{id}':
-    chats: 'Set'
+    nothingHere: 'Set' #TODO added to make this compile... unneeded
   operator:
     allOperators: 'Set'
 

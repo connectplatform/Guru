@@ -24,6 +24,7 @@ module.exports = (port, cb) ->
     './domain/_models/operators'
     './domain/_models/sessions'
     './domain/_models/chats'
+    './domain/_models/operatorChat'
   ]
 
   # Vein

@@ -4,6 +4,6 @@ module.exports = (res) ->
 
   operatorId = unescape(res.cookie 'session')
 
-  {Operator} = redgoose.models
-  Operator.get(operatorId).chats.all (err, rawData)->
-    sendChatsFromIdList res, err, rawData
+  {OperatorChat} = redgoose.models
+  OperatorChat.getChatsByOperator operatorId, (err, rawData)->
+    sendChatsFromIdList res, err, Object.keys rawData

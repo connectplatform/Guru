@@ -5,7 +5,6 @@ face = (decorators) ->
   {chat: {
     visitor,
     visitorPresent,
-    operators,
     history,
     creationDate,
     allChats }} = decorators
@@ -22,7 +21,6 @@ face = (decorators) ->
       chat = id: id
       visitor chat
       visitorPresent chat
-      operators chat
       creationDate chat
       history chat
 
@@ -47,7 +45,6 @@ face = (decorators) ->
         async.parallel {
           visitor: chat.visitor.out
           visitorPresent: chat.visitorPresent.get
-          operators: chat.operators.all
           history: chat.history.get
           creationDate: chat.creationDate.get
         }, (err, chat) ->
@@ -65,7 +62,6 @@ schema =
   'chat:!{id}':
     visitor: 'String' #TODO make this a type that JSON.parses automatically
     visitorPresent: 'String'
-    operators: 'Set'
     history: 'List'
     creationDate: 'String'
   chat:

@@ -1,3 +1,4 @@
+async = require 'async'
 createChannel = require './createChannel'
 redgoose = require 'redgoose'
 
@@ -23,15 +24,16 @@ module.exports = (veinServer) ->
 
           visitorMeta =
             username: username
-            website: null 
+            website: null
             department: null
 
-          chat.visitor.in visitorMeta, (err) ->
-            console.log "error setting visitorMeta in newChat: #{err}" if err
+          async.series [
+            chat.visitor.in visitorMeta
+            chat.visitorPresent.set 'true'
+            createChannel channelName, veinServer
 
-            chat.visitorPresent.set 'true', (err) ->
-              console.log "error setting visitorArrived in newChat: #{err}" if err
-              
-              createChannel channelName, veinServer, ->
-                res.cookie 'channel', channelName
-                res.send null, channel: channelName
+          ], (err, data) ->
+            console.log "redis error in newChat: #{err}" if err
+
+            res.cookie 'channel', channelName
+            res.send null, channel: channelName

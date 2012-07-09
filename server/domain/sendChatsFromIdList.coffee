@@ -5,7 +5,7 @@ module.exports = (res, err, list) ->
   res.send err, null if err
   data = list.filter (element) ->
     element != 'true' #this is a bogus item added by the redis query TODO: should I worry about this?
-    
+
   {Chat} = redgoose.models
   chats = []
 

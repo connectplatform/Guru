@@ -1,3 +1,4 @@
+{tandoor} = require '../../../lib/util'
 # Interface for document
 face = (decorators) ->
 
@@ -12,14 +13,14 @@ face = (decorators) ->
     obj[decoratorName][method] args...
 
   operatorChat =
-    add: (operatorId, chatId, isWatching, cb)->
+    add: tandoor (operatorId, chatId, isWatching, cb)->
       call byOperator, operatorId, "set", chatId, isWatching, ->
         call byChat, chatId, "set", operatorId, isWatching, cb
 
-    getChatsByOperator: (operatorId, cb)->
+    getChatsByOperator: tandoor (operatorId, cb)->
       call byOperator, operatorId, "getall", cb
 
-    getOperatorsByChat: (chatId, cb)->
+    getOperatorsByChat: tandoor (chatId, cb)->
       call byChat, chatId, "getall", cb
 
   return operatorChat

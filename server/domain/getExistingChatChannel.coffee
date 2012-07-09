@@ -1,12 +1,12 @@
 redgoose = require 'redgoose'
 
-module.exports = (veinServer)->
+module.exports = (veinServer, pulsar)->
   unless veinServer.services["getExistingChatChannel"]?
     veinServer.add 'getExistingChatChannel', (res) ->
 
       userChannel = unescape res.cookie 'channel'
       # if client cookie exists and also exists server side
-      if userChannel? and veinServer.services[userChannel]?
+      if userChannel? and pulsar.channels[userChannel]?
         {Chat} = redgoose.models
         Chat.allChats.belongs userChannel, (err, data) ->
           console.log "error checking if chat exists: #{err}" if err?

@@ -1,17 +1,15 @@
 createChannel = require './createChannel'
 redgoose = require 'redgoose'
 
-module.exports = (veinServer) ->
+module.exports = (veinServer, pulsarServer) ->
   unless veinServer.services["newChat"]?
     veinServer.add 'newChat', (res, data) ->
       username = data.username or 'anonymous'
-
 
       {Chat, Session} = redgoose.models
       Chat.create (err, chat)->
         console.log "error creating chat: #{err}" if err
         channelName = chat.id
-
 
         sessionId = unescape(res.cookie('session'))
 
@@ -32,6 +30,6 @@ module.exports = (veinServer) ->
             chat.visitorPresent.set 'true', (err) ->
               console.log "error setting visitorArrived in newChat: #{err}" if err
               
-              createChannel channelName, veinServer, ->
+              createChannel channelName, pulsarServer, ->
                 res.cookie 'channel', channelName
                 res.send null, channel: channelName

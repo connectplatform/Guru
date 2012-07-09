@@ -4,16 +4,18 @@ seedMongo = require './seedMongo'
 
 # pick a port that server and client will run on
 testPort = Math.floor(Math.random() * 1000) + 8000
+pulsarPort = Math.floor(Math.random() * 1000) + 8000
 
 # initialize vein client
 http = require 'http'
 Vein = require 'vein'
+Pulsar = require 'pulsar'
 
 # initialize app server
 initApp = (cb) ->
   return cb() if @app?
   @app = require '../../server/app'
-  @app testPort, cb
+  @app testPort, pulsarPort, cb
 
 module.exports = (testName, tests) ->
 
@@ -21,6 +23,7 @@ module.exports = (testName, tests) ->
 
     before (done) ->
       @getClient = -> new Vein.Client port: testPort, transports: ['websocket']
+      @getPulsar = -> new Pulsar.Client port: pulsarPort, transports: ['websocket']
       @db = db
       initApp done
 

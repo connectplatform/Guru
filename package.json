@@ -14,7 +14,8 @@
     "should": "*",
     "connect": "*",
     "async": "*",
-    "vein": "0.3.1"
+    "pulsar": "*",
+    "vein": "*"
   },
   "devDependencies": {
     "node-log": "*",

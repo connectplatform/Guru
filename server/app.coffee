@@ -1,13 +1,16 @@
 connect = require "connect"
 Vein = require "vein"
+Pulsar = require "pulsar"
 mongo = require "./mongo"
 config = require './config'
 flushCache = require '../lib/flushCache'
+http = require 'http'
 
 redgoose = require 'redgoose'
 
-module.exports = (port, cb) ->
+module.exports = (port, pulsarPort, cb) ->
   port ?= config.app.port
+  pulsarPort ?= config.app.pulsarPort
 
   # Web server
   app = connect()
@@ -27,6 +30,10 @@ module.exports = (port, cb) ->
     './domain/_models/operatorChat'
   ]
 
+  # Pulsar
+  pulsar = new Pulsar http.createServer().listen pulsarPort
+  console.log "pulsar is listening on port #{pulsarPort}"
+
   # Vein
   vein = new Vein server
   vein.use (req, res, next) -> #TODO: refactor this
@@ -44,9 +51,9 @@ module.exports = (port, cb) ->
 
   #TODO: refactor me out
   newChat = require './domain/newChat'
-  newChat vein
+  newChat vein, pulsar
   getExistingChatChannel = require './domain/getExistingChatChannel'
-  getExistingChatChannel vein
+  getExistingChatChannel vein, pulsar
 
   vein.addFolder __dirname + '/domain/_services/'
 

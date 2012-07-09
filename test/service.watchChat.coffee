@@ -14,26 +14,25 @@ boiler 'Service - Watch Chat', ->
     visitorClient = @getClient()
     visitorClient.ready =>
       visitorClient.newChat {username: 'foo'}, (err, data) =>
-        channel = visitorClient.cookie 'channel'
+        channelName = visitorClient.cookie 'channel'
+        sessionId = visitorClient.cookie 'session'
         visitorClient.refresh =>
+          visitorClient.disconnect()
           message = "hello, world!"
-          visitorClient[channel] message, (err, data) =>
-            visitorClient.disconnect()
 
-            operatorClient = @getClient()
-            operatorClient.ready ->
+          channel = @getPulsar().channel channelName
+          channel.emit 'clientMessage', {message: message, session: sessionId}
 
-              operatorClient.getChatHistory channel, (err, data)->
+          @client.ready =>
 
-                #when
-                operatorClient.login loginData, (err, data) ->
-                  operatorClient.watchChat channel, (err, data) ->
-                    false.should.eql err?
-                    operatorClient.getChatHistory channel, (err, data)->
-                      operatorClient.disconnect()
-                      false.should.eql err?
+            #when
+            @client.login loginData, (err, data) =>
+              @client.watchChat channelName, (err, data) =>
+                false.should.eql err?
+                @client.getChatHistory channelName, (err, data)=>
+                  false.should.eql err?
 
-                      #expect
-                      data[0].username.should.eql 'foo'
-                      data[0].message.should.eql message
-                      done()
+                  #expect
+                  data[0].username.should.eql 'foo'
+                  data[0].message.should.eql message
+                  done()

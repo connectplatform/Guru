@@ -9,11 +9,16 @@ boiler 'Service - New Chat', ->
       throw err if err
       @client.refresh =>
 
-        # listen for response
-        @client.subscribe[data.channel] (err, data) =>
-          data.message.should.eql 'hello from the test' if data.username is 'clientTest1'
+        session = @client.cookie 'session'
+        channel = @getPulsar().channel data.channel
+
+        channel.on 'serverMessage', (data)->
+          data.message.should.eql 'hello from the test'
+          data.username.should.eql 'clientTest1'
           done()
 
-        # send signal
-        @client[data.channel] 'hello from the test', (err, data) ->
-          false.should.eql err?
+        outgoing =
+          session: session
+          message: 'hello from the test'
+        
+        channel.emit 'clientMessage', outgoing

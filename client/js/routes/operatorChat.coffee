@@ -6,7 +6,10 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
       server.ready (services)->
         console.log "server is ready-- services availible: #{services}"
         server.getMyChats (err, chats) ->
+
           chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
+
+          console.log chat.creationDate for chat in chats
 
           sidebar {}, sbTemp
 
@@ -21,15 +24,18 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
           for chat in chats
             id = chat.id
             console.log "attatching methods to ##{chat.renderedId}"
-            $("##{chat.renderedId} .message-form").submit (evt)->
-              evt.preventDefault()
-              message = $("##{chat.renderedId} .message-form .message").val()
-              unless message is ""
-                server[id] message, (err, data) ->
-                  console.log err if err and console?
-                $("##{chat.renderedId} .message-form .message").val("")
-                $("##{chat.renderedId} .chat-display-box").scrollTop($("##{chat.renderedId} .chat-display-box").prop("scrollHeight"))
-              false
+            if chat.isWatching
+              $("##{chat.renderedId} .message-form").hide()
+            else
+              $("##{chat.renderedId} .message-form").submit (evt)->
+                evt.preventDefault()
+                message = $("##{chat.renderedId} .message-form .message").val()
+                unless message is ""
+                  server[id] message, (err, data) ->
+                    console.log err if err and console?
+                  $("##{chat.renderedId} .message-form .message").val("")
+                  $("##{chat.renderedId} .chat-display-box").scrollTop($("##{chat.renderedId} .chat-display-box").prop("scrollHeight"))
+                false
 
             appendChat = (err, data)->
               console.log "Error appending chat: #{err}" if err

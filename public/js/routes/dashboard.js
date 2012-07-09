@@ -28,6 +28,19 @@
             });
             return false;
           });
+          $('.watchChat').click(function(evt) {
+            var chatId;
+            chatId = $(this).attr('chatId');
+            server.watchChat(chatId, {}, function(err, data) {
+              if (err) {
+                console.log("Error watching chat: " + err);
+              }
+              if (data) {
+                return window.location.hash = '/operatorChat';
+              }
+            });
+            return false;
+          });
           util.autotimer('.counter');
           return $(window).bind('hashchange', function() {
             return util.cleartimers();

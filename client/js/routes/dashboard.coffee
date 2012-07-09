@@ -17,6 +17,13 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
               window.location.hash = '/operatorChat' if data
             false
 
+          $('.watchChat').click (evt)->
+            chatId = $(this).attr 'chatId'
+            server.watchChat chatId, {}, (err, data)->
+              console.log "Error watching chat: #{err}" if err
+              window.location.hash = '/operatorChat' if data
+            false
+
           util.autotimer '.counter'
 
           $(window).bind 'hashchange', ->

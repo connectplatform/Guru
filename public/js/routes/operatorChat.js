@@ -9,10 +9,14 @@
       return server.ready(function(services) {
         console.log("server is ready-- services availible: " + services);
         return server.getMyChats(function(err, chats) {
-          var appendChat, chat, id, _i, _j, _len, _len1;
+          var appendChat, chat, id, _i, _j, _k, _len, _len1, _len2;
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = chat.id.replace(/:/g, '-');
+          }
+          for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
+            chat = chats[_j];
+            console.log(chat.creationDate);
           }
           sidebar({}, sbTemp);
           $('#content').html(templ({
@@ -23,25 +27,29 @@
             return $(this).tab('show');
           });
           $('#chatTabs a:first').tab('show');
-          for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
-            chat = chats[_j];
+          for (_k = 0, _len2 = chats.length; _k < _len2; _k++) {
+            chat = chats[_k];
             id = chat.id;
             console.log("attatching methods to #" + chat.renderedId);
-            $("#" + chat.renderedId + " .message-form").submit(function(evt) {
-              var message;
-              evt.preventDefault();
-              message = $("#" + chat.renderedId + " .message-form .message").val();
-              if (message !== "") {
-                server[id](message, function(err, data) {
-                  if (err && (typeof console !== "undefined" && console !== null)) {
-                    return console.log(err);
-                  }
-                });
-                $("#" + chat.renderedId + " .message-form .message").val("");
-                $("#" + chat.renderedId + " .chat-display-box").scrollTop($("#" + chat.renderedId + " .chat-display-box").prop("scrollHeight"));
-              }
-              return false;
-            });
+            if (chat.isWatching) {
+              $("#" + chat.renderedId + " .message-form").hide();
+            } else {
+              $("#" + chat.renderedId + " .message-form").submit(function(evt) {
+                var message;
+                evt.preventDefault();
+                message = $("#" + chat.renderedId + " .message-form .message").val();
+                if (message !== "") {
+                  server[id](message, function(err, data) {
+                    if (err && (typeof console !== "undefined" && console !== null)) {
+                      return console.log(err);
+                    }
+                  });
+                  $("#" + chat.renderedId + " .message-form .message").val("");
+                  $("#" + chat.renderedId + " .chat-display-box").scrollTop($("#" + chat.renderedId + " .chat-display-box").prop("scrollHeight"));
+                }
+                return false;
+              });
+            }
             appendChat = function(err, data) {
               if (err) {
                 console.log("Error appending chat: " + err);
@@ -54,10 +62,10 @@
             }
           }
           return $(window).bind('hashchange', function() {
-            var _k, _len2, _results;
+            var _l, _len3, _results;
             _results = [];
-            for (_k = 0, _len2 = chats.length; _k < _len2; _k++) {
-              chat = chats[_k];
+            for (_l = 0, _len3 = chats.length; _l < _len3; _l++) {
+              chat = chats[_l];
               _results.push(server.subscribe[id](function() {}));
             }
             return _results;

@@ -17,6 +17,9 @@ coffee -o ./public/js/ -c ./client/js/
 # Vein 
 cp ./node_modules/vein/vein.js ./client/js/ext/vein.js
 
+# Pulsar
+cp ./node_modules/pulsar/pulsar.js ./client/js/ext/pulsar.js
+
 # Non-built files
 cp ./client/*.html ./public
 cp -R ./client/js/ext/* ./public/js/ext

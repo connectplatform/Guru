@@ -1,5 +1,5 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "templates/chatMessage"],
-  (server, notify, sidebar, sbTemp, chatMessage) ->
+define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/sidebar", "templates/chatMessage"],
+  (server, pulsar, notify, sidebar, sbTemp, chatMessage) ->
     (args, templ) ->
       window.location = '/' unless server.cookie 'session'
 
@@ -22,7 +22,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
           $('#chatTabs a:first').tab 'show'
 
           for chat in chats
-            id = chat.id
+            channel = pulsar.channel chat.id
             console.log "attatching methods to ##{chat.renderedId}"
             if chat.isWatching
               $("##{chat.renderedId} .message-form").hide()
@@ -31,20 +31,16 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
                 evt.preventDefault()
                 message = $("##{chat.renderedId} .message-form .message").val()
                 unless message is ""
-                  server[id] message, (err, data) ->
-                    console.log err if err and console?
+                  channel.emit 'clientMessage', {message: message, session: server.cookie('session')}
+
                   $("##{chat.renderedId} .message-form .message").val("")
                   $("##{chat.renderedId} .chat-display-box").scrollTop($("##{chat.renderedId} .chat-display-box").prop("scrollHeight"))
                 false
 
-            appendChat = (err, data)->
-              console.log "Error appending chat: #{err}" if err
+            appendChat = (data) ->
               $("##{chat.renderedId} .chat-display-box").append chatMessage data
 
-            console.log server.subscribe[id].listeners
-            if server.subscribe[id].listeners.length is 0
-              server.subscribe[id] appendChat
+            channel.on 'serverMessage', appendChat
 
           $(window).bind 'hashchange', ->
-            for chat in chats
-              server.subscribe[id] ->
+            #TODO unbind pulsar services here if necessary

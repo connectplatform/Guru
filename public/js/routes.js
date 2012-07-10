@@ -10,6 +10,9 @@
     dermis.route('/dashboard');
     dermis.route('/userAdmin');
     dermis.route('/operatorChat');
+    dermis.route('/users');
+    dermis.route('/websites');
+    dermis.route('/departments');
     dermis.route('/joinChat/:id');
     return dermis.init();
   });

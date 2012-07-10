@@ -9,7 +9,7 @@ module.exports = (res, fields) ->
     return res.send err.message if err?
     return res.send 'Invalid user or password.' unless user?
 
-    username = if user.lastName? then "#{user.firstName} #{user.lastName}" else "#{user.firstName}"
+    username = if user.lastName is not "" then "#{user.firstName} #{user.lastName}" else "#{user.firstName}"
 
     {Session} = redgoose.models
     Session.create {role: 'operator', chatName: username}, (err, session)->

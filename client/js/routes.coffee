@@ -15,6 +15,11 @@ define ["dermis"], (dermis) ->
   dermis.route '/userAdmin'
   dermis.route '/operatorChat'
 
+  # CRUD screens for admin
+  dermis.route '/users'
+  dermis.route '/websites'
+  dermis.route '/departments'
+
   # chat actions
   dermis.route '/joinChat/:id'
 

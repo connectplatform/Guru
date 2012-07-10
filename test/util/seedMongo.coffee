@@ -1,5 +1,6 @@
-mongo = require '../../server/mongo'
+async = require 'async'
 {digest_s} = require 'md5'
+mongo = require '../../server/mongo'
 User = mongo.model 'User'
 
 module.exports = (cb)->
@@ -8,10 +9,17 @@ module.exports = (cb)->
       user.password = digest_s user.password
       User.create user, cb
 
-    operator = 
+    operators = [
       email: 'god@torchlightsoftware.com'
       password: 'foobar'
       role: 'admin'
       firstName: 'God'
+    ,
+      email: 'guru1@torchlightsoftware.com'
+      password: 'foobar'
+      role: 'Operator'
+      firstName: 'First'
+      lastName: 'Guru'
+    ]
 
-    createUser operator, cb
+    async.forEach operators, createUser, cb

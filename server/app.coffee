@@ -24,7 +24,6 @@ module.exports = (port, pulsarPort, cb) ->
   # Redgoose
   redgoose.init()
   redgoose.load require model for model in [
-    './domain/_models/operators'
     './domain/_models/sessions'
     './domain/_models/chats'
     './domain/_models/operatorChat'

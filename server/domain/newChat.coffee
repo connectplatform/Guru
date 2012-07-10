@@ -2,13 +2,16 @@ async = require 'async'
 createChannel = require './createChannel'
 redgoose = require 'redgoose'
 
+# on server startup, wire up the newChat endpoint
 module.exports = (veinServer, pulsarServer) ->
   unless veinServer.services["newChat"]?
+
+    # when new chat requested, create artifacts and initialize pulsar channel
     veinServer.add 'newChat', (res, data) ->
       username = data.username or 'anonymous'
 
       {Chat, Session} = redgoose.models
-      Chat.create (err, chat)->
+      Chat.create (err, chat) ->
         console.log "error creating chat: #{err}" if err
         channelName = chat.id
 
@@ -26,10 +29,10 @@ module.exports = (veinServer, pulsarServer) ->
             department: null
 
           async.series [
-            chat.visitor.in visitorMeta
+            chat.visitor.set visitorMeta
             chat.visitorPresent.set 'true'
 
-          ], (err, data) ->
+          ], (err) ->
             console.log "redis error in newChat: #{err}" if err
 
             createChannel channelName, pulsarServer

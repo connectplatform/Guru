@@ -4,7 +4,7 @@ seed = require './util/seedMongo'
 
 boiler 'Service - Get Chat History', ->
 
-  it 'should return the history of a chat', (done)->
+  it 'should return the history of a chat', (done) ->
     username = 'historyVisitor'
     data = {username: username}
     @client.newChat data, (err, data) =>
@@ -22,7 +22,7 @@ boiler 'Service - Get Chat History', ->
         channel.emit 'clientMessage', outgoing0
         channel.emit 'clientMessage', outgoing1
 
-        channel.on 'serverMessage', (data)=>
+        channel.on 'serverMessage', (data) =>
           if data.message is 'done'
             @client.getChatHistory channelName, (err, data) =>
               false.should.eql err?

@@ -1,7 +1,7 @@
 {tandoor} = require '../../lib/util'
 redgoose = require 'redgoose'
 
-module.exports = tandoor (serviceName, pulsar) ->
+module.exports = (serviceName, pulsar) ->
   channel = pulsar.channel serviceName
   channel.on 'clientMessage', (contents) ->
     {Session, Chat} = redgoose.models

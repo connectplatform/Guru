@@ -28,10 +28,11 @@ module.exports = (veinServer, pulsarServer) ->
           async.series [
             chat.visitor.in visitorMeta
             chat.visitorPresent.set 'true'
-            createChannel channelName, pulsarServer
 
           ], (err, data) ->
             console.log "redis error in newChat: #{err}" if err
+
+            createChannel channelName, pulsarServer
 
             res.cookie 'channel', channelName
             res.send null, channel: channelName

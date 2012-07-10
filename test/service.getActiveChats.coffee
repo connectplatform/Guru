@@ -3,9 +3,9 @@ boiler = require './util/boilerplate'
 
 boiler 'Service - Get Active Chats', ->
 
-  it 'should return data on all existing chats', (done)->
+  it 'should return data on all existing chats', (done) ->
     data = {username: 'foo'}
-    @client.newChat data, (err, data)=>
+    @client.newChat data, (err, data) =>
 
       loginData =
         email: 'god@torchlightsoftware.com'
@@ -14,7 +14,7 @@ boiler 'Service - Get Active Chats', ->
       client2 = @getClient()
       client2.ready ->
         client2.login loginData, ->
-          client2.getActiveChats (err, data)->
+          client2.getActiveChats (err, data) ->
             client2.disconnect()
             false.should.eql err?
             chatData = data[0]

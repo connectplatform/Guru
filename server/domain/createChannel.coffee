@@ -1,25 +1,20 @@
 {tandoor} = require '../../lib/util'
 redgoose = require 'redgoose'
 
-module.exports = tandoor (serviceName, veinServer, cb)->
-  unless veinServer.services[serviceName]?
-    veinServer.add serviceName, (res, message)->
+module.exports = tandoor (serviceName, pulsar) ->
+  channel = pulsar.channel serviceName
+  channel.on 'clientMessage', (contents) ->
+    {Session, Chat} = redgoose.models
 
-      {Session, Chat} = redgoose.models
+    Session.get(contents.session).chatName.get (err, username) ->
 
-      sessionId = unescape(res.cookie('session'))
-      Session.get(sessionId).chatName.get (err, username)->
+      console.log "Error getting chat name from cache: #{err}" if err
+      data =
+        message: contents.message
+        username: username
+        timestamp: Date.now()
 
-        return res.send err if err?
-        data =
-          message: message
-          username: username
-          timestamp: Date.now()
+      Chat.get(serviceName).history.add data, (err) ->
+        console.log "error caching message: #{err}" if err
 
-        Chat.get(serviceName).history.add data, (err)->
-          return res.send err if err?
-
-        res.publish null, data
-        res.send null, "ack"
-
-    cb()
+      channel.emit 'serverMessage', data

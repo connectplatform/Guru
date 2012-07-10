@@ -2,17 +2,15 @@ async = require 'async'
 createChannel = require './createChannel'
 redgoose = require 'redgoose'
 
-module.exports = (veinServer) ->
+module.exports = (veinServer, pulsarServer) ->
   unless veinServer.services["newChat"]?
     veinServer.add 'newChat', (res, data) ->
       username = data.username or 'anonymous'
-
 
       {Chat, Session} = redgoose.models
       Chat.create (err, chat)->
         console.log "error creating chat: #{err}" if err
         channelName = chat.id
-
 
         sessionId = unescape(res.cookie('session'))
 
@@ -30,7 +28,7 @@ module.exports = (veinServer) ->
           async.series [
             chat.visitor.in visitorMeta
             chat.visitorPresent.set 'true'
-            createChannel channelName, veinServer
+            createChannel channelName, pulsarServer
 
           ], (err, data) ->
             console.log "redis error in newChat: #{err}" if err

@@ -49,7 +49,7 @@ face = (decorators) ->
           creationDate: chat.creationDate.get
         }, (err, chat) ->
           chat.id = id
-          chat.creationDate = new Date parseInt creationDate
+          chat.creationDate = new Date parseInt chat.creationDate
           cb err, chat
 
       return chat

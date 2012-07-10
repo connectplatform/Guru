@@ -18,7 +18,6 @@ boiler 'Model - Operator Chat', ->
       OperatorChat.getOperatorsByChat 'chat2'
 
     ], (err, data) ->
-      console.log 'got here'
       [_..., opChats, chatOps] = data
       console.log "err: #{err}" if err?
       false.should.eql err?

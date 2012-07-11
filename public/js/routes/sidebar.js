@@ -3,17 +3,22 @@
 
   define(["app/server", "app/notify", "app/pulsar", 'templates/badge'], function(server, notify, pulsar, badge) {
     return function(args, templ) {
-      var updates;
+      var updateUnanswered, updates;
       $('#sidebar').html(templ());
       updates = pulsar.channel('notify:operators');
-      return updates.on('unansweredCount', function(num) {
+      updateUnanswered = function(num) {
         var content;
-        console.log("" + num + " unanswered chats.");
         content = num > 0 ? badge({
           num: num
         }) : '';
-        return $("#notifyUnanswered").html(content);
+        return $(".notifyUnanswered").html(content);
+      };
+      server.ready(function() {
+        return server.getChatStats(function(err, stats) {
+          return updateUnanswered(stats.unanswered.length);
+        });
       });
+      return updates.on('unansweredCount', updateUnanswered);
     };
   });
 

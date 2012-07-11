@@ -1,13 +1,14 @@
+async = require 'async'
+sendChatsFromIdList = require '../sendChatsFromIdList'
+redgoose = require 'redgoose'
+{OperatorChat, Chat} = redgoose.models
+
 module.exports = (res) ->
-  redgoose = require 'redgoose'
-  async = require 'async'
-  sendChatsFromIdList = require '../sendChatsFromIdList'
-  {OperatorChat, Chat} = redgoose.models
 
   operatorId = unescape(res.cookie 'session')
   OperatorChat.getChatsByOperator operatorId, (err, rawData)->
     res.send err, null if err
-      
+
     doLookup = (obj) ->
       (cb) ->
         Chat.get(obj.chat).dump (err, data)->

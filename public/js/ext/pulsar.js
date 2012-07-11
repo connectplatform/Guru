@@ -2560,5 +2560,5 @@ exports.qs = function (obj) {
 
 }).call(this);
 
-});Pulsar = require('Pulsar');
+});if ("undefined" != typeof module) { module.exports = require('Pulsar'); } else { Pulsar = require('Pulsar'); }
 })();

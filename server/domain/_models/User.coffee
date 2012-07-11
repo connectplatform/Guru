@@ -3,9 +3,13 @@ db = require 'mongoose'
 
 user = new Schema
 
-  firstName: String
+  firstName: 
+    type: String
+    default: ""
 
-  lastName: String
+  lastName:
+    type: String
+    default: ""
 
   email:
     type: String
@@ -21,8 +25,12 @@ user = new Schema
     type: String
     required: true
 
-  websites: [String]
+  websites:
+    type: [String]
+    default: []
 
-  departments: [String]
+  departments:
+    type: [String]
+    default: []
 
 module.exports = user

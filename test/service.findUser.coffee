@@ -3,7 +3,7 @@ boiler = require './util/boilerplate'
 
 boiler 'Service - Find User', ->
 
-  it 'should return data on queried users', (done) ->
+  it 'should let you get all users', (done) ->
     #Get authed
     @client.ready =>
       loginData =
@@ -34,3 +34,26 @@ boiler 'Service - Find User', ->
           false.should.eql users[1].password?
 
           done()
+
+  it 'should let you find a user by their id', (done) ->
+    #Get authed
+    @client.ready =>
+      loginData =
+        email: 'god@torchlightsoftware.com'
+        password: 'foobar'
+      @client.login loginData, =>
+
+        #do test
+        @client.findUser {}, (err, users) =>
+          targetUser = users[0]
+
+          @client.findUser {_id: targetUser.id}, (err, users) ->
+            users[0].firstName.should.eql targetUser.firstName
+            users[0].lastName.should.eql targetUser.lastName
+            users[0].email.should.eql targetUser.email
+            users[0].role.should.eql targetUser.role
+            users[0].websites.should.eql targetUser.websites
+            users[0].departments.should.eql targetUser.departments
+            users[0].id.should.eql targetUser.id
+
+            done()

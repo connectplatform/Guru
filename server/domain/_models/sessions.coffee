@@ -1,5 +1,6 @@
 async = require 'async'
 rand = require '../../../lib/rand'
+pulsar = '../../pulsar'
 
 face = (decorators) ->
   {session: {role, chatName, allSessions}} = decorators
@@ -8,6 +9,8 @@ face = (decorators) ->
     create:  (fields, cb) ->
       id = rand()
       session = @get id
+
+      #TODO: create pulsar channel
 
       async.parallel [
         session.role.set fields.role

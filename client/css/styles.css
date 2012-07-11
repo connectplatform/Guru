@@ -70,3 +70,12 @@ blockquote {
 .operatorChat {
   height: 500px;
 }
+
+.nav-list {
+  padding: 0px;
+}
+
+.nav-list li a {
+  margin-right: -10px;
+  display: inline-block;
+}

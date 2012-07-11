@@ -1,4 +1,4 @@
-pulsar = require 'pulsar'
+pulsar = require '../../pulsar'
 async = require 'async'
 rand = require '../../../lib/rand'
 {inspect} = require 'util'
@@ -42,16 +42,19 @@ face = (decorators) ->
       visitorPresent chat
       creationDate chat
       unanswered chat, ({before, after}) ->
-        before ['set'], (context, args, next) ->
-          switch args
-            when 'true'
-              faceValue.unansweredChats.add id
-            when 'false'
-              faceValue.unansweredChats.srem id
 
-          next null, args
+        # whenever a chat's unanswered status is set, add/remove it from the unanswered chats list
+        before ['set'], (context, [val], next) ->
+          switch val
+            when 'true'
+              faceValue.unansweredChats.add id, ->
+            when 'false'
+              faceValue.unansweredChats.srem id, ->
+
+          next null, [val]
 
       history chat, ({before, after}) ->
+
         # JSON serialize/deserialize
         before ['rpush'], (context, args, next) ->
           next null, args.map JSON.stringify
@@ -76,12 +79,14 @@ face = (decorators) ->
   allChats faceValue
 
   unansweredChats faceValue, ({before, after}) ->
+
+    # whenever an unansweredChat is added/removed, notify the operators
     after ['add'], (context, args, next) ->
       faceValue.unansweredChats.count (err, chatCount) ->
 
-        # notify operators
         notify = pulsar.channel 'notify:operators'
         notify.emit 'unansweredCount', chatCount
+      next null, args
 
   return faceValue
 

@@ -33,6 +33,7 @@ module.exports = (cb) ->
   vein.use (req, res, next) -> #TODO: refactor this
     if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
       next()
+
     else
       userSession = unescape res.cookie 'session'
       {Session} = redgoose.models

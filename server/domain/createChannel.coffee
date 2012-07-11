@@ -1,12 +1,12 @@
 pulsar = require '../pulsar'
 redgoose = require 'redgoose'
 
-module.exports = (serviceName) ->
+module.exports = (channelName) ->
 
   # create a channel
-  channel = pulsar.channel serviceName
+  channel = pulsar.channel channelName
 
-  # when a message is received, add it to the history
+  # when a message is received, add it to the history and push to listeners
   channel.on 'clientMessage', (contents) ->
     {Session, Chat} = redgoose.models
 
@@ -18,7 +18,7 @@ module.exports = (serviceName) ->
         username: username
         timestamp: Date.now()
 
-      Chat.get(serviceName).history.rpush data, (err) ->
+      Chat.get(channelName).history.rpush data, (err) ->
         console.log "error caching message: #{err}" if err
 
       channel.emit 'serverMessage', data

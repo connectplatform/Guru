@@ -12,6 +12,6 @@ module.exports = (res, fields) ->
     username = if user.lastName? then "#{user.firstName} #{user.lastName}" else "#{user.firstName}"
 
     {Session} = redgoose.models
-    Session.create {role: 'operator', chatName: username}, (err, session)->
+    Session.create {role: 'operator', chatName: username}, (err, session) ->
       res.cookie 'session', session.id
       res.send null, user

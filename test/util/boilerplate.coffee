@@ -3,8 +3,8 @@ flushCache = require '../../lib/flushCache'
 seedMongo = require './seedMongo'
 
 # pick a port that server and client will run on
-testPort = Math.floor(Math.random() * 1000) + 8000
-pulsarPort = Math.floor(Math.random() * 1000) + 8000
+testPort = process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
+pulsarPort = process.env.GURU_PULSAR_PORT = Math.floor(Math.random() * 1000) + 8000
 
 # initialize vein client
 http = require 'http'
@@ -15,7 +15,7 @@ Pulsar = require 'pulsar'
 initApp = (cb) ->
   return cb() if @app?
   @app = require '../../server/app'
-  @app testPort, pulsarPort, cb
+  @app cb
 
 module.exports = (testName, tests) ->
 

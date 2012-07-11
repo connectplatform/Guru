@@ -1,16 +1,15 @@
 connect = require "connect"
 Vein = require "vein"
-Pulsar = require "pulsar"
 mongo = require "./mongo"
+pulsar = require "./pulsar"
 config = require './config'
 flushCache = require '../lib/flushCache'
 http = require 'http'
 
 redgoose = require 'redgoose'
 
-module.exports = (port, pulsarPort, cb) ->
-  port ?= config.app.port
-  pulsarPort ?= config.app.pulsarPort
+module.exports = (cb) ->
+  port = (process.env.GURU_PORT or config.app.port)
 
   # Web server
   app = connect()
@@ -29,10 +28,6 @@ module.exports = (port, pulsarPort, cb) ->
     './domain/_models/operatorChat'
   ]
 
-  # Pulsar
-  pulsar = new Pulsar http.createServer().listen pulsarPort
-  console.log "pulsar is listening on port #{pulsarPort}"
-
   # Vein
   vein = new Vein server
   vein.use (req, res, next) -> #TODO: refactor this
@@ -48,16 +43,11 @@ module.exports = (port, pulsarPort, cb) ->
           res.cookie 'session', null
           next "#{req.service} not authorized"
 
-  #TODO: refactor me out
-  newChat = require './domain/newChat'
-  newChat vein, pulsar
-  getExistingChatChannel = require './domain/getExistingChatChannel'
-  getExistingChatChannel vein, pulsar
-
   vein.addFolder __dirname + '/domain/_services/'
 
   #flush cache
   flushCache ->
     console.log "Server started on #{port}"
+    console.log "Pulsar started on #{config.app.pulsarPort}"
     console.log "Using database #{config.mongo.host}"
     cb()

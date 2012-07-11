@@ -1,6 +1,7 @@
+pulsar = require '../pulsar'
 redgoose = require 'redgoose'
 
-module.exports = (serviceName, pulsar) ->
+module.exports = (serviceName) ->
 
   # create a channel
   channel = pulsar.channel serviceName

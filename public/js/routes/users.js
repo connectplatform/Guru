@@ -3,11 +3,31 @@
 
   define(["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util"], function(server, notify, sidebar, sbTemp, util) {
     return function(args, templ) {
+      var getFormFields, setFormFields;
       if (!server.cookie('session')) {
         return window.location.hash = '/';
       }
+      getFormFields = function() {
+        return {
+          firstName: $('#user-form #firstName').val(),
+          lastName: $('#user-form #lastName').val(),
+          email: $('#user-form #email').val(),
+          role: $('#user-form #role').val(),
+          websites: $('#user-form #websites').val(),
+          departments: $('#user-form #departments').val()
+        };
+      };
+      setFormFields = function(currentUser) {
+        $('#user-form #firstName').val(currentUser.firstName);
+        $('#user-form #lastName').val(currentUser.lastName);
+        $('#user-form #email').val(currentUser.email);
+        $('#user-form #role').val(currentUser.role);
+        $('#user-form #websites').val(currentUser.websites);
+        return $('#user-form #departments').val(currentUser.departments);
+      };
       return server.ready(function() {
         return server.findUser({}, function(err, users) {
+          var getUserById;
           if (err) {
             console.log("err retrieving users: " + err);
           }
@@ -15,24 +35,62 @@
           $('#content').html(templ({
             users: users
           }));
-          return $('#addUser').click(function(evt) {
+          getUserById = function(id) {
+            var user, _i, _len;
+            for (_i = 0, _len = users.length; _i < _len; _i++) {
+              user = users[_i];
+              if (user.id === id) {
+                return user;
+              }
+            }
+          };
+          $('#addUser').click(function(evt) {
             evt.preventDefault();
             $('#user-modal').modal();
-            return $('#user-modal').submit(function() {
+            return $('#user-modal').submit(function(evt) {
               var fields;
-              fields = {
-                firstName: $('#user-form #firstName').val(),
-                lastName: $('#user-form #lastName').val(),
-                email: $('#user-form #email').val(),
-                role: $('#user-form #role').val(),
-                websites: $('#user-form #websites').val(),
-                departments: $('#user-form #departments').val()
-              };
+              evt.preventDefault();
+              fields = getFormFields();
               return server.saveUser(fields, function(err, data) {
                 if (err != null) {
                   return notify.error("Error saving user: " + err);
                 }
-                return $('#user-modal').hide();
+                return $('#user-modal').modal('hide');
+              });
+            });
+          });
+          $('.editUser').click(function(evt) {
+            var currentUser;
+            evt.preventDefault();
+            $('#user-modal').modal();
+            currentUser = getUserById($(this).attr('userId'));
+            setFormFields(currentUser);
+            return $('#user-modal').submit(function(evt) {
+              var fields;
+              evt.preventDefault();
+              fields = getFormFields();
+              fields.id = currentUser.id;
+              return server.saveUser(fields, function(err, data) {
+                if (err != null) {
+                  return notify.error("Error saving user: " + err);
+                }
+                return $('#user-modal').modal('hide');
+              });
+            });
+          });
+          return $('.deleteUser').click(function(evt) {
+            var currentUser;
+            evt.preventDefault();
+            currentUser = getUserById($(this).attr('userId'));
+            $('#delete-modal').modal();
+            $('#delete-modal #delete-prompt').val("Are you sure you want to delete user " + currentUser.email + "?");
+            return $('#user-modal').submit(function(evt) {
+              evt.preventDefault();
+              return server.deleteUser(currentUser.id, function(err) {
+                if (err != null) {
+                  return notify.error("Error deleting user: " + err);
+                }
+                return $('#user-modal').modal('hide');
               });
             });
           });

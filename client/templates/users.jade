@@ -34,16 +34,32 @@
 
   form#user-form
     .modal-body
-      input#name.small-modal-box(type="text", value="")
+      input#firstName.small-modal-box(type="text", value="", placeholder="First Name")
       .clear
-      input#email.small-modal-box(type="text", value="")
+      input#lastName.small-modal-box(type="text", value="", placeholder="Last Name")
+      .clear
+      input#email.small-modal-box(type="text", value="", placeholder="email")
       .clear
       //TODO: make role choose from a list
-      input#role.small-modal-box(type="text", value="")
+      input#role.small-modal-box(type="text", value="Operator")
       .clear
-      input#department.small-modal-box(type="text", value="")
+      //TODO need to let you add these as a comma separated list, or something
+      input#websites.small-modal-box(type="text", value="", placeholder="Websites")
+      .clear
+      input#departments.small-modal-box(type="text", value="", placeholder="Websites")
       .clear
 
     .modal-footer
       button.btn.btn-primary(type="submit") Save
       button#user-cancel-button.btn Cancel
+
+#delete-modal.modal.fade.small-modal
+  .modal-header
+    h3 Delete User
+    .modal-body
+      .delete-prompt
+
+    .modal-footer
+      button.btn(type="submit") Delete
+      button#user-cancel-button.btn.btn-primary Cancel
+

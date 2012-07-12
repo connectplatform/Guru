@@ -13,53 +13,8 @@
       th Departments
       th Actions
 
-    tbody
+    tbody#userTableBody
       each user in users
-        tr
-          td= user.firstName
-          td= user.lastName
-          td= user.email
-          td= user.role
-          td= user.websites
-          td= user.departments
+        include userRow
 
-          th
-            a.editUser(userId="#{user.id}") Edit
-            &nbsp;|&nbsp;
-            a.deleteUser(userId="#{user.id}") Delete
-
-#user-modal.modal.fade.small-modal
-  .modal-header
-    h3 User Information
-
-  form#user-form
-    .modal-body
-      input#firstName.small-modal-box(type="text", value="", placeholder="First Name")
-      .clear
-      input#lastName.small-modal-box(type="text", value="", placeholder="Last Name")
-      .clear
-      input#email.small-modal-box(type="text", value="", placeholder="email")
-      .clear
-      //TODO: make role choose from a list
-      input#role.small-modal-box(type="text", value="Operator")
-      .clear
-      //TODO need to let you add these as a comma separated list, or something
-      input#websites.small-modal-box(type="text", value="", placeholder="Websites")
-      .clear
-      input#departments.small-modal-box(type="text", value="", placeholder="Websites")
-      .clear
-
-    .modal-footer
-      button.btn.btn-primary(type="submit") Save
-      button#user-cancel-button.btn Cancel
-
-#delete-modal.modal.fade.small-modal
-  .modal-header
-    h3 Delete User
-    .modal-body
-      .delete-prompt
-
-    .modal-footer
-      button.btn(type="submit") Delete
-      button#user-cancel-button.btn.btn-primary Cancel
-
+#modalBox

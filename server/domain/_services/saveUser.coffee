@@ -18,4 +18,10 @@ module.exports = (res, fields) ->
     user[key] = value for key, value of fields when key isnt 'id'
     user.save (err) ->
       console.log "error saving user model: #{err}" if err?
-      res.send err, user['_id']
+
+      filterUser = (user) ->
+        newUser = {id: user['_id']}
+        newUser[key] = value for key, value of user._doc when key isnt 'password' and key isnt '_id'
+        newUser
+
+      res.send err, filterUser user

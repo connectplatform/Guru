@@ -1,0 +1,12 @@
+tr.userRow(userId="#{user.id}")
+  td= user.firstName
+  td= user.lastName
+  td= user.email
+  td= user.role
+  td= user.websites
+  td= user.departments
+
+  th
+    a.editUser(userId="#{user.id}") Edit
+    &nbsp;|&nbsp;
+    a.deleteUser(userId="#{user.id}") Delete

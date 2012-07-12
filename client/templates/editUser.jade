@@ -1,0 +1,24 @@
+#editUser.modal.fade.small-modal
+  .modal-header
+    h3 User Information
+
+  form
+    .modal-body
+      input.firstName.small-modal-box(type="text", value="#{user.firstName}", placeholder="First Name")
+      .clear
+      input.lastName.small-modal-box(type="text", value="#{user.lastName}", placeholder="Last Name")
+      .clear
+      input.email.small-modal-box(type="text", value="#{user.email}", placeholder="email")
+      .clear
+      //TODO: make role choose from a list
+      input.role.small-modal-box(type="text", value="#{user.role}", placeholder="role")
+      .clear
+      //TODO need to let you add these as a comma separated list, or something
+      input.websites.small-modal-box(type="text", value="#{user.websites}", placeholder="Websites")
+      .clear
+      input.departments.small-modal-box(type="text", value="#{user.departments}", placeholder="Websites")
+      .clear
+
+    .modal-footer
+      button.saveButton.btn.btn-primary() Save
+      button.cancelButton.btn Cancel

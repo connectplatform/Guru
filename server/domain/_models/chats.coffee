@@ -68,6 +68,7 @@ face = (decorators) ->
           visitorPresent: chat.visitorPresent.get
           history: chat.history.all
           creationDate: chat.creationDate.get
+          unanswered: chat.unanswered.get
 
         }, (err, chat) ->
           chat.id = id

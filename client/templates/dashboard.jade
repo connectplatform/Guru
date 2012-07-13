@@ -23,6 +23,9 @@
           td= chat.visitor.website
           td= chat.visitor.department
           th
-            a.joinChat(chatId="#{chat.id}") Join
+            if chat.unanswered == "true"
+              a.acceptChat(chatId="#{chat.id}") Accept
+            else
+              a.joinChat(chatId="#{chat.id}") Join
             &nbsp;|&nbsp;
             a.watchChat(chatId="#{chat.id}", watch="true") Watch

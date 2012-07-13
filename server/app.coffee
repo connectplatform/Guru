@@ -38,7 +38,8 @@ module.exports = (cb) ->
       userSession = unescape res.cookie 'session'
       {Session} = redgoose.models
       Session.get(userSession).role.get (err, role) ->
-        if role is 'operator'
+        if (role is 'Operator') or (role is 'Admin')
+          console.log 'error:', err if err?
           next()
         else
           res.cookie 'session', null

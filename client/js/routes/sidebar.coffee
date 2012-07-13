@@ -12,6 +12,7 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
     # init badge number
     server.ready ->
       server.getChatStats (err, stats) ->
+        console.log 'got an err:', err
         updateUnanswered stats.unanswered.length
 
     # update badge number on change

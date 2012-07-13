@@ -29,6 +29,11 @@ module.exports = (testName, tests) ->
 
     beforeEach (done) ->
       @client = @getClient()
+      @getAuthed = (cb) =>
+        loginData =
+          email: 'god@torchlightsoftware.com'
+          password: 'foobar'
+        @client.login loginData, cb
       @client.ready (services) ->
         flushCache ->
           seedMongo done

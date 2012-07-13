@@ -18,20 +18,14 @@ boiler 'Service - Get My Chats', ->
           client2.newChat data, (err, data) =>
             client2.disconnect()
 
-            loginData =
-              email: 'god@torchlightsoftware.com'
-              password: 'foobar'
-            client3 = @getClient()
-            client3.ready ->
-              client3.login loginData, ->
-                client3.joinChat channel, (err, data) ->
+            @getAuthed =>
+              @client.joinChat channel, (err, data) =>
 
-                  client3.getMyChats (err, data) ->
-                    client3.disconnect()
-                    false.should.eql err?
-                    data.length.should.eql 1
-                    chatData = data[0]
-                    chatData.visitor.username.should.eql 'joinMe'
-                    chatData.visitorPresent.should.eql 'true'
-                    new Date chatData.creationDate #just need this to not cause an error
-                    done()
+                @client.getMyChats (err, data) =>
+                  false.should.eql err?
+                  data.length.should.eql 1
+                  chatData = data[0]
+                  chatData.visitor.username.should.eql 'joinMe'
+                  chatData.visitorPresent.should.eql 'true'
+                  new Date chatData.creationDate #just need this to not cause an error
+                  done()

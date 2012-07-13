@@ -10,8 +10,12 @@
       .clear
       input.email.small-modal-box(type="text", value="#{user.email}", placeholder="email")
       .clear
-      //TODO: make role choose from a list
-      input.role.small-modal-box(type="text", value="#{user.role}", placeholder="role")
+      select.role.small-modal-box(name="role")
+        each role in user.allowedRoles
+          if role == user.role
+            option(value="#{role}", selected="selected") #{role}
+          else
+            option(value="#{role}") #{role}
       .clear
       //TODO need to let you add these as a comma separated list, or something
       input.websites.small-modal-box(type="text", value="#{user.websites}", placeholder="Websites")

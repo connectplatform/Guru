@@ -32,16 +32,21 @@ module.exports = (cb) ->
   vein = new Vein server
   vein.use (req, res, next) -> #TODO: refactor this
     if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
+      console.log 'no auth needed'
       next()
 
     else
       userSession = unescape res.cookie 'session'
       {Session} = redgoose.models
       Session.get(userSession).role.get (err, role) ->
-        if role is 'operator'
+        if (role is 'Operator') or (role is 'Admin')
+          console.log 'error:', err if err?
+          console.log "#{role} user authorized"
           next()
         else
           res.cookie 'session', null
+          console.log 'role:', role
+          console.log 'session:', res.cookie 'session'
           next "#{req.service} not authorized"
 
   vein.addFolder __dirname + '/domain/_services/'

@@ -11,6 +11,7 @@ boiler 'Model - Operator Chat', ->
     async.series [
 
       # add and get chat/operator pairs
+      # the arguments would be IDs in a real case
       OperatorChat.add 'operator', 'chat1', 'true'
       OperatorChat.add 'operator', 'chat2', 'false'
       OperatorChat.add 'operator2', 'chat2', 'true'

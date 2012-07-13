@@ -12,7 +12,7 @@ module.exports = (cb)->
     operators = [
       email: 'god@torchlightsoftware.com'
       password: 'foobar'
-      role: 'admin'
+      role: 'Admin'
       firstName: 'God'
     ,
       email: 'guru1@torchlightsoftware.com'

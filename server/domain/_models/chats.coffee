@@ -81,7 +81,7 @@ face = (decorators) ->
   unansweredChats faceValue, ({before, after}) ->
 
     # whenever an unansweredChat is added/removed, notify the operators
-    after ['add'], (context, args, next) ->
+    after ['add', 'srem'], (context, args, next) ->
       faceValue.unansweredChats.count (err, chatCount) ->
 
         notify = pulsar.channel 'notify:operators'

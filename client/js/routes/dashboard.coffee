@@ -24,6 +24,17 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
               window.location.hash = '/operatorChat' if data
             false
 
+          $('.acceptChat').click (evt) ->
+            chatId = $(this).attr 'chatId'
+            server.acceptChat chatId, (err, result) ->
+              console.log "Error watching chat: #{err}" if err
+              if result.status is 'OK'
+                window.location.hash = '/operatorChat'
+              else
+                notify.alert "Another operator already accepted this chat"
+                updateDashboard()
+            false
+
           util.autotimer '.counter'
 
           $(window).bind 'hashchange', ->

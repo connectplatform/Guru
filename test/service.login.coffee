@@ -1,6 +1,5 @@
 require 'should'
 boiler = require './util/boilerplate'
-seed = require './util/seedMongo'
 redgoose = require 'redgoose'
 
 boiler 'Service - Login', ->

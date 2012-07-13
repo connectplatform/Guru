@@ -1,6 +1,5 @@
 require 'should'
 boiler = require './util/boilerplate'
-seed = require './util/seedMongo'
 
 boiler 'Service - Get Chat History', ->
 

@@ -1,6 +1,6 @@
 db = require '../../server/mongo'
 flushCache = require '../../lib/flushCache'
-seedMongo = require './seedMongo'
+seedMongo = require '../../server/seedMongo'
 
 # pick a port that server and client will run on
 testPort = process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000

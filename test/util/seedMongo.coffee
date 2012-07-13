@@ -2,6 +2,7 @@ async = require 'async'
 {digest_s} = require 'md5'
 mongo = require '../../server/mongo'
 User = mongo.model 'User'
+Role = mongo.model 'Role'
 
 module.exports = (cb)->
   mongo.wipe ->
@@ -22,4 +23,5 @@ module.exports = (cb)->
       lastName: 'Guru'
     ]
 
-    async.forEach operators, createUser, cb
+    async.forEach operators, createUser, ->
+      Role.create {name: "Operator"}, cb

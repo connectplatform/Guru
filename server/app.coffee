@@ -31,19 +31,20 @@ module.exports = (cb) ->
   # Vein
   vein = new Vein server
   vein.use (req, res, next) -> #TODO: refactor this
-    if req.service in ['login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
+    if req.service in ['getMyRole', 'login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
       next()
 
     else
       userSession = unescape res.cookie 'session'
       {Session} = redgoose.models
       Session.get(userSession).role.get (err, role) ->
+        console.log 'Auth middleware error:', err if err?
         if (role is 'Operator') or (role is 'Admin')
-          console.log 'error:', err if err?
           next()
         else
           res.cookie 'session', null
-          next "#{req.service} not authorized"
+          res.send "#{req.service} not authorized"
+          next()
 
   vein.addFolder __dirname + '/domain/_services/'
 

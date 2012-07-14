@@ -37,11 +37,13 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
 
           util.autotimer '.counter'
 
+          updates = pulsar.channel 'notify:operators'
+          updates.on 'unansweredCount', (num) ->
+            updateDashboard()
+
           $(window).bind 'hashchange', ->
             util.cleartimers()
+            updates.removeAllListeners 'unansweredCount'
 
       server.ready updateDashboard
 
-      updates = pulsar.channel 'notify:operators'
-      updates.on 'unansweredCount', (num) ->
-        updateDashboard()

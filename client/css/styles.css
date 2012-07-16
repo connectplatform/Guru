@@ -72,10 +72,14 @@ blockquote {
 }
 
 .nav-list {
-  padding: 0px;
+  padding: 0;
 }
 
 .nav-list li a {
   margin-right: -10px;
   display: inline-block;
+}
+
+.maxHeight {
+  height: 100%;
 }

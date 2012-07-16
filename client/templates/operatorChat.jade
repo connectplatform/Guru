@@ -5,15 +5,18 @@
     for chat in chats
       li: a(href="##{chat.renderedId}", data-toggle="tab") #{chat.visitor.username}
 
-  .tab-content.operatorChat
-
+  .tab-content
     for chat in chats
-      .tab-pane.chatWindow(id="#{chat.renderedId}", chatId="#{chat.id}")
-        .chat-box.well.chat-display-box
-          for msg in chat.history
-            p #{msg.username}: #{msg.message}
+      .tab-pane.row.operatorChat(id="#{chat.renderedId}")
+        .chatWindow.span8.row(chatId="#{chat.id}")
+          .chat-box.well.chat-display-box.span12
+            for msg in chat.history
+              p #{msg.username}: #{msg.message}
 
-        form.message-form.form-inline
-          input(type="text", value="").message
+          form.message-form.form-inline.offset1
+            input(type="text", value="").message
 
-          button.btn.btn-primary(type="submit").submit-button Send
+            button.btn.btn-primary(type="submit").submit-button Send
+
+        .visitorInfo.span4(chatId="#{chat.id}")
+          | Visitor: #{chat.visitor.username}

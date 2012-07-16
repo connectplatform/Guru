@@ -37,7 +37,10 @@
             msg = history[_i];
             appendChat(null, msg);
           }
-          return channel.on('serverMessage', appendChat);
+          channel.on('serverMessage', appendChat);
+          return $(window).bind('hashchange', function() {
+            return channel.removeAllListeners('serverMessage');
+          });
         });
       });
     };

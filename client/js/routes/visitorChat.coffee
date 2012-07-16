@@ -26,3 +26,6 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
         appendChat null, msg for msg in history
 
         channel.on 'serverMessage', appendChat
+
+        $(window).bind 'hashchange', ->
+          channel.removeAllListeners 'serverMessage'

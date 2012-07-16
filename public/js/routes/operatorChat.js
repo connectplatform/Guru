@@ -9,7 +9,7 @@
       return server.ready(function(services) {
         console.log("server is ready-- services availible: " + services);
         return server.getMyChats(function(err, chats) {
-          var appendChat, channel, chat, _i, _j, _k, _len, _len1, _len2, _results;
+          var channel, chat, createChatAppender, createSubmitHandler, _i, _j, _k, _len, _len1, _len2, _results;
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = chat.id.replace(/:/g, '-');
@@ -27,36 +27,40 @@
             return $(this).tab('show');
           });
           $('#chatTabs a:first').tab('show');
+          createSubmitHandler = function(renderedId, channel) {
+            return function(evt) {
+              var message;
+              evt.preventDefault();
+              console.log("submitting for id: " + renderedId + ", on channel " + channel.name);
+              message = $("#" + renderedId + " .message-form .message").val();
+              if (message !== "") {
+                channel.emit('clientMessage', {
+                  message: message,
+                  session: server.cookie('session')
+                });
+                $("#" + renderedId + " .message-form .message").val("");
+                return $("#" + renderedId + " .chat-display-box").scrollTop($("#" + renderedId + " .chat-display-box").prop("scrollHeight"));
+              }
+            };
+          };
+          createChatAppender = function(renderedId) {
+            return function(message) {
+              return $("#" + renderedId + " .chat-display-box").append(chatMessage(message));
+            };
+          };
           _results = [];
           for (_k = 0, _len2 = chats.length; _k < _len2; _k++) {
             chat = chats[_k];
             channel = pulsar.channel(chat.id);
-            console.log("attatching methods to #" + chat.renderedId);
             if (chat.isWatching) {
-              _results.push($("#" + chat.renderedId + " .message-form").hide());
+              $("#" + chat.renderedId + " .message-form").hide();
             } else {
-              $("#" + chat.renderedId + " .message-form").submit(function(evt) {
-                var message;
-                evt.preventDefault();
-                message = $("#" + chat.renderedId + " .message-form .message").val();
-                if (message !== "") {
-                  channel.emit('clientMessage', {
-                    message: message,
-                    session: server.cookie('session')
-                  });
-                  $("#" + chat.renderedId + " .message-form .message").val("");
-                  $("#" + chat.renderedId + " .chat-display-box").scrollTop($("#" + chat.renderedId + " .chat-display-box").prop("scrollHeight"));
-                }
-                return false;
-              });
-              appendChat = function(data) {
-                return $("#" + chat.renderedId + " .chat-display-box").append(chatMessage(data));
-              };
-              channel.on('serverMessage', appendChat);
-              _results.push($(window).bind('hashchange', function() {
-                return channel.removeAllListeners('serverMessage');
-              }));
+              $("#" + chat.renderedId + " .message-form").submit(createSubmitHandler(chat.renderedId, channel));
             }
+            channel.on('serverMessage', createChatAppender(chat.renderedId));
+            _results.push($(window).bind('hashchange', function() {
+              return channel.removeAllListeners('serverMessage');
+            }));
           }
           return _results;
         });

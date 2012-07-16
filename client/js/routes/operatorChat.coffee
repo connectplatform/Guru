@@ -21,26 +21,32 @@ define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/s
 
           $('#chatTabs a:first').tab 'show'
 
+          createSubmitHandler = (renderedId, channel) ->
+            (evt) ->
+              evt.preventDefault()
+              console.log "submitting for id: #{renderedId}, on channel #{channel.name}"
+              message = $("##{renderedId} .message-form .message").val()
+              unless message is ""
+                channel.emit 'clientMessage', {message: message, session: server.cookie('session')}
+
+                $("##{renderedId} .message-form .message").val("")
+                $("##{renderedId} .chat-display-box").scrollTop($("##{renderedId} .chat-display-box").prop("scrollHeight"))
+
+          createChatAppender = (renderedId) ->
+            (message) ->
+              $("##{renderedId} .chat-display-box").append chatMessage message
+
           for chat in chats
             channel = pulsar.channel chat.id
-            console.log "attatching methods to ##{chat.renderedId}"
+
+            #Only render and wire up submit button if we're not watching
             if chat.isWatching
               $("##{chat.renderedId} .message-form").hide()
             else
-              $("##{chat.renderedId} .message-form").submit (evt)->
-                evt.preventDefault()
-                message = $("##{chat.renderedId} .message-form .message").val()
-                unless message is ""
-                  channel.emit 'clientMessage', {message: message, session: server.cookie('session')}
+              $("##{chat.renderedId} .message-form").submit createSubmitHandler chat.renderedId, channel
 
-                  $("##{chat.renderedId} .message-form .message").val("")
-                  $("##{chat.renderedId} .chat-display-box").scrollTop($("##{chat.renderedId} .chat-display-box").prop("scrollHeight"))
-                false
+            #display incoming messages
+            channel.on 'serverMessage', createChatAppender chat.renderedId
 
-              appendChat = (data) ->
-                $("##{chat.renderedId} .chat-display-box").append chatMessage data
-
-              channel.on 'serverMessage', appendChat
-              
-              $(window).bind 'hashchange', ->
-                channel.removeAllListeners 'serverMessage'
+            $(window).bind 'hashchange', ->
+              channel.removeAllListeners 'serverMessage'

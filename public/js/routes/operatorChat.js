@@ -9,7 +9,7 @@
       return server.ready(function(services) {
         console.log("server is ready-- services availible: " + services);
         return server.getMyChats(function(err, chats) {
-          var appendChat, channel, chat, _i, _j, _k, _len, _len1, _len2;
+          var appendChat, channel, chat, _i, _j, _k, _len, _len1, _len2, _results;
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = chat.id.replace(/:/g, '-');
@@ -27,12 +27,13 @@
             return $(this).tab('show');
           });
           $('#chatTabs a:first').tab('show');
+          _results = [];
           for (_k = 0, _len2 = chats.length; _k < _len2; _k++) {
             chat = chats[_k];
             channel = pulsar.channel(chat.id);
             console.log("attatching methods to #" + chat.renderedId);
             if (chat.isWatching) {
-              $("#" + chat.renderedId + " .message-form").hide();
+              _results.push($("#" + chat.renderedId + " .message-form").hide());
             } else {
               $("#" + chat.renderedId + " .message-form").submit(function(evt) {
                 var message;
@@ -48,13 +49,16 @@
                 }
                 return false;
               });
+              appendChat = function(data) {
+                return $("#" + chat.renderedId + " .chat-display-box").append(chatMessage(data));
+              };
+              channel.on('serverMessage', appendChat);
+              _results.push($(window).bind('hashchange', function() {
+                return channel.removeAllListeners('serverMessage');
+              }));
             }
-            appendChat = function(data) {
-              return $("#" + chat.renderedId + " .chat-display-box").append(chatMessage(data));
-            };
-            channel.on('serverMessage', appendChat);
           }
-          return $(window).bind('hashchange', function() {});
+          return _results;
         });
       });
     };

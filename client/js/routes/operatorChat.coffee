@@ -37,10 +37,10 @@ define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/s
                   $("##{chat.renderedId} .chat-display-box").scrollTop($("##{chat.renderedId} .chat-display-box").prop("scrollHeight"))
                 false
 
-            appendChat = (data) ->
-              $("##{chat.renderedId} .chat-display-box").append chatMessage data
+              appendChat = (data) ->
+                $("##{chat.renderedId} .chat-display-box").append chatMessage data
 
-            channel.on 'serverMessage', appendChat
-
-          $(window).bind 'hashchange', ->
-            #TODO unbind pulsar services here if necessary
+              channel.on 'serverMessage', appendChat
+              
+              $(window).bind 'hashchange', ->
+                channel.removeAllListeners 'serverMessage'

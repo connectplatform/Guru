@@ -1,6 +1,14 @@
 db = require 'mongoose'
 {Schema} = db
 
+validateRole = (role, cb) ->
+  mongo = require '../../mongo'
+  {Role} = mongo.models
+  Role.find {}, (err, roles) ->
+    for validRole in roles
+      return cb true if role is validRole.name 
+    cb false
+
 user = new Schema
 
   firstName: 
@@ -24,6 +32,7 @@ user = new Schema
   role:
     type: String
     required: true
+    validate: [validateRole, "Invalid role"]
 
   websites:
     type: [String]

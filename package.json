@@ -12,7 +12,7 @@
     "redis": "*",
     "async": "*",
     "should": "*",
-    "connect": "*",
+    "connect": "2.3.4",
     "async": "*",
     "pulsar": "*",
     "vein": "*"

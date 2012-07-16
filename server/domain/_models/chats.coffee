@@ -87,6 +87,7 @@ face = (decorators) ->
 
         notify = pulsar.channel 'notify:operators'
         notify.emit 'unansweredCount', chatCount
+        console.log "sent unanswered count #{chatCount}"
       next null, args
 
   return faceValue

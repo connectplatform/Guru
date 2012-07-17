@@ -24,7 +24,13 @@
       createLeaveHandler: function(chatId) {
         return function(evt) {
           evt.preventDefault();
-          return console.log("leave clicked");
+          console.log("leave clicked");
+          return server.leaveChat(chatId, function(err) {
+            if (err != null) {
+              console.log("error leaving chat: " + err);
+            }
+            return window.location.hash = '/dashboard';
+          });
         };
       }
     };

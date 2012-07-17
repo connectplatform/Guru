@@ -9,8 +9,6 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
 
           chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
 
-          console.log chat.creationDate for chat in chats
-
           sidebar {}, sbTemp
 
           $('#content').html templ chats: chats
@@ -24,7 +22,6 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
           createSubmitHandler = (renderedId, channel) ->
             (evt) ->
               evt.preventDefault()
-              console.log "submitting for id: #{renderedId}, on channel #{channel.name}"
               message = $("##{renderedId} .message-form .message").val()
               unless message is ""
                 channel.emit 'clientMessage', {message: message, session: server.cookie('session')}

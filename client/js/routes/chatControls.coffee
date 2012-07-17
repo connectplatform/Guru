@@ -1,5 +1,4 @@
 define ["app/server"], (server) ->
-  #TODO
   createInviteHandler: (chatId) ->
     (evt) ->
       evt.preventDefault()
@@ -19,4 +18,7 @@ define ["app/server"], (server) ->
     (evt) ->
       evt.preventDefault()
       console.log "leave clicked"
-      #TODO 
+      server.leaveChat chatId, (err) ->
+        console.log "error leaving chat: #{err}" if err?
+        #TODO: find way to refresh tabs without redirecting to dashboard
+        window.location.hash = '/dashboard'

@@ -1,5 +1,5 @@
-define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/sidebar", "templates/chatMessage"],
-  (server, pulsar, notify, sidebar, sbTemp, chatMessage) ->
+define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/sidebar", "templates/sidebar", "templates/chatMessage"],
+  (server, pulsar, notify, controls, sidebar, sbTemp, chatMessage) ->
     (args, templ) ->
       window.location = '/' unless server.cookie 'session'
 
@@ -50,3 +50,9 @@ define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/s
 
             $(window).bind 'hashchange', ->
               channel.removeAllListeners 'serverMessage'
+
+            #wire up control buttons
+            $("##{chat.renderedId} .inviteButton").click controls.createInviteHandler chat.id
+            $("##{chat.renderedId} .transferButton").click controls.createTransferHandler chat.id
+            $("##{chat.renderedId} .kickButton").click controls.createKickHandler chat.id
+            $("##{chat.renderedId} .leaveButton").click controls.createLeaveHandler chat.id

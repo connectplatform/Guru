@@ -34,6 +34,18 @@ module.exports = (testName, tests) ->
           email: 'god@torchlightsoftware.com'
           password: 'foobar'
         @client.login loginData, cb
+
+      @newChat = (cb) =>
+        client = @getClient()
+        client.ready =>
+          data = {username: 'visitor'}
+          client.newChat data, (err, data) =>
+            throw new Error err if err
+            @channelName = data.channel
+            @channel = @getPulsar().channel @channelName
+            client.disconnect()
+            cb()
+
       @client.ready (services) ->
         flushCache ->
           seedMongo done

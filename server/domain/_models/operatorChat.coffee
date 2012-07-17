@@ -17,6 +17,10 @@ face = (decorators) ->
       call byOperator, operatorId, "set", chatId, isWatching, ->
         call byChat, chatId, "set", operatorId, isWatching, cb
 
+    remove: tandoor (operatorId, chatId, cb) ->
+      call byOperator, operatorId, "hdel", chatId, ->
+        call byChat, chatId, "hdel", operatorId, cb
+
     getChatsByOperator: tandoor (operatorId, cb)->
       call byOperator, operatorId, "getall", cb
 

@@ -3,18 +3,6 @@ boiler = require './util/boilerplate'
 
 boiler 'Service - Accept Chat', ->
 
-  beforeEach ->
-    data = {username: 'visitor'}
-    @newChat = (done) =>
-      client = @getClient()
-      client.ready =>
-        client.newChat data, (err, data) =>
-          throw new Error err if err
-          @channelName = data.channel
-          @channel = @getPulsar().channel @channelName
-          client.disconnect()
-          done()
-
   it 'should join the operator into the chat', (done) ->
     @newChat =>
       @getAuthed =>

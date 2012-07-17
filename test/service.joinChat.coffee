@@ -7,8 +7,7 @@ boiler 'Service - Join Chat', ->
   it 'should associate an operator with a chat', (done) ->
     visitorClient = @getClient()
     visitorClient.ready =>
-      visitorClient.newChat {username: 'foo'}, (err, data) =>
-        channel = visitorClient.cookie 'channel'
+      visitorClient.newChat {username: 'foo'}, (err, {channel}) =>
         visitorClient.disconnect()
 
         @getAuthed => 

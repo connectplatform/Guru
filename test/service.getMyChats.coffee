@@ -6,9 +6,7 @@ boiler 'Service - Get My Chats', ->
     client = @getClient()
     client.ready =>
       data = {username: 'joinMe'}
-      client.newChat data, (err, data) =>
-        channel = client.cookie 'channel'
-        client.cookie 'channel', null
+      client.newChat data, (err, {channel}) =>
         client.cookie 'session', null
         client.disconnect()
 

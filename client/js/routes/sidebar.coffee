@@ -6,7 +6,7 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
 
     # call to update badge number
     updateUnanswered = (num) ->
-      content = if num > 0 then badge {num: num} else ''
+      content = if num > 0 then badge {status: 'important', num: num} else ''
       $(".notifyUnanswered").html content
 
     # init badge number

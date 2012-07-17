@@ -10,10 +10,29 @@
       sidebar({}, sbTemp);
       updateDashboard = function() {
         return server.getActiveChats(function(err, chats) {
-          var updates;
+          var chat, statusLevels, updates, _i, _len, _ref;
           if (err != null) {
             console.log("err retrieving chats: " + err);
           }
+          statusLevels = {
+            waiting: 'important',
+            active: 'success',
+            vacant: 'default'
+          };
+          for (_i = 0, _len = chats.length; _i < _len; _i++) {
+            chat = chats[_i];
+            chat.statusLevel = statusLevels[chat.status];
+            chat.accept = ((_ref = chat.status) === 'invite' || _ref === 'transfer' || _ref === 'waiting');
+          }
+          console.log('operators:', (function() {
+            var _j, _len1, _results;
+            _results = [];
+            for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
+              chat = chats[_j];
+              _results.push(chat.operators);
+            }
+            return _results;
+          })());
           $('#content').html(templ({
             chats: chats
           }));

@@ -18,14 +18,14 @@
         tr
           td= chat.visitor.username
           td= chat.operators
-          td= chat.status
+          td: span(class="badge badge-#{chat.statusLevel}") #{chat.status}
           td.counter(started='#{chat.creationDate}')
           td= chat.visitor.website
           td= chat.visitor.department
           th
             .btn-group
               if chat.accept
-                btn.btn.btn-primary.acceptChat(chatId="#{chat.id}") Accept
+                btn.btn.btn-success.acceptChat(chatId="#{chat.id}") Accept
               else
                 btn.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
 

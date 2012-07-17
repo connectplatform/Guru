@@ -8,8 +8,22 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
         server.getActiveChats (err, chats) ->
           console.log "err retrieving chats: #{err}" if err?
 
+          # calculate some status fields
+          statusLevels =
+            waiting: 'important'
+            active: 'success'
+            vacant: 'default'
+
+          for chat in chats
+            chat.statusLevel = statusLevels[chat.status]
+            chat.accept = (chat.status in ['invite', 'transfer', 'waiting'])
+
+          console.log 'operators:', (chat.operators for chat in chats)
+
+          # render chats
           $('#content').html templ chats: chats
 
+          # wire up events
           $('.joinChat').click (evt) ->
             chatId = $(this).attr 'chatId'
             server.joinChat chatId, {}, (err, data) ->
@@ -35,6 +49,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
                 updateDashboard()
             false
 
+          # count elapsed time since chat began
           util.autotimer '.counter'
 
           updates = pulsar.channel 'notify:operators'

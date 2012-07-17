@@ -9,6 +9,7 @@
       updateUnanswered = function(num) {
         var content;
         content = num > 0 ? badge({
+          status: 'important',
           num: num
         }) : '';
         return $(".notifyUnanswered").html(content);

@@ -79,3 +79,7 @@ blockquote {
   margin-right: -10px;
   display: inline-block;
 }
+
+#dashboard .table .btn-group {
+  margin: -4px;
+}

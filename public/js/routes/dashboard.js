@@ -11,7 +11,7 @@
       updateDashboard = function() {
         return server.getActiveChats(function(err, chats) {
           var updates;
-          if (err) {
+          if (err != null) {
             console.log("err retrieving chats: " + err);
           }
           $('#content').html(templ({
@@ -21,7 +21,7 @@
             var chatId;
             chatId = $(this).attr('chatId');
             server.joinChat(chatId, {}, function(err, data) {
-              if (err) {
+              if (err != null) {
                 console.log("Error joining chat: " + err);
               }
               if (data) {
@@ -34,7 +34,7 @@
             var chatId;
             chatId = $(this).attr('chatId');
             server.watchChat(chatId, {}, function(err, data) {
-              if (err) {
+              if (err != null) {
                 console.log("Error watching chat: " + err);
               }
               if (data) {
@@ -47,8 +47,8 @@
             var chatId;
             chatId = $(this).attr('chatId');
             server.acceptChat(chatId, function(err, result) {
-              if (err) {
-                console.log("Error watching chat: " + err);
+              if (err != null) {
+                console.log("Error accepting chat: " + err);
               }
               if (result.status === 'OK') {
                 return window.location.hash = '/operatorChat';

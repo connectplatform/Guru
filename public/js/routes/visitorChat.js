@@ -25,7 +25,6 @@
           return false;
         });
         appendChat = function(data) {
-          console.log('message data:', data);
           return $(".chat-display-box").append(chatMessage(data));
         };
         return server.getChatHistory(server.cookie('channel'), function(err, history) {

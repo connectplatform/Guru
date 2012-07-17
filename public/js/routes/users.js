@@ -34,7 +34,7 @@
           return server.findUser({}, function(err, users) {
             var getUserById, user, wireUpRow, _i, _len, _results,
               _this = this;
-            if (err) {
+            if (err != null) {
               console.log("err retrieving users: " + err);
             }
             sidebar({}, sbTemp);

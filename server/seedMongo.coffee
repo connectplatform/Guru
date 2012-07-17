@@ -17,7 +17,7 @@ module.exports = (done)->
     operators = [
         email: 'god@torchlightsoftware.com'
         password: 'foobar'
-        role: 'Admin'
+        role: 'Administrator'
         firstName: 'God'
       ,
         email: 'guru1@torchlightsoftware.com'
@@ -39,8 +39,9 @@ module.exports = (done)->
     ]
 
     roles = [
-        {name: "Admin"}
+        {name: "Administrator"}
         {name: "Operator"}
+        {name: "Supervisor"}
     ]
 
     async.parallel [

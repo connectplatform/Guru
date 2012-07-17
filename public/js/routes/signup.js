@@ -22,7 +22,7 @@
             return notify.error("Error during signup: " + err);
           }
           $('#signup-modal').modal('hide');
-          return window.location.hash = '/home';
+          return window.location.hash = '/dashboard';
         });
         return false;
       });

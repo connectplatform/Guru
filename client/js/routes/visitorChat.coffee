@@ -18,7 +18,6 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
         false
 
       appendChat = (data)->
-        console.log 'message data:', data #removeme
         $(".chat-display-box").append chatMessage data
 
       server.getChatHistory server.cookie('channel'), (err, history)->

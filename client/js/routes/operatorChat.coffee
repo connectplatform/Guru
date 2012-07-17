@@ -8,9 +8,6 @@ define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/s
         server.getMyChats (err, chats) ->
 
           chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
-
-          console.log chat.creationDate for chat in chats
-
           sidebar {}, sbTemp
 
           $('#content').html templ chats: chats
@@ -22,8 +19,8 @@ define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/s
           $('#chatTabs a:first').tab 'show'
 
           for chat in chats
-            channel = pulsar.channel chat.id
-            console.log "attatching methods to ##{chat.renderedId}"
+            chatChannel = pulsar.channel chat.id
+            console.log "attaching methods to ##{chat.renderedId}"
             if chat.isWatching
               $("##{chat.renderedId} .message-form").hide()
             else
@@ -31,7 +28,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/s
                 evt.preventDefault()
                 message = $("##{chat.renderedId} .message-form .message").val()
                 unless message is ""
-                  channel.emit 'clientMessage', {message: message, session: server.cookie('session')}
+                  chatChannel.emit 'clientMessage', {message: message, session: server.cookie('session')}
 
                   $("##{chat.renderedId} .message-form .message").val("")
                   $("##{chat.renderedId} .chat-display-box").scrollTop($("##{chat.renderedId} .chat-display-box").prop("scrollHeight"))
@@ -40,7 +37,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/sidebar", "templates/s
             appendChat = (data) ->
               $("##{chat.renderedId} .chat-display-box").append chatMessage data
 
-            channel.on 'serverMessage', appendChat
+            chatChannel.on 'serverMessage', appendChat
 
           $(window).bind 'hashchange', ->
-            #TODO unbind pulsar services here if necessary
+            chatChannel.removeAllListeners 'serverMessage'

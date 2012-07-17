@@ -74,7 +74,6 @@
       },
       cleartimers: function() {
         var id, sel, _ref, _results;
-        console.log("clearing: ", this.updating);
         _ref = this.updating;
         _results = [];
         for (sel in _ref) {

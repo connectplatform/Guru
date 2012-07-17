@@ -8,7 +8,6 @@
       updates = pulsar.channel('notify:operators');
       updateUnanswered = function(num) {
         var content;
-        console.log("" + num + " unanswered");
         content = num > 0 ? badge({
           num: num
         }) : '';
@@ -16,10 +15,9 @@
       };
       return server.ready(function() {
         return server.getMyRole(function(err, role) {
-          if (role !== 'Operator' && role !== 'Supervisor' && role !== 'Admin') {
+          if (role !== 'Operator' && role !== 'Supervisor' && role !== 'Administrator') {
             return window.location.hash = '#/logout';
           } else {
-            console.log("yep we're good");
             server.getChatStats(function(err, stats) {
               return updateUnanswered(stats.unanswered.length);
             });

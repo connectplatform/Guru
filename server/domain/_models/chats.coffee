@@ -6,8 +6,7 @@ rand = require '../../../lib/rand'
 face = (decorators) ->
   {chat: {
     visitor,
-    visitorPresent,
-    unanswered,
+    status,
     history,
     creationDate,
 
@@ -22,7 +21,7 @@ face = (decorators) ->
       # initialization
       async.parallel [
         chat.creationDate.set Date.now()
-        chat.unanswered.set 'true'
+        chat.status.set 'waiting'
         @allChats.add id
       ], (err) ->
 
@@ -39,17 +38,15 @@ face = (decorators) ->
         after ['get'], (context, data, next) ->
           next null, JSON.parse(data)
 
-      visitorPresent chat
       creationDate chat
-      unanswered chat, ({before, after}) ->
+      status chat, ({before, after}) ->
 
         # whenever a chat's unanswered status is set, add/remove it from the unanswered chats list
-        before ['set'], (context, [val], next) ->
-          switch val
-            when 'true'
-              faceValue.unansweredChats.add id, ->
-            when 'false'
-              faceValue.unansweredChats.srem id, ->
+        before ['getset', 'set'], (context, [val], next) ->
+          if val == 'waiting'
+            faceValue.unansweredChats.add id, ->
+          else
+            faceValue.unansweredChats.srem id, ->
 
           next null, [val]
 
@@ -65,10 +62,9 @@ face = (decorators) ->
 
         async.parallel {
           visitor: chat.visitor.get
-          visitorPresent: chat.visitorPresent.get
+          status: chat.status.get
           history: chat.history.all
           creationDate: chat.creationDate.get
-          unanswered: chat.unanswered.get
 
         }, (err, chat) ->
           chat.id = id
@@ -87,18 +83,16 @@ face = (decorators) ->
 
         notify = pulsar.channel 'notify:operators'
         notify.emit 'unansweredCount', chatCount
-        console.log "sent unanswered count #{chatCount}"
       next null, args
 
   return faceValue
 
 schema =
   'chat:!{id}':
-    visitor: 'String' #TODO make this a type that JSON.parses automatically
-    visitorPresent: 'String'
-    unanswered: 'String'
-    history: 'List'
+    visitor: 'String' #TODO: make this a hash
+    status: 'String' # transfer, invite, waiting, active, vacant
     creationDate: 'String'
+    history: 'List'
   chat:
     allChats: 'Set'
     unansweredChats: 'Set'

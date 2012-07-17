@@ -1,4 +1,4 @@
-#home.well
+#dashboard.well
   .page-header: h1 Dashboard
 
   p.description Currently active chats.
@@ -6,8 +6,8 @@
   table.table.table-striped
     thead: tr
       th Visitor
-      th Visitor Present
       th Operators
+      th Status
       th Duration
       th Website
       th Department
@@ -17,15 +17,16 @@
       each chat in chats
         tr
           td= chat.visitor.username
-          td= chat.visitorPresent
           td= chat.operators
+          td= chat.status
           td.counter(started='#{chat.creationDate}')
           td= chat.visitor.website
           td= chat.visitor.department
           th
-            if chat.unanswered == "true"
-              a.acceptChat(chatId="#{chat.id}") Accept
-            else
-              a.joinChat(chatId="#{chat.id}") Join
-            &nbsp;|&nbsp;
-            a.watchChat(chatId="#{chat.id}", watch="true") Watch
+            .btn-group
+              if chat.accept
+                btn.btn.btn-primary.acceptChat(chatId="#{chat.id}") Accept
+              else
+                btn.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
+
+              btn.btn.watchChat(chatId="#{chat.id}", watch="true") Watch

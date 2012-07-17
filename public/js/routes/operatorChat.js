@@ -9,14 +9,10 @@
       return server.ready(function(services) {
         console.log("server is ready-- services availible: " + services);
         return server.getMyChats(function(err, chats) {
-          var appendChat, channel, chat, _i, _j, _k, _len, _len1, _len2;
+          var appendChat, chat, chatChannel, _i, _j, _len, _len1;
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = chat.id.replace(/:/g, '-');
-          }
-          for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
-            chat = chats[_j];
-            console.log(chat.creationDate);
           }
           sidebar({}, sbTemp);
           $('#content').html(templ({
@@ -27,10 +23,10 @@
             return $(this).tab('show');
           });
           $('#chatTabs a:first').tab('show');
-          for (_k = 0, _len2 = chats.length; _k < _len2; _k++) {
-            chat = chats[_k];
-            channel = pulsar.channel(chat.id);
-            console.log("attatching methods to #" + chat.renderedId);
+          for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
+            chat = chats[_j];
+            chatChannel = pulsar.channel(chat.id);
+            console.log("attaching methods to #" + chat.renderedId);
             if (chat.isWatching) {
               $("#" + chat.renderedId + " .message-form").hide();
             } else {
@@ -39,7 +35,7 @@
                 evt.preventDefault();
                 message = $("#" + chat.renderedId + " .message-form .message").val();
                 if (message !== "") {
-                  channel.emit('clientMessage', {
+                  chatChannel.emit('clientMessage', {
                     message: message,
                     session: server.cookie('session')
                   });
@@ -52,9 +48,11 @@
             appendChat = function(data) {
               return $("#" + chat.renderedId + " .chat-display-box").append(chatMessage(data));
             };
-            channel.on('serverMessage', appendChat);
+            chatChannel.on('serverMessage', appendChat);
           }
-          return $(window).bind('hashchange', function() {});
+          return $(window).bind('hashchange', function() {
+            return chatChannel.removeAllListeners('serverMessage');
+          });
         });
       });
     };

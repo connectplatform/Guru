@@ -17,7 +17,7 @@ define ["app/server", "app/notify", "templates/signup"], (server, notify, templ)
       server.signup fields, (err, okay) ->
         return notify.error "Error during signup: #{err}" if err?
         $('#signup-modal').modal 'hide'
-        window.location.hash = '/home'
+        window.location.hash = '/dashboard'
 
       return false
 

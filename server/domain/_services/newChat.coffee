@@ -13,7 +13,7 @@ module.exports = (res, data) ->
     sessionId = unescape(res.cookie('session'))
 
     #TODO: move this up to middleware
-    Session.create {role: 'visitor', chatName: username}, (err, session) ->
+    Session.create {role: 'visitor', chatName: username, visitorChat: channelName}, (err, session) ->
       console.log "error creating session: #{err}" if err
       sessionId = session.id
       res.cookie 'session', sessionId
@@ -31,5 +31,4 @@ module.exports = (res, data) ->
 
         createChannel channelName
 
-        res.cookie 'channel', channelName
         res.send null, channel: channelName

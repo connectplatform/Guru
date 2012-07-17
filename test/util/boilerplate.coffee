@@ -52,7 +52,6 @@ module.exports = (testName, tests) ->
 
     afterEach (done) ->
       @client.cookie 'session', null
-      @client.cookie 'channel', null
       @client.disconnect()
       done()
 

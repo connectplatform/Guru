@@ -13,13 +13,12 @@ boiler 'Service - Get Existing Chat Channel', ->
     client = @getClient()
     client.ready =>
       data = {username: 'clientTest1'}
-      client.newChat data, (err, data) =>
-        channelName = data.channel
+      client.newChat data, (err, {channel}) =>
         client.disconnect()
         client2 = @getClient()
         client2.ready ->
-          client2.getExistingChatChannel (err, data) ->
+          client2.getExistingChatChannel (err, existingChannel) ->
             false.should.eql err?
-            data.channel.should.eql channelName
+            existingChannel.channel.should.eql channel
             client2.disconnect()
             done()

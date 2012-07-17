@@ -29,6 +29,7 @@ boiler 'Service - New Chat', ->
       # send test data
       @channel.emit 'clientMessage', outgoing
 
+###TODO: get rid of race condition here
   it 'should notify operators of a new chat', (done) ->
     notify = @getPulsar().channel 'notify:operators'
     notify.on 'unansweredCount', (num) ->

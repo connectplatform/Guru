@@ -7,7 +7,7 @@ boiler 'Service - New Chat', ->
     data = {username: 'clientTest1'}
     @newChat = (done) =>
       @client.newChat data, (err, data) =>
-        throw new Error err if err
+        throw new Error err if err?
         @channel = @getPulsar().channel data.channel
         @session = @client.cookie 'session'
         done()
@@ -36,4 +36,8 @@ boiler 'Service - New Chat', ->
       notify.removeAllListeners 'unansweredCount'
       done()
 
-    @newChat()
+    if notify.events['unansweredCount']?
+      @newChat()
+    else
+      notify.on 'newClient', =>
+        @newChat()

@@ -1,23 +1,22 @@
 async = require 'async'
-sendChatsFromIdList = require '../sendChatsFromIdList'
 redgoose = require 'redgoose'
 {OperatorChat, Chat} = redgoose.models
 
 module.exports = (res) ->
 
+  # get all my chats
   operatorId = unescape(res.cookie 'session')
-  OperatorChat.getChatsByOperator operatorId, (err, rawData)->
+  OperatorChat.getChatsByOperator operatorId, (err, chatWatchHash) ->
     res.send err, null if err
 
-    doLookup = (obj) ->
-      (cb) ->
-        Chat.get(obj.chat).dump (err, data)->
-          console.log "Error getting chat from cache: data:#{data}, error:#{err}" if err
-          message.timestamp = new Date(parseInt(message.timestamp)) for message in data.history
-          data.isWatching = obj.isWatching == "true" ? true : false
-          cb null, data
+    # get info for a specific chat
+    doLookup = ([chat, isWatching], cb) ->
+      Chat.get(chat).dump (err, data) ->
+        console.log "Error getting chat from cache: data:#{data}, error:#{err}" if err
+        message.timestamp = new Date(parseInt(message.timestamp)) for message in data.history
+        data.isWatching = isWatching == "true" ? true : false
+        cb err, data
 
-    functions = (doLookup {chat: key, isWatching:rawData[key]} for key of rawData)
+    arr = ([chat, isWatching] for chat, isWatching of chatWatchHash)
 
-    async.parallel functions, (err, result)->
-      res.send err, result
+    async.map arr, doLookup, res.send

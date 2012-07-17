@@ -13,7 +13,7 @@ face = (decorators) ->
     obj[decoratorName][method] args...
 
   operatorChat =
-    add: tandoor (operatorId, chatId, isWatching, cb)->
+    add: tandoor (operatorId, chatId, isWatching, cb) ->
       call byOperator, operatorId, "set", chatId, isWatching, ->
         call byChat, chatId, "set", operatorId, isWatching, cb
 
@@ -21,19 +21,23 @@ face = (decorators) ->
       call byOperator, operatorId, "hdel", chatId, ->
         call byChat, chatId, "hdel", operatorId, cb
 
-    getChatsByOperator: tandoor (operatorId, cb)->
+    getChatsByOperator: tandoor (operatorId, cb) ->
       call byOperator, operatorId, "getall", cb
 
-    getOperatorsByChat: tandoor (chatId, cb)->
+    getOperatorsByChat: tandoor (chatId, cb) ->
       call byChat, chatId, "getall", cb
 
   return operatorChat
 
 # Schema for document
 schema =
+
+  # This should probably be refactored into:
+  # 'byOperator!{id}:byChat:!{id}': 'Hash'
+
   'operatorChat':
-    'byOperator!{id}': 'Hash'
-    'byChat:!{id}': 'Hash'
+    'byOperator!{id}': 'Hash' # key: chatID, value: isWatching
+    'byChat:!{id}': 'Hash' # key: operatorID, value: isWatching
 
 # Name, Interface, Schema
 module.exports = ['OperatorChat', face, schema]

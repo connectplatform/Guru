@@ -15,6 +15,6 @@ boiler 'Service - Get Active Chats', ->
             false.should.eql err?
             [chatData] = chats
             chatData.visitor.username.should.eql 'foo'
-            chatData.visitorPresent.should.eql 'true' #TODO this is a hack until boolean redgoose types are added
+            chatData.status.should.eql 'waiting'
             new Date chatData.creationDate #just need this to not cause an error
             done()

@@ -39,7 +39,7 @@ module.exports = (cb) ->
       {Session} = redgoose.models
       Session.get(userSession).role.get (err, role) ->
         console.log 'Auth middleware error:', err if err?
-        if (role is 'Operator') or (role is 'Admin')
+        if (role is 'Operator') or (role is 'Administrator')
           next()
         else
           res.cookie 'session', null

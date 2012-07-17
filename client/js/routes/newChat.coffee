@@ -3,7 +3,7 @@ define ["app/server", "app/notify"], (server, notify) ->
     $("#content").html "Loading..."
     server.ready ->
 
-      server.getExistingChatChannel (err, data)->
+      server.getExistingChatChannel (err, data) ->
         window.location.hash = "/visitorChat/#{data.channel}" if data? and !!data
 
         $("#content").html templ()
@@ -14,7 +14,6 @@ define ["app/server", "app/notify"], (server, notify) ->
           username = $("#newChat-form #username").val()
 
           server.newChat username: username, (err, data) ->
-            console.log "data: #{data}"
             if err?
               $("#content").html templ()
               notify.error "Error connecting to chat: #{err}"

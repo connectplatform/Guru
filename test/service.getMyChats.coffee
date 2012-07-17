@@ -26,6 +26,6 @@ boiler 'Service - Get My Chats', ->
                   data.length.should.eql 1
                   chatData = data[0]
                   chatData.visitor.username.should.eql 'joinMe'
-                  chatData.visitorPresent.should.eql 'true'
+                  chatData.status.should.eql 'waiting'
                   new Date chatData.creationDate #just need this to not cause an error
                   done()

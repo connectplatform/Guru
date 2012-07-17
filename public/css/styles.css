@@ -83,3 +83,7 @@ blockquote {
 .maxHeight {
   height: 100%;
 }
+
+#dashboard .table .btn-group {
+  margin: -4px;
+}

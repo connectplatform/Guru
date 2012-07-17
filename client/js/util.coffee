@@ -48,5 +48,4 @@ define ->
     @updating[selector] = id
 
   cleartimers: ->
-    console.log "clearing: ", @updating
     clearInterval id for sel, id of @updating

@@ -8,7 +8,6 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
         server.getMyChats (err, chats) ->
 
           chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
-
           sidebar {}, sbTemp
 
           $('#content').html templ chats: chats

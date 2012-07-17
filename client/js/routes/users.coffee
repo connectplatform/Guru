@@ -31,7 +31,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
             }
 
           server.findUser {}, (err, users) ->
-            console.log "err retrieving users: #{err}" if err
+            console.log "err retrieving users: #{err}" if err?
             sidebar {}, sbTemp
 
             getUserById = (id) ->

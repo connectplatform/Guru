@@ -6,7 +6,6 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
 
     # call to update badge number
     updateUnanswered = (num) ->
-      console.log "#{num} unanswered"
       content = if num > 0 then badge {num: num} else ''
       $(".notifyUnanswered").html content
 
@@ -15,11 +14,10 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
 
       # TODO: move this to 'before' middleware
       server.getMyRole (err, role) ->
-        unless role in ['Operator', 'Supervisor', 'Admin']
+        unless role in ['Operator', 'Supervisor', 'Administrator']
           window.location.hash = '#/logout'
 
         else
-          console.log "yep we're good"
           server.getChatStats (err, stats) ->
             updateUnanswered stats.unanswered.length
 

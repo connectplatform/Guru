@@ -25,7 +25,6 @@ module.exports = (res, data) ->
 
       async.series [
         chat.visitor.set visitorMeta
-        chat.visitorPresent.set 'true'
 
       ], (err) ->
         console.log "redis error in newChat: #{err}" if err

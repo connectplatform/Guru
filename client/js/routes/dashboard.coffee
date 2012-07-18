@@ -16,7 +16,6 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
 
           for chat in chats
             chat.statusLevel = statusLevels[chat.status]
-            chat.accept = (chat.status in ['invite', 'transfer', 'waiting'])
 
           console.log 'operators:', (chat.operators for chat in chats)
 

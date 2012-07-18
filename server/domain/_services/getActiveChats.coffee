@@ -1,3 +1,4 @@
+{inspect} = require 'util'
 async = require 'async'
 redgoose = require 'redgoose'
 {Chat, OperatorChat} = redgoose.models
@@ -19,10 +20,10 @@ getChatsFromIdList = (list, done) ->
       OperatorChat.getOperatorsByChat chatID
 
     ], (err, [chat, operators]) ->
-
       console.log "Error getting chat from cache: chatID: #{chatID}, error:#{err}" if err?
       message.timestamp = new Date(parseInt(message.timestamp)) for message in chat.history
-      chat.operators = if operators? then (o for o in operators when o.visible is true) else []
+      chat.relation = undefined # o.getMeta for o in operators
+      chat.operators = if operators? then (o for o, watching of operators when watching is 'false') else []
       next err, chat
 
   async.map chatIDs, getChat, done

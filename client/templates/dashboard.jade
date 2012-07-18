@@ -23,10 +23,21 @@
           td= chat.visitor.website
           td= chat.visitor.department
           th
-            .btn-group
-              if chat.accept
-                btn.btn.btn-success.acceptChat(chatId="#{chat.id}") Accept
-              else
-                btn.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
 
-              btn.btn.watchChat(chatId="#{chat.id}", watch="true") Watch
+            // different options depending on chat status or pending invites
+            .btn-group
+              if chat.relation == 'present'
+                btn.btn.btn-danger.leaveChat(chatId="#{chat.id}") Leave
+              else
+
+                if chat.relation == 'invite'
+                  btn.btn.btn-success.acceptInvite(chatId="#{chat.id}") Join
+                else if chat.relation == 'transfer'
+                  btn.btn.btn-success.acceptTransfer(chatId="#{chat.id}") Assume
+
+                else if chat.status == 'waiting'
+                  btn.btn.btn-success.acceptChat(chatId="#{chat.id}") Accept
+                else
+                  btn.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
+
+                btn.btn.watchChat(chatId="#{chat.id}", watch="true") Watch

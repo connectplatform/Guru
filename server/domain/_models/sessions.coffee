@@ -29,6 +29,13 @@ face = (decorators) ->
       role session
       chatName session
       visitorChat session
+
+      session.delete = (cb) ->
+        async.parallel [
+          session.role.del
+          session.chatName.del
+          session.visitorChat.del
+          ], cb
       return session
 
   allSessions faceValue

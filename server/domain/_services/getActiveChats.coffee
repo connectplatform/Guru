@@ -23,8 +23,16 @@ getChatsFromIdList = (list, done) ->
       console.log "Error getting chat from cache: chatID: #{chatID}, error:#{err}" if err?
       message.timestamp = new Date(parseInt(message.timestamp)) for message in chat.history
       chat.relation = undefined # o.getMeta for o in operators
-      chat.operators = if operators? then (o for o, watching of operators when watching is 'false') else []
-      next err, chat
+      filterOperators = (operator, cb) ->
+        operator.relationMeta.get 'isWatching', (err, isWatching) ->
+          return cb err, null if err?
+          if isWatching is 'true'
+            cb null, null
+          else
+            cb null, operator
+      async.map operators, filterOperators, (err, filteredOperators) ->
+        chat.operators = filteredOperators.filter (element) -> element != null
+        next err, chat
 
   async.map chatIDs, getChat, done
 

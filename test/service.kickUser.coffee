@@ -5,6 +5,7 @@ boiler = require './util/boilerplate'
 boiler 'Service - Kick User', ->
 
   it 'should remove visitor from chat', (done) ->
+    #TODO uncomment when kickuser can take channelname as an arg
     done()
     ###
     # Setup

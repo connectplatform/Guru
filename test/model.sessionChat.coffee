@@ -3,19 +3,19 @@ should = require 'should'
 redgoose = require 'redgoose'
 boiler = require './util/boilerplate'
 
-boiler 'Model - Operator Chat', ->
+boiler 'Model - Session Chat', ->
 
   it 'should associate an operator and chat', (done)->
-    {OperatorChat} = redgoose.models
+    {SessionChat} = redgoose.models
 
     async.series [
       # add and get chat/operator pairs
       # the arguments would be IDs in a real case
-      OperatorChat.add 'operator1', 'chat1', isWatching: 'true'
-      OperatorChat.add 'operator1', 'chat2', isWatching: 'false'
-      OperatorChat.add 'operator2', 'chat2', isWatching: 'true'
-      OperatorChat.getChatsByOperator 'operator1'
-      OperatorChat.getOperatorsByChat 'chat2'
+      SessionChat.add 'operator1', 'chat1', isWatching: 'true'
+      SessionChat.add 'operator1', 'chat2', isWatching: 'false'
+      SessionChat.add 'operator2', 'chat2', isWatching: 'true'
+      SessionChat.getChatsBySession 'operator1'
+      SessionChat.getSessionsByChat 'chat2'
 
     ], (err, data) ->
       [_..., opChats, chatOps] = data
@@ -39,7 +39,7 @@ boiler 'Model - Operator Chat', ->
         async.map chatOps, getIsWatching, (err, relations) ->
           should.not.exist err
           for relation in relations
-            true.should.eql relation.operatorId is 'operator1' or relation.operatorId is 'operator2'
+            true.should.eql relation.sessionId is 'operator1' or relation.sessionId is 'operator2'
             relation.isWatching.should.eql 'false' if relation.chatId is 'operator1'  
             relation.isWatching.should.eql 'true' if relation.chatId is 'operator2'  
 

@@ -1,19 +1,19 @@
 async = require 'async'
 redgoose = require 'redgoose'
-{OperatorChat, Chat} = redgoose.models
+{SessionChat, Chat} = redgoose.models
 
 module.exports = (res) ->
   # get all my chats
   operatorId = unescape(res.cookie 'session')
-  OperatorChat.getChatsByOperator operatorId, (err, operatorChats) ->
+  SessionChat.getChatsBySession operatorId, (err, sessionChats) ->
     res.send err, null if err
 
-    # get the isWatching field from operatorChat
-    getIsWatching = (operatorChat, cb) ->
-      operatorChat.relationMeta.get 'isWatching', (err, isWatching) ->
-        cb err, [operatorChat.chatId, isWatching]
+    # get the isWatching field from sessionChat
+    getIsWatching = (sessionChat, cb) ->
+      sessionChat.relationMeta.get 'isWatching', (err, isWatching) ->
+        cb err, [sessionChat.chatId, isWatching]
 
-    async.map operatorChats, getIsWatching, (err, arr) ->
+    async.map sessionChats, getIsWatching, (err, arr) ->
 
       # get info for a specific chat
       doLookup = ([chat, isWatching], cb) ->

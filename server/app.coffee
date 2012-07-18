@@ -25,7 +25,7 @@ module.exports = (cb) ->
   redgoose.load require model for model in [
     './domain/_models/sessions'
     './domain/_models/chats'
-    './domain/_models/operatorChat'
+    './domain/_models/sessionChat'
   ]
 
   # Vein

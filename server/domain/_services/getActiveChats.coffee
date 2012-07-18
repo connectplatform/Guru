@@ -1,7 +1,7 @@
 {inspect} = require 'util'
 async = require 'async'
 redgoose = require 'redgoose'
-{Chat, OperatorChat} = redgoose.models
+{Chat, SessionChat} = redgoose.models
 
 getChatsFromIdList = (list, done) ->
 
@@ -17,7 +17,7 @@ getChatsFromIdList = (list, done) ->
 
     async.parallel [
       Chat.get(chatID).dump
-      OperatorChat.getOperatorsByChat chatID
+      SessionChat.getSessionsByChat chatID
 
     ], (err, [chat, operators]) ->
       console.log "Error getting chat from cache: chatID: #{chatID}, error:#{err}" if err?

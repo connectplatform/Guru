@@ -87,3 +87,7 @@ blockquote {
 #dashboard .table .btn-group {
   margin: -4px;
 }
+
+.operatorChat {
+  margin-left: 0px;
+}

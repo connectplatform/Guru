@@ -23,15 +23,6 @@
             chat = chats[_i];
             chat.statusLevel = statusLevels[chat.status];
           }
-          console.log('operators:', (function() {
-            var _j, _len1, _results;
-            _results = [];
-            for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
-              chat = chats[_j];
-              _results.push(chat.operators);
-            }
-            return _results;
-          })());
           $('#content').html(templ({
             chats: chats
           }));

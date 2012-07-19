@@ -3,9 +3,7 @@
 
   define(["app/server", "app/pulsar", "app/notify", "routes/chatControls", "routes/sidebar", "templates/sidebar", "templates/chatMessage"], function(server, pulsar, notify, controls, sidebar, sbTemp, chatMessage) {
     return function(args, templ) {
-      if (!server.cookie('session')) {
-        window.location = '/';
-      }
+      sidebar({}, sbTemp);
       return server.ready(function(services) {
         console.log("server is ready-- services availible: " + services);
         return server.getMyChats(function(err, chats) {
@@ -14,7 +12,6 @@
             chat = chats[_i];
             chat.renderedId = chat.id.replace(/:/g, '-');
           }
-          sidebar({}, sbTemp);
           $('#content').html(templ({
             chats: chats
           }));

@@ -2,12 +2,9 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
   (args, templ) ->
     $('#sidebar').html templ()
 
-    updates = pulsar.channel 'notify:operators'
-
-    # call to update badge number
-    updateUnanswered = (num) ->
+    updateBadge = (selector, num) ->
       content = if num > 0 then badge {status: 'important', num: num} else ''
-      $(".notifyUnanswered").html content
+      $(selector).html content
 
     # init badge number
     server.ready ->
@@ -18,12 +15,22 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
           window.location.hash = '#/logout'
 
         else
+          sessionID = server.cookie 'session'
+          operatorUpdates = pulsar.channel 'notify:operators'
+          sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
+
           server.getChatStats (err, stats) ->
-            updateUnanswered stats.unanswered.length
+            updateBadge ".notifyUnanswered", stats.unanswered.length
 
           # update badge number on change
-          updates.on 'unansweredCount', updateUnanswered
+          operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
+          sessionUpdates.on 'unreadChats', (unread) ->
+            total = 0
+            for chat, count of unread
+              total += count
+            updateBadge ".notifyUnread", total
 
           # TODO: move this to 'after' middleware
           $(window).bind 'hashchange', ->
-            updates.removeAllListeners 'unansweredCount'
+            operatorUpdates.removeAllListeners 'unansweredCount'
+            sessionUpdates.removeAllListeners 'unreadCount'

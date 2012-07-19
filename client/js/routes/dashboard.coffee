@@ -17,8 +17,6 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
           for chat in chats
             chat.statusLevel = statusLevels[chat.status]
 
-          console.log 'operators:', (chat.operators for chat in chats)
-
           # render chats
           $('#content').html templ chats: chats
 

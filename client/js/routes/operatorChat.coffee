@@ -1,14 +1,13 @@
 define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/sidebar", "templates/sidebar", "templates/chatMessage"],
   (server, pulsar, notify, controls, sidebar, sbTemp, chatMessage) ->
     (args, templ) ->
-      window.location = '/' unless server.cookie 'session'
+      sidebar {}, sbTemp
 
       server.ready (services)->
         console.log "server is ready-- services availible: #{services}"
         server.getMyChats (err, chats) ->
 
           chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
-          sidebar {}, sbTemp
 
           $('#content').html templ chats: chats
 

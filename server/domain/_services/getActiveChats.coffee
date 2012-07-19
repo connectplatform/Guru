@@ -16,7 +16,7 @@ getChatsFromIdList = (list, done) ->
 
     async.parallel [
       Chat.get(chatID).dump
-      SessionChat.getSessionsByChat chatID
+      SessionChat.getByChat chatID
 
     ], (err, [chat, chatSessions]) ->
       console.log "Error getting chat from cache: chatID: #{chatID}, error:#{err}" if err?

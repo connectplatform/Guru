@@ -3,7 +3,7 @@ redgoose = require 'redgoose'
 {SessionChat, Chat} = redgoose.models
 
 module.exports = (res, chatId) ->
-  SessionChat.getSessionsByChat chatId, (err, chatSessions) ->
+  SessionChat.getByChat chatId, (err, chatSessions) ->
     getRole = (chatSession, cb) ->
       chatSession.session.role.get (err, role) ->
         chatSession.role = role

@@ -5,7 +5,7 @@ redgoose = require 'redgoose'
 module.exports = (res) ->
   # get all my chats
   operatorId = unescape(res.cookie 'session')
-  SessionChat.getChatsBySession operatorId, (err, sessionChats) ->
+  SessionChat.getBySession operatorId, (err, sessionChats) ->
     res.send err, null if err
 
     # get the isWatching field from sessionChat

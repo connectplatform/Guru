@@ -14,8 +14,8 @@ boiler 'Model - Session Chat', ->
       SessionChat.add 'operator1', 'chat1', isWatching: 'true'
       SessionChat.add 'operator1', 'chat2', isWatching: 'false'
       SessionChat.add 'operator2', 'chat2', isWatching: 'true'
-      SessionChat.getChatsBySession 'operator1'
-      SessionChat.getSessionsByChat 'chat2'
+      SessionChat.getBySession 'operator1'
+      SessionChat.getByChat 'chat2'
 
     ], (err, data) ->
       [_..., opChats, chatOps] = data

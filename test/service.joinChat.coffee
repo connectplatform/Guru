@@ -17,7 +17,7 @@ boiler 'Service - Join Chat', ->
 
             #TODO refactor this to check at a higher level than cache contents
             {SessionChat} = redgoose.models
-            SessionChat.getChatsBySession id, (err, [chat]) =>
+            SessionChat.getBySession id, (err, [chat]) =>
               false.should.eql err?
               chat.chatId.should.eql channel
               done()

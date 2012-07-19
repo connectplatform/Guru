@@ -4,6 +4,6 @@ redgoose = require 'redgoose'
 
 module.exports = (res) ->
 
-  SessionChat.getChatsBySession unescape(res.cookie 'session'), (err, [chatSession]) ->
+  SessionChat.getBySession unescape(res.cookie 'session'), (err, [chatSession]) ->
     return res.send null, channel: chatSession.chatId if chatSession?
     res.send null, null

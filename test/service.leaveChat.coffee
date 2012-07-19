@@ -1,4 +1,4 @@
-require 'should'
+should = require 'should'
 boiler = require './util/boilerplate'
 
 boiler 'Service - Leave Chat', ->
@@ -8,15 +8,20 @@ boiler 'Service - Leave Chat', ->
     @newChat =>
       @getAuthed =>
         @client.joinChat @channelName, (err) =>
-          false.should.eql err?
+          should.not.exist err
 
           # Try to leave
           @client.leaveChat @channelName, (err, channelName) =>
-            false.should.eql err?
+            should.not.exist err
             channelName.should.eql @channelName
 
             # Check whether we're still in channel
             @client.getMyChats (err, chats) =>
-              false.should.eql err?
+              should.not.exist err
               chats.length.should.eql 0
-              done()
+
+              # Check whether the chat has the right status
+              @client.getActiveChats (err, [chat]) =>
+                chat.status.should.eql 'waiting'
+
+                done()

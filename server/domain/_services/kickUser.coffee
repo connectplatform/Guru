@@ -1,9 +1,9 @@
 async = require 'async'
 redgoose = require 'redgoose'
-{SessionChat, Chat} = redgoose.models
+{ChatSession, Chat} = redgoose.models
 
 module.exports = (res, chatId) ->
-  SessionChat.getByChat chatId, (err, chatSessions) ->
+  ChatSession.getByChat chatId, (err, chatSessions) ->
     getRole = (chatSession, cb) ->
       chatSession.session.role.get (err, role) ->
         chatSession.role = role

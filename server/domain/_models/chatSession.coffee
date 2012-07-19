@@ -70,4 +70,4 @@ schema =
     'relationMeta:!{sessionId}:!{chatId}': 'Hash'
 
 # Name, Interface, Schema
-module.exports = ['SessionChat', face, schema]
+module.exports = ['ChatSession', face, schema]

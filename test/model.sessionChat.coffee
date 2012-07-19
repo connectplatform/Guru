@@ -6,16 +6,16 @@ boiler = require './util/boilerplate'
 boiler 'Model - Session Chat', ->
 
   it 'should associate an operator and chat', (done)->
-    {SessionChat} = redgoose.models
+    {ChatSession} = redgoose.models
 
     async.series [
       # add and get chat/operator pairs
       # the arguments would be IDs in a real case
-      SessionChat.add 'operator1', 'chat1', isWatching: 'true'
-      SessionChat.add 'operator1', 'chat2', isWatching: 'false'
-      SessionChat.add 'operator2', 'chat2', isWatching: 'true'
-      SessionChat.getBySession 'operator1'
-      SessionChat.getByChat 'chat2'
+      ChatSession.add 'operator1', 'chat1', isWatching: 'true'
+      ChatSession.add 'operator1', 'chat2', isWatching: 'false'
+      ChatSession.add 'operator2', 'chat2', isWatching: 'true'
+      ChatSession.getBySession 'operator1'
+      ChatSession.getByChat 'chat2'
 
     ], (err, data) ->
       [_..., opChats, chatOps] = data

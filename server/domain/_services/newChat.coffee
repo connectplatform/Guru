@@ -5,7 +5,7 @@ redgoose = require 'redgoose'
 module.exports = (res, data) ->
   username = data.username or 'anonymous'
 
-  {Chat, Session, SessionChat} = redgoose.models
+  {Chat, Session, ChatSession} = redgoose.models
   Chat.create (err, chat) ->
     console.log "error creating chat: #{err}" if err
     chatId = chat.id
@@ -16,7 +16,7 @@ module.exports = (res, data) ->
       sessionId = session.id
       res.cookie 'session', sessionId
 
-      SessionChat.add sessionId, chatId, isWatching: false, (err) ->
+      ChatSession.add sessionId, chatId, isWatching: false, (err) ->
         console.log "error creating sessionChat: #{err}" if err
 
         visitorMeta =

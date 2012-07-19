@@ -16,8 +16,8 @@ boiler 'Service - Join Chat', ->
             id = @client.cookie('session')
 
             #TODO refactor this to check at a higher level than cache contents
-            {SessionChat} = redgoose.models
-            SessionChat.getBySession id, (err, [chat]) =>
+            {ChatSession} = redgoose.models
+            ChatSession.getBySession id, (err, [chat]) =>
               false.should.eql err?
               chat.chatId.should.eql channel
               done()

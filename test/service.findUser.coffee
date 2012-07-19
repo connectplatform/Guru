@@ -1,4 +1,4 @@
-require 'should'
+should = require 'should'
 boiler = require './util/boilerplate'
 
 boiler 'Service - Find User', ->
@@ -9,41 +9,26 @@ boiler 'Service - Find User', ->
       #do test
       @client.findUser {}, (err, users) ->
         false.should.eql err?
-
-        users[0].firstName.should.exist
-        users[0].lastName.should.exist
-        users[0].email.should.exist
-        users[0].role.should.exist
-        users[0].websites.should.exist
-        users[0].departments.should.exist
-        users[0].id.should.exist
-        false.should.eql users[0].password?
-
-        users[1].firstName.should.exist
-        users[1].lastName.should.exist
-        users[1].email.should.exist
-        users[1].role.should.exist
-        users[1].websites.should.exist
-        users[1].departments.should.exist
-        users[1].id.should.exist
-        false.should.eql users[1].password?
+        for user in users
+          user.firstName.should.exist
+          user.lastName.should.exist
+          user.email.should.exist
+          user.role.should.exist
+          user.websites.should.exist
+          user.departments.should.exist
+          user.id.should.exist
+          false.should.eql user.password?
 
         done()
 
   it 'should let you find a user by their id', (done) ->
     @getAuthed =>
-      
-      #do test
-      @client.findUser {}, (err, users) =>
-        targetUser = users[0]
 
-        @client.findUser {_id: targetUser.id}, (err, users) ->
-          users[0].firstName.should.eql targetUser.firstName
-          users[0].lastName.should.eql targetUser.lastName
-          users[0].email.should.eql targetUser.email
-          users[0].role.should.eql targetUser.role
-          users[0].websites.should.eql targetUser.websites
-          users[0].departments.should.eql targetUser.departments
-          users[0].id.should.eql targetUser.id
+      @client.findUser {email: 'god@torchlightsoftware.com'}, (err, [god]) ->
+        god.firstName.should.eql 'God'
+        god.lastName.should.eql ''
+        god.role.should.eql 'Administrator'
+        god.websites.should.eql []
+        god.departments.should.eql []
 
-          done()
+        done()

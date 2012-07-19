@@ -3,7 +3,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
     (args, templ) ->
       sidebar {}, sbTemp
 
-      server.ready (services)->
+      server.ready (services) ->
         console.log "server is ready-- services availible: #{services}"
         server.getMyChats (err, chats) ->
 
@@ -11,11 +11,17 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
 
           $('#content').html templ chats: chats
 
-          $('#chatTabs').click (e) ->
+          $('#chatTabs a').click (e) ->
             e.preventDefault()
             $(this).tab 'show'
 
-          $('#chatTabs a:first').tab 'show'
+            # let the server know we read these
+            chatID = $(this).attr 'chatid'
+            console.log 'chatID:', chatID
+            server.readChats chatID, ->
+
+          # on page load click the first tab
+          $('#chatTabs a:first').click()
 
           createSubmitHandler = (renderedId, channel) ->
             (evt) ->

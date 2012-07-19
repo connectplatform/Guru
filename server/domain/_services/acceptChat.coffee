@@ -1,5 +1,6 @@
+redgoose = require 'redgoose'
+
 module.exports = (res, chatId) ->
-  redgoose = require 'redgoose'
   operatorId = unescape(res.cookie('session'))
   {Chat, ChatSession} = redgoose.models
 

@@ -3,7 +3,7 @@
   ul#chatTabs.nav.nav-tabs
 
     for chat in chats
-      li: a(href="##{chat.renderedId}", data-toggle="tab") #{chat.visitor.username}
+      li: a(href="##{chat.renderedId}", chatid="#{chat.renderedId}", data-toggle="tab") #{chat.visitor.username}
 
   .tab-content
     for chat in chats

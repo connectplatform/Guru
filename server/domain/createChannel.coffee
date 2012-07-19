@@ -20,7 +20,7 @@ module.exports = (channelName) ->
       ChatSession.getByChat channelName
     ], (err, [username, sessions]) ->
       console.log "Error getting chat name from cache: #{err}" if err
-      operators = (op.sessionID for op in sessions)
+      operators = (op.sessionId for op in sessions)
 
       # push history data
       history =

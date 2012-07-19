@@ -1,9 +1,9 @@
-module.exports = (res, fields) ->
-  redgoose = require 'redgoose'
-  {digest_s} = require 'md5'
-  db = require '../../mongo'
-  {User} = db.models
+redgoose = require 'redgoose'
+{digest_s} = require 'md5'
+db = require '../../mongo'
+{User} = db.models
 
+module.exports = (res, fields) ->
   search = {email: fields.email, password: digest_s fields.password}
   User.findOne search, (err, user) ->
     return res.send err.message if err?

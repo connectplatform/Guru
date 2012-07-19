@@ -15,11 +15,15 @@
           $('#content').html(templ({
             chats: chats
           }));
-          $('#chatTabs').click(function(e) {
+          $('#chatTabs a').click(function(e) {
+            var chatID;
             e.preventDefault();
-            return $(this).tab('show');
+            $(this).tab('show');
+            chatID = $(this).attr('chatid');
+            console.log('chatID:', chatID);
+            return server.readChats(chatID, function() {});
           });
-          $('#chatTabs a:first').tab('show');
+          $('#chatTabs a:first').click();
           createSubmitHandler = function(renderedId, channel) {
             return function(evt) {
               var message;

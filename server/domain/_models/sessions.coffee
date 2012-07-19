@@ -3,19 +3,16 @@ rand = require '../../../lib/rand'
 pulsar = require '../../pulsar'
 
 face = (decorators) ->
-  {session: {role, chatName, visitorChat, unreadChats, allSessions}} = decorators
+  {session: {role, chatName, unreadChats, allSessions}} = decorators
 
   faceValue =
     create:  (fields, cb) ->
       id = rand()
       session = @get id
 
-      fields.visitorChat ||= ""
-
       async.parallel [
         session.role.set fields.role
         session.chatName.set fields.chatName
-        session.visitorChat.set fields.visitorChat
         @allSessions.add id
 
       ], (err, data) ->
@@ -29,7 +26,6 @@ face = (decorators) ->
 
       role session
       chatName session
-      visitorChat session
 
       unreadChats session, ({after}) ->
         after ['incrby'], (context, args, next) ->
@@ -41,6 +37,13 @@ face = (decorators) ->
             unreadChats[chat] = parseInt num
           next null, unreadChats
 
+      session.delete = (cb) ->
+        async.parallel [
+          session.role.del
+          session.chatName.del
+          session.unreadChats.del
+          ], cb
+
       return session
 
   allSessions faceValue
@@ -51,7 +54,6 @@ schema =
   'session:!{id}':
     role: 'String'
     chatName: 'String'
-    visitorChat: 'String'
     unreadChats: 'Hash' # k: chatID, v: unreadCount
   session:
     allSessions: 'Set'

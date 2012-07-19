@@ -1,7 +1,6 @@
-{inspect} = require 'util'
 async = require 'async'
 redgoose = require 'redgoose'
-{Chat, OperatorChat} = redgoose.models
+{Chat, ChatSession} = redgoose.models
 
 getChatsFromIdList = (list, done) ->
 
@@ -17,14 +16,25 @@ getChatsFromIdList = (list, done) ->
 
     async.parallel [
       Chat.get(chatID).dump
-      OperatorChat.getOperatorsByChat chatID
+      ChatSession.getByChat chatID
 
-    ], (err, [chat, operators]) ->
+    ], (err, [chat, chatSessions]) ->
       console.log "Error getting chat from cache: chatID: #{chatID}, error:#{err}" if err?
       message.timestamp = new Date(parseInt(message.timestamp)) for message in chat.history
       chat.relation = undefined # o.getMeta for o in operators
-      chat.operators = if operators? then (o for o, watching of operators when watching is 'false') else []
-      next err, chat
+      getVisibleOperators = (chatSession, cb) ->
+        async.parallel [
+          chatSession.relationMeta.get 'isWatching'
+          chatSession.session.role.get
+        ], (err, [isWatching, role]) ->
+          return cb err, null if err?
+          if isWatching is 'true' or role is 'Visitor'
+            cb null, null
+          else
+            cb null, chatSession.sessionId
+      async.map chatSessions, getVisibleOperators, (err, visibleOperators) ->
+        chat.operators = visibleOperators.filter (element) -> element != null
+        next err, chat
 
   async.map chatIDs, getChat, done
 

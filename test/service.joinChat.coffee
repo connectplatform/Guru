@@ -11,18 +11,13 @@ boiler 'Service - Join Chat', ->
         visitorClient.disconnect()
 
         @getAuthed => 
-          @client.joinChat channel, (err, data) =>
+          @client.joinChat channel, (err) =>
             false.should.eql err?
             id = @client.cookie('session')
 
             #TODO refactor this to check at a higher level than cache contents
-            {OperatorChat} = redgoose.models
-            OperatorChat.getChatsByOperator id, (err, data) =>
-
+            {ChatSession} = redgoose.models
+            ChatSession.getBySession id, (err, [chat]) =>
               false.should.eql err?
-              data[channel].should.eql 'false'
-              OperatorChat.getOperatorsByChat channel, (err, data) =>
-                false.should.eql err?
-                data[id].should.eql 'false'
-                @client.disconnect()
-                done()
+              chat.chatId.should.eql channel
+              done()

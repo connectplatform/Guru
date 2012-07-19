@@ -1,7 +1,7 @@
 async = require 'async'
 pulsar = require '../pulsar'
 redgoose = require 'redgoose'
-{Session, Chat, OperatorChat} = redgoose.models
+{Session, Chat, ChatSession} = redgoose.models
 
 module.exports = (channelName) ->
 
@@ -17,11 +17,10 @@ module.exports = (channelName) ->
     # get user's identity and operators present
     async.parallel [
       sess.chatName.get
-      OperatorChat.getOperatorsByChat channelName
-    ], (err, [username, operators]) ->
+      ChatSession.getByChat channelName
+    ], (err, [username, sessions]) ->
       console.log "Error getting chat name from cache: #{err}" if err
-      operators ?= {}
-      operators = (sessionID for sessionID of operators)
+      operators = (op.sessionID for op in sessions)
 
       # push history data
       history =

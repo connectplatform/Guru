@@ -1,9 +1,9 @@
 pulsar = require '../../pulsar'
 redgoose = require 'redgoose'
-{Chat, Session} = redgoose.models
+{ChatSession} = redgoose.models
 
 module.exports = (res) ->
 
-  Session.get(unescape res.cookie 'session').visitorChat.get (err, userChannel) ->
-    return res.send null, channel: userChannel if userChannel?
+  ChatSession.getBySession unescape(res.cookie 'session'), (err, [chatSession]) ->
+    return res.send null, channel: chatSession.chatId if chatSession?
     res.send null, null

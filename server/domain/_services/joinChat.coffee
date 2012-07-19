@@ -1,8 +1,8 @@
 redgoose = require 'redgoose'
-{OperatorChat} = redgoose.models
+{ChatSession} = redgoose.models
 
 module.exports = (res, chatId, options) ->
   operatorId = unescape res.cookie('session')
-  OperatorChat.add operatorId, chatId, 'false', (err) ->
-    console.log "Error adding OperatorChat in joinChat: #{err}" if err
+  ChatSession.add operatorId, chatId, isWatching: 'false', (err) ->
+    console.log "Error adding ChatSession in joinChat: #{err}" if err
     res.send null, true

@@ -11,7 +11,7 @@ module.exports = (res, data) ->
     chatId = chat.id
 
     #TODO: move this up to middleware
-    Session.create {role: 'Visitor', chatName: username, visitorChat: chatId}, (err, session) ->
+    Session.create {role: 'Visitor', chatName: username}, (err, session) ->
       console.log "error creating session: #{err}" if err
       sessionId = session.id
       res.cookie 'session', sessionId

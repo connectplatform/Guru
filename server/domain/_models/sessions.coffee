@@ -41,7 +41,7 @@ face = (decorators) ->
         async.parallel [
           session.role.del
           session.chatName.del
-          session.unreadChats.del
+          #session.unreadChats.del
           ], cb
 
       return session

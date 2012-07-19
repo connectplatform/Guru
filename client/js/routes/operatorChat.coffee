@@ -49,5 +49,5 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
             #wire up control buttons
             $("##{chat.renderedId} .inviteButton").click controls.createInviteHandler chat.id
             $("##{chat.renderedId} .transferButton").click controls.createTransferHandler chat.id
-            $("##{chat.renderedId} .kickButton").click controls.createKickHandler chat.id
+            $("##{chat.renderedId} .kickButton").click controls.createKickHandler chat.id, chat.renderedId
             $("##{chat.renderedId} .leaveButton").click controls.createLeaveHandler chat.id

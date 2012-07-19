@@ -1,4 +1,4 @@
-define ["app/server"], (server) ->
+define ["app/server", "templates/serverMessage"], (server, serverMessage) ->
   createInviteHandler: (chatId) ->
     (evt) ->
       evt.preventDefault()
@@ -9,11 +9,16 @@ define ["app/server"], (server) ->
       evt.preventDefault()
       console.log "transfer clicked"
       #TODO
-  createKickHandler: (chatId) ->
+  createKickHandler: (chatId, renderedId) ->
+    console.log "chatId in closure: #{chatId}"
     (evt) ->
       evt.preventDefault()
-      console.log "kick clicked"
-      #TODO 
+      console.log "chatId in handler: #{chatId}"
+      server.kickUser chatId, (err) ->
+        console.log "error kicking user: #{err}" if err?
+        $("##{renderedId} .chat-display-box").append serverMessage message: "The visitor has been kicked from the room"
+        console.log "displayed kick message"
+
   createLeaveHandler: (chatId) ->
     (evt) ->
       evt.preventDefault()

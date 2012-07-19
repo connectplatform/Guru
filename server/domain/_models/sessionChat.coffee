@@ -1,3 +1,6 @@
+redgoose = require 'redgoose'
+{Chat, Session} = redgoose.models
+
 {tandoor} = require '../../../lib/util'
 async = require 'async'
 # Interface for document
@@ -13,13 +16,16 @@ face = (decorators) ->
     obj.id = id
     obj[decoratorName][method] args...
 
-  packageMeta = (sessionId, chatId) ->
+  packageRelation = (sessionId, chatId) ->
     obj = chatId: chatId, sessionId: sessionId
     relationMeta obj
+    obj.session = Session.get sessionId
+    obj.chat = Chat.get chatId
     obj
 
   callRelation = (sessionId, chatId, method, args...) ->
-    obj = packageMeta sessionId, chatId
+    obj = chatId: chatId, sessionId: sessionId
+    relationMeta obj
     obj.relationMeta[method] args...
 
   sessionChat =
@@ -27,7 +33,6 @@ face = (decorators) ->
       async.parallel [
         call bySession, sessionId, "add", chatId
         call byChat, chatId, "add", sessionId
-#        callRelation sessionId, chatId, "set", 'isWatching', metaInfo.isWatching #TODO: run through elements automatically
         callRelation sessionId, chatId, "mset", metaInfo
       ], (err) ->
 
@@ -41,17 +46,17 @@ face = (decorators) ->
         callRelation sessionId, chatId, "del"
         ], (err) ->
 
-          console.log "Error adding sessionChat: #{err}" if err?
+          console.log "Error removing sessionChat: #{err}" if err?
           cb err, true
 
     getChatsBySession: tandoor (sessionId, cb) ->
       call bySession, sessionId, "members", (err, chatIds) ->
-        result = (packageMeta sessionId, chatId for chatId in chatIds)
+        result = (packageRelation sessionId, chatId for chatId in chatIds)
         cb err, result
 
     getSessionsByChat: tandoor (chatId, cb) ->
       call byChat, chatId, "members", (err, sessionIds) ->
-        result = (packageMeta sessionId, chatId for sessionId in sessionIds)
+        result = (packageRelation sessionId, chatId for sessionId in sessionIds)
         cb err, result
 
   return sessionChat

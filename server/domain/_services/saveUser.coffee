@@ -1,7 +1,8 @@
+{digest_s} = require 'md5'
+db = require '../../mongo'
+{User} = db.models
+
 module.exports = (res, fields) ->
-  {digest_s} = require 'md5'
-  db = require '../../mongo'
-  {User} = db.models
 
   getUser = (fields, cb) ->
     if fields.id?
@@ -14,7 +15,7 @@ module.exports = (res, fields) ->
       user.password = digest_s 'password'
       cb user
 
-  getUser fields, (user) ->   
+  getUser fields, (user) ->
     user[key] = value for key, value of fields when key isnt 'id'
     user.save (err) ->
       console.log "error saving user model: #{err}" if err?

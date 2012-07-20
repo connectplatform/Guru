@@ -68,6 +68,8 @@ schema =
     'bySession:!{id}': 'Set'
     'byChat:!{id}': 'Set'
     'relationMeta:!{sessionId}:!{chatId}': 'Hash'
+    # meta keys: isWatching: true|false
+    #            type: member|invite|transfer
+    #            requestor: sessionID (optional)
 
-# Name, Interface, Schema
 module.exports = ['ChatSession', face, schema]

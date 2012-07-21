@@ -2,7 +2,7 @@
 redgoose = require 'redgoose'
 {ChatSession} = redgoose.models
 
-module.exports = (res, chatId, options) ->
+module.exports = (res, chatId) ->
   operatorId = unescape(res.cookie('session'))
 
   ChatSession.add operatorId, chatId, isWatching: 'true', (err)->

@@ -1,4 +1,4 @@
-require 'should'
+should = require 'should'
 boiler = require './util/boilerplate'
 
 boiler 'Service - Get My Chats', ->
@@ -20,7 +20,7 @@ boiler 'Service - Get My Chats', ->
               @client.joinChat channel, (err, data) =>
 
                 @client.getMyChats (err, data) =>
-                  false.should.eql err?
+                  should.not.exist err
                   data.length.should.eql 1
                   chatData = data[0]
                   chatData.visitor.username.should.eql 'joinMe'

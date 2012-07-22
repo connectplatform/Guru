@@ -10,11 +10,16 @@ boiler 'Service - Get Nonpresent Opertors', ->
         @client.watchChat @channelName, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators @channelName, (err, operatorIds) =>
+          @client.getNonpresentOperators @channelName, (err, operatorSessions) =>
             should.not.exist err
-            operatorIds.length.should.eql 1
+
+            # Validate returned data
+            operatorSessions.length.should.eql 1
+            operatorSessions[0].chatName.should.eql "God"
+            operatorSessions[0].role.should.eql "Administrator"
+
+            # Make sure we have the right id
             {Session} = redgoose.models
-            Session.get(operatorIds[0]).chatName.get (err, chatname) =>
-              should.not.exist err
-              chatname.should.eql "God"
+            Session.get(operatorSessions[0].id).chatName.get (err, chatName) =>
+              chatName.should.eql "God"
               done()

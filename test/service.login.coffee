@@ -1,20 +1,20 @@
-require 'should'
+should = require 'should'
 boiler = require './util/boilerplate'
 redgoose = require 'redgoose'
 
 boiler 'Service - Login', ->
 
   it 'should log you in', (done) ->
-    data =
+    loginData =
       email: 'god@torchlightsoftware.com'
       password: 'foobar'
 
-    @client.login data, (err, data) =>
-      false.should.eql err?
+    @client.login loginData, (err, userInfo) =>
+      should.not.exist err
       id = @client.cookie('session')
 
       {Session} = redgoose.models
-      Session.get(id).chatName.get (err, data) ->
-        false.should.eql err?
-        data.should.eql "God"
+      Session.get(id).chatName.get (err, chatName) ->
+        should.not.exist err
+        chatName.should.eql "God"
         done()

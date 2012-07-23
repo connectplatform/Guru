@@ -8,6 +8,9 @@ module.exports = (res, chatId) ->
     if status is 'active'
       res.send null, {status:"ALREADY ACCEPTED", chatId: chatId}
     else
-      ChatSession.add operatorId, chatId, isWatching: 'false', (err)->
+      relationMeta =
+        isWatching: 'false'
+        type: 'member'
+      ChatSession.add operatorId, chatId, relationMeta, (err)->
         console.log "Error adding ChatSession in acceptChat: #{err}" if err
         res.send null, {status:"OK", chatId: chatId}

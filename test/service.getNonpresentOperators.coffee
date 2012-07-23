@@ -23,3 +23,17 @@ boiler 'Service - Get Nonpresent Opertors', ->
             Session.get(operatorSessions[0].id).chatName.get (err, chatName) =>
               chatName.should.eql "God"
               done()
+
+  it "should not return operators who are visible in the chat", (done) ->
+    # Setup
+    @newChat =>
+      @getAuthed =>
+        @client.acceptChat @channelName, (err) =>
+
+          # Get a list of operators who are online and not visible in chat
+          @client.getNonpresentOperators @channelName, (err, operatorSessions) =>
+            should.not.exist err
+
+            # Validate returned data
+            operatorSessions.length.should.eql 0
+            done()

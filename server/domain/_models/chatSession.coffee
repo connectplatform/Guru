@@ -30,6 +30,7 @@ face = (decorators) ->
 
   sessionChat =
     add: tandoor (sessionId, chatId, metaInfo, cb) ->
+      {inspect} = require 'util'
       async.parallel [
         call bySession, sessionId, "add", chatId
         call byChat, chatId, "add", sessionId

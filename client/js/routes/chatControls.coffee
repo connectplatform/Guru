@@ -10,6 +10,13 @@ define ["app/server", "templates/serverMessage", "templates/selectUser"], (serve
         $("#selectModal").html selectUser users: users
         $("#selectUser").modal()
 
+        $("#selectUser .select").click (evt) ->
+          evt.preventDefault()
+          userId = $(this).attr 'userId'
+          console.log "chose user with id: #{userId}"
+          $("#selectUser").modal "hide"
+
+
         #TODO get selected user, send invite
   createTransferHandler: (chatId) ->
     (evt) ->

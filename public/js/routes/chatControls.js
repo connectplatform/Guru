@@ -16,7 +16,14 @@
             $("#selectModal").html(selectUser({
               users: users
             }));
-            return $("#selectUser").modal();
+            $("#selectUser").modal();
+            return $("#selectUser .select").click(function(evt) {
+              var userId;
+              evt.preventDefault();
+              userId = $(this).attr('userId');
+              console.log("chose user with id: " + userId);
+              return $("#selectUser").modal("hide");
+            });
           });
         };
       },
@@ -33,10 +40,9 @@
             if (err != null) {
               console.log("error kicking user: " + err);
             }
-            $("#" + renderedId + " .chat-display-box").append(serverMessage({
+            return $("#" + renderedId + " .chat-display-box").append(serverMessage({
               message: "The visitor has been kicked from the room"
             }));
-            return console.log("displayed kick message");
           });
         };
       },

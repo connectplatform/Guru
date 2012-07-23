@@ -34,16 +34,11 @@ boiler 'Service - Invite Operator', ->
               {ChatSession} = redgoose.models
               ChatSession.getByChat @channelName, (err, chatSessions) =>
                 should.not.exist err
-                for chatSession in chatSessions when chatSession.sessionId is @targetSession
-                  chatSession.relationMeta.getall (err, meta) =>
-                    meta.type.should.eql 'invite'
-                    meta.requestor.should.eql @client.cookie 'session'
-                    done()
+                for cs in chatSessions when cs.sessionId is @targetSession
+                  chatSession = cs
 
-                  ###this should work but doesn't unless the chatSession we're accessing is last in the chatSessions array
-                  chatSession.relationMeta.getall (err, meta) =>
-                    chatSession.relationMeta.get 'type', (err, type) =>
-                      type.should.eql 'invite'
-                      chatSession.relationMeta.get 'requestor', (err, requestor) =>
-                        requestor.should.eql @client.cookie 'session'
-                        done()
+                  chatSession.relationMeta.get 'type', (err, type) =>
+                    type.should.eql 'invite'
+                    chatSession.relationMeta.get 'requestor', (err, requestor) =>
+                      requestor.should.eql @client.cookie 'session'
+                      done()

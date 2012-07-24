@@ -1,8 +1,9 @@
+
 should = require 'should'
 boiler = require './util/boilerplate'
 redgoose = require 'redgoose'
 
-acceptInvite = require '../server/domain/_services/acceptInvite'
+acceptTransfer = require '../server/domain/_services/acceptTransfer'
 getMyChats = require '../server/domain/_services/getMyChats'
 
 beforeEach (done) ->
@@ -19,15 +20,15 @@ beforeEach (done) ->
         cb()
   done()
 
-boiler 'Service - Accept Invite', ->
-  it "should let an operator accept an invite", (done) ->
+boiler 'Service - Accept Transfer', ->
+  it "should let an operator accept a transfer and kick the requesting operator", (done) ->
     # Setup
     @newChat =>
       @loginOperator =>
         @getAuthed =>
           @client.acceptChat @channelName, (err) =>
             should.not.exist err
-            @client.inviteOperator @targetSession, @channelName, (err) =>
+            @client.transferChat @targetSession, @channelName, (err) =>
               should.not.exist err
 
               # Do test
@@ -38,15 +39,21 @@ boiler 'Service - Accept Invite', ->
                   should.not.exist err
                   chatId.should.eql @channelName
 
-                  getMyChatsRes =
+                  # after the tranfer, target operator should be in the chat
+                  getAcceptorsChatsRes =
                     cookie: (string) =>
                       @targetSession if string is 'session'
                     send: (err, chats) =>
                       should.not.exist err
                       chats.length.should.eql 1
                       chats[0].id.should.eql @channelName
-                      done()
 
-                  getMyChats getMyChatsRes
+                      # after the transfer, transferring operator should not be in the chat
+                      @client.getMyChats (err, chats) =>
+                        should.not.exist err
+                        chats.length.should.eql 0
+                        done()
 
-              acceptInvite mockRes, @channelName
+                  getMyChats getAcceptorsChatsRes
+
+              acceptTransfer mockRes, @channelName

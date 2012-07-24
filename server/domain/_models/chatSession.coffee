@@ -50,6 +50,11 @@ face = (decorators) ->
           console.log "Error removing sessionChat: #{err}" if err?
           cb err, true
 
+    get: (sessionId, chatId) ->
+      chatSession = sessionId: sessionId, chatId: chatId
+      relationMeta chatSession
+      chatSession
+
     getBySession: tandoor (sessionId, cb) ->
       call bySession, sessionId, "members", (err, chatIds) ->
         result = (packageRelation sessionId, chatId for chatId in chatIds)

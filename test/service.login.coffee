@@ -6,7 +6,7 @@ boiler 'Service - Login', ->
 
   it 'should log you in', (done) ->
     loginData =
-      email: 'god@torchlightsoftware.com'
+      email: 'admin@torchlightsoftware.com'
       password: 'foobar'
 
     @client.login loginData, (err, userInfo) =>
@@ -16,5 +16,5 @@ boiler 'Service - Login', ->
       {Session} = redgoose.models
       Session.get(id).chatName.get (err, chatName) ->
         should.not.exist err
-        chatName.should.eql "God"
+        chatName.should.eql "Admin"
         done()

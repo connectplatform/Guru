@@ -24,11 +24,11 @@ boiler 'Service - Find User', ->
   it 'should let you find a user by their id', (done) ->
     @getAuthed =>
 
-      @client.findUser {email: 'god@torchlightsoftware.com'}, (err, [god]) ->
-        god.firstName.should.eql 'God'
-        god.lastName.should.eql ''
-        god.role.should.eql 'Administrator'
-        god.websites.should.eql []
-        god.departments.should.eql []
+      @client.findUser {email: 'admin@torchlightsoftware.com'}, (err, [admin]) ->
+        admin.firstName.should.eql 'Admin'
+        admin.lastName.should.eql 'Guy'
+        admin.role.should.eql 'Administrator'
+        admin.websites.should.eql []
+        admin.departments.should.eql []
 
         done()

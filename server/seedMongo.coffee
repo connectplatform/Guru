@@ -18,7 +18,8 @@ module.exports = (done)->
         email: 'admin@torchlightsoftware.com'
         password: 'foobar'
         role: 'Administrator'
-        firstName: 'God'
+        firstName: 'Admin'
+        lastName: 'Guy'
       ,
         email: 'guru1@torchlightsoftware.com'
         password: 'foobar'

@@ -31,7 +31,7 @@ module.exports = (testName, tests) ->
       @client = @getClient()
       @getAuthed = (cb) =>
         loginData =
-          email: 'god@torchlightsoftware.com'
+          email: 'admin@torchlightsoftware.com'
           password: 'foobar'
         @client.login loginData, cb
 

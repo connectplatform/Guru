@@ -13,8 +13,6 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
           departments: $('#editUser .departments').val()
         }
 
-
-
       server.ready ->
 
         server.getRoles (err, allowedRoles) ->
@@ -111,5 +109,5 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
                 evt.preventDefault()
                 $('#editUser').modal 'hide'
 
-            #Attach handlers to all rows  
+            #Attach handlers to all rows
             wireUpRow user.id for user in users

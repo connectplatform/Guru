@@ -1,8 +1,8 @@
 async = require 'async'
 redgoose = require 'redgoose'
-{Chat, ChatSession} = redgoose.models
 
 getChatsFromIdList = (list, done) ->
+  {Chat, ChatSession} = redgoose.models
 
   #this is a bogus chatID added by the redis query TODO: should I worry about this?
   chatIDs = list.filter (element) -> element != 'true'
@@ -44,5 +44,24 @@ getChatsFromIdList = (list, done) ->
   async.map chatIDs, getChat, done
 
 module.exports = (res) ->
+  {Chat, ChatSession} = redgoose.models
   Chat.allChats.all (err, chats) ->
-    getChatsFromIdList chats, res.send
+    getChatsFromIdList chats, (err1, chats) ->
+
+      #only look these up once for all chats we're checking
+      chatIds = chats.map (chat) -> chat.id
+      #map chat statuses
+      assignStatus = (myChatSession, cb) ->
+        myChatSession.relationMeta.get 'type', (err, type) ->
+          if type is 'invite' or type is 'transfer'
+            #change status of chat in chats that has the same id as this
+            chatIndex = chatIds.indexOf myChatSession.chatId
+            if chatIndex < 0
+              console.log "Warning: chat disappeared while we were using it in getActiveChats"
+            else
+              chats[chatIndex].status = type
+          cb()
+
+      ChatSession.getBySession res.cookie('session'), (err, myChatSessions) ->
+        async.forEach myChatSessions, assignStatus, (err) ->
+          res.send err, chats

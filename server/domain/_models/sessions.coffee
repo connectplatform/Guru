@@ -28,13 +28,13 @@ face = (decorators) ->
       chatName session
 
       unreadChats session, ({before, after}) ->
+
         before ['hrem'], (context, args, next) ->
           console.log 'setting to 0:', args[0]
           next null, args
 
         after ['incrby'], (context, args, next) ->
           session.unreadChats.getall (err, chats) ->
-            console.log 'unreadChats:', chats
             notifySession.emit 'unreadChats', chats
 
         # filter retreived values with a parseInt

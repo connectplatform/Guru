@@ -30,6 +30,7 @@ face = (decorators) ->
 
   sessionChat =
     add: tandoor (sessionId, chatId, metaInfo, cb) ->
+      {inspect} = require 'util'
       async.parallel [
         call bySession, sessionId, "add", chatId
         call byChat, chatId, "add", sessionId
@@ -48,6 +49,11 @@ face = (decorators) ->
 
           console.log "Error removing sessionChat: #{err}" if err?
           cb err, true
+
+    get: (sessionId, chatId) ->
+      chatSession = sessionId: sessionId, chatId: chatId
+      relationMeta chatSession
+      chatSession
 
     getBySession: tandoor (sessionId, cb) ->
       call bySession, sessionId, "members", (err, chatIds) ->

@@ -1,0 +1,16 @@
+#selectUser.modal.fade.small-modal
+  .modal-header
+    h3 User Information
+
+  table.table.table-striped
+    thead: tr
+      th Name
+      th Actions
+
+    tbody#userTableBody
+      each user in users
+        tr.userRow(userId="#{user.id}")
+          td= user.chatName
+
+          th
+            a.select(userId="#{user.id}") Select

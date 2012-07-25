@@ -2,10 +2,7 @@ define ["app/server", "templates/serverMessage", "templates/selectUser"], (serve
   createInviteHandler: (chatId) ->
     (evt) ->
       evt.preventDefault()
-      console.log "invite clicked"
       server.getNonpresentOperators chatId, (err, users) ->
-        console.log "got users:"
-        console.log users
         console.log "Error getting nonpresent users: #{err}" if err
         $("#selectModal").html selectUser users: users
         $("#selectUser").modal()
@@ -13,16 +10,25 @@ define ["app/server", "templates/serverMessage", "templates/selectUser"], (serve
         $("#selectUser .select").click (evt) ->
           evt.preventDefault()
           userId = $(this).attr 'userId'
-          console.log "chose user with id: #{userId}"
           $("#selectUser").modal "hide"
+          server.inviteOperator userId, chatId, (err) ->
+            console.log "error inviting operator: #{err}" if err
 
-
-        #TODO get selected user, send invite
   createTransferHandler: (chatId) ->
     (evt) ->
       evt.preventDefault()
-      console.log "transfer clicked"
-      #TODO
+      server.getNonpresentOperators chatId, (err, users) ->
+        console.log "Error getting nonpresent users: #{err}" if err
+        $("#selectModal").html selectUser users: users
+        $("#selectUser").modal()
+
+        $("#selectUser .select").click (evt) ->
+          evt.preventDefault()
+          userId = $(this).attr 'userId'
+          $("#selectUser").modal "hide"
+          server.transferChat userId, chatId, (err) ->
+            console.log "error inviting operator: #{err}" if err
+
   createKickHandler: (chatId, renderedId) ->
     (evt) ->
       evt.preventDefault()

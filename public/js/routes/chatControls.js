@@ -6,9 +6,8 @@
       createInviteHandler: function(chatId) {
         return function(evt) {
           evt.preventDefault();
-          console.log("invite clicked");
           return server.getNonpresentOperators(chatId, function(err, users) {
-            console.log("got users:");
+            console.log("found users:");
             console.log(users);
             if (err) {
               console.log("Error getting nonpresent users: " + err);
@@ -21,8 +20,12 @@
               var userId;
               evt.preventDefault();
               userId = $(this).attr('userId');
-              console.log("chose user with id: " + userId);
-              return $("#selectUser").modal("hide");
+              $("#selectUser").modal("hide");
+              return server.inviteOperator(userId, chatId, function(err) {
+                if (err) {
+                  return console.log("error inviting operator: " + err);
+                }
+              });
             });
           });
         };

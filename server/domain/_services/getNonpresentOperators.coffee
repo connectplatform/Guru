@@ -16,14 +16,15 @@ filterSessions = (sessionIds, chatId, cb) ->
 
       removePresentOperators = (sessionId, cb) ->
         sessionIds = presentChatSessions.map (chatSession) -> chatSession.sessionId
+
         currentIndex = sessionIds.indexOf sessionId
+        result = null
         if currentIndex < 0
-          #Somehow a nonpresent chatsession has ended up in this list
-          console.log "Warning: invalid item in getNonpresentOperators"
-          return cb null, null
+          #This operator is not in this chat
+          cb null, sessionId
         else
           currentChatSession = presentChatSessions[currentIndex]
-          # We weed them out only if they are a visible member
+          #This operator is in this chat, but we only weed them out if they're a visible member
           currentChatSession.relationMeta.get 'type', (err, type) ->
             currentChatSession.relationMeta.get 'isWatching', (err, isWatching) ->
               if type is 'member' and isWatching is 'false'

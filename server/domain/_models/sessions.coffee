@@ -28,7 +28,9 @@ face = (decorators) ->
       chatName session
 
       unreadChats session, ({before, after}) ->
-        before ['set'], (context, args, next) ->
+
+        before ['hrem'], (context, args, next) ->
+          console.log 'setting to 0:', args[0]
           next null, args
 
         after ['incrby'], (context, args, next) ->

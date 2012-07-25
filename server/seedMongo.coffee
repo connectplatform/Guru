@@ -15,7 +15,7 @@ module.exports = (done)->
       Role.create role, cb
 
     operators = [
-        email: 'god@torchlightsoftware.com'
+        email: 'admin@torchlightsoftware.com'
         password: 'foobar'
         role: 'Administrator'
         firstName: 'God'

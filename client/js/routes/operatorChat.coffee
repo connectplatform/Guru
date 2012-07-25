@@ -3,8 +3,13 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
     (args, templ) ->
       sidebar {}, sbTemp
 
+      # get notified of new messages
+      sessionID = server.cookie "session"
+      sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
+
       server.ready (services) ->
         console.log "server is ready-- services availible: #{services}"
+
         server.getMyChats (err, chats) ->
 
           chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
@@ -18,7 +23,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
             # let the server know we read these
             chatID = $(this).attr 'chatid'
             console.log 'chatID:', chatID
-            server.readChats chatID, ->
+            sessionUpdates.emit 'viewedChats', chatID
 
           # on page load click the first tab
           $('#chatTabs a:first').click()

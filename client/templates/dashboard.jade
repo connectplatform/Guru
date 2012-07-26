@@ -26,7 +26,7 @@
 
             // different options depending on chat status or pending invites
             .btn-group
-              if chat.relation == 'present'
+              if chat.relation == 'member'
                 btn.btn.btn-danger.leaveChat(chatId="#{chat.id}") Leave
               else
 

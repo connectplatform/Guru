@@ -19,7 +19,7 @@ beforeEach (done) ->
   done()
 
 boiler 'Service - Get Active Chats', ->
-  it "should display a chat status based on whether an operator is invited", (done) ->
+  it "should have a chat relation based on whether an operator is invited", (done) ->
     # Setup
     @newChat =>
       @loginOperator =>
@@ -36,7 +36,7 @@ boiler 'Service - Get Active Chats', ->
                   should.not.exist err
                   chats.length.should.eql 1
                   chats[0].id.should.eql @channelName
-                  chats[0].status.should.eql 'invite'
+                  chats[0].relation.should.eql 'invite'
                   done()
 
               getActiveChats getActiveChatsRes

@@ -53,13 +53,13 @@ module.exports = (res) ->
       #map chat statuses
       assignStatus = (myChatSession, cb) ->
         myChatSession.relationMeta.get 'type', (err, type) ->
-          if type is 'invite' or type is 'transfer'
+          if type is 'invite' or type is 'transfer' or type is 'member'
             #change status of chat in chats that has the same id as this
             chatIndex = chatIds.indexOf myChatSession.chatId
             if chatIndex < 0
               console.log "Warning: chat disappeared while we were using it in getActiveChats"
             else
-              chats[chatIndex].status = type
+              chats[chatIndex].relation = type
           cb()
 
       ChatSession.getBySession res.cookie('session'), (err, myChatSessions) ->

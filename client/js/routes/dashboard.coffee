@@ -40,12 +40,33 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
             chatId = $(this).attr 'chatId'
             server.acceptChat chatId, (err, result) ->
               console.log "Error accepting chat: #{err}" if err?
-              if result.status is 'OK' 
+              if result.status is 'OK'
                 window.location.hash = '/operatorChat'
               else
                 notify.alert "Another operator already accepted this chat"
                 updateDashboard()
             false
+
+          $('.leaveChat').click (evt) ->
+            evt.preventDefault()
+            chatId = $(this).attr 'chatId'
+            server.leaveChat chatId, (err) ->
+              console.log "error leaving chat: #{err}" if err?
+              updateDashboard()
+
+          $('.acceptInvite').click (evt) ->
+            evt.preventDefault()
+            chatId = $(this).attr 'chatId'
+            server.acceptInvite chatId, (err, chatId) ->
+              console.log "error accepting invite: #{err}" if err?
+              window.location.hash = '/operatorChat'
+
+          $('.acceptTransfer').click (evt) ->
+            evt.preventDefault()
+            chatId = $(this).attr 'chatId'
+            server.acceptTransfer chatId, (err, chatId) ->
+              console.log "error accepting transfer: #{err}" if err?
+              window.location.hash = '/operatorChat'
 
           # count elapsed time since chat began
           util.autotimer '.counter'

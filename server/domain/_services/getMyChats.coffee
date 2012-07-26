@@ -1,10 +1,10 @@
 async = require 'async'
 redgoose = require 'redgoose'
+{ChatSession, Chat} = redgoose.models
 
 module.exports = (res) ->
   # get all my chats
   operatorId = unescape(res.cookie 'session')
-  {ChatSession, Chat} = redgoose.models
   ChatSession.getBySession operatorId, (err, sessionChats) ->
     res.send err, null if err
 

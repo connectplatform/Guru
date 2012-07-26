@@ -1,11 +1,11 @@
 redgoose = require 'redgoose'
 pulsar = require '../../pulsar'
+{ChatSession} = redgoose.models
 
 module.exports = (res, chatId) ->
   newMeta =
     type: 'member'
     isWatching: 'false'
-  {ChatSession} = redgoose.models
   sessionId = res.cookie 'session'
   chatSession = ChatSession.get sessionId, chatId
   chatSession.relationMeta.get 'requestor', (err1, requestor) ->

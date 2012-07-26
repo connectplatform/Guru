@@ -28,12 +28,13 @@ getChatsFromIdList = (list, done) ->
         async.parallel [
           chatSession.relationMeta.get 'isWatching'
           chatSession.session.role.get
-        ], (err, [isWatching, role]) ->
+          chatSession.session.chatName.get
+        ], (err, [isWatching, role, chatName]) ->
 
           if isWatching is 'true' or role is 'Visitor'
             value = null
           else
-            value = chatSession.sessionId
+            value = chatName
 
           cb err, value
 

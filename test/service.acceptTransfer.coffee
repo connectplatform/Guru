@@ -1,10 +1,6 @@
-
 should = require 'should'
 boiler = require './util/boilerplate'
 redgoose = require 'redgoose'
-
-acceptTransfer = require '../server/domain/_services/acceptTransfer'
-getMyChats = require '../server/domain/_services/getMyChats'
 
 beforeEach (done) ->
   @loginOperator = (cb) =>
@@ -21,7 +17,10 @@ beforeEach (done) ->
   done()
 
 boiler 'Service - Accept Transfer', ->
+
   it "should let an operator accept a transfer and kick the requesting operator", (done) ->
+    acceptTransfer = require '../server/domain/_services/acceptTransfer'
+    getMyChats = require '../server/domain/_services/getMyChats'
     # Setup
     @newChat =>
       @loginOperator =>

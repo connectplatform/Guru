@@ -2,9 +2,6 @@ should = require 'should'
 boiler = require './util/boilerplate'
 redgoose = require 'redgoose'
 
-acceptInvite = require '../server/domain/_services/acceptInvite'
-getMyChats = require '../server/domain/_services/getMyChats'
-
 beforeEach (done) ->
   @loginOperator = (cb) =>
     loginData =
@@ -21,6 +18,8 @@ beforeEach (done) ->
 
 boiler 'Service - Accept Invite', ->
   it "should let an operator accept an invite", (done) ->
+    acceptInvite = require '../server/domain/_services/acceptInvite'
+    getMyChats = require '../server/domain/_services/getMyChats'
     # Setup
     @newChat =>
       @loginOperator =>

@@ -31,7 +31,7 @@ module.exports = (cb) ->
   # Vein
   vein = new Vein server
   vein.use (req, res, next) -> #TODO: refactor this
-    if req.service in ['getMyRole', 'login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel'] or req.service.match /^chat/
+    if req.service in ['getMyRole', 'login', 'signup', 'newChat', '', 'getChatHistory', 'getExistingChatChannel', 'visitorCanAccessChannel'] or req.service.match /^chat/
       next()
 
     else

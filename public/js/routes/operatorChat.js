@@ -53,11 +53,9 @@
           createChatRemover = function(thisChatId, channel) {
             return function(endedId) {
               var renderedId;
-              console.log("chatRemover was called: endedId:" + endedId + ", thisChatId:" + thisChatId);
               if (thisChatId !== endedId) {
                 return;
               }
-              console.log("got here");
               channel.removeAllListeners('serverMessage');
               renderedId = renderId(endedId);
               $("#" + renderedId + " .chat-display-box").append(serverMessage({

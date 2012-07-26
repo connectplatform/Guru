@@ -1,5 +1,5 @@
-define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/sidebar", "templates/sidebar", "templates/chatMessage"],
-  (server, pulsar, notify, controls, sidebar, sbTemp, chatMessage) ->
+define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/sidebar", "templates/sidebar", "templates/chatMessage", "templates/serverMessage"],
+  (server, pulsar, notify, controls, sidebar, sbTemp, chatMessage, serverMessage) ->
     (args, templ) ->
       sidebar {}, sbTemp
 
@@ -7,12 +7,14 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
       sessionID = server.cookie "session"
       sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
 
+      renderId = (id) -> id.replace /:/g, '-'
+
       server.ready (services) ->
         console.log "server is ready-- services availible: #{services}"
 
         server.getMyChats (err, chats) ->
 
-          chat.renderedId = chat.id.replace /:/g, '-' for chat in chats
+          chat.renderedId = renderId chat.id for chat in chats
 
           $('#content').html templ chats: chats
 
@@ -42,6 +44,14 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
             (message) ->
               $("##{renderedId} .chat-display-box").append chatMessage message
 
+          createChatRemover = (thisChatId, channel) ->
+            (endedId) ->
+              return unless thisChatId is endedId
+              channel.removeAllListeners 'serverMessage'
+              renderedId = renderId endedId
+              $("##{renderedId} .chat-display-box").append serverMessage message: "Another operator has taken over this chat"
+              $(".message-form").hide()
+
           for chat in chats
             channel = pulsar.channel chat.id
 
@@ -53,9 +63,11 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
 
             #display incoming messages
             channel.on 'serverMessage', createChatAppender chat.renderedId
+            sessionUpdates.on 'kickedFromChat', createChatRemover chat.id, channel
 
             $(window).bind 'hashchange', ->
               channel.removeAllListeners 'serverMessage'
+              sessionUpdates.removeAllListeners 'kickedFromChat'
 
             #wire up control buttons
             $("##{chat.renderedId} .inviteButton").click controls.createInviteHandler chat.id

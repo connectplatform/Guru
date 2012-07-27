@@ -8,7 +8,7 @@ boiler 'Model - Operator Chat', ->
 
   it 'should not let you save an invalid role', (done)->
     user =
-      email: 'invalidrole@torchlightsoftware.com'
+      email: 'invalidrole@foo.com'
       password: digest_s 'foobar'
       role: 'Invalid'
       firstName: 'First'

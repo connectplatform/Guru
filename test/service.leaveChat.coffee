@@ -32,7 +32,7 @@ boiler 'Service - Leave Chat', ->
       firstClient = @getClient()
       firstClient.ready =>
         loginData =
-          email: 'admin@torchlightsoftware.com'
+          email: 'admin@foo.com'
           password: 'foobar'
         firstClient.login loginData, =>
           firstClient.acceptChat @channelName, (err) =>

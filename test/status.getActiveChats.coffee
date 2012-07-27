@@ -7,7 +7,7 @@ getActiveChats = require '../server/domain/_services/getActiveChats'
 beforeEach (done) ->
   @loginOperator = (cb) =>
     loginData =
-      email: 'guru1@torchlightsoftware.com'
+      email: 'guru1@foo.com'
       password: 'foobar'
     client = @getClient()
     client.ready =>

@@ -11,7 +11,7 @@ boiler 'Service - Save User', ->
         firstName: "Gnu"
         lastName: "Yewser"
         role: "Operator"
-        email: "yewser@torchlightsoftware.com"
+        email: "yewser@foo.com"
 
       @client.saveUser fields, (err, user) =>
         user.firstName.should.eql fields.firstName

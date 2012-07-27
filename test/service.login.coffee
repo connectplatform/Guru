@@ -6,7 +6,7 @@ boiler 'Service - Login', ->
 
   it 'should log you in', (done) ->
     loginData =
-      email: 'admin@torchlightsoftware.com'
+      email: 'admin@foo.com'
       password: 'foobar'
 
     @client.login loginData, (err, userInfo) =>

@@ -27,7 +27,7 @@ boiler 'Service - Accept Chat', ->
     @newChat =>
 
       loginData =
-        email: 'guru1@torchlightsoftware.com'
+        email: 'guru1@foo.com'
         password: 'foobar'
 
       client = @getClient()

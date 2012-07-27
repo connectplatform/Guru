@@ -10,7 +10,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
       renderId = (id) -> id.replace /:/g, '-'
 
       server.ready (services) ->
-        console.log "server is ready-- services availible: #{services}"
+        #console.log "server is ready-- services availible: #{services}"
 
         server.getMyChats (err, chats) ->
 

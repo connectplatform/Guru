@@ -4,7 +4,7 @@ mongo = require './mongo'
 User = mongo.model 'User'
 Role = mongo.model 'Role'
 
-module.exports = (done)->
+module.exports = (done) ->
   mongo.wipe ->
 
     createUser = (user, cb) ->
@@ -15,24 +15,24 @@ module.exports = (done)->
       Role.create role, cb
 
     operators = [
-        email: 'admin@torchlightsoftware.com'
+        email: 'admin@foo.com'
         password: 'foobar'
         role: 'Administrator'
         firstName: 'Admin'
         lastName: 'Guy'
       ,
-        email: 'guru1@torchlightsoftware.com'
+        email: 'guru1@foo.com'
         password: 'foobar'
         role: 'Operator'
         firstName: 'First'
         lastName: 'Guru'
       ,
-        email: 'guru2@torchlightsoftware.com'
+        email: 'guru2@foo.com'
         password: 'foobar'
         role: 'Operator'
         websites: 'test.com'
       ,
-        email: 'guru3@torchlightsoftware.com'
+        email: 'guru3@foo.com'
         password: 'foobar'
         role: 'Operator'
         websites: 'test.com'

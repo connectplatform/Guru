@@ -21,6 +21,9 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
           # render chats
           $('#content').html templ chats: chats
 
+          # TODO: These join chat handlers are all very similar.
+          # Can we generalize them into a helper function?
+
           # wire up events
           $('.joinChat').click (evt) ->
             chatId = $(this).attr 'chatId'
@@ -74,13 +77,15 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
       server.ready ->
         updateDashboard()
 
-        console.log "about to attach unansweredCount listener"
+        # automatically update when unansweredCount changes
         updates = pulsar.channel 'notify:operators'
-        updates.on 'unansweredCount', (num) ->
-          console.log "unansweredCount listener called"
-          updateDashboard()
+        refresh = (num) -> updateDashboard()
+        updates.on 'unansweredCount', refresh
 
-        $(window).bind 'hashchange', ->
-          util.cleartimers()
-          updates.removeAllListeners 'unansweredCount'
-          console.log "dashboard hashchange triggered"
+        # stop listening for unansweredCount when we leave the page
+        ran = false
+        window.rooter.hash.listen (newHash) ->
+          unless ran
+            ran = true
+            util.cleartimers()
+            updates.removeListener 'unansweredCount', refresh

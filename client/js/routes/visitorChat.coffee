@@ -1,38 +1,42 @@
 define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage"],
   (server, pulsar, notify, newChat, chatMessage, serverMessage) ->
     ({id}, templ) ->
-      $("#content").html templ()
-      $("#message-form #message").focus()
-
-      console.log "id: #{id}"
-      channel = pulsar.channel id
 
       server.refresh (services) ->
-        $(".message-form").submit (evt) ->
-          evt.preventDefault()
-          unless $(".message").val() is ""
-            message = $(".message").val()
+        server.visitorCanAccessChannel server.cookie('session'), id, (err, canAccess) ->
+          console.log "canAccess: #{canAccess}"
+          console.log "canAccess is true: #{canAccess is true}"
+          return window.location.hash = '/newChat' unless canAccess
 
-            channel.emit 'clientMessage', {message: message, session: server.cookie 'session'}
+          $("#content").html templ()
+          $("#message-form #message").focus()
+          channel = pulsar.channel id
 
-            $(".message").val("")
-            $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
-          false
+          $(".message-form").submit (evt) ->
+            evt.preventDefault()
+            unless $(".message").val() is ""
+              message = $(".message").val()
 
-        appendChat = (data)->
-          $(".chat-display-box").append chatMessage data
+              channel.emit 'clientMessage', {message: message, session: server.cookie 'session'}
 
-        server.getChatHistory server.cookie('channel'), (err, history)->
-          notify.error "Error loading chat history: #{err}" if err
-          appendChat null, msg for msg in history
+              $(".message").val("")
+              $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
+            false
 
-          channel.on 'serverMessage', appendChat
-          channel.on 'chatEnded', ->
-            #TODO need to make sure disconnection occurs server side as well
-            $(".chat-display-box").append serverMessage message: "The operator has ended the chat"
-            channel.removeAllListeners 'serverMessage'
-            $(".message-form").hide()
+          appendChat = (data)->
+            $(".chat-display-box").append chatMessage data
 
-          $(window).bind 'hashchange', ->
-            channel.removeAllListeners 'serverMessage'
-            channel.removeAllListeners 'chatEnded'
+          server.getChatHistory server.cookie('channel'), (err, history)->
+            notify.error "Error loading chat history: #{err}" if err
+            appendChat null, msg for msg in history
+
+            channel.on 'serverMessage', appendChat
+            channel.on 'chatEnded', ->
+              #TODO need to make sure disconnection occurs server side as well
+              $(".chat-display-box").append serverMessage message: "The operator has ended the chat"
+              channel.removeAllListeners 'serverMessage'
+              $(".message-form").hide()
+
+            $(window).bind 'hashchange', ->
+              channel.removeAllListeners 'serverMessage'
+              channel.removeAllListeners 'chatEnded'

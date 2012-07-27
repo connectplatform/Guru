@@ -3,51 +3,57 @@
 
   define(["app/server", "app/pulsar", "app/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage"], function(server, pulsar, notify, newChat, chatMessage, serverMessage) {
     return function(_arg, templ) {
-      var channel, id;
+      var id;
       id = _arg.id;
-      $("#content").html(templ());
-      $("#message-form #message").focus();
-      console.log("id: " + id);
-      channel = pulsar.channel(id);
       return server.refresh(function(services) {
-        var appendChat;
-        $(".message-form").submit(function(evt) {
-          var message;
-          evt.preventDefault();
-          if ($(".message").val() !== "") {
-            message = $(".message").val();
-            channel.emit('clientMessage', {
-              message: message,
-              session: server.cookie('session')
-            });
-            $(".message").val("");
-            $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"));
+        return server.visitorCanAccessChannel(server.cookie('session'), id, function(err, canAccess) {
+          var appendChat, channel;
+          console.log("canAccess: " + canAccess);
+          console.log("canAccess is true: " + (canAccess === true));
+          if (!canAccess) {
+            return window.location.hash = '/newChat';
           }
-          return false;
-        });
-        appendChat = function(data) {
-          return $(".chat-display-box").append(chatMessage(data));
-        };
-        return server.getChatHistory(server.cookie('channel'), function(err, history) {
-          var msg, _i, _len;
-          if (err) {
-            notify.error("Error loading chat history: " + err);
-          }
-          for (_i = 0, _len = history.length; _i < _len; _i++) {
-            msg = history[_i];
-            appendChat(null, msg);
-          }
-          channel.on('serverMessage', appendChat);
-          channel.on('chatEnded', function() {
-            $(".chat-display-box").append(serverMessage({
-              message: "The operator has ended the chat"
-            }));
-            channel.removeAllListeners('serverMessage');
-            return $(".message-form").hide();
+          $("#content").html(templ());
+          $("#message-form #message").focus();
+          channel = pulsar.channel(id);
+          $(".message-form").submit(function(evt) {
+            var message;
+            evt.preventDefault();
+            if ($(".message").val() !== "") {
+              message = $(".message").val();
+              channel.emit('clientMessage', {
+                message: message,
+                session: server.cookie('session')
+              });
+              $(".message").val("");
+              $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"));
+            }
+            return false;
           });
-          return $(window).bind('hashchange', function() {
-            channel.removeAllListeners('serverMessage');
-            return channel.removeAllListeners('chatEnded');
+          appendChat = function(data) {
+            return $(".chat-display-box").append(chatMessage(data));
+          };
+          return server.getChatHistory(server.cookie('channel'), function(err, history) {
+            var msg, _i, _len;
+            if (err) {
+              notify.error("Error loading chat history: " + err);
+            }
+            for (_i = 0, _len = history.length; _i < _len; _i++) {
+              msg = history[_i];
+              appendChat(null, msg);
+            }
+            channel.on('serverMessage', appendChat);
+            channel.on('chatEnded', function() {
+              $(".chat-display-box").append(serverMessage({
+                message: "The operator has ended the chat"
+              }));
+              channel.removeAllListeners('serverMessage');
+              return $(".message-form").hide();
+            });
+            return $(window).bind('hashchange', function() {
+              channel.removeAllListeners('serverMessage');
+              return channel.removeAllListeners('chatEnded');
+            });
           });
         });
       });

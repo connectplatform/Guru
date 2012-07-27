@@ -17,7 +17,7 @@ boiler 'Service - Visitor Can Access Channel', ->
         #This will be executed after the kick
         @client.visitorCanAccessChannel @client.cookie('session'), @channelName, (err, accessAllowed) =>
           should.not.exist err
-          accessAllowed.should.eql true
+          accessAllowed.should.eql false
           done()
 
       kickUser mockRes, @channelName

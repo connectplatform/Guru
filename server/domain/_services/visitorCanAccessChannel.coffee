@@ -4,5 +4,6 @@ redgoose = require 'redgoose'
 module.exports = (res, sessionId, chatId) ->
   ChatSession.getBySession sessionId, (err, chatSessions) ->
     for chatSession in chatSessions
-      return res.send err, true if chatSession.session.id is sessionId
+      console.log "chatSession.chat.id: #{chatSession.chat.id}"
+      return res.send err, true if chatSession.chat.id is chatId
     res.send err, false

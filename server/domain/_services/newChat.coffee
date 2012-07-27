@@ -16,7 +16,12 @@ module.exports = (res, data) ->
       sessionId = session.id
       res.cookie 'session', sessionId
 
-      ChatSession.add sessionId, chatId, isWatching: false, (err) ->
+      relationMeta = {
+        isWatching: false,
+        type: 'member'
+      }
+
+      ChatSession.add sessionId, chatId, relationMeta, (err) ->
         console.log "error creating sessionChat: #{err}" if err
 
         visitorMeta =

@@ -6,9 +6,13 @@ module.exports = (res, chatId) ->
 
   ChatSession.remove operatorId, chatId, (err) ->
     Chat.get(chatId).status.get (err, status) ->
-      if status is 'active'
-        Chat.get(chatId).status.set 'waiting', (err) ->
-          console.log "Error setting chat status: #{err}" if err?
+
+      ChatSession.getByChat chatId, (err, chatSessions) ->
+        console.log "Error getting chatSessions: #{err}" if err
+
+        if status is 'active' and chatSessions.length is 1
+          Chat.get(chatId).status.set 'waiting', (err) ->
+            console.log "Error setting chat status: #{err}" if err?
+            res.send err, chatId
+        else
           res.send err, chatId
-      else
-        res.send err, chatId

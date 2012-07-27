@@ -37,6 +37,10 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
               channel.removeAllListeners 'serverMessage'
               $(".message-form").hide()
 
-            $(window).bind 'hashchange', ->
-              channel.removeAllListeners 'serverMessage'
-              channel.removeAllListeners 'chatEnded'
+            # stop listening for pulsar events when we leave the page
+            ran = false
+            window.rooter.hash.listen (newHash) ->
+              unless ran
+                ran = true
+                channel.removeAllListeners 'serverMessage'
+                channel.removeAllListeners 'chatEnded'

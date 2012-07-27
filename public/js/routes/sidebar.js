@@ -28,7 +28,7 @@
             operatorUpdates.on('unansweredCount', function(num) {
               return updateBadge(".notifyUnanswered", num);
             });
-            sessionUpdates.on('unreadChats', function(unread) {
+            return sessionUpdates.on('unreadChats', function(unread) {
               var chat, count, total;
               total = 0;
               for (chat in unread) {
@@ -36,10 +36,6 @@
                 total += count;
               }
               return updateBadge(".notifyUnread", total);
-            });
-            return $(window).bind('hashchange', function() {
-              operatorUpdates.removeAllListeners('unansweredCount');
-              return sessionUpdates.removeAllListeners('unreadCount');
             });
           }
         });

@@ -1,7 +1,6 @@
-define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/sidebar", "templates/sidebar", "templates/chatMessage", "templates/serverMessage"],
-  (server, pulsar, notify, controls, sidebar, sbTemp, chatMessage, serverMessage) ->
+define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage"],
+  (server, pulsar, notify, controls, chatMessage, serverMessage) ->
     (args, templ) ->
-      sidebar {}, sbTemp
 
       # get notified of new messages
       sessionID = server.cookie "session"
@@ -65,9 +64,13 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls","routes/
             channel.on 'serverMessage', createChatAppender chat.renderedId
             sessionUpdates.on 'kickedFromChat', createChatRemover chat.id, channel
 
-            $(window).bind 'hashchange', ->
-              channel.removeAllListeners 'serverMessage'
-              sessionUpdates.removeAllListeners 'kickedFromChat'
+            # stop listening for pulsar events when we leave the page
+            ran = false
+            window.rooter.hash.listen (newHash) ->
+              unless ran
+                ran = true
+                channel.removeAllListeners 'serverMessage'
+                sessionUpdates.removeAllListeners 'kickedFromChat'
 
             #wire up control buttons
             $("##{chat.renderedId} .inviteButton").click controls.createInviteHandler chat.id

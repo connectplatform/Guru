@@ -29,8 +29,3 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
             for chat, count of unread
               total += count
             updateBadge ".notifyUnread", total
-
-          # TODO: move this to 'after' middleware
-          $(window).bind 'hashchange', ->
-            operatorUpdates.removeAllListeners 'unansweredCount'
-            sessionUpdates.removeAllListeners 'unreadCount'

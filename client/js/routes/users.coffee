@@ -1,5 +1,5 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "templates/editUser", "templates/deleteUser", "templates/userRow"],
-  (server, notify, sidebar, sbTemp, editUser, deleteUser, userRow) ->
+define ["app/server", "app/notify", "templates/editUser", "templates/deleteUser", "templates/userRow"],
+  (server, notify, editUser, deleteUser, userRow) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 
@@ -30,7 +30,6 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
 
           server.findUser {}, (err, users) ->
             console.log "err retrieving users: #{err}" if err?
-            sidebar {}, sbTemp
 
             getUserById = (id) ->
               for user in users

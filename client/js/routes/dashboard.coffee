@@ -1,8 +1,7 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util", "app/pulsar"],
-  (server, notify, sidebar, sbTemp, util, pulsar) ->
+define ["app/server", "app/notify", "app/util", "app/pulsar"],
+  (server, notify, util, pulsar) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
-      sidebar {}, sbTemp
 
       updateDashboard = ->
         console.log "updateDashboard called"
@@ -82,7 +81,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
         refresh = (num) -> updateDashboard()
         updates.on 'unansweredCount', refresh
 
-        # stop listening for unansweredCount when we leave the page
+        # stop listening for pulsar events when we leave the page
         ran = false
         window.rooter.hash.listen (newHash) ->
           unless ran

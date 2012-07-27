@@ -34,7 +34,7 @@
             return $(".chat-display-box").append(chatMessage(data));
           };
           return server.getChatHistory(server.cookie('channel'), function(err, history) {
-            var msg, _i, _len;
+            var msg, ran, _i, _len;
             if (err) {
               notify.error("Error loading chat history: " + err);
             }
@@ -50,9 +50,13 @@
               channel.removeAllListeners('serverMessage');
               return $(".message-form").hide();
             });
-            return $(window).bind('hashchange', function() {
-              channel.removeAllListeners('serverMessage');
-              return channel.removeAllListeners('chatEnded');
+            ran = false;
+            return window.rooter.hash.listen(function(newHash) {
+              if (!ran) {
+                ran = true;
+                channel.removeAllListeners('serverMessage');
+                return channel.removeAllListeners('chatEnded');
+              }
             });
           });
         });

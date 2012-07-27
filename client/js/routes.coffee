@@ -1,4 +1,4 @@
-define ["dermis"], (dermis) ->
+define ["dermis", "routes/sidebar", "templates/sidebar"], (dermis, sidebar, sbTemp) ->
 
   # routes for visitors to join chat
   dermis.route '/newChat'
@@ -24,3 +24,17 @@ define ["dermis"], (dermis) ->
   dermis.route '/joinChat/:id'
 
   dermis.init()
+
+  $ ->
+    hash = window.rooter.hash.value()
+    console.log 'hash:', hash
+    if hash in [
+      '/dashboard',
+      '/userAdmin',
+      '/operatorChat',
+      '/users',
+      '/websites',
+      '/departments'
+    ]
+      console.log 'rendering sidebar'
+      sidebar {}, sbTemp

@@ -26,7 +26,7 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
           appendChat = (data)->
             $(".chat-display-box").append chatMessage data
 
-          server.getChatHistory server.cookie('channel'), (err, history)->
+          server.getChatHistory channel, (err, history)->
             notify.error "Error loading chat history: #{err}" if err
             appendChat null, msg for msg in history
 

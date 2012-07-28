@@ -12,7 +12,6 @@ globalServices = [
 ]
 
 ###
-{tandoor} = require '../lib/util'
 async = require 'async'
 routeValidators = {}
 
@@ -25,10 +24,10 @@ noFilters = (routes) ->
   routeValidators[route] = [] for route in routes
 
 middleware = (req, res, next) ->
-  service = req.service
-  return next 'Invalid service' unless service?
-  async.series ro
-
+  validators = routeValidators[req.service]
+  return next 'Invalid service' unless validators?
+  async.series (validator req for validator in validators), (err) ->
+    next err
 
 beforeFilter ['deleteUser', 'findUser', 'saveUser'], [isAdministrator]
 ###
@@ -61,17 +60,26 @@ unsortedServices = [
   'watchChat'
 ]
 
+{getType} = require '../lib/util'
+mapArgs = (arg) ->
+  if (getType arg is '[object Object]') and arg.socket? and arg.name? and arg.listeners?
+    return arg.name
+  else
+    return arg
+
 module.exports = (req, res, next) ->
 
-  #TODO figure out way to make control flow nice here
+  args = req.args.map mapArgs
+  cookies = req.cookies
+
   return next() if req.service in globalServices
 
   if req.service in availibleToChatMembers
-    isChatMember req, (err) ->
+    isChatMember args, cookies, (err) ->
       next err
 
   else if req.service in administratorOnly
-    isAdministrator req, (isAllowed) ->
+    isAdministrator args, cookies, (isAllowed) ->
       if isAllowed
         next()
       else

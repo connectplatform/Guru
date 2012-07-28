@@ -1,10 +1,10 @@
 redgoose = require 'redgoose'
 {ChatSession} = redgoose.models
 
-module.exports = (req, cb) ->
-  [chatId] = req.args
+module.exports = (args, cookies, cb) ->
+  [chatId] = args
   return cb 'expects arg: chatId' unless chatId?
-  sessionId = req.cookies.session
+  sessionId = cookies.session
   return cb 'expects cookie: {session: sessionId}' unless sessionId?
 
   ChatSession.get(sessionId, chatId).relationMeta.get 'type', (err, relationType) ->

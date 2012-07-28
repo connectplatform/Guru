@@ -1,9 +1,9 @@
 redgoose = require 'redgoose'
 {Session} = redgoose.models
 
-module.exports = (req, cb) ->
+module.exports = (args, cookies, cb) ->
 
-  sessionId = req.cookies.session
+  sessionId = cookies.session
   cb false unless sessionId?
 
   Session.get(sessionId).role.get (err, role) ->

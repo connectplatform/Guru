@@ -1,78 +1,75 @@
+async = require 'async'
 redgoose = require 'redgoose'
+{tandoor} = require '../../../lib/util'
 {Chat, Session} = redgoose.models
 
-{tandoor} = require '../../../lib/util'
-async = require 'async'
 # Interface for document
-face = (decorators) ->
+face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
 
-  {sessionChat: {byChat, bySession, relationMeta}} = decorators
+  # get a chatSession
+  get = (sessionId, chatId) ->
 
-  #TODO pull this into redgoose, refactor here
-  call = (decorator, id, method, args...) ->
-    obj = {}
-    decorator obj
-    decoratorName = Object.keys(obj)[0]
-    obj.id = id
-    obj[decoratorName][method] args...
+    # base object
+    chatSession = sessionId: sessionId, chatId: chatId
 
-  packageRelation = (sessionId, chatId) ->
-    obj = chatId: chatId, sessionId: sessionId
-    relationMeta obj
-    obj.session = Session.get sessionId
-    obj.chat = Chat.get chatId
-    obj
+    # accessors
+    chatIndex chatSession
+    sessionIndex chatSession
+    relationMeta chatSession
 
-  callRelation = (sessionId, chatId, method, args...) ->
-    obj = chatId: chatId, sessionId: sessionId
-    relationMeta obj
-    obj.relationMeta[method] args...
+    # relations
+    chatSession.session = Session.get sessionId
+    chatSession.chat = Chat.get chatId
 
-  sessionChat =
+    chatSession
+
+  # construct model
+  chatSession =
+
+    get: get
+
     add: tandoor (sessionId, chatId, metaInfo, cb) ->
-      {inspect} = require 'util'
-      async.parallel [
-        call bySession, sessionId, "add", chatId
-        call byChat, chatId, "add", sessionId
-        callRelation sessionId, chatId, "mset", metaInfo
-      ], (err) ->
+      cs = get sessionId, chatId
 
-        console.log "Error adding sessionChat: #{err}" if err?
-        cb err, true
+      async.parallel [
+        cs.sessionIndex.add chatId
+        cs.chatIndex.add sessionId
+        cs.relationMeta.mset metaInfo
+
+      ], (err) ->
+        console.log "Error adding chatSession: #{err}" if err?
+        cb err, cs
 
     remove: tandoor (sessionId, chatId, cb) ->
+      cs = get sessionId, chatId
+
       async.parallel [
-        call bySession, sessionId, "srem", chatId
-        call byChat, chatId, "srem", sessionId
-        callRelation sessionId, chatId, "del"
-        ], (err) ->
+        cs.sessionIndex.srem chatId
+        cs.chatIndex.srem sessionId
+        cs.relationMeta.del
 
-          console.log "Error removing sessionChat: #{err}" if err?
-          cb err, true
-
-    get: (sessionId, chatId) ->
-      chatSession = sessionId: sessionId, chatId: chatId
-      relationMeta chatSession
-      chatSession
+      ], (err) ->
+        console.log "Error removing chatSession: #{err}" if err?
+        cb err, cs
 
     getBySession: tandoor (sessionId, cb) ->
-      call bySession, sessionId, "members", (err, chatIds) ->
-        result = (packageRelation sessionId, chatId for chatId in chatIds)
+      get(sessionId).sessionIndex.members (err, chatIds) ->
+        result = (get sessionId, chatId for chatId in chatIds)
         cb err, result
 
     getByChat: tandoor (chatId, cb) ->
-      call byChat, chatId, "members", (err, sessionIds) ->
-        result = (packageRelation sessionId, chatId for sessionId in sessionIds)
+      get(null, chatId).chatIndex.members (err, sessionIds) ->
+        result = (get sessionId, chatId for sessionId in sessionIds)
         cb err, result
 
-  return sessionChat
+  return chatSession
 
 # Schema for document
 schema =
 
-  'sessionChat':
-    'bySession:!{id}': 'Set'
-    'byChat:!{id}': 'Set'
+  'chatSession':
+    'sessionIndex:!{sessionId}': 'Set'
+    'chatIndex:!{chatId}': 'Set'
     'relationMeta:!{sessionId}:!{chatId}': 'Hash'
     # meta keys: isWatching: true|false
     #            type: member|invite|transfer

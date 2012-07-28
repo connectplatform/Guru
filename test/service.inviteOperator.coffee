@@ -48,14 +48,14 @@ boiler 'Service - Invite Operator', ->
               requestor.should.eql @client.cookie 'session'
               done()
 
-  #it "should notify the operator you invited", (done) ->
+  it "should notify the operator you invited", (done) ->
 
-    ## Should receive notification
-    #recipient = @getPulsar().channel "notify:session:#{@targetSession}"
-    #recipient.on 'chatInvites', ([channelID]) ->
-      #should.exist channelID
-      #done()
+    # Should receive notification
+    recipient = @getPulsar().channel "notify:session:#{@targetSession}"
+    recipient.on 'chatInvites', ([chat]) ->
+      should.exist chat
+      done()
 
-    ## Try to invite other operator
-    #@client.inviteOperator @targetSession, @channelName, (err) =>
-      #should.not.exist err
+    # Try to invite other operator
+    @client.inviteOperator @targetSession, @channelName, (err) =>
+      should.not.exist err

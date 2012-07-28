@@ -1,7 +1,8 @@
 async = require 'async'
 redgoose = require 'redgoose'
-{tandoor} = require '../../../lib/util'
+{tandoor, compact} = require '../../../lib/util'
 {Chat, Session} = redgoose.models
+pulsar = require '../../pulsar'
 
 # Interface for document
 face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
@@ -13,9 +14,31 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
     chatSession = sessionId: sessionId, chatId: chatId
 
     # accessors
-    chatIndex chatSession
-    sessionIndex chatSession
-    relationMeta chatSession
+    chatIndex chatSession, ({after}) ->
+      after ['members'], (context, sessionIds, next) ->
+        next null, (get sessionId, chatId for sessionId in sessionIds)
+
+    sessionIndex chatSession, ({after}) ->
+      after ['members'], (context, chatIds, next) ->
+        next null, (get sessionId, chatId for chatId in chatIds)
+
+    getInvites = (rel, next) ->
+      rel.relationMeta.get 'type', (err, type) ->
+        if type in ['invite', 'transfer']
+          next null, {chatId: rel.chatId, type: type}
+        else
+          next null, null
+
+    relationMeta chatSession, ({before}) ->
+      before ['mset', 'set'], (context, args, next) ->
+
+        # maybe pull this and getInvites out into sendChatInvites.coffee?
+        chatSession.sessionIndex.members (err, chats) ->
+          async.map chats, getInvites, (err, chats) ->
+            notify = pulsar.channel "notify:session:#{sessionId}"
+            notify.emit 'chatInvites', compact chats
+
+        next null, args
 
     # relations
     chatSession.session = Session.get sessionId
@@ -52,15 +75,12 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
         console.log "Error removing chatSession: #{err}" if err?
         cb err, cs
 
+    # just sugar
     getBySession: tandoor (sessionId, cb) ->
-      get(sessionId).sessionIndex.members (err, chatIds) ->
-        result = (get sessionId, chatId for chatId in chatIds)
-        cb err, result
+      get(sessionId).sessionIndex.members cb
 
     getByChat: tandoor (chatId, cb) ->
-      get(null, chatId).chatIndex.members (err, sessionIds) ->
-        result = (get sessionId, chatId for sessionId in sessionIds)
-        cb err, result
+      get(null, chatId).chatIndex.members cb
 
   return chatSession
 

@@ -1,11 +1,11 @@
 redgoose = require 'redgoose'
 {Session} = redgoose.models
 
-module.exports = (req, cb) ->
+module.exports = (args, cookies, cb) ->
 
-  sessionId = req.cookies.session
-  cb false unless sessionId?
+  sessionId = cookies.session
+  return cb "expected cookie: {session: sessionId}" unless sessionId?
 
   Session.get(sessionId).role.get (err, role) ->
-    cb false if err
-    cb role is 'Administrator'
+    return cb "You are not an administrator" unless role is "Administrator"
+    cb()

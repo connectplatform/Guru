@@ -3,7 +3,7 @@ rand = require '../../../lib/rand'
 pulsar = require '../../pulsar'
 
 face = (decorators) ->
-  {session: {role, chatName, unreadChats, allSessions}} = decorators
+  {session: {role, chatName, unreadMessages, allSessions}} = decorators
 
   faceValue =
     create:  (fields, cb) ->
@@ -27,28 +27,32 @@ face = (decorators) ->
       role session
       chatName session
 
-      unreadChats session, ({before, after}) ->
+      unreadMessages session, ({after}) ->
 
-        before ['hrem'], (context, args, next) ->
-          console.log 'setting to 0:', args[0]
+        notifyUnread = ->
+          session.unreadMessages.getall (err, chats) ->
+            chats ?= {}
+            notifySession.emit 'unreadMessages', chats
+
+        after ['hdel', 'incrby'], (context, args, next) ->
+          notifyUnread()
           next null, args
 
-        after ['incrby'], (context, args, next) ->
-          session.unreadChats.getall (err, chats) ->
-            notifySession.emit 'unreadChats', chats
-
         # filter retreived values with a parseInt
-        after ['getall'], (context, unreadChats, next) ->
-          for chat, num of unreadChats
-            unreadChats[chat] = parseInt num
-          next null, unreadChats
+        after ['getall'], (context, unreadMessages, next) ->
+          for chat, num of unreadMessages
+            unreadMessages[chat] = parseInt num
+          next null, unreadMessages
 
       session.delete = (cb) ->
         async.parallel [
-          session.role.del
-          session.chatName.del
-          #session.unreadChats.del
+            session.role.del
+            session.chatName.del
+            session.unreadMessages.del
           ], cb
+
+      notifySession.on 'viewedMessages', (chatId) ->
+        session.unreadMessages.hdel chatId, ->
 
       return session
 
@@ -60,7 +64,7 @@ schema =
   'session:!{id}':
     role: 'String'
     chatName: 'String'
-    unreadChats: 'Hash' # k: chatID, v: unreadCount
+    unreadMessages: 'Hash' # k: chatID, v: unreadCount
   session:
     allSessions: 'Set'
 

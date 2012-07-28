@@ -24,7 +24,7 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
 
           # update badge number on change
           operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
-          sessionUpdates.on 'unreadChats', (unread) ->
+          sessionUpdates.on 'unreadMessages', (unread) ->
             total = 0
             for chat, count of unread
               total += count

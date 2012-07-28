@@ -1,14 +1,21 @@
 //TODO: this formatting is just a scaffold
-ul.chatControls.span4(chatId="#{chat.id}")
-  li
+div.well.chatControls.span4(chatId="#{chat.id}")
+
+  .visitor-info
     | Visitor: #{chat.visitor.username}
-  li
-    | Actions:
-  li
-    button.btn.inviteButton Invite
-  li
-    button.btn.transferButton Transfer
-  li
-    button.btn.kickButton Kick
-  li
-    button.btn.leaveButton Leave
+
+  .actions
+    p
+      | Actions:
+
+    table
+      tr
+        td
+          button.btn.btn-primary.inviteButton Invite
+        td
+          button.btn.btn-primary.transferButton Transfer
+      tr
+        td
+          button.btn.btn-danger.kickButton Kick
+        td
+          button.btn.btn-warning.leaveButton Leave

@@ -95,3 +95,25 @@ blockquote {
 .bold {
   font-weight: bold;
 }
+
+.chatTab {
+  margin-right: 4px;
+}
+
+.actions table td {
+  padding: 4px;
+}
+
+.actions button.btn {
+  width: 75px;
+}
+
+.actions {
+  position: absolute;
+  bottom: 14px;
+}
+
+.chatControls {
+  height: 82%;
+  position: relative;
+}

@@ -31,6 +31,6 @@ module.exports = (channelName) ->
 
       # notify operators
       async.forEach operators, (op, cb) ->
-        Session.get(op).unreadChats.incrby channelName, 1, cb
+        Session.get(op).unreadMessages.incrby channelName, 1, cb
 
       channel.emit 'serverMessage', history

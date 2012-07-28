@@ -4,7 +4,6 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
       return window.location.hash = '/' unless server.cookie 'session'
 
       updateDashboard = ->
-        console.log "updateDashboard called"
         server.getActiveChats (err, chats) ->
           console.log "err retrieving chats: #{err}" if err?
 

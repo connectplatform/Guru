@@ -25,16 +25,16 @@ define ["dermis", "routes/sidebar", "templates/sidebar"], (dermis, sidebar, sbTe
 
   dermis.init()
 
+  operatorPages = [
+    '/dashboard',
+    '/userAdmin',
+    '/operatorChat',
+    '/users',
+    '/websites',
+    '/departments'
+  ]
+
   $ ->
     hash = window.rooter.hash.value()
-    console.log 'hash:', hash
-    if hash in [
-      '/dashboard',
-      '/userAdmin',
-      '/operatorChat',
-      '/users',
-      '/websites',
-      '/departments'
-    ]
-      console.log 'rendering sidebar'
+    if hash in operatorPages
       sidebar {}, sbTemp

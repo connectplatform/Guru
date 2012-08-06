@@ -3,6 +3,20 @@
 module.exports = ->
   beforeFilter ['isAdministrator'], only: ['deleteUser', 'findUser', 'saveUser']
   beforeFilter ['isChatMember'], only: ['getChatHistory']
+
+  beforeFilter ['isRegisteredUser'],
+    except: [
+      'getMyRole',
+      'login',
+      'newChat',
+      'getExistingChatChannel',
+      'visitorCanAccessChannel',
+      'getChatHistory',
+      'deleteUser',#these three are covered by isAdministrator
+      'findUser',
+      'saveUser'
+    ]
+
 ###
 # These routes should have filters, but they have not been added yet
 [

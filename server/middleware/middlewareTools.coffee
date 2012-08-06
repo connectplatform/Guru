@@ -23,7 +23,8 @@ module.exports =
         routeValidators[route].push tandoor validator for validator in validators
 
     else if targetObject.except?
-      for route of routeValidators when targetObject.except.indexOf route is -1
+      allOtherRoutes = (routeName for routeName of routeValidators when targetObject.except.indexOf(routeName) is -1)
+      for route in allOtherRoutes
         routeValidators[route].push tandoor validator for validator in validators
 
     else

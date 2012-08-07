@@ -31,7 +31,7 @@ boiler 'Service - Invite Operator', ->
   it "should let you invite an operator to the chat", (done) ->
 
     # Try to invite other operator
-    @client.inviteOperator @targetSession, @channelName, (err) =>
+    @client.inviteOperator @channelName, @targetSession, (err) =>
       should.not.exist err
 
       # Check whether operator was invited
@@ -57,5 +57,5 @@ boiler 'Service - Invite Operator', ->
       done()
 
     # Try to invite other operator
-    @client.inviteOperator @targetSession, @channelName, (err) =>
+    @client.inviteOperator @channelName, @targetSession, (err) =>
       should.not.exist err

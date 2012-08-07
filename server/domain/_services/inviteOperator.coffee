@@ -1,7 +1,7 @@
 redgoose = require 'redgoose'
 {Session, ChatSession} = redgoose.models
 
-module.exports = (res, sessionId, chatId) ->
+module.exports = (res, chatId, sessionId) ->
   metaInfo =
     isWatching: 'false'
     type: 'invite'

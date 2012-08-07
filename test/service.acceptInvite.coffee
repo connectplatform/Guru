@@ -26,7 +26,7 @@ boiler 'Service - Accept Invite', ->
         @getAuthed =>
           @client.acceptChat @channelName, (err) =>
             should.not.exist err
-            @client.inviteOperator @targetSession, @channelName, (err) =>
+            @client.inviteOperator @channelName, @targetSession, (err) =>
               should.not.exist err
 
               # Do test

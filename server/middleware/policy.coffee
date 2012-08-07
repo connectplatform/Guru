@@ -2,7 +2,7 @@
 
 module.exports = ->
   beforeFilter ['isAdministrator'], only: ['deleteUser', 'findUser', 'saveUser']
-  beforeFilter ['isChatMember'], only: ['getChatHistory', 'inviteOperator']
+  beforeFilter ['isChatMember'], only: ['getChatHistory', 'inviteOperator', 'transferChat']
 
   beforeFilter ['isRegisteredUser'],
     except: [

@@ -26,7 +26,7 @@ define ["app/server", "templates/serverMessage", "templates/selectUser"], (serve
           evt.preventDefault()
           userId = $(this).attr 'userId'
           $("#selectUser").modal "hide"
-          server.transferChat userId, chatId, (err) ->
+          server.transferChat chatId, userId, (err) ->
             console.log "error inviting operator: #{err}" if err
 
   createKickHandler: (chatId, renderedId) ->

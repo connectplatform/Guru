@@ -26,7 +26,7 @@ boiler 'Service - Transfer Chat', ->
             should.not.exist err
 
             # Try to transfer
-            @client.transferChat @targetSession, @channelName, (err) =>
+            @client.transferChat @channelName, @targetSession, (err) =>
               should.not.exist err
 
               # Check whether transfer worked

@@ -27,7 +27,7 @@ boiler 'Service - Accept Transfer', ->
         @getAuthed =>
           @client.acceptChat @channelName, (err) =>
             should.not.exist err
-            @client.transferChat @targetSession, @channelName, (err) =>
+            @client.transferChat @channelName, @targetSession, (err) =>
               should.not.exist err
 
               # Do test

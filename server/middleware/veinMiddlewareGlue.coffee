@@ -1,4 +1,5 @@
 async = require 'async'
+policy = require './policy'
 {populateRoutes, getValidators} = require './middlewareTools'
 
 {getType} = require '../../lib/util'
@@ -9,7 +10,7 @@ mapArgs = (arg) ->
   else
     return arg
 
-module.exports = (vein, policy) ->
+module.exports = (vein) ->
   veinServices = Object.keys vein.services
 
   populateRoutes veinServices

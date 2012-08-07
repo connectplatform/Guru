@@ -33,9 +33,8 @@ module.exports = (cb) ->
   vein.addFolder __dirname + '/domain/_services/'
 
   veinMiddlewareGlue = require './middleware/veinMiddlewareGlue'
-  accessPolicies = require './middleware/policy'
 
-  veinMiddlewareGlue vein, accessPolicies
+  veinMiddlewareGlue vein
 
   #flush cache
   flushCache ->

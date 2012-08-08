@@ -2,15 +2,6 @@
 
 module.exports = ->
   beforeFilter ['isAdministrator'], only: ['deleteUser', 'findUser', 'saveUser']
-  beforeFilter ['isChatMember'],
-    only: [
-      'getChatHistory',
-      'inviteOperator',
-      'transferChat',
-      'getNonpresentOperators',
-      'kickUser',
-      'leaveChat'
-    ]
 
   beforeFilter ['isRegisteredUser'],
     except: [
@@ -25,18 +16,22 @@ module.exports = ->
       'saveUser'
     ]
 
+  beforeFilter ['isChatMember'],
+    only: [
+      'getChatHistory',
+      'inviteOperator',
+      'getNonpresentOperators',
+      'leaveChat'
+    ]
+
+  beforeFilter ['isVisibleInChat'], only: [ 'transferChat', 'kickUser']
+  beforeFilter ['isNotVisibleChatMember'], only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']
+  beforeFilter ['isNotChatMember'], only: ['watchChat']
+  #beforeFilter ['isInvitedToChat'], only: ['acceptInvite']
+  #beforeFilter ['isInvitedToTransfer'], only: ['acceptTransfer']
 ###
 # These routes should have filters, but they have not been added yet
 [
-  'acceptChat',
-  'acceptInvite',
-  'acceptTransfer',
-  'getActiveChats',
   'getChatStats',
-  'getMyChats',
-  'getRoles',
-  'joinChat',
-  'leaveChat',
   'readChats',
-  'watchChat'
 ]

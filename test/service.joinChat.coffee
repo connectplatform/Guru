@@ -10,7 +10,7 @@ boiler 'Service - Join Chat', ->
       visitorClient.newChat {username: 'foo'}, (err, {channel}) =>
         visitorClient.disconnect()
 
-        @getAuthed => 
+        @getAuthed =>
           @client.joinChat channel, (err) =>
             false.should.eql err?
             id = @client.cookie('session')

@@ -32,7 +32,7 @@ boiler 'Service - Leave Chat', ->
       firstClient = @getClient()
       firstClient.ready =>
         loginData =
-          email: 'admin@foo.com'
+          email: 'guru1@foo.com'
           password: 'foobar'
         firstClient.login loginData, =>
           firstClient.acceptChat @channelName, (err) =>
@@ -41,20 +41,20 @@ boiler 'Service - Leave Chat', ->
 
             @getAuthed =>
               @client.joinChat @channelName, (err) =>
-              should.not.exist err
-
-              # Try to leave
-              @client.leaveChat @channelName, (err, channelName) =>
                 should.not.exist err
-                channelName.should.eql @channelName
 
-                # Check whether we're still in channel
-                @client.getMyChats (err, chats) =>
+                # Try to leave
+                @client.leaveChat @channelName, (err, channelName) =>
                   should.not.exist err
-                  chats.length.should.eql 0
+                  channelName.should.eql @channelName
 
-                  # Check whether the chat has the right status
-                  @client.getActiveChats (err, [chat]) =>
-                    chat.status.should.eql 'active'
+                  # Check whether we're still in channel
+                  @client.getMyChats (err, chats) =>
+                    should.not.exist err
+                    chats.length.should.eql 0
 
-                    done()
+                    # Check whether the chat has the right status
+                    @client.getActiveChats (err, [chat]) =>
+                      chat.status.should.eql 'active'
+
+                      done()

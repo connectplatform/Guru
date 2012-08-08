@@ -3,7 +3,7 @@
 module.exports = ->
   beforeFilter ['isAdministrator'], only: ['deleteUser', 'findUser', 'saveUser']
 
-  beforeFilter ['isRegisteredUser'],
+  beforeFilter ['isStaff'],
     except: [
       'getMyRole',
       'login',
@@ -27,11 +27,5 @@ module.exports = ->
   beforeFilter ['isVisibleInChat'], only: [ 'transferChat', 'kickUser']
   beforeFilter ['isNotVisibleChatMember'], only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']
   beforeFilter ['isNotChatMember'], only: ['watchChat']
-  #beforeFilter ['isInvitedToChat'], only: ['acceptInvite']
-  #beforeFilter ['isInvitedToTransfer'], only: ['acceptTransfer']
-###
-# These routes should have filters, but they have not been added yet
-[
-  'getChatStats',
-  'readChats',
-]
+  beforeFilter ['isInvitedToChat'], only: ['acceptInvite']
+  beforeFilter ['isInvitedToTransfer'], only: ['acceptTransfer']

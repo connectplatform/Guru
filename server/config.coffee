@@ -13,7 +13,6 @@ config =
       port: 80
       pulsarPort: 4001
     mongo:
-      host: 'mongodb://nodejitsu:1f67dc62308acf2edc33fe00e9269ff5@staff.mongohq.com:10078/nodejitsudb764288183790'
-      #host: 'mongodb://guru:oIO7=1_85-7y||~@ds033767.mongolab.com:33767/guru-prod' #mongolabs instance
+      host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
 
 module.exports = config[environment]

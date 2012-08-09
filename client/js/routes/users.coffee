@@ -33,7 +33,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
             return user
 
           # find all users and populate listing
-          server.findUser {}, (err, users) ->
+          server.findModel {}, "User", (err, users) ->
             console.log "err retrieving users: #{err}" if err
 
             formBuild = formBuilder getFormFields, editUser, deleteUser, server.saveModel, server.deleteUser, extraDataPacker, userRow, users, "user"

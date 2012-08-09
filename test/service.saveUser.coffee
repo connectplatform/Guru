@@ -20,7 +20,7 @@ boiler 'Service - Save Model', ->
 
         #check results
         false.should.eql err?
-        @client.findUser {_id: user.id}, (err, foundUsers) =>
+        @client.findModel {_id: user.id}, "User", (err, foundUsers) =>
           false.should.eql err?
           foundUsers[0].firstName.should.eql fields.firstName
           foundUsers[0].lastName.should.eql fields.lastName
@@ -31,7 +31,7 @@ boiler 'Service - Save Model', ->
     @getAuthed =>
 
       #change fields and resave
-      @client.findUser {}, (err, foundUsers) =>
+      @client.findModel {}, "User", (err, foundUsers) =>
         target = foundUsers[1]
         target.firstName = "Seamus"
         @client.saveModel target, "User", (err, user) =>
@@ -42,7 +42,7 @@ boiler 'Service - Save Model', ->
           user.email.should.eql target.email
 
           #check that save was successful
-          @client.findUser {_id: user.id}, (err, foundUsers) =>
+          @client.findModel {_id: user.id}, "User", (err, foundUsers) =>
             false.should.eql err?
             foundUsers[0].should.eql target
             done()

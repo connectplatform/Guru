@@ -7,7 +7,7 @@ boiler 'Service - Find User', ->
     @getAuthed =>
 
       #do test
-      @client.findUser {}, (err, users) ->
+      @client.findModel {}, "User", (err, users) ->
         false.should.eql err?
         for user in users
           user.firstName.should.exist
@@ -24,7 +24,7 @@ boiler 'Service - Find User', ->
   it 'should let you find a user by their id', (done) ->
     @getAuthed =>
 
-      @client.findUser {email: 'admin@foo.com'}, (err, [admin]) ->
+      @client.findModel {email: 'admin@foo.com'}, "User", (err, [admin]) ->
         admin.firstName.should.eql 'Admin'
         admin.lastName.should.eql 'Guy'
         admin.role.should.eql 'Administrator'

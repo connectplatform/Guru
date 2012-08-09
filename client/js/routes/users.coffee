@@ -36,7 +36,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
           server.findModel {}, "User", (err, users) ->
             console.log "err retrieving users: #{err}" if err
 
-            formBuild = formBuilder getFormFields, editUser, deleteUser, server.saveModel, server.deleteModel, extraDataPacker, userRow, users, "user"
+            formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"
             #Done with edit/delete handlers, now render page
             $('#content').html templ users: users
 

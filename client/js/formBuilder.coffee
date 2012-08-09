@@ -1,5 +1,5 @@
-define [], ->
-  (getFormFields, editingTemplate, deletingTemplate, saveService, deleteService, extraDataPacker, rowTemplate, initialElements, elementName)->
+define ["app/server"], (server) ->
+  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName)->
 
     uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1)
 
@@ -26,7 +26,7 @@ define [], ->
             fields = getFormFields()
             fields.id = element.id if element.id?
 
-            saveService fields, uppercaseName, (err, savedElement) ->
+            server.saveModel fields, uppercaseName, (err, savedElement) ->
               formBuilder.setElement savedElement
 
               onComplete err, savedElement
@@ -62,7 +62,7 @@ define [], ->
           $("#delete#{uppercaseName} .deleteButton").click (evt) ->
             evt.preventDefault()
 
-            deleteService currentElement.id, uppercaseName, (err) ->
+            server.deleteModel currentElement.id, uppercaseName, (err) ->
               return notify.error "Error deleting #{elementName}: #{err}" if err?
               $("##{elementName}.#{elementName}Row[#{elementName}Id=#{currentElement.id}]").remove()
               $("#delete#{uppercaseName}").modal 'hide'

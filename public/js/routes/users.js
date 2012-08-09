@@ -34,12 +34,12 @@
             user.allowedRoles = allowedRoles;
             return user;
           };
-          return server.findUser({}, function(err, users) {
+          return server.findModel({}, "User", function(err, users) {
             var formBuild, user, _i, _len, _results;
             if (err) {
               console.log("err retrieving users: " + err);
             }
-            formBuild = formBuilder(getFormFields, editUser, deleteUser, server.saveUser, server.deleteUser, extraDataPacker, userRow, users, "user");
+            formBuild = formBuilder(getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user");
             $('#content').html(templ({
               users: users
             }));

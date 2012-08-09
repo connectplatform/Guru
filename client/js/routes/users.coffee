@@ -36,11 +36,11 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
           server.findUser {}, (err, users) ->
             console.log "err retrieving users: #{err}" if err
 
-            formBuild = formBuilder getFormFields, editUser, deleteUser, server.saveUser, server.deleteUser, extraDataPacker, userRow, users
+            formBuild = formBuilder getFormFields, editUser, deleteUser, server.saveUser, server.deleteUser, extraDataPacker, userRow, users, "user"
             #Done with edit/delete handlers, now render page
             $('#content').html templ users: users
 
-            $('#addUser').click formBuild.userForm editUser, getNewUser(), (err, savedUser) ->
+            $('#addUser').click formBuild.elementForm editUser, getNewUser(), (err, savedUser) ->
               return notify.error "Error saving user: #{err}" if err?
               formBuild.setElement savedUser
               $("#userTableBody").append userRow user: savedUser

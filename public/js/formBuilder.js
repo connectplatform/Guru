@@ -2,9 +2,10 @@
 (function() {
 
   define([], function() {
-    return function(getFormFields, editingTemplate, deletingTemplate, saveService, deleteService, extraDataPacker, rowTemplate, initialElements) {
-      var elements, formBuilder, getElementById,
+    return function(getFormFields, editingTemplate, deletingTemplate, saveService, deleteService, extraDataPacker, rowTemplate, initialElements, elementName) {
+      var elements, formBuilder, getElementById, uppercaseName,
         _this = this;
+      uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1);
       elements = initialElements;
       getElementById = function(id) {
         var element, _i, _len;
@@ -16,82 +17,80 @@
         }
       };
       formBuilder = {
-        userForm: function(template, user, onComplete) {
+        elementForm: function(template, element, onComplete) {
           return function(evt) {
+            var templateObject;
             evt.preventDefault();
-            $("#modalBox").html(template({
-              user: user
-            }));
-            $('#editUser').modal();
-            $('#editUser .saveButton').click(function(evt) {
+            templateObject = {};
+            templateObject[elementName] = element;
+            $("#modalBox").html(template(templateObject));
+            $("#edit" + uppercaseName).modal();
+            $("#edit" + uppercaseName + " .saveButton").click(function(evt) {
               var fields;
               evt.preventDefault();
               fields = getFormFields();
-              if (user.id != null) {
-                fields.id = user.id;
+              if (element.id != null) {
+                fields.id = element.id;
               }
-              return saveService(fields, function(err, savedUser) {
-                formBuilder.setElement(savedUser);
-                console.log("savedUser", savedUser);
-                console.log("element is now", getElementById(savedUser.id));
-                onComplete(err, savedUser);
+              return saveService(fields, function(err, savedElement) {
+                formBuilder.setElement(savedElement);
+                onComplete(err, savedElement);
                 if (err != null) {
                   return;
                 }
-                formBuilder.wireUpRow(savedUser.id);
-                return $('#editUser').modal('hide');
+                formBuilder.wireUpRow(savedElement.id);
+                return $("#edit" + uppercaseName).modal('hide');
               });
             });
-            return $('#editUser .cancelButton').click(function(evt) {
+            return $("#edit" + uppercaseName + " .cancelButton").click(function(evt) {
               evt.preventDefault();
-              return $('#editUser').modal('hide');
+              return $("#edit" + uppercaseName).modal('hide');
             });
           };
         },
         wireUpRow: function(id) {
-          var currentUser, deleteUserClicked, editUserClicked;
-          currentUser = getElementById(id);
-          editUserClicked = formBuilder.userForm(editingTemplate, currentUser, function(err, savedUser) {
-            console.log("currentUser", currentUser);
-            console.log("savedUser", savedUser);
+          var currentElement, deleteElementClicked, editElementClicked;
+          currentElement = getElementById(id);
+          editElementClicked = formBuilder.elementForm(editingTemplate, currentElement, function(err, savedElement) {
+            var templateObject;
             if (err != null) {
-              return notify.error("Error saving user: " + err);
+              return notify.error("Error saving element: " + err);
             }
-            return $("#userTableBody .userRow[userId=" + currentUser.id + "]").replaceWith(rowTemplate({
-              user: savedUser
-            }));
+            templateObject = {};
+            templateObject[elementName] = savedElement;
+            return $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + currentElement.id + "]").replaceWith(rowTemplate(templateObject));
           });
-          deleteUserClicked = function(evt) {
+          deleteElementClicked = function(evt) {
+            var templateObject;
             evt.preventDefault();
-            currentUser = getElementById($(this).attr('userId'));
-            console.log("currentUser", currentUser);
-            $("#modalBox").html(deletingTemplate({
-              user: currentUser
-            }));
+            currentElement = getElementById($(this).attr("" + elementName + "Id"));
+            templateObject = {};
+            templateObject[elementName] = currentElement;
+            $("#modalBox").html(deletingTemplate(templateObject));
             console.log("box rendered");
-            $('#deleteUser').modal();
-            $('#deleteUser .deleteButton').click(function(evt) {
+            $("#delete" + uppercaseName).modal();
+            $("#delete" + uppercaseName + " .deleteButton").click(function(evt) {
               evt.preventDefault();
-              return deleteService(currentUser.id, function(err) {
+              return deleteService(currentElement.id, function(err) {
                 if (err != null) {
-                  return notify.error("Error deleting user: " + err);
+                  return notify.error("Error deleting " + elementName + ": " + err);
                 }
-                $("#userTableBody .userRow[userId=" + currentUser.id + "]").remove();
-                return $('#deleteUser').modal('hide');
+                $("#" + elementName + "." + elementName + "Row[" + elementName + "Id=" + currentElement.id + "]").remove();
+                return $("#delete" + uppercaseName).modal('hide');
               });
             });
-            return $('#deleteUser .cancelButton').click(function() {
-              return $('#deleteUser').modal('hide');
+            return $("#delete" + uppercaseName + " .cancelButton").click(function() {
+              return $("#delete" + uppercaseName).modal('hide');
             });
           };
-          $("#userTableBody .userRow[userId=" + id + "] .editUser").click(editUserClicked);
-          return $("#userTableBody .userRow[userId=" + id + "] .deleteUser").click(deleteUserClicked);
+          $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + id + "] .edit" + uppercaseName).click(editElementClicked);
+          return $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + id + "] .delete" + uppercaseName).click(deleteElementClicked);
         },
         addElement: function(newElement, cb) {
           return function(evt) {
-            return formBuilder.userForm(editingTemplate, newElement, function(err, savedElement) {
+            return formBuilder.elementForm(editingTemplate, newElement, function(err, savedElement) {
               if (!err) {
-                initialElements.push(savedUser);
+                initialElements.push(savedElement);
               }
               return cb(err, savedElement);
             });

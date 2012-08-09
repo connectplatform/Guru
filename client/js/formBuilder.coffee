@@ -1,5 +1,7 @@
 define [], ->
-  (getFormFields, editingTemplate, deletingTemplate, saveService, deleteService, extraDataPacker, rowTemplate, initialElements)->
+  (getFormFields, editingTemplate, deletingTemplate, saveService, deleteService, extraDataPacker, rowTemplate, initialElements, elementName)->
+
+    uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1)
 
     elements = initialElements
 
@@ -9,72 +11,72 @@ define [], ->
           return extraDataPacker element
 
     formBuilder =
-      userForm: (template, user, onComplete) ->
+      elementForm: (template, element, onComplete) ->
         (evt) ->
           evt.preventDefault()
 
-          $("#modalBox").html template user: user
-          $('#editUser').modal()
+          templateObject = {}
+          templateObject[elementName] = element
+          $("#modalBox").html template templateObject
+          $("#edit#{uppercaseName}").modal()
 
-          $('#editUser .saveButton').click (evt) ->
+          $("#edit#{uppercaseName} .saveButton").click (evt) ->
             evt.preventDefault()
 
             fields = getFormFields()
-            fields.id = user.id if user.id?
+            fields.id = element.id if element.id?
 
-            saveService fields, (err, savedUser) ->
-              formBuilder.setElement savedUser
-              console.log "savedUser", savedUser
-              console.log "element is now", getElementById savedUser.id
+            saveService fields, (err, savedElement) ->
+              formBuilder.setElement savedElement
 
-              onComplete err, savedUser
+              onComplete err, savedElement
               return if err?
 
-              formBuilder.wireUpRow(savedUser.id)
-              $('#editUser').modal 'hide'
+              formBuilder.wireUpRow(savedElement.id)
+              $("#edit#{uppercaseName}").modal 'hide'
 
-          $('#editUser .cancelButton').click (evt) ->
+          $("#edit#{uppercaseName} .cancelButton").click (evt) ->
             evt.preventDefault()
-            $('#editUser').modal 'hide'
+            $("#edit#{uppercaseName}").modal 'hide'
 
       wireUpRow: (id) =>
-        currentUser = getElementById id
+        currentElement = getElementById id
 
-        editUserClicked = formBuilder.userForm editingTemplate, currentUser, (err, savedUser) ->
+        editElementClicked = formBuilder.elementForm editingTemplate, currentElement, (err, savedElement) ->
 
-          console.log "currentUser", currentUser
-          console.log "savedUser", savedUser
+          return notify.error "Error saving element: #{err}" if err?
+          templateObject = {}
+          templateObject[elementName] = savedElement
+          $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{currentElement.id}]").replaceWith rowTemplate templateObject
 
-          return notify.error "Error saving user: #{err}" if err?
-          $("#userTableBody .userRow[userId=#{currentUser.id}]").replaceWith rowTemplate user: savedUser
-
-        deleteUserClicked = (evt) ->
+        deleteElementClicked = (evt) ->
           evt.preventDefault()
-          currentUser = getElementById $(this).attr 'userId'
+          currentElement = getElementById $(this).attr "#{elementName}Id"
 
-          console.log "currentUser", currentUser
-          $("#modalBox").html deletingTemplate user: currentUser
+          templateObject = {}
+          templateObject[elementName] = currentElement
+          $("#modalBox").html deletingTemplate templateObject
           console.log "box rendered"
-          $('#deleteUser').modal()
+          $("#delete#{uppercaseName}").modal()
 
-          $('#deleteUser .deleteButton').click (evt) ->
+          $("#delete#{uppercaseName} .deleteButton").click (evt) ->
             evt.preventDefault()
 
-            deleteService currentUser.id, (err) ->
-              return notify.error "Error deleting user: #{err}" if err?
-              $("#userTableBody .userRow[userId=#{currentUser.id}]").remove()
-              $('#deleteUser').modal 'hide'
+            deleteService currentElement.id, (err) ->
+              return notify.error "Error deleting #{elementName}: #{err}" if err?
+              $("##{elementName}.#{elementName}Row[#{elementName}Id=#{currentElement.id}]").remove()
+              $("#delete#{uppercaseName}").modal 'hide'
 
-          $('#deleteUser .cancelButton').click ->
-            $('#deleteUser').modal 'hide'
+          $("#delete#{uppercaseName} .cancelButton").click ->
+            $("#delete#{uppercaseName}").modal 'hide'
 
-        $("#userTableBody .userRow[userId=#{id}] .editUser").click editUserClicked
-        $("#userTableBody .userRow[userId=#{id}] .deleteUser").click deleteUserClicked
+        $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .edit#{uppercaseName}").click editElementClicked
+        $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .delete#{uppercaseName}").click deleteElementClicked
 
       addElement: (newElement, cb) ->
         (evt) ->
-          formBuilder.userForm editingTemplate, newElement, (err, savedElement) ->
-            initialElements.push savedUser unless err
+          formBuilder.elementForm editingTemplate, newElement, (err, savedElement) ->
+            initialElements.push savedElement unless err
             cb err, savedElement
 
       setElement: (newElement) ->

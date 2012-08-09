@@ -62,7 +62,7 @@ define [], ->
           $("#delete#{uppercaseName} .deleteButton").click (evt) ->
             evt.preventDefault()
 
-            deleteService currentElement.id, (err) ->
+            deleteService currentElement.id, uppercaseName, (err) ->
               return notify.error "Error deleting #{elementName}: #{err}" if err?
               $("##{elementName}.#{elementName}Row[#{elementName}Id=#{currentElement.id}]").remove()
               $("#delete#{uppercaseName}").modal 'hide'

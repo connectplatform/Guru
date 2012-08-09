@@ -1,9 +1,9 @@
 require 'should'
 boiler = require './util/boilerplate'
 
-boiler 'Service - Save User', ->
+boiler 'Service - Save Model', ->
 
-  it 'should create a user if no id is provided', (done) ->
+  it 'should create a user if model is User and no id is provided', (done) ->
     @getAuthed =>
 
       #do test
@@ -13,7 +13,7 @@ boiler 'Service - Save User', ->
         role: "Operator"
         email: "yewser@foo.com"
 
-      @client.saveUser fields, "User", (err, user) =>
+      @client.saveModel fields, "User", (err, user) =>
         user.firstName.should.eql fields.firstName
         user.lastName.should.eql fields.lastName
         user.email.should.eql fields.email
@@ -27,14 +27,14 @@ boiler 'Service - Save User', ->
           foundUsers[0].email.should.eql fields.email
           done()
 
-  it "should edit a user if the user's id is provided", (done) ->
+  it "should edit a user if model is User the user's id is provided", (done) ->
     @getAuthed =>
 
       #change fields and resave
       @client.findUser {}, (err, foundUsers) =>
         target = foundUsers[1]
         target.firstName = "Seamus"
-        @client.saveUser target, "User", (err, user) =>
+        @client.saveModel target, "User", (err, user) =>
           false.should.eql err?
 
           user.firstName.should.eql target.firstName

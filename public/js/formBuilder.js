@@ -3,7 +3,7 @@
 
   define([], function() {
     return function(getFormFields, editingTemplate, deletingTemplate, saveService, deleteService, extraDataPacker, rowTemplate, initialElements) {
-      var elements, formBuilder, getElementById, setElement,
+      var elements, formBuilder, getElementById,
         _this = this;
       elements = initialElements;
       getElementById = function(id) {
@@ -12,15 +12,6 @@
           element = elements[_i];
           if (element.id === id) {
             return extraDataPacker(element);
-          }
-        }
-      };
-      setElement = function(newElement) {
-        var element, _i, _len;
-        for (_i = 0, _len = elements.length; _i < _len; _i++) {
-          element = elements[_i];
-          if (element.id === newElement.id) {
-            return element = extraDataPacker(newElement);
           }
         }
       };
@@ -40,6 +31,9 @@
                 fields.id = user.id;
               }
               return saveService(fields, function(err, savedUser) {
+                formBuilder.setElement(savedUser);
+                console.log("savedUser", savedUser);
+                console.log("element is now", getElementById(savedUser.id));
                 onComplete(err, savedUser);
                 if (err != null) {
                   return;
@@ -58,10 +52,11 @@
           var currentUser, deleteUserClicked, editUserClicked;
           currentUser = getElementById(id);
           editUserClicked = formBuilder.userForm(editingTemplate, currentUser, function(err, savedUser) {
+            console.log("currentUser", currentUser);
+            console.log("savedUser", savedUser);
             if (err != null) {
               return notify.error("Error saving user: " + err);
             }
-            setElement(savedUser);
             return $("#userTableBody .userRow[userId=" + currentUser.id + "]").replaceWith(rowTemplate({
               user: savedUser
             }));
@@ -101,6 +96,16 @@
               return cb(err, savedElement);
             });
           };
+        },
+        setElement: function(newElement) {
+          var element, _i, _len;
+          for (_i = 0, _len = elements.length; _i < _len; _i++) {
+            element = elements[_i];
+            if (element.id === newElement.id) {
+              return elements[elements.indexOf(element)] = extraDataPacker(newElement);
+            }
+          }
+          return elements.push(newElement);
         }
       };
       return formBuilder;

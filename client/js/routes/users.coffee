@@ -40,15 +40,10 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
             #Done with edit/delete handlers, now render page
             $('#content').html templ users: users
 
-            $('#addUser').click formBuild.addElement getNewUser(), (err, savedUser) ->
+            $('#addUser').click formBuild.userForm editUser, getNewUser(), (err, savedUser) ->
               return notify.error "Error saving user: #{err}" if err?
+              formBuild.setElement savedUser
               $("#userTableBody").append userRow user: savedUser
-
-            #TODO: revert this, and manually set the new value in formBuild
-            #$('#addUser').click formBuild.userForm editUser, getNewUser(), (err, savedUser) ->
-              #return notify.error "Error saving user: #{err}" if err?
-              #users.push savedUser
-              #$("#userTableBody").append userRow user: savedUser
 
             #Attach handlers to all rows
             formBuild.wireUpRow user.id for user in users

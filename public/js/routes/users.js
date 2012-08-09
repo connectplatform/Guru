@@ -43,10 +43,11 @@
             $('#content').html(templ({
               users: users
             }));
-            $('#addUser').click(formBuild.addElement(getNewUser(), function(err, savedUser) {
+            $('#addUser').click(formBuild.userForm(editUser, getNewUser(), function(err, savedUser) {
               if (err != null) {
                 return notify.error("Error saving user: " + err);
               }
+              formBuild.setElement(savedUser);
               return $("#userTableBody").append(userRow({
                 user: savedUser
               }));

@@ -8,11 +8,6 @@ define [], ->
         if element.id is id
           return extraDataPacker element
 
-    setElement = (newElement) ->
-      for element in elements
-        if element.id is newElement.id
-          return element = extraDataPacker newElement
-
     formBuilder =
       userForm: (template, user, onComplete) ->
         (evt) ->
@@ -28,6 +23,10 @@ define [], ->
             fields.id = user.id if user.id?
 
             saveService fields, (err, savedUser) ->
+              formBuilder.setElement savedUser
+              console.log "savedUser", savedUser
+              console.log "element is now", getElementById savedUser.id
+
               onComplete err, savedUser
               return if err?
 
@@ -42,8 +41,11 @@ define [], ->
         currentUser = getElementById id
 
         editUserClicked = formBuilder.userForm editingTemplate, currentUser, (err, savedUser) ->
+
+          console.log "currentUser", currentUser
+          console.log "savedUser", savedUser
+
           return notify.error "Error saving user: #{err}" if err?
-          setElement savedUser
           $("#userTableBody .userRow[userId=#{currentUser.id}]").replaceWith rowTemplate user: savedUser
 
         deleteUserClicked = (evt) ->
@@ -74,5 +76,11 @@ define [], ->
           formBuilder.userForm editingTemplate, newElement, (err, savedElement) ->
             initialElements.push savedUser unless err
             cb err, savedElement
+
+      setElement: (newElement) ->
+        for element in elements
+          if element.id is newElement.id
+            return elements[elements.indexOf element] = extraDataPacker newElement
+        elements.push newElement
 
     return formBuilder

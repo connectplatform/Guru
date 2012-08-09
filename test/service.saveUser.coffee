@@ -13,7 +13,7 @@ boiler 'Service - Save User', ->
         role: "Operator"
         email: "yewser@foo.com"
 
-      @client.saveUser fields, (err, user) =>
+      @client.saveUser fields, "User", (err, user) =>
         user.firstName.should.eql fields.firstName
         user.lastName.should.eql fields.lastName
         user.email.should.eql fields.email
@@ -34,7 +34,7 @@ boiler 'Service - Save User', ->
       @client.findUser {}, (err, foundUsers) =>
         target = foundUsers[1]
         target.firstName = "Seamus"
-        @client.saveUser target, (err, user) =>
+        @client.saveUser target, "User", (err, user) =>
           false.should.eql err?
 
           user.firstName.should.eql target.firstName

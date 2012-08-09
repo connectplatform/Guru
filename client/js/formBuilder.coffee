@@ -26,7 +26,7 @@ define [], ->
             fields = getFormFields()
             fields.id = element.id if element.id?
 
-            saveService fields, (err, savedElement) ->
+            saveService fields, uppercaseName, (err, savedElement) ->
               formBuilder.setElement savedElement
 
               onComplete err, savedElement

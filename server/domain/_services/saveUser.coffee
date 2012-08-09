@@ -2,27 +2,28 @@
 db = require '../../mongo'
 {User} = db.models
 
-module.exports = (res, fields) ->
+module.exports = (res, fields, modelName) ->
+  Model = db.models[modelName]
 
-  getUser = (fields, cb) ->
+  getModel = (fields, cb) ->
     if fields.id?
-      User.findOne {_id: fields.id}, (err, user) ->
+      Model.findOne {_id: fields.id}, (err, foundModel) ->
         return res.send err, null if err?
-        cb user
+        cb foundModel
     else
       #TODO: generate a random password that we can email to the user
-      user = new User
-      user.password = digest_s 'password'
-      cb user
+      userModel = new Model
+      userModel.password = digest_s 'password'
+      cb userModel
 
-  getUser fields, (user) ->
-    user[key] = value for key, value of fields when key isnt 'id'
-    user.save (err) ->
-      console.log "error saving user model: #{err}" if err?
+  getModel fields, (foundModel) ->
+    foundModel[key] = value for key, value of fields when key isnt 'id'
+    foundModel.save (err) ->
+      console.log "error saving #{model} model: #{err}" if err?
 
-      filterUser = (user) ->
-        newUser = {id: user['_id']}
-        newUser[key] = value for key, value of user._doc when key isnt 'password' and key isnt '_id'
+      filterModel = (aModel) ->
+        newUser = {id: aModel['_id']}
+        newUser[key] = value for key, value of aModel._doc when key isnt 'password' and key isnt '_id'
         newUser
 
-      res.send err, filterUser user
+      res.send err, filterModel foundModel

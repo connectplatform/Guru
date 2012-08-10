@@ -1,0 +1,8 @@
+tr.specialtyRow(specialtyId="#{specialty.id}")
+  td= specialty.name
+  td= specialty.url
+
+  th
+    a.editSpecialty(specialtyId="#{specialty.id}") Edit
+    &nbsp;|&nbsp;
+    a.deleteSpecialty(specialtyId="#{specialty.id}") Delete

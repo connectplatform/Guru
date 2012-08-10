@@ -1,0 +1,14 @@
+.well
+  .page-header: h1 Specialties
+
+  button.btn#addSpecialty Add New Specialty
+
+  table.table.table-striped
+    thead: tr
+      th Name
+
+    tbody#specialtyTableBody
+      each specialty in specialties
+        include specialtyRow
+
+#specialtyModalBox

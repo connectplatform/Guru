@@ -7,6 +7,7 @@ loadModel = (name) -> db.model name, require "./domain/_models/#{name}"
 db.connect config.mongo.host
 loadModel "Role"
 loadModel "User"
+loadModel "Specialty"
 
 db.wipe = (cb) ->
   async.parallel (m.remove.bind m, null for _, m of db.models), cb

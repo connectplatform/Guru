@@ -17,26 +17,24 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
                 lastName: $('#editUser .lastName').val()
                 email: $('#editUser .email').val()
                 role: $('#editUser .role').val()
-                websites: $('#editUser .websites').val()
+                websites: ($(thing).val() for thing in $('#editUser .websites :checkbox:checked'))
                 departments: $('#editUser .departments').val()
               }
 
+            extraDataPacker = (user) ->
+              user.allowedRoles = allowedRoles
+              user.allowedWebsites = validWebsiteNames
+              return user
+
             getNewUser = ->
-              {
+              extraDataPacker {
                 firstName: ""
                 lastName: ""
                 email: ""
                 role: "Operator"
                 websites: []
                 departments: ""
-                allowedRoles: allowedRoles
               }
-
-            extraDataPacker = (user) ->
-              user.allowedRoles = allowedRoles
-              user.allowedWebsites = validWebsiteNames
-              console.log "allowedWebsites", validWebsiteNames
-              return user
 
             # find all users and populate listing
             server.findModel {}, "User", (err, users) ->

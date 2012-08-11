@@ -17,9 +17,16 @@
           else
             option(value="#{role}") #{role}
       .clear
-      // .websites.small-modal-box
-      for siteName in user.validWebsites
-        input(type="checkbox", name="#{siteName}", value="#{siteName") #{siteName}
+      |Websites:
+      .websites.small-modal-box.scrolling-checkboxes
+        for siteName in user.allowedWebsites
+          if user.websites.indexOf(siteName) == -1
+            input.checkbox(type="checkbox", name="#{siteName}", value="#{siteName}")
+          else
+            input.checkbox(type="checkbox", name="#{siteName}", value="#{siteName}", checked="yes")
+          &nbsp;
+          |#{siteName}
+          br
 
       .clear
       input.departments.small-modal-box(type="text", value="#{user.departments}", placeholder="Departments")

@@ -29,7 +29,17 @@
           br
 
       .clear
-      input.departments.small-modal-box(type="text", value="#{user.departments}", placeholder="Departments")
+      |Specialties:
+      .specialties.small-modal-box.scrolling-checkboxes
+        for specialtyName in user.allowedSpecialties
+          if user.specialties.indexOf(specialtyName) == -1
+            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}")
+          else
+            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}", checked="yes")
+          &nbsp;
+          |#{specialtyName}
+          br
+
       .clear
 
     .modal-footer

@@ -27,6 +27,7 @@
               var fields;
               evt.preventDefault();
               fields = getFormFields();
+              console.log("about to save model", fields);
               if (element.id != null) fields.id = element.id;
               return server.saveModel(fields, uppercaseName, function(err, savedElement) {
                 formBuilder.setElement(savedElement);

@@ -18,6 +18,7 @@ define ["app/server"], (server) ->
           templateObject = {}
           templateObject[elementName] = element
           console.log "object going into template", templateObject
+
           $("##{elementName}ModalBox").html template templateObject
           $("#edit#{uppercaseName}").modal()
 

@@ -5,45 +5,51 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
 
       server.ready ->
 
-        server.getRoles (err, allowedRoles) ->
+        server.findModel {}, "Website", (err, websites) ->
 
-          getFormFields = ->
-            {
-              firstName: $('#editUser .firstName').val()
-              lastName: $('#editUser .lastName').val()
-              email: $('#editUser .email').val()
-              role: $('#editUser .role').val()
-              websites: $('#editUser .websites').val()
-              departments: $('#editUser .departments').val()
-            }
+          validWebsiteNames = websites.map (site) -> site.name
 
-          getNewUser = ->
-            {
-              firstName: ""
-              lastName: ""
-              email: ""
-              role: "Operator"
-              websites: ""
-              departments: ""
-              allowedRoles: allowedRoles
-            }
+          server.getRoles (err, allowedRoles) ->
 
-          extraDataPacker = (user) ->
-            user.allowedRoles = allowedRoles
-            return user
+            getFormFields = ->
+              {
+                firstName: $('#editUser .firstName').val()
+                lastName: $('#editUser .lastName').val()
+                email: $('#editUser .email').val()
+                role: $('#editUser .role').val()
+                websites: $('#editUser .websites').val()
+                departments: $('#editUser .departments').val()
+              }
 
-          # find all users and populate listing
-          server.findModel {}, "User", (err, users) ->
-            console.log "err retrieving users: #{err}" if err
+            getNewUser = ->
+              {
+                firstName: ""
+                lastName: ""
+                email: ""
+                role: "Operator"
+                websites: []
+                departments: ""
+                allowedRoles: allowedRoles
+              }
 
-            formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"
-            #Done with edit/delete handlers, now render page
-            $('#content').html templ users: users
+            extraDataPacker = (user) ->
+              user.allowedRoles = allowedRoles
+              user.allowedWebsites = validWebsiteNames
+              console.log "allowedWebsites", validWebsiteNames
+              return user
 
-            $('#addUser').click formBuild.elementForm editUser, getNewUser(), (err, savedUser) ->
-              return notify.error "Error saving user: #{err}" if err?
-              formBuild.setElement savedUser
-              $("#userTableBody").append userRow user: savedUser
+            # find all users and populate listing
+            server.findModel {}, "User", (err, users) ->
+              console.log "err retrieving users: #{err}" if err
 
-            #Attach handlers to all rows
-            formBuild.wireUpRow user.id for user in users
+              formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"
+              #Done with edit/delete handlers, now render page
+              $('#content').html templ users: users
+
+              $('#addUser').click formBuild.elementForm editUser, getNewUser(), (err, savedUser) ->
+                return notify.error "Error saving user: #{err}" if err?
+                formBuild.setElement savedUser
+                $("#userTableBody").append userRow user: savedUser
+
+              #Attach handlers to all rows
+              formBuild.wireUpRow user.id for user in users

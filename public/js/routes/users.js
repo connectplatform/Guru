@@ -7,57 +7,65 @@
         return window.location.hash = '/';
       }
       return server.ready(function() {
-        return server.getRoles(function(err, allowedRoles) {
-          var extraDataPacker, getFormFields, getNewUser;
-          getFormFields = function() {
-            return {
-              firstName: $('#editUser .firstName').val(),
-              lastName: $('#editUser .lastName').val(),
-              email: $('#editUser .email').val(),
-              role: $('#editUser .role').val(),
-              websites: $('#editUser .websites').val(),
-              departments: $('#editUser .departments').val()
+        return server.findModel({}, "Website", function(err, websites) {
+          var validWebsiteNames;
+          validWebsiteNames = websites.map(function(site) {
+            return site.name;
+          });
+          return server.getRoles(function(err, allowedRoles) {
+            var extraDataPacker, getFormFields, getNewUser;
+            getFormFields = function() {
+              return {
+                firstName: $('#editUser .firstName').val(),
+                lastName: $('#editUser .lastName').val(),
+                email: $('#editUser .email').val(),
+                role: $('#editUser .role').val(),
+                websites: $('#editUser .websites').val(),
+                departments: $('#editUser .departments').val()
+              };
             };
-          };
-          getNewUser = function() {
-            return {
-              firstName: "",
-              lastName: "",
-              email: "",
-              role: "Operator",
-              websites: "",
-              departments: "",
-              allowedRoles: allowedRoles
+            getNewUser = function() {
+              return {
+                firstName: "",
+                lastName: "",
+                email: "",
+                role: "Operator",
+                websites: [],
+                departments: "",
+                allowedRoles: allowedRoles
+              };
             };
-          };
-          extraDataPacker = function(user) {
-            user.allowedRoles = allowedRoles;
-            return user;
-          };
-          return server.findModel({}, "User", function(err, users) {
-            var formBuild, user, _i, _len, _results;
-            if (err) {
-              console.log("err retrieving users: " + err);
-            }
-            formBuild = formBuilder(getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user");
-            $('#content').html(templ({
-              users: users
-            }));
-            $('#addUser').click(formBuild.elementForm(editUser, getNewUser(), function(err, savedUser) {
-              if (err != null) {
-                return notify.error("Error saving user: " + err);
+            extraDataPacker = function(user) {
+              user.allowedRoles = allowedRoles;
+              user.allowedWebsites = validWebsiteNames;
+              console.log("allowedWebsites", validWebsiteNames);
+              return user;
+            };
+            return server.findModel({}, "User", function(err, users) {
+              var formBuild, user, _i, _len, _results;
+              if (err) {
+                console.log("err retrieving users: " + err);
               }
-              formBuild.setElement(savedUser);
-              return $("#userTableBody").append(userRow({
-                user: savedUser
+              formBuild = formBuilder(getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user");
+              $('#content').html(templ({
+                users: users
               }));
-            }));
-            _results = [];
-            for (_i = 0, _len = users.length; _i < _len; _i++) {
-              user = users[_i];
-              _results.push(formBuild.wireUpRow(user.id));
-            }
-            return _results;
+              $('#addUser').click(formBuild.elementForm(editUser, getNewUser(), function(err, savedUser) {
+                if (err != null) {
+                  return notify.error("Error saving user: " + err);
+                }
+                formBuild.setElement(savedUser);
+                return $("#userTableBody").append(userRow({
+                  user: savedUser
+                }));
+              }));
+              _results = [];
+              for (_i = 0, _len = users.length; _i < _len; _i++) {
+                user = users[_i];
+                _results.push(formBuild.wireUpRow(user.id));
+              }
+              return _results;
+            });
           });
         });
       });

@@ -17,7 +17,10 @@
           else
             option(value="#{role}") #{role}
       .clear
-      input.websites.small-modal-box(type="text", value="#{user.websites}", placeholder="Websites")
+      // .websites.small-modal-box
+      for siteName in user.validWebsites
+        input(type="checkbox", name="#{siteName}", value="#{siteName") #{siteName}
+
       .clear
       input.departments.small-modal-box(type="text", value="#{user.departments}", placeholder="Departments")
       .clear

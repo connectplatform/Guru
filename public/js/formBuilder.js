@@ -20,18 +20,15 @@
             evt.preventDefault();
             templateObject = {};
             templateObject[elementName] = element;
-            console.log("object going into template", templateObject);
             $("#" + elementName + "ModalBox").html(template(templateObject));
             $("#edit" + uppercaseName).modal();
             $("#edit" + uppercaseName + " .saveButton").click(function(evt) {
               var fields;
               evt.preventDefault();
               fields = getFormFields();
-              console.log("about to save model", fields);
               if (element.id != null) fields.id = element.id;
               return server.saveModel(fields, uppercaseName, function(err, savedElement) {
                 formBuilder.setElement(savedElement);
-                console.log("savedElement id:", savedElement.id);
                 onComplete(err, savedElement);
                 if (err != null) return;
                 formBuilder.wireUpRow(savedElement.id);
@@ -47,28 +44,23 @@
         wireUpRow: function(id) {
           var currentElement, deleteElementClicked, editElementClicked;
           currentElement = getElementById(id);
-          console.log("wiring up row with id:", currentElement.id);
           editElementClicked = formBuilder.elementForm(editingTemplate, currentElement, function(err, savedElement) {
             var templateObject;
-            console.log("clicked edit on row with id:", savedElement.id);
             if (err != null) return notify.error("Error saving element: " + err);
             templateObject = {};
             templateObject[elementName] = savedElement;
-            console.log("object going into template", templateObject);
             return $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + currentElement.id + "]").replaceWith(rowTemplate(templateObject));
           });
           deleteElementClicked = function(evt) {
             var templateObject;
             evt.preventDefault();
             currentElement = getElementById($(this).attr("" + elementName + "Id"));
-            console.log("current element in delete element clicked", currentElement);
             templateObject = {};
             templateObject[elementName] = currentElement;
             $("#" + elementName + "ModalBox").html(deletingTemplate(templateObject));
             $("#delete" + uppercaseName).modal();
             $("#delete" + uppercaseName + " .deleteButton").click(function(evt) {
               evt.preventDefault();
-              console.log("deleting element with id:", currentElement.id);
               return server.deleteModel(currentElement.id, uppercaseName, function(err) {
                 if (err != null) {
                   return notify.error("Error deleting " + elementName + ": " + err);

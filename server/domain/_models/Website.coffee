@@ -15,4 +15,8 @@ website = new Schema
     index:
       unique: true
 
+  specialties:
+    type: [String]
+    default: []
+
 module.exports = website

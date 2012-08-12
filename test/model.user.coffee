@@ -17,3 +17,15 @@ boiler 'Model - Operator Chat', ->
     User.create user, (err, data) ->
       err.message.should.eql "Validation failed"
       done()
+
+  it 'should gracefully call back with an error if you leave a required field blank', (done)->
+    user =
+      password: digest_s 'foobar'
+      email: "jkl@foo.com"
+      firstName: 'First'
+      lastName: 'Guru'
+
+    @getAuthed =>
+      @client.saveModel user, "User", (err, savedModel) ->
+        err.should.eql 'Validator "required" failed for path role\n'
+        done()

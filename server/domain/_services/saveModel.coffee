@@ -1,5 +1,15 @@
 db = require '../../mongo'
 
+parseMongooseError = (err) ->
+  return null unless err?
+  message = ""
+  if err?.errors
+    for field, info of err.errors
+      message += "#{info.message}\n"
+    return message
+  else
+    return "Model error"
+
 module.exports = (res, fields, modelName) ->
   Model = db.models[modelName]
 
@@ -8,15 +18,14 @@ module.exports = (res, fields, modelName) ->
   getModel = (fields, cb) ->
     if fields.id?
       Model.findOne {_id: fields.id}, (err, foundModel) ->
-        return res.send err, null if err?
-        cb foundModel
+        cb err, foundModel
     else
       createdModel = createFields new Model
-      cb createdModel
+      cb null, createdModel
 
-  getModel fields, (foundModel) ->
+  getModel fields, (err, foundModel) ->
+    return res.send err, null if err?
     foundModel[key] = value for key, value of fields when key isnt 'id'
     foundModel.save (err) ->
-      console.log "error saving #{model} model: #{err}" if err?
 
-      res.send err, filterOutput foundModel
+      res.send parseMongooseError(err), filterOutput foundModel

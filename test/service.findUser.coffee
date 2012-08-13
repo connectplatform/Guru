@@ -15,7 +15,7 @@ boiler 'Service - Find User', ->
           user.email.should.exist
           user.role.should.exist
           user.websites.should.exist
-          user.departments.should.exist
+          user.specialties.should.exist
           user.id.should.exist
           false.should.eql user.password?
 
@@ -29,6 +29,6 @@ boiler 'Service - Find User', ->
         admin.lastName.should.eql 'Guy'
         admin.role.should.eql 'Administrator'
         admin.websites.should.eql []
-        admin.departments.should.eql []
+        admin.specialties.should.eql []
 
         done()

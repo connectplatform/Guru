@@ -17,7 +17,6 @@ define ["app/server"], (server) ->
 
           templateObject = {}
           templateObject[elementName] = element
-          console.log "object going into template", templateObject
 
           $("##{elementName}ModalBox").html template templateObject
           $("#edit#{uppercaseName}").modal()
@@ -31,8 +30,6 @@ define ["app/server"], (server) ->
             server.saveModel fields, uppercaseName, (err, savedElement) ->
               formBuilder.setElement savedElement
 
-              console.log "savedElement id:", savedElement.id
-
               onComplete err, savedElement
               return if err?
 
@@ -45,22 +42,17 @@ define ["app/server"], (server) ->
 
       wireUpRow: (id) =>
         currentElement = getElementById id
-        console.log "wiring up row with id:", currentElement.id
 
         editElementClicked = formBuilder.elementForm editingTemplate, currentElement, (err, savedElement) ->
-          console.log "clicked edit on row with id:", savedElement.id
 
           return notify.error "Error saving element: #{err}" if err?
           templateObject = {}
           templateObject[elementName] = savedElement
-          console.log "object going into template", templateObject
           $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{currentElement.id}]").replaceWith rowTemplate templateObject
 
         deleteElementClicked = (evt) ->
           evt.preventDefault()
           currentElement = getElementById $(this).attr "#{elementName}Id"
-
-          console.log "current element in delete element clicked", currentElement
 
           templateObject = {}
           templateObject[elementName] = currentElement
@@ -69,8 +61,6 @@ define ["app/server"], (server) ->
 
           $("#delete#{uppercaseName} .deleteButton").click (evt) ->
             evt.preventDefault()
-
-            console.log "deleting element with id:", currentElement.id
 
             server.deleteModel currentElement.id, uppercaseName, (err) ->
               return notify.error "Error deleting #{elementName}: #{err}" if err?

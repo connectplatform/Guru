@@ -5,10 +5,10 @@ pulsar = require "./pulsar"
 config = require './config'
 flushCache = require '../lib/flushCache'
 http = require 'http'
-
 redgoose = require 'redgoose'
 
 module.exports = (cb) ->
+
   port = (process.env.GURU_PORT or config.app.port)
 
   # Web server

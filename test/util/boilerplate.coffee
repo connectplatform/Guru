@@ -25,7 +25,8 @@ module.exports = (testName, tests) ->
       @getClient = -> new Vein.Client port: testPort, transports: ['websocket']
       @getPulsar = -> new Pulsar.Client port: pulsarPort, transports: ['websocket']
       @db = db
-      initApp done
+      initApp ->
+        done()
 
     beforeEach (done) ->
       @client = @getClient()

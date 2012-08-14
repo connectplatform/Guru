@@ -1,6 +1,7 @@
 define ["app/server", "app/notify", "app/util", "app/pulsar"],
   (server, notify, util, pulsar) ->
     (args, templ) ->
+      console.log "wheeeee!"
       return window.location.hash = '/' unless server.cookie 'session'
 
       updateDashboard = ->

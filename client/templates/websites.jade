@@ -1,0 +1,16 @@
+.well
+  .page-header: h1 Websites
+
+  button.btn#addWebsite Add New Website
+
+  table.table.table-striped
+    thead: tr
+      th Name
+      th Url
+      th Specialties
+
+    tbody#websiteTableBody
+      each website in websites
+        include websiteRow
+
+#websiteModalBox

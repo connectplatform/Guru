@@ -1,7 +1,7 @@
 {beforeFilter} = require './middlewareTools'
 
 module.exports = ->
-  beforeFilter ['isAdministrator'], only: ['deleteUser', 'findUser', 'saveUser']
+  beforeFilter ['isAdministrator'], only: ['deleteModel', 'findModel', 'saveModel']
 
   beforeFilter ['isStaff'],
     except: [
@@ -11,9 +11,9 @@ module.exports = ->
       'getExistingChatChannel',
       'visitorCanAccessChannel',
       'getChatHistory',
-      'deleteUser',#these three are covered by isAdministrator
-      'findUser',
-      'saveUser'
+      'deleteModel',#these three are covered by isAdministrator
+      'findModel',
+      'saveModel'
     ]
 
   beforeFilter ['isChatMember'],

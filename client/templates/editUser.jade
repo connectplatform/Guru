@@ -17,10 +17,29 @@
           else
             option(value="#{role}") #{role}
       .clear
-      //TODO need to let you add these as a comma separated list, or something
-      input.websites.small-modal-box(type="text", value="#{user.websites}", placeholder="Websites")
+      |Websites:
+      .websites.small-modal-box.scrolling-checkboxes
+        for siteName in user.allowedWebsites
+          if user.websites.indexOf(siteName) == -1
+            input.checkbox(type="checkbox", name="#{siteName}", value="#{siteName}")
+          else
+            input.checkbox(type="checkbox", name="#{siteName}", value="#{siteName}", checked="yes")
+          &nbsp;
+          |#{siteName}
+          br
+
       .clear
-      input.departments.small-modal-box(type="text", value="#{user.departments}", placeholder="Departments")
+      |Specialties:
+      .specialties.small-modal-box.scrolling-checkboxes
+        for specialtyName in user.allowedSpecialties
+          if user.specialties.indexOf(specialtyName) == -1
+            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}")
+          else
+            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}", checked="yes")
+          &nbsp;
+          |#{specialtyName}
+          br
+
       .clear
 
     .modal-footer

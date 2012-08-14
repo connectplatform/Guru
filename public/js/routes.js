@@ -13,10 +13,10 @@
     dermis.route('/operatorChat');
     dermis.route('/users');
     dermis.route('/websites');
-    dermis.route('/departments');
+    dermis.route('/specialties');
     dermis.route('/joinChat/:id');
     dermis.init();
-    operatorPages = ['/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/departments'];
+    operatorPages = ['/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'];
     return $(function() {
       var hash;
       hash = window.rooter.hash.value();

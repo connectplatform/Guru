@@ -1,0 +1,25 @@
+#editWebsite.modal.fade.small-modal
+  .modal-header
+    h3 Website Information
+
+  form
+    .modal-body
+      input.name.small-modal-box(type="text", value="#{website.name}", placeholder="Name")
+      .clear
+      input.url.small-modal-box(type="text", value="#{website.url}", placeholder="URL")
+      .clear
+
+      |Specialties:
+      .specialties.small-modal-box.scrolling-checkboxes
+        for specialtyName in website.allowedSpecialties
+          if website.specialties.indexOf(specialtyName) == -1
+            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}")
+          else
+            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}", checked="yes")
+          &nbsp;
+          |#{specialtyName}
+          br
+
+    .modal-footer
+      button.saveButton.btn.btn-primary() Save
+      button.cancelButton.btn Cancel

@@ -30,13 +30,13 @@ module.exports = (done) ->
         email: 'guru2@foo.com'
         password: 'foobar'
         role: 'Operator'
-        websites: 'test.com'
+        websites: ['test.com']
       ,
         email: 'guru3@foo.com'
         password: 'foobar'
         role: 'Operator'
-        websites: 'test.com'
-        departments: 'Sales'
+        websites: ['test.com']
+        specialties: ['Sales']
     ]
 
     roles = [

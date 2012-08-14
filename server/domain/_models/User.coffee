@@ -6,12 +6,20 @@ validateRole = (role, cb) ->
   {Role} = mongo.models
   Role.find {}, (err, roles) ->
     for validRole in roles
-      return cb true if role is validRole.name 
+      return cb true if role is validRole.name
+    cb false
+
+validateWebsite = (websiteName, cb) ->
+  mongo = require '../../mongo'
+  {Website} = mongo.models
+  Website.find {}, (err, validWebsites) ->
+    for validWebsite in validWebsites
+      return cb true if websiteName is validWebsite.name
     cb false
 
 user = new Schema
 
-  firstName: 
+  firstName:
     type: String
     default: ""
 
@@ -37,8 +45,9 @@ user = new Schema
   websites:
     type: [String]
     default: []
+#    validate: [validateWebsite, "Invalid website"]
 
-  departments:
+  specialties:
     type: [String]
     default: []
 

@@ -1,137 +1,89 @@
 (function() {
 
-  define(["app/server", "app/notify", "templates/editUser", "templates/deleteUser", "templates/userRow"], function(server, notify, editUser, deleteUser, userRow) {
+  define(["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "templates/editUser", "templates/deleteUser", "templates/userRow", "app/formBuilder"], function(server, notify, sidebar, sbTemp, editUser, deleteUser, userRow, formBuilder) {
     return function(args, templ) {
-      var getFormFields;
       if (!server.cookie('session')) return window.location.hash = '/';
-      getFormFields = function() {
-        return {
-          firstName: $('#editUser .firstName').val(),
-          lastName: $('#editUser .lastName').val(),
-          email: $('#editUser .email').val(),
-          role: $('#editUser .role').val(),
-          websites: $('#editUser .websites').val(),
-          departments: $('#editUser .departments').val()
-        };
-      };
       return server.ready(function() {
-        return server.getRoles(function(err, allowedRoles) {
-          var getNewUser;
-          getNewUser = function() {
-            return {
-              firstName: "",
-              lastName: "",
-              email: "",
-              role: "Operator",
-              websites: "",
-              departments: "",
-              allowedRoles: allowedRoles
-            };
-          };
-          return server.findUser({}, function(err, users) {
-            var getUserById, user, wireUpRow, _i, _len, _results,
-              _this = this;
-            if (err != null) console.log("err retrieving users: " + err);
-            getUserById = function(id) {
-              var user, _i, _len;
-              for (_i = 0, _len = users.length; _i < _len; _i++) {
-                user = users[_i];
-                if (user.id === id) return user;
-              }
-            };
-            wireUpRow = function(id) {
-              var deleteUserClicked, editUserClicked;
-              editUserClicked = function(evt) {
-                var currentUser;
-                evt.preventDefault();
-                currentUser = getUserById($(this).attr('userId'));
-                currentUser.allowedRoles = allowedRoles;
-                $("#modalBox").html(editUser({
-                  user: currentUser
-                }));
-                $('#editUser').modal();
-                $('#editUser .saveButton').click(function(evt) {
-                  var fields;
-                  evt.preventDefault();
-                  fields = getFormFields();
-                  fields.id = currentUser.id;
-                  return server.saveUser(fields, function(err, savedUser) {
-                    if (err != null) {
-                      return notify.error("Error saving user: " + err);
+        return server.findModel({}, "Website", function(err, websites) {
+          return server.findModel({}, "Specialty", function(err, specialties) {
+            var validSpecialtyNames, validWebsiteNames;
+            validWebsiteNames = websites.map(function(site) {
+              return site.name;
+            });
+            validSpecialtyNames = specialties.map(function(specialty) {
+              return specialty.name;
+            });
+            return server.getRoles(function(err, allowedRoles) {
+              var extraDataPacker, getFormFields, getNewUser;
+              getFormFields = function() {
+                var thing;
+                return {
+                  firstName: $('#editUser .firstName').val(),
+                  lastName: $('#editUser .lastName').val(),
+                  email: $('#editUser .email').val(),
+                  role: $('#editUser .role').val(),
+                  websites: (function() {
+                    var _i, _len, _ref, _results;
+                    _ref = $('#editUser .websites :checkbox:checked');
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                      thing = _ref[_i];
+                      _results.push($(thing).val());
                     }
-                    $("#userTableBody .userRow[userId=" + currentUser.id + "]").replaceWith(userRow({
-                      user: savedUser
-                    }));
-                    wireUpRow(currentUser.id);
-                    return $('#editUser').modal('hide');
-                  });
-                });
-                return $('#editUser .cancelButton').click(function(evt) {
-                  evt.preventDefault();
-                  return $('#editUser').modal('hide');
+                    return _results;
+                  })(),
+                  specialties: (function() {
+                    var _i, _len, _ref, _results;
+                    _ref = $('#editUser .specialties :checkbox:checked');
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                      thing = _ref[_i];
+                      _results.push($(thing).val());
+                    }
+                    return _results;
+                  })()
+                };
+              };
+              extraDataPacker = function(user) {
+                user.allowedRoles = allowedRoles;
+                user.allowedWebsites = validWebsiteNames;
+                user.allowedSpecialties = validSpecialtyNames;
+                return user;
+              };
+              getNewUser = function() {
+                return extraDataPacker({
+                  firstName: "",
+                  lastName: "",
+                  email: "",
+                  role: "Operator",
+                  websites: [],
+                  specialties: []
                 });
               };
-              deleteUserClicked = function(evt) {
-                var currentUser;
-                evt.preventDefault();
-                currentUser = getUserById($(this).attr('userId'));
-                $("#modalBox").html(deleteUser({
-                  user: currentUser
+              return server.findModel({}, "User", function(err, users) {
+                var formBuild, user, _i, _len, _results;
+                if (err) console.log("err retrieving users: " + err);
+                formBuild = formBuilder(getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user");
+                $('#content').html(templ({
+                  users: users
                 }));
-                $('#deleteUser').modal();
-                $('#deleteUser .deleteButton').click(function(evt) {
-                  evt.preventDefault();
-                  return server.deleteUser(currentUser.id, function(err) {
-                    if (err != null) {
-                      return notify.error("Error deleting user: " + err);
-                    }
-                    $("#userTableBody .userRow[userId=" + currentUser.id + "]").remove();
-                    return $('#deleteUser').modal('hide');
-                  });
-                });
-                return $('#deleteUser .cancelButton').click(function() {
-                  return $('#deleteUser').modal('hide');
-                });
-              };
-              $("#userTableBody .userRow[userId=" + id + "] .editUser").click(editUserClicked);
-              return $("#userTableBody .userRow[userId=" + id + "] .deleteUser").click(deleteUserClicked);
-            };
-            $('#content').html(templ({
-              users: users
-            }));
-            $('#addUser').click(function(evt) {
-              evt.preventDefault();
-              $("#modalBox").html(editUser({
-                user: getNewUser()
-              }));
-              $('#editUser').modal();
-              $('#editUser .saveButton').click(function(evt) {
-                var fields;
-                evt.preventDefault();
-                fields = getFormFields();
-                return server.saveUser(fields, function(err, savedUser) {
+                $('#addUser').click(formBuild.elementForm(editUser, getNewUser(), function(err, savedUser) {
                   if (err != null) {
                     return notify.error("Error saving user: " + err);
                   }
-                  users.push(savedUser);
-                  $("#userTableBody").append(userRow({
+                  formBuild.setElement(savedUser);
+                  return $("#userTableBody").append(userRow({
                     user: savedUser
                   }));
-                  wireUpRow(savedUser.id);
-                  return $('#editUser').modal('hide');
-                });
-              });
-              return $('#editUser .cancelButton').click(function(evt) {
-                evt.preventDefault();
-                return $('#editUser').modal('hide');
+                }));
+                _results = [];
+                for (_i = 0, _len = users.length; _i < _len; _i++) {
+                  user = users[_i];
+                  _results.push(formBuild.wireUpRow(user.id));
+                }
+                return _results;
               });
             });
-            _results = [];
-            for (_i = 0, _len = users.length; _i < _len; _i++) {
-              user = users[_i];
-              _results.push(wireUpRow(user.id));
-            }
-            return _results;
           });
         });
       });

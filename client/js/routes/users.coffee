@@ -1,112 +1,56 @@
-define ["app/server", "app/notify", "templates/editUser", "templates/deleteUser", "templates/userRow"],
-  (server, notify, editUser, deleteUser, userRow) ->
+define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "templates/editUser", "templates/deleteUser", "templates/userRow", "app/formBuilder"],
+  (server, notify, sidebar, sbTemp, editUser, deleteUser, userRow, formBuilder) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 
-      getFormFields = ->
-        {
-          firstName: $('#editUser .firstName').val()
-          lastName: $('#editUser .lastName').val()
-          email: $('#editUser .email').val()
-          role: $('#editUser .role').val()
-          websites: $('#editUser .websites').val()
-          departments: $('#editUser .departments').val()
-        }
-
       server.ready ->
 
-        server.getRoles (err, allowedRoles) ->
+        server.findModel {}, "Website", (err, websites) ->
+          server.findModel {}, "Specialty", (err, specialties) ->
 
-          getNewUser = ->
-            {
-              firstName: ""
-              lastName: ""
-              email: ""
-              role: "Operator"
-              websites: ""
-              departments: ""
-              allowedRoles: allowedRoles
-            }
+            validWebsiteNames = websites.map (site) -> site.name
+            validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
-          server.findUser {}, (err, users) ->
-            console.log "err retrieving users: #{err}" if err?
+            server.getRoles (err, allowedRoles) ->
 
-            getUserById = (id) ->
-              for user in users
-                return user if user.id is id
+              getFormFields = ->
+                {
+                  firstName: $('#editUser .firstName').val()
+                  lastName: $('#editUser .lastName').val()
+                  email: $('#editUser .email').val()
+                  role: $('#editUser .role').val()
+                  websites: ($(thing).val() for thing in $('#editUser .websites :checkbox:checked'))
+                  specialties: ($(thing).val() for thing in $('#editUser .specialties :checkbox:checked'))
+                }
 
-            wireUpRow = (id) =>
-              editUserClicked = (evt) ->
-                evt.preventDefault()
-                currentUser = getUserById $(this).attr 'userId'
-                currentUser.allowedRoles = allowedRoles
+              extraDataPacker = (user) ->
+                user.allowedRoles = allowedRoles
+                user.allowedWebsites = validWebsiteNames
+                user.allowedSpecialties = validSpecialtyNames
+                return user
 
-                $("#modalBox").html editUser user: currentUser
-                $('#editUser').modal()
+              getNewUser = ->
+                extraDataPacker {
+                  firstName: ""
+                  lastName: ""
+                  email: ""
+                  role: "Operator"
+                  websites: []
+                  specialties: []
+                }
 
-                $('#editUser .saveButton').click (evt) ->
-                  evt.preventDefault()
+              # find all users and populate listing
+              server.findModel {}, "User", (err, users) ->
+                console.log "err retrieving users: #{err}" if err
 
-                  fields = getFormFields()
-                  fields.id = currentUser.id
+                formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"
+                #Done with edit/delete handlers, now render page
+                $('#content').html templ users: users
 
-                  server.saveUser fields, (err, savedUser) ->
-                    return notify.error "Error saving user: #{err}" if err?
-
-                    $("#userTableBody .userRow[userId=#{currentUser.id}]").replaceWith userRow user: savedUser
-                    wireUpRow(currentUser.id)
-                    $('#editUser').modal 'hide'
-
-                $('#editUser .cancelButton').click (evt) ->
-                  evt.preventDefault()
-                  $('#editUser').modal 'hide'
-
-              deleteUserClicked = (evt) ->
-                evt.preventDefault()
-                currentUser = getUserById $(this).attr 'userId'
-
-                $("#modalBox").html deleteUser user: currentUser
-                $('#deleteUser').modal()
-
-                $('#deleteUser .deleteButton').click (evt) ->
-                  evt.preventDefault()
-
-                  server.deleteUser currentUser.id, (err) ->
-                    return notify.error "Error deleting user: #{err}" if err?
-                    $("#userTableBody .userRow[userId=#{currentUser.id}]").remove()
-                    $('#deleteUser').modal 'hide'
-
-                $('#deleteUser .cancelButton').click ->
-                  $('#deleteUser').modal 'hide'
-
-              $("#userTableBody .userRow[userId=#{id}] .editUser").click editUserClicked
-              $("#userTableBody .userRow[userId=#{id}] .deleteUser").click deleteUserClicked
-
-            #Done with edit/delete handlers, now render page
-            $('#content').html templ users: users
-
-            #Wire up addUser
-            $('#addUser').click (evt) ->
-              evt.preventDefault()
-
-              $("#modalBox").html editUser user: getNewUser()
-              $('#editUser').modal()
-
-              $('#editUser .saveButton').click (evt) ->
-                evt.preventDefault()
-
-                fields = getFormFields()
-
-                server.saveUser fields, (err, savedUser) ->
+                $('#addUser').click formBuild.elementForm editUser, getNewUser(), (err, savedUser) ->
                   return notify.error "Error saving user: #{err}" if err?
-                  users.push savedUser
+                  formBuild.setElement savedUser
                   $("#userTableBody").append userRow user: savedUser
-                  wireUpRow(savedUser.id)
-                  $('#editUser').modal 'hide'
 
-              $('#editUser .cancelButton').click (evt) ->
-                evt.preventDefault()
-                $('#editUser').modal 'hide'
-
-            #Attach handlers to all rows
-            wireUpRow user.id for user in users
+                #Attach handlers to all rows
+                formBuild.wireUpRow user.id for user in users

@@ -18,7 +18,7 @@ define ["dermis", "routes/sidebar", "templates/sidebar"], (dermis, sidebar, sbTe
   # CRUD screens for admin
   dermis.route '/users'
   dermis.route '/websites'
-  dermis.route '/departments'
+  dermis.route '/specialties'
 
   # chat actions
   dermis.route '/joinChat/:id'
@@ -31,7 +31,7 @@ define ["dermis", "routes/sidebar", "templates/sidebar"], (dermis, sidebar, sbTe
     '/operatorChat',
     '/users',
     '/websites',
-    '/departments'
+    '/specialties'
   ]
 
   $ ->

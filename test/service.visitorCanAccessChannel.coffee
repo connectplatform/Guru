@@ -5,7 +5,7 @@ boiler 'Service - Visitor Can Access Channel', ->
 
   it 'should say a visitor can connect to a chat that they created', (done) ->
     @newChat =>
-      @client.visitorCanAccessChannel @client.cookie('session'), @channelName, (err, accessAllowed) =>
+      @client.visitorCanAccessChannel @channelName, (err, accessAllowed) =>
         should.not.exist err
         accessAllowed.should.eql true
         done()
@@ -15,7 +15,7 @@ boiler 'Service - Visitor Can Access Channel', ->
     @newChat =>
       mockRes = send: =>
         #This will be executed after the kick
-        @client.visitorCanAccessChannel @client.cookie('session'), @channelName, (err, accessAllowed) =>
+        @client.visitorCanAccessChannel @channelName, (err, accessAllowed) =>
           should.not.exist err
           accessAllowed.should.eql false
           done()

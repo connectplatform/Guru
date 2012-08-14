@@ -2,7 +2,6 @@ redgoose = require 'redgoose'
 {Session} = redgoose.models
 
 module.exports = (args, cookies, cb) ->
-
   sessionId = cookies.session
   return cb "expected cookie: {session: sessionId}" unless sessionId?
 

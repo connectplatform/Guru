@@ -1,4 +1,6 @@
-require ['app/server', 'app/pulsar'], (server, pulsar) ->
+require ['app/server', 'spec/helpers/mock'], (server, mock) ->
+  console.log 'server:', server
+  console.log 'mock:', mock
 
   hasText = (selector, value) ->
     -> ($(selector).text() is value)
@@ -9,11 +11,10 @@ require ['app/server', 'app/pulsar'], (server, pulsar) ->
 
   describe 'page', ->
     beforeEach ->
-
       waitsFor hasText('#login-modal h3', 'Login'), 'no login prompt', 1000
 
     afterEach ->
-      server.cookie 'session', null
+      mock.removeCookie()
       window.location.hash = '/login'
 
     it 'should show the login prompt', ->
@@ -22,15 +23,8 @@ require ['app/server', 'app/pulsar'], (server, pulsar) ->
 
     describe 'with mocked login', ->
       beforeEach ->
-        server.cookie 'session', 'session_foo'
-        server.login = (args..., cb) ->
-          cb null, {name: 'Bob'}
-        server.getMyRole = (args..., cb) ->
-          cb null, 'Operator'
-        server.getChatStats = (args..., cb) ->
-          cb null, {unanswered: 0}
-        server.getActiveChats = (args..., cb) ->
-          cb null, []
+        mock.services()
+        mock.cookie()
 
       it 'should log me in', ->
         $('#login-modal input#email').val 'foo@bar.com'
@@ -38,5 +32,3 @@ require ['app/server', 'app/pulsar'], (server, pulsar) ->
         $('#login-modal button.btn-primary').click()
 
         waitsFor hasText('#dashboard h1', 'Dashboard'), 'Did not see dashboard', 1000
-
-  return name: 'loginSpec'

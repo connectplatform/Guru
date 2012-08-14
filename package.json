@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "node-log": "*",
-    "jaded": "0.0.3"
+    "jaded": "0.0.6"
   },
   "engines": {
     "node": ">= 0.4.0"

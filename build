@@ -22,6 +22,9 @@ cp ./node_modules/vein/vein.js ./client/js/ext/vein.js
 # Pulsar
 cp ./node_modules/pulsar/pulsar.js ./client/js/ext/pulsar.js
 
+# Jade
+cp ./node_modules/jaded/node_modules/jade/runtime.min.js ./client/js/ext/jade-runtime.js
+
 # Non-built files
 cp ./client/*.html ./public
 cp -R ./client/js/ext/* ./public/js/ext

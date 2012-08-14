@@ -9,4 +9,3 @@ require
     {name: "spec", location: "js/spec"}
   ]
 , ['app/main', 'app/pulsar', 'jasmine/jasmine', 'spec/SpecRunner']
-

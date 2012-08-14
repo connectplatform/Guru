@@ -2,4 +2,4 @@
 -r should
 -R spec
 --ui bdd
---globals app
+--globals app ___eio

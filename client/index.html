@@ -19,19 +19,10 @@
       <script src="js/ext/jquery.js"></script>
       <script src="js/ext/jquery.noty.js"></script>
       <script src="js/ext/bootstrap.js"></script>
-      <script>
-         require({
-           baseUrl: ".",
-           packages: [
-             { name: "templates", location: "templates"},
-             { name: "app", location: "js" },
-             { name: "routes", location: "js/routes" },
-             { name: "ext", location: "js/ext" }
-           ]
-         },[
-           'app/main'
-         ]);
-      </script>
+
+      <!-- loads all AMD dependencies -->
+      <script src="js/index.js"></script>
+
    </head>
    <body>
       <div class="container-fluid">

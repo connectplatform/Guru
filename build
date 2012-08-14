@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm -rf ./public
 mkdir -p ./public/templates
 mkdir -p ./public/js
@@ -14,7 +16,7 @@ coffee -o ./public/js/ -c ./client/js/
 # TODO - process that minifies all js
 # uglifyjs -nc --unsafe -mt -o ./public/js/main.min.js ./public/js/main.js
 
-# Vein 
+# Vein
 cp ./node_modules/vein/vein.js ./client/js/ext/vein.js
 
 # Pulsar

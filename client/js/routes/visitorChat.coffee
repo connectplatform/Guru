@@ -3,7 +3,7 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
     ({id}, templ) ->
 
       server.refresh (services) ->
-        server.visitorCanAccessChannel server.cookie('session'), id, (err, canAccess) ->
+        server.visitorCanAccessChannel id, (err, canAccess) ->
           console.log "canAccess: #{canAccess}"
           console.log "canAccess is true: #{canAccess is true}"
           return window.location.hash = '/newChat' unless canAccess

@@ -2,8 +2,8 @@ async = require 'async'
 createChannel = require '../createChannel'
 redgoose = require 'redgoose'
 
-module.exports = (res, data) ->
-  username = data.username or 'anonymous'
+module.exports = (res, userData) ->
+  username = userData.username or 'anonymous'
 
   {Chat, Session, ChatSession} = redgoose.models
   Chat.create (err, chat) ->

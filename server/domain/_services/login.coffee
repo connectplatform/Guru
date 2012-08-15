@@ -12,6 +12,12 @@ module.exports = (res, fields) ->
     username = if user.lastName is not "" then "#{user.firstName} #{user.lastName}" else "#{user.firstName}"
 
     {Session} = redgoose.models
-    Session.create {role: user.role, chatName: username}, (err, session) ->
-      res.cookie 'session', session.id
-      res.send null, user
+    Session.sessionIdsByOperator.get user.id, (err, sessionId) ->
+      console.log "error getting existing session" if err
+      if sessionId?
+        res.cookie 'session', sessionId
+        res.send null, user
+      else
+        Session.create {role: user.role, chatName: username, operatorId: user.id}, (err, session) ->
+          res.cookie 'session', session.id
+          res.send null, user

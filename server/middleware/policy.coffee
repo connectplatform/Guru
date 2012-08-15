@@ -1,6 +1,8 @@
 {beforeFilter} = require './middlewareTools'
+argumentValidations = require './argumentValidations'
 
 module.exports = ->
+  argumentValidations()
   beforeFilter ['isAdministrator'], only: ['deleteModel', 'findModel', 'saveModel']
 
   beforeFilter ['isStaff'],

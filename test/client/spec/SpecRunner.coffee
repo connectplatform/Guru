@@ -3,7 +3,7 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
 
     $('head').append '<link rel="stylesheet" type="text/css" href="/js/ext/jasmine-1.2.0/jasmine.css">'
 
-    mock.services()
+    window.location.hash = '/test'
 
     jasmineEnv = jasmine.getEnv()
     jasmineEnv.updateInterval = 1000
@@ -13,6 +13,4 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
       htmlReporter.specFilter spec
 
     $ ->
-      delay 40, ->
-        console.log 'login spec:', login
-        jasmineEnv.execute()
+      delay 100, -> jasmineEnv.execute()

@@ -21,20 +21,25 @@ define ['app/server', 'app/pulsar'], (server, pulsar) ->
         cb null, []
 
     hasChats: ->
-      server.getActiveChats = (args..., cb) ->
+      server.getMyChats = (args..., cb) ->
 
         history =
           message: 'hello'
           username: 'Bob'
           timestamp: new Date
 
-        chat =
-          visitor: ''
-          status: ''
+        chat = (id, name) ->
+          id: id
+          visitor:
+            department: null
+            website: null
+            username: name
+          isWatching: false
+          status: 'active'
           creationDate: new Date
           history: [
-            JSON.stringify history
+            history
           ]
 
-        cb null, [chat]
+        cb null, [chat('chat_1', 'Bob'), chat('chat_2', 'Sam')]
 

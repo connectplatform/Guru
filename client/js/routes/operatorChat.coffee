@@ -6,13 +6,17 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
       sessionId = server.cookie "session"
       sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
 
+      # helper function
       renderId = (id) -> id.replace /:/g, '-'
+
+      # what chat is currently selected
       status = {}
 
       server.ready (services) ->
         #console.log "server is ready-- services availible: #{services}"
 
         server.getMyChats (err, chats) ->
+          console.log 'chats:', chats
 
           chat.renderedId = renderId chat.id for chat in chats
 
@@ -54,18 +58,24 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
 
           updateChatBadge = (chatId) ->
             (unreadMessages) ->
+              console.log 'received unread:', unreadMessages
+
               unreadCount = unreadMessages[chatId] or 0
+              console.log 'unread count:', unreadCount
 
               if unreadCount > 0 and status.currentChat is chatId
-                console.log 'currentChat:', status.currentChat
+                console.log 'already viewed:', status.currentChat
                 sessionUpdates.emit 'viewedMessages', chatId
                 content = ''
               else if unreadCount > 0
+                console.log 'setting badge:', unreadCount
                 content = badge {status: 'important', num: unreadCount}
               else
+                console.log 'unsetting badge'
                 content = ''
 
-              $("#{chatId}").html content
+              console.log 'chatId:', chatId
+              $(".notifyUnread[chatid=#{chatId}]").html content
 
           for chat in chats
             channel = pulsar.channel chat.id

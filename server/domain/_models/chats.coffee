@@ -92,7 +92,7 @@ schema =
     visitor: 'String' #TODO: make this a hash
     status: 'String' # transfer, invite, waiting, active, vacant
     creationDate: 'String'
-    history: 'List'
+    history: 'List' # message, username, timestamp
   chat:
     allChats: 'Set'
     unansweredChats: 'Set'

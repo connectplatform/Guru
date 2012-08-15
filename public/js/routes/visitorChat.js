@@ -6,7 +6,7 @@
       var id;
       id = _arg.id;
       return server.refresh(function(services) {
-        return server.visitorCanAccessChannel(server.cookie('session'), id, function(err, canAccess) {
+        return server.visitorCanAccessChannel(id, function(err, canAccess) {
           var appendChat, channel;
           console.log("canAccess: " + canAccess);
           console.log("canAccess is true: " + (canAccess === true));

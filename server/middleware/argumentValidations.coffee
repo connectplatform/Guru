@@ -10,6 +10,7 @@ module.exports = ->
       'getRoles',
       'login',
       'newChat',
+      'getMyRole',
       'visitorCanAccessChannel'
     ]
 

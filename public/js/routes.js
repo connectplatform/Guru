@@ -2,7 +2,7 @@
 (function() {
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define(["dermis", "routes/sidebar", "templates/sidebar"], function(dermis, sidebar, sbTemp) {
+  define(["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"], function(dermis, addMiddleware, sidebar, sbTemp) {
     var operatorPages;
     dermis.route('/newChat');
     dermis.route('/visitorChat/:id');
@@ -15,7 +15,7 @@
     dermis.route('/users');
     dermis.route('/websites');
     dermis.route('/specialties');
-    dermis.route('/joinChat/:id');
+    addMiddleware(dermis);
     dermis.init();
     operatorPages = ['/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'];
     return $(function() {

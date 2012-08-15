@@ -16,6 +16,9 @@
       }, {
         name: "ext",
         location: "js/ext"
+      }, {
+        name: "middleware",
+        location: "js/middleware"
       }
     ]
   }, ['app/main']);

@@ -18,7 +18,6 @@ module.exports = (vein) ->
   routeValidators = getValidators()
 
   vein.use (req, res, next) ->
-    console.log "service #{req.service}"
     validators = routeValidators[req.service]
     return next 'Invalid service' unless validators?
     args = req.args.map mapArgs

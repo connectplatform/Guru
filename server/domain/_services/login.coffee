@@ -13,7 +13,6 @@ module.exports = (res, fields) ->
 
     {Session} = redgoose.models
     Session.sessionIdsByOperator.get user.id, (err, sessionId) ->
-      console.log "error getting existing session" if err
       if sessionId?
         res.cookie 'session', sessionId
         res.send null, user

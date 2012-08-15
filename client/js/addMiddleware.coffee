@@ -1,22 +1,55 @@
-define ['middleware/redirectOperators', 'middleware/redirectVisitors'], (redirectOperators, redirectVisitors) ->
-  (dermis) ->
+all = [
+  '/newChat'
+  '/visitorChat/:id'
+  '/'
+  '/login'
+  '/logout'
+  '/dashboard'
+  '/userAdmin'
+  '/operatorChat'
+  '/users'
+  '/websites'
+  '/specialties'
+]
 
-    dermis.before [
-      '/newChat',
-      '/visitorChat/:id',
-      '/users',
-      '/websites',
-      '/specialties'
-    ], [redirectOperators]
+define ['middleware/redirectOperators', 'middleware/redirectVisitors',
+  'middleware/redirectGuestsToLogin',
+  'routes/sidebar', 'templates/sidebar',
+  'middleware/getRole'],
+  (redirectOperators, redirectVisitors, redirectGuestsToLogin, sidebar, sbTemp, getRole) ->
+    (dermis) ->
 
-    dermis.before [
-      '/',
-      '/login',
-      '/dashboard',
-      '/userAdmin',
-      '/operatorChat',
-      '/users',
-      '/websites',
-      '/specialties',
-    ], [redirectVisitors]
+      renderSidebar = (args, next) ->
+        sidebar {}, sbTemp
+        next()
 
+      dermis.before all, [getRole]
+
+      # access controls
+      dermis.before [
+        '/newChat'
+        '/visitorChat/:id'
+        '/users'
+        '/websites'
+        '/specialties'
+      ], [redirectOperators]
+
+      dermis.before [
+        '/'
+        '/login'
+        '/dashboard'
+        '/userAdmin'
+        '/operatorChat'
+        '/users'
+        '/websites'
+        '/specialties'
+      ], [redirectVisitors]
+
+      dermis.before [
+        '/dashboard'
+        '/userAdmin'
+        '/operatorChat'
+        '/users'
+        '/websites'
+        '/specialties'
+      ], [redirectGuestsToLogin, renderSidebar]

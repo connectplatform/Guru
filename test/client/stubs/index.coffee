@@ -5,6 +5,7 @@ require
     {name: "app", location: "js"}
     {name: "routes", location: "js/routes"}
     {name: "ext", location: "js/ext"}
+    {name: "middleware", location: "js/middleware"}
     {name: "jasmine", location: "js/ext/jasmine-1.2.0"}
     {name: "spec", location: "js/spec"}
   ]

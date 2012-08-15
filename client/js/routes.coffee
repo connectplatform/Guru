@@ -26,17 +26,3 @@ define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"],
     addMiddleware dermis
 
     dermis.init()
-
-    operatorPages = [
-      '/dashboard',
-      '/userAdmin',
-      '/operatorChat',
-      '/users',
-      '/websites',
-      '/specialties'
-    ]
-
-    $ ->
-      hash = window.rooter.hash.value()
-      if hash in operatorPages
-        sidebar {}, sbTemp

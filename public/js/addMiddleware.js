@@ -1,9 +1,19 @@
 (function() {
+  var all;
 
-  define(['middleware/redirectOperators', 'middleware/redirectVisitors'], function(redirectOperators, redirectVisitors) {
+  all = ['/newChat', '/visitorChat/:id', '/', '/login', '/logout', '/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'];
+
+  define(['middleware/redirectOperators', 'middleware/redirectVisitors', 'middleware/redirectGuestsToLogin', 'routes/sidebar', 'templates/sidebar', 'middleware/getRole'], function(redirectOperators, redirectVisitors, redirectGuestsToLogin, sidebar, sbTemp, getRole) {
     return function(dermis) {
+      var renderSidebar;
+      renderSidebar = function(args, next) {
+        sidebar({}, sbTemp);
+        return next();
+      };
+      dermis.before(all, [getRole]);
       dermis.before(['/newChat', '/visitorChat/:id', '/users', '/websites', '/specialties'], [redirectOperators]);
-      return dermis.before(['/', '/login', '/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'], [redirectVisitors]);
+      dermis.before(['/', '/login', '/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'], [redirectVisitors]);
+      return dermis.before(['/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'], [redirectGuestsToLogin, renderSidebar]);
     };
   });
 

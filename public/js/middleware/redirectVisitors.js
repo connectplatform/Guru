@@ -1,17 +1,15 @@
 (function() {
 
   define(["app/server"], function(server) {
-    return function(args, next) {
-      return server.ready(function() {
-        return server.getMyRole(function(err, role) {
-          if (role !== "Visitor") {
-            return next();
-          } else {
-            window.location.hash = "#/newChat";
-            return next("redirecting visitor to newChat");
-          }
-        });
-      });
+    return function(_arg, next) {
+      var role;
+      role = _arg.role;
+      if (role === 'Visitor') {
+        window.location.hash = "#/newChat";
+        return next("redirecting visitor to newChat");
+      } else {
+        return next();
+      }
     };
   });
 

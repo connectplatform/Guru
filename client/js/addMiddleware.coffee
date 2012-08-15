@@ -9,7 +9,6 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors'], (redirec
       '/specialties'
     ], [redirectOperators]
 
-###
     dermis.before [
       '/',
       '/login',

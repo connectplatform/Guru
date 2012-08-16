@@ -23,7 +23,8 @@
                   _results.push($(thing).val());
                 }
                 return _results;
-              })()
+              })(),
+              acpEndpoint: $('#editWebsite .acpEndpoint').val()
             };
           };
           extraDataPacker = function(website) {
@@ -35,7 +36,8 @@
             site = extraDataPacker({
               name: "",
               url: "",
-              specialties: []
+              specialties: [],
+              acpEndpoint: ""
             });
             console.log(site);
             return site;

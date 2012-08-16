@@ -19,4 +19,7 @@ website = new Schema
     type: [String]
     default: []
 
+  acpEndpoint:
+    type: String
+
 module.exports = website

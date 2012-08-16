@@ -1,5 +1,6 @@
 define ["app/server", "app/notify"], (server, notify) ->
-  (_, templ) ->
+  (_, templ, queryString) ->
+    console.log "newChats got queryString ", queryString
     $("#content").html "Loading..."
     server.ready ->
 
@@ -13,7 +14,7 @@ define ["app/server", "app/notify"], (server, notify) ->
 
           username = $("#newChat-form #username").val()
 
-          server.newChat username: username, (err, data) ->
+          server.newChat {username: username, referrerData: queryString}, (err, data) ->
             if err?
               $("#content").html templ()
               notify.error "Error connecting to chat: #{err}"

@@ -1,7 +1,8 @@
 (function() {
 
   define(["app/server", "app/notify"], function(server, notify) {
-    return function(_, templ) {
+    return function(_, templ, queryString) {
+      console.log("newChats got queryString ", queryString);
       $("#content").html("Loading...");
       return server.ready(function() {
         return server.getExistingChatChannel(function(err, data) {
@@ -14,7 +15,8 @@
             var username;
             username = $("#newChat-form #username").val();
             server.newChat({
-              username: username
+              username: username,
+              referrerData: queryString
             }, function(err, data) {
               if (err != null) {
                 $("#content").html(templ());

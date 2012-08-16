@@ -3,7 +3,7 @@
 
   define(["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"], function(dermis, addMiddleware, sidebar, sbTemp) {
     var operatorPages;
-    dermis.route('/newChat');
+    dermis.route('/newChat?');
     dermis.route('/visitorChat/:id');
     dermis.route('/', 'routes/index');
     dermis.route('/login');

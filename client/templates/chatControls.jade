@@ -1,8 +1,14 @@
-//TODO: this formatting is just a scaffold
+//TODO: this formatting is a rough draft
 div.well.chatControls.span4(chatId="#{chat.id}")
 
   .visitor-info
     | Visitor: #{chat.visitor.username}
+
+  .referrer-data
+    | Referrer Data: #{chat.visitor.referrerData}
+
+  .acp-data
+    | ACP Data: #{chat.visitor.acpData}
 
   .actions
     p

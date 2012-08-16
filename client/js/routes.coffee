@@ -2,7 +2,7 @@ define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"],
  (dermis, addMiddleware, sidebar, sbTemp) ->
 
     # routes for visitors to join chat
-    dermis.route '/newChat'
+    dermis.route '/newChat?'
     dermis.route '/visitorChat/:id'
 
     # login for backend users

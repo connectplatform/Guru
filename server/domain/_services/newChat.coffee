@@ -30,7 +30,7 @@ module.exports = (res, userData) ->
           department: null
 
         async.series [
-          chat.visitor.set visitorMeta
+          chat.visitor.mset visitorMeta
 
         ], (err) ->
           console.log "redis error in newChat: #{err}" if err

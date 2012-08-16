@@ -30,14 +30,16 @@ face = (decorators) ->
 
     get: (id) ->
       chat = id: id
-
+      ###
+#TODO: add this in if everything is broken.  Delete it if it isn't.
       visitor chat, ({before, after}) ->
         # JSON serialize/deserialize
         before ['set'], (context, args, next) ->
           next null, args.map JSON.stringify
         after ['get'], (context, data, next) ->
           next null, JSON.parse(data)
-
+###
+      visitor chat
       creationDate chat
       status chat, ({before, after}) ->
 
@@ -61,7 +63,7 @@ face = (decorators) ->
       chat.dump = (cb) ->
 
         async.parallel {
-          visitor: chat.visitor.get
+          visitor: chat.visitor.getall
           status: chat.status.get
           history: chat.history.all
           creationDate: chat.creationDate.get
@@ -89,7 +91,7 @@ face = (decorators) ->
 
 schema =
   'chat:!{id}':
-    visitor: 'String' #TODO: make this a hash
+    visitor: 'Hash' #TODO: make this a hash
     status: 'String' # transfer, invite, waiting, active, vacant
     creationDate: 'String'
     history: 'List'

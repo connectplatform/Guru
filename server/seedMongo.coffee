@@ -52,7 +52,7 @@ module.exports = (done) ->
     websites = [
         name: "example.com"
         url: "http://www.example.com"
-        acpEndpoint: "http://localhost:8674"
+        acpEndpoint: "http://localhost:8675"
     ]
 
     async.parallel [

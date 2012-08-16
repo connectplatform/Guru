@@ -15,7 +15,8 @@
     "connect": "2.3.4",
     "async": "*",
     "pulsar": "0.0.4",
-    "vein": "0.3.4"
+    "vein": "0.3.4",
+    "restler": "*"
   },
   "devDependencies": {
     "node-log": "*",

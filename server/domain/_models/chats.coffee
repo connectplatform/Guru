@@ -1,7 +1,7 @@
 pulsar = require '../../pulsar'
 async = require 'async'
 rand = require '../../../lib/rand'
-{inspect} = require 'util'
+{getType} = require '../../../lib/util'
 
 face = (decorators) ->
   {chat: {
@@ -30,16 +30,28 @@ face = (decorators) ->
 
     get: (id) ->
       chat = id: id
-      ###
-#TODO: add this in if everything is broken.  Delete it if it isn't.
+
       visitor chat, ({before, after}) ->
         # JSON serialize/deserialize
-        before ['set'], (context, args, next) ->
-          next null, args.map JSON.stringify
+        dehydrateJSON = (obj) ->
+          newObj = {}
+          for key, value of obj
+            if getType(value) is '[object Object]'
+              newObj[key] = JSON.stringify value
+            else
+              newObj[key] = value
+          newObj
+
+        before ['set'], (context, [key, value], next) ->
+          next null, [key, JSON.stringify value] if (value is 'acpData') or (value is 'referrerData')
+          next null, [key, value]
+
+        before ['mset'], (context, args, next) ->
+          next null, args.map dehydrateJSON
+
         after ['get'], (context, data, next) ->
           next null, JSON.parse(data)
-###
-      visitor chat
+
       creationDate chat
       status chat, ({before, after}) ->
 

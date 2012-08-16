@@ -1,6 +1,7 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar"],
-  (server, notify, sidebar, sbTemp) ->
+define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "js/util"],
+  (server, notify, sidebar, sbTemp, util) ->
     (args, templ) ->
+
       $('#content').html ''
       $('#sidebar').html ''
 

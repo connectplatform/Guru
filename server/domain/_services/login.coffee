@@ -6,8 +6,8 @@ db = require '../../mongo'
 module.exports = (res, fields) ->
   search = {email: fields.email, password: digest_s fields.password}
   User.findOne search, (err, user) ->
-    return res.send err.message if err?
-    return res.send 'Invalid user or password.' unless user?
+    return res.reply err.message if err?
+    return res.reply 'Invalid user or password.' unless user?
 
     username = if user.lastName is not "" then "#{user.firstName} #{user.lastName}" else "#{user.firstName}"
 
@@ -15,8 +15,8 @@ module.exports = (res, fields) ->
     Session.sessionIdsByOperator.get user.id, (err, sessionId) ->
       if sessionId?
         res.cookie 'session', sessionId
-        res.send null, user
+        res.reply null, user
       else
         Session.create {role: user.role, chatName: username, operatorId: user.id}, (err, session) ->
           res.cookie 'session', session.id
-          res.send null, user
+          res.reply null, user

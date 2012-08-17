@@ -1,9 +1,8 @@
 (function() {
 
-  define(["app/server", "app/notify", "routes/sidebar", "templates/sidebar"], function(server, notify, sidebar, sbTemp) {
+  define(["app/server", "app/notify", "app/registerSessionUpdates"], function(server, notify, registerSessionUpdates) {
     return function(args, templ) {
       $('#content').html('');
-      $('#sidebar').html('');
       $('#content').append(templ());
       $('#login-modal').modal();
       $('#login-modal #email').focus();
@@ -20,7 +19,7 @@
           return server.login(fields, function(err, user) {
             if (err != null) return notify.error("Error logging in: " + err);
             $('#login-modal').modal('hide');
-            sidebar({}, sbTemp);
+            registerSessionUpdates();
             return window.location.hash = '/dashboard';
           });
         });

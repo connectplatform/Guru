@@ -1,43 +1,45 @@
 should = require 'should'
 boiler = require './util/boilerplate'
 redgoose = require 'redgoose'
+Pulsar = require 'pulsar'
 
 boiler 'Service - Invite Operator', ->
   beforeEach (done) ->
     # create a new chat
     @newChat =>
 
-      # log in as an operator
+      # create invitee
       loginData =
         email: 'guru1@foo.com'
         password: 'foobar'
+
       client = @getClient()
       client.ready =>
         client.login loginData, (err) =>
           throw new Error err if err
 
-          # get the session
+          # get the invitee's session
           @targetSession = client.cookie 'session'
           client.disconnect()
 
-          # log in another operator
+          # create inviter
           @getAuthed =>
 
             # accept the chat
-            @client.acceptChat @channelName, (err) =>
+            @client.acceptChat @chatChannelName, (err) =>
               should.not.exist err
               done()
 
   it "should let you invite an operator to the chat", (done) ->
 
     # Try to invite other operator
-    @client.inviteOperator @channelName, @targetSession, (err) =>
+    @client.inviteOperator @chatChannelName, @targetSession, (err) =>
       should.not.exist err
 
       # Check whether operator was invited
       # TODO: once they're updated, use accept invite or getActiveChats to test this instead
       {ChatSession} = redgoose.models
-      ChatSession.getByChat @channelName, (err, chatSessions) =>
+      ChatSession.getByChat @chatChannelName, (err, chatSessions) =>
         should.not.exist err
         for cs in chatSessions when cs.sessionId is @targetSession
           chatSession = cs
@@ -50,12 +52,16 @@ boiler 'Service - Invite Operator', ->
 
   it "should notify the operator you invited", (done) ->
 
+    sessionUpdates = "notify:session:#{@targetSession}"
+
     # Should receive notification
-    recipient = @getPulsar().channel "notify:session:#{@targetSession}"
+    recipient = @getPulsar().channel sessionUpdates
     recipient.on 'chatInvites', ([chat]) ->
       should.exist chat
       done()
 
-    # Try to invite other operator
-    @client.inviteOperator @channelName, @targetSession, (err) =>
-      should.not.exist err
+    recipient.ready =>
+
+      # Try to invite other operator
+      @client.inviteOperator @chatChannelName, @targetSession, (err) =>
+        should.not.exist err

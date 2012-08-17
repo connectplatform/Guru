@@ -25,27 +25,27 @@ boiler 'Service - Accept Transfer', ->
     @newChat =>
       @loginOperator =>
         @getAuthed =>
-          @client.acceptChat @channelName, (err) =>
+          @client.acceptChat @chatChannelName, (err) =>
             should.not.exist err
-            @client.transferChat @channelName, @targetSession, (err) =>
+            @client.transferChat @chatChannelName, @targetSession, (err) =>
               should.not.exist err
 
               # Do test
               mockRes =
                 cookie: (string) => @targetSession
-                send: (err, chatId) =>
+                reply: (err, chatId) =>
                   #body of test here
                   should.not.exist err
-                  chatId.should.eql @channelName
+                  chatId.should.eql @chatChannelName
 
                   # after the tranfer, target operator should be in the chat
                   getAcceptorsChatsRes =
                     cookie: (string) =>
                       @targetSession if string is 'session'
-                    send: (err, chats) =>
+                    reply: (err, chats) =>
                       should.not.exist err
                       chats.length.should.eql 1
-                      chats[0].id.should.eql @channelName
+                      chats[0].id.should.eql @chatChannelName
 
                       # after the transfer, transferring operator should not be in the chat
                       @client.getMyChats (err, chats) =>
@@ -55,4 +55,4 @@ boiler 'Service - Accept Transfer', ->
 
                   getMyChats getAcceptorsChatsRes
 
-              acceptTransfer mockRes, @channelName
+              acceptTransfer mockRes, @chatChannelName

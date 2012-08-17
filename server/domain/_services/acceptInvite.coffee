@@ -8,4 +8,4 @@ module.exports = (res, chatId) ->
   sessionId = res.cookie 'session'
   chatSession = ChatSession.get sessionId, chatId
   chatSession.relationMeta.mset newMeta, (err) ->
-    res.send err, chatId
+    res.reply err, chatId

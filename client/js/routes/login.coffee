@@ -1,8 +1,7 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar"],
-  (server, notify, sidebar, sbTemp) ->
+define ["app/server", "app/notify", "app/registerSessionUpdates"],
+  (server, notify, registerSessionUpdates) ->
     (args, templ) ->
       $('#content').html ''
-      $('#sidebar').html ''
 
       $('#content').append templ()
       $('#login-modal').modal()
@@ -20,7 +19,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar"],
           server.login fields, (err, user) ->
             return notify.error "Error logging in: #{err}" if err?
             $('#login-modal').modal 'hide'
-            sidebar {}, sbTemp
+            registerSessionUpdates()
             window.location.hash = '/dashboard'
 
         return false

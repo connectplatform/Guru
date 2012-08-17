@@ -65,4 +65,4 @@ module.exports = (res) ->
 
       ChatSession.getBySession res.cookie('session'), (err, myChatSessions) ->
         async.forEach myChatSessions, assignStatus, (err) ->
-          res.send err, chats
+          res.reply err, chats

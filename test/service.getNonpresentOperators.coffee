@@ -7,10 +7,10 @@ boiler 'Service - Get Nonpresent Opertors', ->
     # Setup
     @newChat =>
       @getAuthed =>
-        @client.watchChat @channelName, (err) =>
+        @client.watchChat @chatChannelName, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators @channelName, (err, operatorSessions) =>
+          @client.getNonpresentOperators @chatChannelName, (err, operatorSessions) =>
             should.not.exist err
 
             # Validate returned data
@@ -28,10 +28,10 @@ boiler 'Service - Get Nonpresent Opertors', ->
     # Setup
     @newChat =>
       @getAuthed =>
-        @client.acceptChat @channelName, (err) =>
+        @client.acceptChat @chatChannelName, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators @channelName, (err, operatorSessions) =>
+          @client.getNonpresentOperators @chatChannelName, (err, operatorSessions) =>
             should.not.exist err
 
             # Validate returned data

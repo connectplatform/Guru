@@ -24,18 +24,18 @@ boiler 'Service - Get Active Chats', ->
     @newChat =>
       @loginOperator =>
         @getAuthed =>
-          @client.acceptChat @channelName, (err) =>
+          @client.acceptChat @chatChannelName, (err) =>
             should.not.exist err
-            @client.inviteOperator @channelName, @targetSession, (err) =>
+            @client.inviteOperator @chatChannelName, @targetSession, (err) =>
               should.not.exist err
 
               # Do test
               getActiveChatsRes =
                 cookie: (string) => @targetSession
-                send: (err, chats) =>
+                reply: (err, chats) =>
                   should.not.exist err
                   chats.length.should.eql 1
-                  chats[0].id.should.eql @channelName
+                  chats[0].id.should.eql @chatChannelName
                   chats[0].relation.should.eql 'invite'
                   done()
 

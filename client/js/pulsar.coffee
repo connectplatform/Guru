@@ -1,1 +1,1 @@
-define ["ext/pulsar"], (Pulsar) -> new Pulsar port: 4001
+define ["ext/pulsar"], (Pulsar) -> Pulsar.createClient port: 4001

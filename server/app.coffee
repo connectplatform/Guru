@@ -1,3 +1,5 @@
+require 'sugar'
+Object.extend()
 connect = require "connect"
 Vein = require "vein"
 mongo = require "./mongo"
@@ -29,7 +31,7 @@ module.exports = (cb) ->
   ]
 
   # Vein
-  vein = new Vein server
+  vein = Vein.createServer server: server
   vein.addFolder __dirname + '/domain/_services/'
 
   veinMiddlewareGlue = require './middleware/veinMiddlewareGlue'

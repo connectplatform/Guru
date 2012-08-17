@@ -23,4 +23,4 @@ module.exports = (res, chatId) ->
             notify = pulsar.channel chatId
             notify.emit 'chatEnded'
 
-            res.send null, null
+            res.reply null, null

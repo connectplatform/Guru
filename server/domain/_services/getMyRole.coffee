@@ -3,5 +3,5 @@ redgoose = require 'redgoose'
 
 module.exports = (res) ->
   sessionId = res.cookie 'session'
-  return res.send null, 'None' unless sessionId?
-  Session.get(sessionId).role.get res.send
+  return res.reply null, 'None' unless sessionId?
+  Session.get(sessionId).role.get res.reply

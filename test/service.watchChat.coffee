@@ -12,7 +12,7 @@ boiler 'Service - Watch Chat', ->
     visitorClient.ready =>
       visitorClient.newChat {username: 'foo'}, (err, {channel}) =>
         sessionId = visitorClient.cookie 'session'
-        visitorClient.refresh =>
+        visitorClient.ready =>
           visitorClient.disconnect()
           message = "hello, world!"
 

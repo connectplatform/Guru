@@ -9,4 +9,4 @@ module.exports = (res, chatId) ->
     type: 'member'
   ChatSession.add operatorId, chatId, relationMeta, (err)->
     console.log "Error adding ChatSession in joinChat: #{err}" if err
-    res.send null, true
+    res.reply null, true

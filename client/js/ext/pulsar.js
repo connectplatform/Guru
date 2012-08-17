@@ -1,420 +1,4 @@
-(function(){var global = this;function debug(){return debug};function require(p, parent){ var path = require.resolve(p) , mod = require.modules[path]; if (!mod) throw new Error('failed to require "' + p + '" from ' + parent); if (!mod.exports) { mod.exports = {}; mod.call(mod.exports, mod, mod.exports, require.relative(path), global); } return mod.exports;}require.modules = {};require.resolve = function(path){ var orig = path , reg = path + '.js' , index = path + '/index.js'; return require.modules[reg] && reg || require.modules[index] && index || orig;};require.register = function(path, fn){ require.modules[path] = fn;};require.relative = function(parent) { return function(p){ if ('debug' == p) return debug; if ('.' != p.charAt(0)) return require(p); var path = parent.split('/') , segs = p.split('/'); path.pop(); for (var i = 0; i < segs.length; i++) { var seg = segs[i]; if ('..' == seg) path.pop(); else if ('.' != seg) path.push(seg); } return require(path.join('/'), parent); };};require.register("node_modules/engine.io-client/lib/engine.io-client.js", function(module, exports, require, global){
-
-/**
- * Client version.
- *
- * @api public.
- */
-
-exports.version = '0.1.0';
-
-/**
- * Protocol version.
- *
- * @api public.
- */
-
-exports.protocol = 1;
-
-/**
- * Utils.
- *
- * @api public
- */
-
-exports.util = require('./util');
-
-/**
- * Parser.
- *
- * @api public
- */
-
-exports.parser = require('./parser');
-
-/**
- * Socket constructor.
- *
- * @api public.
- */
-
-exports.Socket = require('./socket');
-
-/**
- * Export EventEmitter.
- */
-
-exports.EventEmitter = require('./event-emitter')
-
-/**
- * Export Transport.
- */
-
-exports.Transport = require('./transport');
-
-/**
- * Export transports
- */
-
-exports.transports = require('./transports');
-
-});require.register("node_modules/engine.io-client/lib/event-emitter.js", function(module, exports, require, global){
-
-/**
- * Module exports.
- */
-
-module.exports = EventEmitter;
-
-/**
- * Event emitter constructor.
- *
- * @api public.
- */
-
-function EventEmitter () {};
-
-/**
- * Adds a listener
- *
- * @api public
- */
-
-EventEmitter.prototype.on = function (name, fn) {
-  if (!this.$events) {
-    this.$events = {};
-  }
-
-  if (!this.$events[name]) {
-    this.$events[name] = fn;
-  } else if (isArray(this.$events[name])) {
-    this.$events[name].push(fn);
-  } else {
-    this.$events[name] = [this.$events[name], fn];
-  }
-
-  return this;
-};
-
-EventEmitter.prototype.addListener = EventEmitter.prototype.on;
-
-/**
- * Adds a volatile listener.
- *
- * @api public
- */
-
-EventEmitter.prototype.once = function (name, fn) {
-  var self = this;
-
-  function on () {
-    self.removeListener(name, on);
-    fn.apply(this, arguments);
-  };
-
-  on.listener = fn;
-  this.on(name, on);
-
-  return this;
-};
-
-/**
- * Removes a listener.
- *
- * @api public
- */
-
-EventEmitter.prototype.removeListener = function (name, fn) {
-  if (this.$events && this.$events[name]) {
-    var list = this.$events[name];
-
-    if (isArray(list)) {
-      var pos = -1;
-
-      for (var i = 0, l = list.length; i < l; i++) {
-        if (list[i] === fn || (list[i].listener && list[i].listener === fn)) {
-          pos = i;
-          break;
-        }
-      }
-
-      if (pos < 0) {
-        return this;
-      }
-
-      list.splice(pos, 1);
-
-      if (!list.length) {
-        delete this.$events[name];
-      }
-    } else if (list === fn || (list.listener && list.listener === fn)) {
-      delete this.$events[name];
-    }
-  }
-
-  return this;
-};
-
-/**
- * Removes all listeners for an event.
- *
- * @api public
- */
-
-EventEmitter.prototype.removeAllListeners = function (name) {
-  if (name === undefined) {
-    this.$events = {};
-    return this;
-  }
-
-  if (this.$events && this.$events[name]) {
-    this.$events[name] = null;
-  }
-
-  return this;
-};
-
-/**
- * Gets all listeners for a certain event.
- *
- * @api publci
- */
-
-EventEmitter.prototype.listeners = function (name) {
-  if (!this.$events) {
-    this.$events = {};
-  }
-
-  if (!this.$events[name]) {
-    this.$events[name] = [];
-  }
-
-  if (!isArray(this.$events[name])) {
-    this.$events[name] = [this.$events[name]];
-  }
-
-  return this.$events[name];
-};
-
-/**
- * Emits an event.
- *
- * @api public
- */
-
-EventEmitter.prototype.emit = function (name) {
-  if (!this.$events) {
-    return false;
-  }
-
-  var handler = this.$events[name];
-
-  if (!handler) {
-    return false;
-  }
-
-  var args = Array.prototype.slice.call(arguments, 1);
-
-  if ('function' == typeof handler) {
-    handler.apply(this, args);
-  } else if (isArray(handler)) {
-    var listeners = handler.slice();
-
-    for (var i = 0, l = listeners.length; i < l; i++) {
-      listeners[i].apply(this, args);
-    }
-  } else {
-    return false;
-  }
-
-  return true;
-};
-
-/**
- * Checks for Array type.
- *
- * @param {Object} object
- * @api private
- */
-
-function isArray (obj) {
-  return '[object Array]' == Object.prototype.toString.call(obj);
-};
-
-/**
- * Compatibility with WebSocket
- */
-
-EventEmitter.prototype.addEventListener = EventEmitter.prototype.on;
-EventEmitter.prototype.removeEventListener = EventEmitter.prototype.removeListener;
-EventEmitter.prototype.dispatchEvent = EventEmitter.prototype.emit;
-
-});require.register("node_modules/engine.io-client/lib/parser.js", function(module, exports, require, global){
-/**
- * Module dependencies.
- */
-
-var util = require('./util')
-
-/**
- * Packet types.
- */
-
-var packets = exports.packets = {
-    open:     0    // non-ws
-  , close:    1    // non-ws
-  , ping:     2
-  , pong:     3
-  , message:  4
-  , upgrade:  5
-  , noop:     6
-};
-
-var packetslist = util.keys(packets);
-
-/**
- * Premade error packet.
- */
-
-var err = { type: 'error', data: 'parser error' }
-
-/**
- * Encodes a packet.
- *
- *     <packet type id> [ `:` <data> ]
- *
- * Example:
- *
- *     5:hello world
- *     3
- *     4
- *
- * @api private
- */
-
-exports.encodePacket = function (packet) {
-  var encoded = packets[packet.type]
-
-  // data fragment is optional
-  if (undefined !== packet.data) {
-    encoded += String(packet.data);
-  }
-
-  return '' + encoded;
-};
-
-/**
- * Decodes a packet.
- *
- * @return {Object} with `type` and `data` (if any)
- * @api private
- */
-
-exports.decodePacket = function (data) {
-  var type = data.charAt(0);
-
-  if (Number(type) != type || !packetslist[type]) {
-    return err;
-  }
-
-  if (data.length > 1) {
-    return { type: packetslist[type], data: data.substring(1) };
-  } else {
-    return { type: packetslist[type] };
-  }
-};
-
-/**
- * Encodes multiple messages (payload).
- * 
- *     <length>:data
- *
- * Example:
- *
- *     11:hello world2:hi
- *
- * @param {Array} packets
- * @api private
- */
-
-exports.encodePayload = function (packets) {
-  if (!packets.length) {
-    return '0:';
-  }
-
-  var encoded = ''
-    , message
-
-  for (var i = 0, l = packets.length; i < l; i++) {
-    message = exports.encodePacket(packets[i]);
-    encoded += message.length + ':' + message;
-  }
-
-  return encoded;
-};
-
-/*
- * Decodes data when a payload is maybe expected.
- *
- * @param {String} data
- * @return {Array} packets
- * @api public
- */
-
-exports.decodePayload = function (data) {
-  if (data == '') {
-    // parser error - ignoring payload
-    return [err];
-  }
-
-  var packets = []
-    , length = ''
-    , n, msg, packet
-
-  for (var i = 0, l = data.length; i < l; i++) {
-    var chr = data.charAt(i)
-
-    if (':' != chr) {
-      length += chr;
-    } else {
-      if ('' == length || (length != (n = Number(length)))) {
-        // parser error - ignoring payload
-        return [err];
-      }
-
-      msg = data.substr(i + 1, n);
-
-      if (length != msg.length) {
-        // parser error - ignoring payload
-        return [err];
-      }
-
-      if (msg.length) {
-        packet = exports.decodePacket(msg);
-
-        if (err.type == packet.type && err.data == packet.data) {
-          // parser error in individual packet - ignoring payload
-          return [err];
-        }
-
-        packets.push(packet);
-      }
-
-      // advance cursor
-      i += n;
-      length = ''
-    }
-  }
-
-  if (length != '') {
-    // parser error - ignoring payload
-    return [err];
-  }
-
-  return packets;
-};
-
-});require.register("node_modules/engine.io-client/lib/socket.js", function(module, exports, require, global){
+(function(){var global = this;function debug(){return debug};function require(p, parent){ var path = require.resolve(p) , mod = require.modules[path]; if (!mod) throw new Error('failed to require "' + p + '" from ' + parent); if (!mod.exports) { mod.exports = {}; mod.call(mod.exports, mod, mod.exports, require.relative(path), global); } return mod.exports;}require.modules = {};require.resolve = function(path){ var orig = path , reg = path + '.js' , index = path + '/index.js'; return require.modules[reg] && reg || require.modules[index] && index || orig;};require.register = function(path, fn){ require.modules[path] = fn;};require.relative = function(parent) { return function(p){ if ('debug' == p) return debug; if ('.' != p.charAt(0)) return require(p); var path = parent.split('/') , segs = p.split('/'); path.pop(); for (var i = 0; i < segs.length; i++) { var seg = segs[i]; if ('..' == seg) path.pop(); else if ('.' != seg) path.push(seg); } return require(path.join('/'), parent); };};require.register("node_modules/engine.io-client/lib/socket.js", function(module, exports, require, global){
 /**
  * Module dependencies.
  */
@@ -457,6 +41,8 @@ function Socket (opts) {
   this.path = (opts.path || '/engine.io').replace(/\/$/, '');
   this.path += '/' + this.resource + '/';
   this.forceJSONP = !!opts.forceJSONP;
+  this.timestampParam = opts.timestampParam || 't';
+  this.timestampRequests = !!opts.timestampRequests;
   this.flashPath = opts.flashPath || '';
   this.transports = opts.transports || ['polling', 'websocket', 'flashsocket'];
   this.readyState = '';
@@ -495,6 +81,8 @@ Socket.prototype.createTransport = function (name) {
     , path: this.path
     , query: query
     , forceJSONP: this.forceJSONP
+    , timestampRequests: this.timestampRequests
+    , timestampParam: this.timestampParam
     , flashPath: this.flashPath
     , policyPort: this.policyPort
   });
@@ -803,6 +391,171 @@ function rnd () {
   return String(Math.random()).substr(5) + String(Math.random()).substr(5);
 }
 
+});require.register("node_modules/engine.io-client/lib/parser.js", function(module, exports, require, global){
+/**
+ * Module dependencies.
+ */
+
+var util = require('./util')
+
+/**
+ * Packet types.
+ */
+
+var packets = exports.packets = {
+    open:     0    // non-ws
+  , close:    1    // non-ws
+  , ping:     2
+  , pong:     3
+  , message:  4
+  , upgrade:  5
+  , noop:     6
+};
+
+var packetslist = util.keys(packets);
+
+/**
+ * Premade error packet.
+ */
+
+var err = { type: 'error', data: 'parser error' }
+
+/**
+ * Encodes a packet.
+ *
+ *     <packet type id> [ `:` <data> ]
+ *
+ * Example:
+ *
+ *     5:hello world
+ *     3
+ *     4
+ *
+ * @api private
+ */
+
+exports.encodePacket = function (packet) {
+  var encoded = packets[packet.type]
+
+  // data fragment is optional
+  if (undefined !== packet.data) {
+    encoded += String(packet.data);
+  }
+
+  return '' + encoded;
+};
+
+/**
+ * Decodes a packet.
+ *
+ * @return {Object} with `type` and `data` (if any)
+ * @api private
+ */
+
+exports.decodePacket = function (data) {
+  var type = data.charAt(0);
+
+  if (Number(type) != type || !packetslist[type]) {
+    return err;
+  }
+
+  if (data.length > 1) {
+    return { type: packetslist[type], data: data.substring(1) };
+  } else {
+    return { type: packetslist[type] };
+  }
+};
+
+/**
+ * Encodes multiple messages (payload).
+ * 
+ *     <length>:data
+ *
+ * Example:
+ *
+ *     11:hello world2:hi
+ *
+ * @param {Array} packets
+ * @api private
+ */
+
+exports.encodePayload = function (packets) {
+  if (!packets.length) {
+    return '0:';
+  }
+
+  var encoded = ''
+    , message
+
+  for (var i = 0, l = packets.length; i < l; i++) {
+    message = exports.encodePacket(packets[i]);
+    encoded += message.length + ':' + message;
+  }
+
+  return encoded;
+};
+
+/*
+ * Decodes data when a payload is maybe expected.
+ *
+ * @param {String} data
+ * @return {Array} packets
+ * @api public
+ */
+
+exports.decodePayload = function (data) {
+  if (data == '') {
+    // parser error - ignoring payload
+    return [err];
+  }
+
+  var packets = []
+    , length = ''
+    , n, msg, packet
+
+  for (var i = 0, l = data.length; i < l; i++) {
+    var chr = data.charAt(i)
+
+    if (':' != chr) {
+      length += chr;
+    } else {
+      if ('' == length || (length != (n = Number(length)))) {
+        // parser error - ignoring payload
+        return [err];
+      }
+
+      msg = data.substr(i + 1, n);
+
+      if (length != msg.length) {
+        // parser error - ignoring payload
+        return [err];
+      }
+
+      if (msg.length) {
+        packet = exports.decodePacket(msg);
+
+        if (err.type == packet.type && err.data == packet.data) {
+          // parser error in individual packet - ignoring payload
+          return [err];
+        }
+
+        packets.push(packet);
+      }
+
+      // advance cursor
+      i += n;
+      length = ''
+    }
+  }
+
+  if (length != '') {
+    // parser error - ignoring payload
+    return [err];
+  }
+
+  return packets;
+};
+
 });require.register("node_modules/engine.io-client/lib/transport.js", function(module, exports, require, global){
 
 /**
@@ -832,6 +585,8 @@ function Transport (opts) {
   this.port = opts.port;
   this.secure = opts.secure;
   this.query = opts.query;
+  this.timestampParam = opts.timestampParam;
+  this.timestampRequests = opts.timestampRequests;
   this.readyState = '';
 };
 
@@ -944,6 +699,510 @@ Transport.prototype.onClose = function () {
   this.emit('close');
 };
 
+});require.register("node_modules/engine.io-client/lib/util.js", function(module, exports, require, global){
+
+/**
+ * Status of page load.
+ */
+
+var pageLoaded = false;
+
+/**
+ * Inheritance.
+ *
+ * @param {Function} ctor a
+ * @param {Function} ctor b
+ * @api private
+ */
+
+exports.inherits = function inherits (a, b) {
+  function c () { }
+  c.prototype = b.prototype;
+  a.prototype = new c;
+};
+
+/**
+ * Object.keys
+ */
+
+exports.keys = Object.keys || function (obj) {
+  var ret = []
+    , has = Object.prototype.hasOwnProperty
+
+  for (var i in obj) {
+    if (has.call(obj, i)) {
+      ret.push(i);
+    }
+  }
+
+  return ret;
+};
+
+/**
+ * Adds an event.
+ *
+ * @api private
+ */
+
+exports.on = function (element, event, fn, capture) {
+  if (element.attachEvent) {
+    element.attachEvent('on' + event, fn);
+  } else if (element.addEventListener) {
+    element.addEventListener(event, fn, capture);
+  }
+};
+
+/**
+ * Load utility.
+ *
+ * @api private
+ */
+
+exports.load = function (fn) {
+  if (global.document && document.readyState === 'complete' || pageLoaded) {
+    return fn();
+  }
+
+  exports.on(global, 'load', fn, false);
+};
+
+/**
+ * Change the internal pageLoaded value.
+ */
+
+if ('undefined' != typeof window) {
+  exports.load(function () {
+    pageLoaded = true;
+  });
+}
+
+/**
+ * Defers a function to ensure a spinner is not displayed by the browser.
+ *
+ * @param {Function} fn
+ * @api private
+ */
+
+exports.defer = function (fn) {
+  if (!exports.ua.webkit || 'undefined' != typeof importScripts) {
+    return fn();
+  }
+
+  exports.load(function () {
+    setTimeout(fn, 100);
+  });
+};
+
+/**
+ * JSON parse.
+ *
+ * @see Based on jQuery#parseJSON (MIT) and JSON2
+ * @api private
+ */
+
+var rvalidchars = /^[\],:{}\s]*$/
+  , rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g
+  , rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
+  , rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g
+  , rtrimLeft = /^\s+/
+  , rtrimRight = /\s+$/
+
+exports.parseJSON = function (data) {
+  if ('string' != typeof data || !data) {
+    return null;
+  }
+
+  data = data.replace(rtrimLeft, '').replace(rtrimRight, '');
+
+  // Attempt to parse using the native JSON parser first
+  if (global.JSON && JSON.parse) {
+    return JSON.parse(data);
+  }
+
+  if (rvalidchars.test(data.replace(rvalidescape, '@')
+      .replace(rvalidtokens, ']')
+      .replace(rvalidbraces, ''))) {
+    return (new Function('return ' + data))();
+  }
+};
+
+/**
+ * UA / engines detection namespace.
+ *
+ * @namespace
+ */
+
+exports.ua = {};
+
+/**
+ * Whether the UA supports CORS for XHR.
+ *
+ * @api private
+ */
+
+exports.ua.hasCORS = 'undefined' != typeof XMLHttpRequest && (function () {
+  try {
+    var a = new XMLHttpRequest();
+  } catch (e) {
+    return false;
+  }
+
+  return a.withCredentials != undefined;
+})();
+
+/**
+ * Detect webkit.
+ *
+ * @api private
+ */
+
+exports.ua.webkit = 'undefined' != typeof navigator && 
+  /webkit/i.test(navigator.userAgent);
+
+/**
+ * Detect gecko.
+ *
+ * @api private
+ */
+
+exports.ua.gecko = 'undefined' != typeof navigator && 
+  /gecko/i.test(navigator.userAgent);
+
+/**
+ * Detect android;
+ */
+
+exports.ua.android = 'undefined' != typeof navigator && 
+  /android/i.test(navigator.userAgent);
+
+/**
+ * XHR request helper.
+ *
+ * @param {Boolean} whether we need xdomain
+ * @api private
+ */
+
+exports.request = function request (xdomain) {
+
+
+
+
+
+  if (xdomain && 'undefined' != typeof XDomainRequest) {
+    return new XDomainRequest();
+  }
+
+  // XMLHttpRequest can be disabled on IE
+  try {
+    if ('undefined' != typeof XMLHttpRequest && (!xdomain || exports.ua.hasCORS)) {
+      return new XMLHttpRequest();
+    }
+  } catch (e) { }
+
+  if (!xdomain) {
+    try {
+      return new ActiveXObject('Microsoft.XMLHTTP');
+    } catch(e) { }
+  }
+};
+
+/**
+ * Parses an URI
+ *
+ * @author Steven Levithan <stevenlevithan.com> (MIT license)
+ * @api private
+ */
+
+var re = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+
+var parts = [
+    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host'
+  , 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+];
+
+exports.parseUri = function (str) {
+  var m = re.exec(str || '')
+    , uri = {}
+    , i = 14;
+
+  while (i--) {
+    uri[parts[i]] = m[i] || '';
+  }
+
+  return uri;
+};
+
+/**
+ * Compiles a querystring
+ *
+ * @param {Object} 
+ * @api private
+ */
+
+exports.qs = function (obj) {
+  var str = '';
+
+  for (var i in obj) {
+    if (obj.hasOwnProperty(i)) {
+      if (str.length) str += '&';
+      str += i + '=' + encodeURIComponent(obj[i]);
+    }
+  }
+
+  return str;
+};
+
+});require.register("node_modules/engine.io-client/lib/event-emitter.js", function(module, exports, require, global){
+
+/**
+ * Module exports.
+ */
+
+module.exports = EventEmitter;
+
+/**
+ * Event emitter constructor.
+ *
+ * @api public.
+ */
+
+function EventEmitter () {};
+
+/**
+ * Adds a listener
+ *
+ * @api public
+ */
+
+EventEmitter.prototype.on = function (name, fn) {
+  if (!this.$events) {
+    this.$events = {};
+  }
+
+  if (!this.$events[name]) {
+    this.$events[name] = fn;
+  } else if (isArray(this.$events[name])) {
+    this.$events[name].push(fn);
+  } else {
+    this.$events[name] = [this.$events[name], fn];
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+/**
+ * Adds a volatile listener.
+ *
+ * @api public
+ */
+
+EventEmitter.prototype.once = function (name, fn) {
+  var self = this;
+
+  function on () {
+    self.removeListener(name, on);
+    fn.apply(this, arguments);
+  };
+
+  on.listener = fn;
+  this.on(name, on);
+
+  return this;
+};
+
+/**
+ * Removes a listener.
+ *
+ * @api public
+ */
+
+EventEmitter.prototype.removeListener = function (name, fn) {
+  if (this.$events && this.$events[name]) {
+    var list = this.$events[name];
+
+    if (isArray(list)) {
+      var pos = -1;
+
+      for (var i = 0, l = list.length; i < l; i++) {
+        if (list[i] === fn || (list[i].listener && list[i].listener === fn)) {
+          pos = i;
+          break;
+        }
+      }
+
+      if (pos < 0) {
+        return this;
+      }
+
+      list.splice(pos, 1);
+
+      if (!list.length) {
+        delete this.$events[name];
+      }
+    } else if (list === fn || (list.listener && list.listener === fn)) {
+      delete this.$events[name];
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Removes all listeners for an event.
+ *
+ * @api public
+ */
+
+EventEmitter.prototype.removeAllListeners = function (name) {
+  if (name === undefined) {
+    this.$events = {};
+    return this;
+  }
+
+  if (this.$events && this.$events[name]) {
+    this.$events[name] = null;
+  }
+
+  return this;
+};
+
+/**
+ * Gets all listeners for a certain event.
+ *
+ * @api publci
+ */
+
+EventEmitter.prototype.listeners = function (name) {
+  if (!this.$events) {
+    this.$events = {};
+  }
+
+  if (!this.$events[name]) {
+    this.$events[name] = [];
+  }
+
+  if (!isArray(this.$events[name])) {
+    this.$events[name] = [this.$events[name]];
+  }
+
+  return this.$events[name];
+};
+
+/**
+ * Emits an event.
+ *
+ * @api public
+ */
+
+EventEmitter.prototype.emit = function (name) {
+  if (!this.$events) {
+    return false;
+  }
+
+  var handler = this.$events[name];
+
+  if (!handler) {
+    return false;
+  }
+
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  if ('function' == typeof handler) {
+    handler.apply(this, args);
+  } else if (isArray(handler)) {
+    var listeners = handler.slice();
+
+    for (var i = 0, l = listeners.length; i < l; i++) {
+      listeners[i].apply(this, args);
+    }
+  } else {
+    return false;
+  }
+
+  return true;
+};
+
+/**
+ * Checks for Array type.
+ *
+ * @param {Object} object
+ * @api private
+ */
+
+function isArray (obj) {
+  return '[object Array]' == Object.prototype.toString.call(obj);
+};
+
+/**
+ * Compatibility with WebSocket
+ */
+
+EventEmitter.prototype.addEventListener = EventEmitter.prototype.on;
+EventEmitter.prototype.removeEventListener = EventEmitter.prototype.removeListener;
+EventEmitter.prototype.dispatchEvent = EventEmitter.prototype.emit;
+
+});require.register("node_modules/engine.io-client/lib/engine.io-client.js", function(module, exports, require, global){
+
+/**
+ * Client version.
+ *
+ * @api public.
+ */
+
+exports.version = '0.1.2';
+
+/**
+ * Protocol version.
+ *
+ * @api public.
+ */
+
+exports.protocol = 1;
+
+/**
+ * Utils.
+ *
+ * @api public
+ */
+
+exports.util = require('./util');
+
+/**
+ * Parser.
+ *
+ * @api public
+ */
+
+exports.parser = require('./parser');
+
+/**
+ * Socket constructor.
+ *
+ * @api public.
+ */
+
+exports.Socket = require('./socket');
+
+/**
+ * Export EventEmitter.
+ */
+
+exports.EventEmitter = require('./event-emitter')
+
+/**
+ * Export Transport.
+ */
+
+exports.Transport = require('./transport');
+
+/**
+ * Export transports
+ */
+
+exports.transports = require('./transports');
+
 });require.register("node_modules/engine.io-client/lib/transports/polling.js", function(module, exports, require, global){
 /**
  * Module dependencies.
@@ -968,7 +1227,6 @@ module.exports = Polling;
 
 function Polling (opts) {
   Transport.call(this, opts);
-  this.forceBust = !!opts.forceBust;
 }
 
 /**
@@ -1127,9 +1385,9 @@ Polling.prototype.uri = function () {
     , schema = this.secure ? 'https' : 'http'
     , port = ''
 
-  // cache busting for IE
-  if (global.ActiveXObject || this.forceBust) {
-    query.t = +new Date;
+  // cache busting is forced for IE / android
+  if (global.ActiveXObject || util.ua.android || this.timestampRequests) {
+    query[this.timestampParam] = +new Date;
   }
 
   query = util.qs(query);
@@ -2029,7 +2287,7 @@ WS.prototype.doClose = function () {
  */
 
 WS.prototype.uri = function () {
-  var query = util.qs(this.query)
+  var query = this.query || {}
     , schema = this.secure ? 'wss' : 'ws'
     , port = ''
 
@@ -2038,6 +2296,13 @@ WS.prototype.uri = function () {
     || ('ws' == schema && this.port != 80))) {
     port = ':' + this.port;
   }
+
+  // append timestamp to URI
+  if (this.timestampRequests) {
+    query[this.timestampParam] = +new Date;
+  }
+
+  query = util.qs(query);
 
   // prepend ? to query
   if (query.length) {
@@ -2073,264 +2338,309 @@ function ws () {
   return global.WebSocket || global.MozWebSocket;
 }
 
-});require.register("node_modules/engine.io-client/lib/util.js", function(module, exports, require, global){
-
-/**
- * Status of page load.
- */
-
-var pageLoaded = false;
-
-/**
- * Inheritance.
- *
- * @param {Function} ctor a
- * @param {Function} ctor b
- * @api private
- */
-
-exports.inherits = function inherits (a, b) {
-  function c () { }
-  c.prototype = b.prototype;
-  a.prototype = new c;
-};
-
-/**
- * Object.keys
- */
-
-exports.keys = Object.keys || function (obj) {
-  var ret = []
-    , has = Object.prototype.hasOwnProperty
-
-  for (var i in obj) {
-    if (has.call(obj, i)) {
-      ret.push(i);
-    }
-  }
-
-  return ret;
-};
-
-/**
- * Adds an event.
- *
- * @api private
- */
-
-exports.on = function (element, event, fn, capture) {
-  if (element.attachEvent) {
-    element.attachEvent('on' + event, fn);
-  } else if (element.addEventListener) {
-    element.addEventListener(event, fn, capture);
-  }
-};
-
-/**
- * Load utility.
- *
- * @api private
- */
-
-exports.load = function (fn) {
-  if (global.document && document.readyState === 'complete' || pageLoaded) {
-    return fn();
-  }
-
-  exports.on(global, 'load', fn, false);
-};
-
-/**
- * Change the internal pageLoaded value.
- */
-
-if ('undefined' != typeof window) {
-  exports.load(function () {
-    pageLoaded = true;
-  });
-}
-
-/**
- * Defers a function to ensure a spinner is not displayed by the browser.
- *
- * @param {Function} fn
- * @api private
- */
-
-exports.defer = function (fn) {
-  if (!exports.ua.webkit || 'undefined' != typeof importScripts) {
-    return fn();
-  }
-
-  exports.load(function () {
-    setTimeout(fn, 100);
-  });
-};
-
-/**
- * JSON parse.
- *
- * @see Based on jQuery#parseJSON (MIT) and JSON2
- * @api private
- */
-
-var rvalidchars = /^[\],:{}\s]*$/
-  , rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g
-  , rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
-  , rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g
-  , rtrimLeft = /^\s+/
-  , rtrimRight = /\s+$/
-
-exports.parseJSON = function (data) {
-  if ('string' != typeof data || !data) {
-    return null;
-  }
-
-  data = data.replace(rtrimLeft, '').replace(rtrimRight, '');
-
-  // Attempt to parse using the native JSON parser first
-  if (global.JSON && JSON.parse) {
-    return JSON.parse(data);
-  }
-
-  if (rvalidchars.test(data.replace(rvalidescape, '@')
-      .replace(rvalidtokens, ']')
-      .replace(rvalidbraces, ''))) {
-    return (new Function('return ' + data))();
-  }
-};
-
-/**
- * UA / engines detection namespace.
- *
- * @namespace
- */
-
-exports.ua = {};
-
-/**
- * Whether the UA supports CORS for XHR.
- *
- * @api private
- */
-
-exports.ua.hasCORS = 'undefined' != typeof XMLHttpRequest && (function () {
-  try {
-    var a = new XMLHttpRequest();
-  } catch (e) {
-    return false;
-  }
-
-  return a.withCredentials != undefined;
-})();
-
-/**
- * Detect webkit.
- *
- * @api private
- */
-
-exports.ua.webkit = 'undefined' != typeof navigator &&
-  /webkit/i.test(navigator.userAgent);
-
-/**
- * Detect gecko.
- *
- * @api private
- */
-
-exports.ua.gecko = 'undefined' != typeof navigator && 
-  /gecko/i.test(navigator.userAgent);
-
-/**
- * XHR request helper.
- *
- * @param {Boolean} whether we need xdomain
- * @api private
- */
-
-exports.request = function request (xdomain) {
-
-
-
-
-
-  if (xdomain && 'undefined' != typeof XDomainRequest) {
-    return new XDomainRequest();
-  }
-
-  // XMLHttpRequest can be disabled on IE
-  try {
-    if ('undefined' != typeof XMLHttpRequest && (!xdomain || exports.ua.hasCORS)) {
-      return new XMLHttpRequest();
-    }
-  } catch (e) { }
-
-  if (!xdomain) {
-    try {
-      return new ActiveXObject('Microsoft.XMLHTTP');
-    } catch(e) { }
-  }
-};
-
-/**
- * Parses an URI
- *
- * @author Steven Levithan <stevenlevithan.com> (MIT license)
- * @api private
- */
-
-var re = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
-
-var parts = [
-    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host'
-  , 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
-];
-
-exports.parseUri = function (str) {
-  var m = re.exec(str || '')
-    , uri = {}
-    , i = 14;
-
-  while (i--) {
-    uri[parts[i]] = m[i] || '';
-  }
-
-  return uri;
-};
-
-/**
- * Compiles a querystring
- *
- * @param {Object} 
- * @api private
- */
-
-exports.qs = function (obj) {
-  var str = '';
-
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      if (str.length) str += '&';
-      str += i + '=' + encodeURIComponent(obj[i]);
-    }
-  }
-
-  return str;
-};
-
-});require.register("Channel.js", function(module, exports, require, global){
+});require.register("defaultClient.js", function(module, exports, require, global){
 // Generated by CoffeeScript 1.3.3
 (function() {
-  var Channel,
+  var def, isBrowser, util;
+
+  def = {
+    options: {},
+    start: function() {},
+    inbound: function(socket, msg, done) {
+      return done(JSON.parse(msg));
+    },
+    outbound: function(socket, msg, done) {
+      return done(JSON.stringify(msg));
+    },
+    validate: function(socket, msg, done) {
+      return done(true);
+    },
+    invalid: function(socket, msg) {},
+    connect: function(socket) {},
+    message: function(socket, msg) {},
+    error: function(socket, err) {},
+    close: function(socket, reason) {}
+  };
+
+  util = require('./util');
+
+  isBrowser = util.isBrowser();
+
+  if (isBrowser) {
+    def.options = {
+      host: window.location.hostname,
+      port: (window.location.port.length > 0 ? parseInt(window.location.port) : 80),
+      secure: window.location.protocol === 'https:'
+    };
+  }
+
+  module.exports = def;
+
+}).call(this);
+
+});require.register("Client.js", function(module, exports, require, global){
+// Generated by CoffeeScript 1.3.3
+(function() {
+  var Client, EventEmitter, engineClient, isBrowser, util,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  util = require('./util');
+
+  isBrowser = util.isBrowser();
+
+  if (isBrowser) {
+    engineClient = require('node_modules/engine.io-client/lib/engine.io-client');
+    EventEmitter = engineClient.EventEmitter;
+  } else {
+    engineClient = require('engine.io-client');
+    EventEmitter = require('events').EventEmitter;
+  }
+
+  util.extendSocket(engineClient.Socket);
+
+  Client = (function(_super) {
+
+    __extends(Client, _super);
+
+    function Client(plugin) {
+      this.handleClose = __bind(this.handleClose, this);
+
+      this.handleError = __bind(this.handleError, this);
+
+      this.handleMessage = __bind(this.handleMessage, this);
+
+      this.handleConnection = __bind(this.handleConnection, this);
+
+      this.disconnect = __bind(this.disconnect, this);
+
+      var eiopts, k, v;
+      for (k in plugin) {
+        v = plugin[k];
+        this[k] = v;
+      }
+      this.isServer = false;
+      this.isClient = true;
+      this.isBrowser = isBrowser;
+      eiopts = {
+        host: this.options.host,
+        port: this.options.port,
+        secure: this.options.secure,
+        path: "/" + this.options.namespace,
+        resource: this.options.resource,
+        transports: this.options.transports,
+        upgrade: this.options.upgrade,
+        flashPath: this.options.flashPath,
+        policyPort: this.options.policyPort,
+        forceJSONP: this.options.forceJSONP,
+        forceBust: this.options.forceBust,
+        debug: this.options.debug
+      };
+      this.ssocket = new engineClient.Socket(eiopts);
+      this.ssocket.parent = this;
+      this.ssocket.on('open', this.handleConnection);
+      this.ssocket.on('error', this.handleError);
+      this.ssocket.on('message', this.handleMessage);
+      this.ssocket.on('close', this.handleClose);
+      this.start();
+      return;
+    }
+
+    Client.prototype.disconnect = function() {
+      this.ssocket.close();
+      return this;
+    };
+
+    Client.prototype.handleConnection = function() {
+      return this.connect(this.ssocket);
+    };
+
+    Client.prototype.handleMessage = function(msg) {
+      var _this = this;
+      return this.inbound(this.ssocket, msg, function(formatted) {
+        return _this.validate(_this.ssocket, formatted, function(valid) {
+          if (valid === true) {
+            return _this.message(_this.ssocket, formatted);
+          } else if (valid === false) {
+            return _this.invalid(_this.ssocket, formatted);
+          }
+        });
+      });
+    };
+
+    Client.prototype.handleError = function(err) {
+      if (typeof err === 'string') {
+        err = new Error(err);
+      }
+      return this.error(this.ssocket, err);
+    };
+
+    Client.prototype.handleClose = function(reason) {
+      return this.close(this.ssocket, reason);
+    };
+
+    return Client;
+
+  })(EventEmitter);
+
+  module.exports = Client;
+
+}).call(this);
+
+});require.register("Socket.js", function(module, exports, require, global){
+// Generated by CoffeeScript 1.3.3
+(function() {
+  var __slice = [].slice;
+
+  module.exports = {
+    write: function(msg) {
+      var _this = this;
+      this.parent.outbound(this, msg, function(formatted) {
+        return _this.send(formatted);
+      });
+      return this;
+    },
+    disconnect: function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      this.close.apply(this, args);
+      return this;
+    }
+  };
+
+}).call(this);
+
+});require.register("util.js", function(module, exports, require, global){
+// Generated by CoffeeScript 1.3.3
+(function() {
+  var util,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
+
+  util = {
+    extendSocket: function(Socket) {
+      var nu;
+      nu = require('./Socket');
+      return __extends(Socket.prototype, nu);
+    },
+    mergePlugins: function() {
+      var args, k, newPlugin, plugin, v, _i, _len;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      newPlugin = {};
+      for (_i = 0, _len = args.length; _i < _len; _i++) {
+        plugin = args[_i];
+        for (k in plugin) {
+          v = plugin[k];
+          if (typeof v === 'object' && k !== 'server') {
+            newPlugin[k] = util.mergePlugins(newPlugin[k], v);
+          } else {
+            newPlugin[k] = v;
+          }
+        }
+      }
+      return newPlugin;
+    },
+    validatePlugin: function(plugin) {
+      if (typeof plugin.options !== 'object') {
+        return 'missing options object';
+      }
+      if (typeof plugin.options.namespace !== 'string') {
+        return 'namespace option required';
+      }
+      if (typeof plugin.options.resource !== 'string') {
+        return 'resource option required';
+      }
+      if (typeof plugin.inbound !== 'function') {
+        return 'missing inbound formatter';
+      }
+      if (typeof plugin.outbound !== 'function') {
+        return 'missing outbound formatter';
+      }
+      if (typeof plugin.validate !== 'function') {
+        return 'missing validate';
+      }
+    },
+    isBrowser: function() {
+      if (typeof window !== "undefined" && window !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  module.exports = util;
+
+}).call(this);
+
+});require.register("main.js", function(module, exports, require, global){
+// Generated by CoffeeScript 1.3.3
+(function() {
+  var isBrowser, ps, util;
+
+  util = require('./util');
+
+  isBrowser = util.isBrowser();
+
+  ps = {
+    createServer: function(plugin) {
+      var Server, defaultServer, err, newPlugin;
+      Server = require('./Server');
+      defaultServer = require('./defaultServer');
+      if (isBrowser) {
+        throw 'ProtoSock server is not for the browser';
+      }
+      newPlugin = util.mergePlugins(defaultServer, plugin);
+      err = util.validatePlugin(newPlugin);
+      if (err != null) {
+        throw new Error("Plugin validation failed: " + err);
+      }
+      return new Server(newPlugin);
+    },
+    createClient: function(plugin) {
+      var Client, defaultClient, err, newPlugin;
+      Client = require('./Client');
+      defaultClient = require('./defaultClient');
+      newPlugin = util.mergePlugins(defaultClient, plugin);
+      err = util.validatePlugin(newPlugin);
+      if (err != null) {
+        throw new Error("Plugin validation failed: " + err);
+      }
+      return new Client(newPlugin);
+    }
+  };
+
+  if (isBrowser) {
+    window.ProtoSock = ps;
+  } else {
+    module.exports = ps;
+  }
+
+}).call(this);
+
+});main = require('main');
+})();
+// Generated by CoffeeScript 1.3.3
+(function() {
+  var Channel, isBrowser,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __slice = [].slice;
+
+  isBrowser = typeof window !== 'undefined';
 
   Channel = (function() {
 
     function Channel(name, socket) {
       this.name = name;
       this.socket = socket;
+      this.runStack = __bind(this.runStack, this);
+
+      this.use = __bind(this.use, this);
+
+      this.ready = __bind(this.ready, this);
+
       this.removeAllListeners = __bind(this.removeAllListeners, this);
 
       this.removeListener = __bind(this.removeListener, this);
@@ -2343,37 +2653,60 @@ exports.qs = function (obj) {
 
       this.realEmit = __bind(this.realEmit, this);
 
-      this.listeners = [];
       this.events = {};
-      this.socket.send(JSON.stringify({
-        channel: this.name,
-        action: 'join'
-      }));
+      this.stack = [];
+      if (this.socket) {
+        this.joined = false;
+        this.socket.write({
+          type: 'join',
+          channel: this.name
+        });
+      } else {
+        this.joined = true;
+        this.listeners = [];
+      }
     }
 
     Channel.prototype.realEmit = function() {
-      var args, event, l, _i, _len, _ref;
+      var args, event,
+        _this = this;
       event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-      if (!this.events[event]) {
-        return false;
-      }
-      _ref = this.events[event];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        l = _ref[_i];
-        l.apply(null, args);
-      }
-      return true;
+      return this.runStack(event, args, function(nargs) {
+        var l, _i, _len, _ref;
+        if (!_this.events[event]) {
+          return false;
+        }
+        _ref = _this.events[event];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          l = _ref[_i];
+          l.apply(null, nargs);
+        }
+        return true;
+      });
     };
 
     Channel.prototype.emit = function() {
-      var args, event;
+      var args, event, msg, socket, _i, _len, _ref;
       event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-      this.socket.send(JSON.stringify({
+      msg = {
+        type: 'emit',
         channel: this.name,
         event: event,
         args: args
-      }));
-      return true;
+      };
+      if (this.listeners) {
+        _ref = this.listeners;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          socket = _ref[_i];
+          socket.write(msg);
+        }
+        return true;
+      } else if (this.socket) {
+        this.socket.write(msg);
+        return true;
+      } else {
+        return false;
+      }
     };
 
     Channel.prototype.addListener = function(event, listener) {
@@ -2421,144 +2754,166 @@ exports.qs = function (obj) {
       return this;
     };
 
+    Channel.prototype.ready = function(fn) {
+      var _this = this;
+      if (this.joined) {
+        return fn(this);
+      } else {
+        return this.on('join', function() {
+          return fn(_this);
+        });
+      }
+    };
+
+    Channel.prototype.use = function(fn) {
+      this.stack.push(fn);
+      return this;
+    };
+
+    Channel.prototype.runStack = function(event, args, cb) {
+      var emit, idx,
+        _this = this;
+      if (this.stack.length === 0) {
+        return cb(args);
+      }
+      if (event === 'newListener') {
+        return cb(args);
+      }
+      idx = -1;
+      emit = function() {
+        var argv, next;
+        argv = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        if (argv.length !== 0) {
+          args = argv;
+        }
+        next = _this.stack[++idx];
+        if (next == null) {
+          return cb(args);
+        }
+        return next.apply(null, [emit, event].concat(__slice.call(args)));
+      };
+      emit.apply(null, args);
+    };
+
     return Channel;
 
   })();
 
-  module.exports = Channel;
+  if (isBrowser) {
+    window.PulsarChannel = Channel;
+  } else {
+    module.exports = Channel;
+  }
 
 }).call(this);
-
-});require.register("Pulsar.js", function(module, exports, require, global){
 // Generated by CoffeeScript 1.3.3
 (function() {
-  var Channel, Pulsar, eio, isBrowser,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  var Channel, client, isBrowser,
     __slice = [].slice;
 
   isBrowser = typeof window !== 'undefined';
 
-  eio = require((isBrowser ? 'node_modules/engine.io-client/lib/engine.io-client' : 'engine.io-client'));
+  Channel = (isBrowser ? PulsarChannel : require('./Channel'));
 
-  Channel = require('./Channel');
-
-  Pulsar = (function(_super) {
-
-    __extends(Pulsar, _super);
-
-    function Pulsar(options) {
-      var _base, _base1, _base2, _base3, _base4, _base5, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-      this.options = options != null ? options : {};
-      this.handleClose = __bind(this.handleClose, this);
-
-      this.handleOpen = __bind(this.handleOpen, this);
-
-      this.handleMessage = __bind(this.handleMessage, this);
-
-      this.handleError = __bind(this.handleError, this);
-
-      this.connect = __bind(this.connect, this);
-
-      this.disconnect = __bind(this.disconnect, this);
-
-      this.channel = __bind(this.channel, this);
-
-      if (isBrowser) {
-        if ((_ref = (_base = this.options).host) == null) {
-          _base.host = window.location.hostname;
+  client = function(opt) {
+    var k, out, v;
+    out = {
+      options: {
+        namespace: 'Pulsar',
+        resource: 'default'
+      },
+      start: function() {
+        return this.channels = {};
+      },
+      channel: function(name) {
+        var _base, _ref;
+        return (_ref = (_base = this.channels)[name]) != null ? _ref : _base[name] = new Channel(name, this.ssocket);
+      },
+      inbound: function(socket, msg, done) {
+        try {
+          return done(JSON.parse(msg));
+        } catch (err) {
+          return this.error(socket, err);
         }
-        if ((_ref1 = (_base1 = this.options).port) == null) {
-          _base1.port = (window.location.port.length > 0 ? parseInt(window.location.port) : 80);
+      },
+      outbound: function(socket, msg, done) {
+        try {
+          return done(JSON.stringify(msg));
+        } catch (err) {
+          return this.error(socket, err);
         }
-        if ((_ref2 = (_base2 = this.options).secure) == null) {
-          _base2.secure = window.location.protocol === 'https:';
+      },
+      validate: function(socket, msg, done) {
+        if (typeof msg !== 'object') {
+          return done(false);
+        }
+        if (typeof msg.type !== 'string') {
+          return done(false);
+        }
+        switch (msg.type) {
+          case 'emit':
+            if (typeof msg.channel !== 'string') {
+              return done(false);
+            }
+            if (!typeof (this.channels[msg.channel] != null)) {
+              return done(false);
+            }
+            if (typeof msg.event !== 'string') {
+              return done(false);
+            }
+            if (!Array.isArray(msg.args)) {
+              return done(false);
+            }
+            break;
+          case 'joined':
+            if (typeof msg.channel !== 'string') {
+              return done(false);
+            }
+            if (!typeof (this.channels[msg.channel] != null)) {
+              return done(false);
+            }
+            break;
+          default:
+            return done(false);
+        }
+        return done(true);
+      },
+      error: function(socket, err) {
+        throw err;
+      },
+      close: function(socket, reason) {
+        return this.emit('close', reason);
+      },
+      message: function(socket, msg) {
+        var chan;
+        chan = this.channels[msg.channel];
+        switch (msg.type) {
+          case 'emit':
+            return chan.realEmit.apply(chan, [msg.event].concat(__slice.call(msg.args)));
+          case 'joined':
+            chan.joined = true;
+            return chan.realEmit('join');
         }
       }
-      if ((_ref3 = (_base3 = this.options).path) == null) {
-        _base3.path = '/pulsar';
-      }
-      if ((_ref4 = (_base4 = this.options).forceBust) == null) {
-        _base4.forceBust = true;
-      }
-      if ((_ref5 = (_base5 = this.options).debug) == null) {
-        _base5.debug = false;
-      }
-      this.socket = new eio.Socket(this.options);
-      this.socket.on('open', this.handleOpen);
-      this.socket.on('error', this.handleError);
-      this.socket.on('message', this.handleMessage);
-      this.socket.on('close', this.handleClose);
-      this.channels = {};
-      this.connected = false;
-      return;
+    };
+    for (k in opt) {
+      v = opt[k];
+      out.options[k] = v;
     }
-
-    Pulsar.prototype.channel = function(name) {
-      var _base, _ref;
-      return (_ref = (_base = this.channels)[name]) != null ? _ref : _base[name] = new Channel(name, this.socket);
-    };
-
-    Pulsar.prototype.disconnect = function() {
-      this.socket.close();
-    };
-
-    Pulsar.prototype.connect = function() {
-      this.socket.open();
-    };
-
-    Pulsar.prototype.handleError = function(err) {
-      throw err;
-    };
-
-    Pulsar.prototype.handleMessage = function(msg) {
-      var action, args, chan, channel, event, _ref;
-      try {
-        _ref = JSON.parse(msg), channel = _ref.channel, event = _ref.event, args = _ref.args, action = _ref.action;
-      } catch (e) {
-        this.handleError(err);
-        return;
-      }
-      chan = this.channels[channel];
-      if (chan == null) {
-        return;
-      }
-      if (!Array.isArray(args)) {
-        args = [args];
-      }
-      return chan.realEmit.apply(chan, [event].concat(__slice.call(args)));
-    };
-
-    Pulsar.prototype.handleOpen = function() {
-      this.connected = true;
-      this.emit('open');
-    };
-
-    Pulsar.prototype.handleClose = function() {
-      var args;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      this.connected = false;
-      this.emit.apply(this, ['close'].concat(__slice.call(args)));
-    };
-
-    return Pulsar;
-
-  })(eio.EventEmitter);
-
-  if (typeof define === 'function') {
-    define(function() {
-      return Pulsar;
-    });
-  }
+    return out;
+  };
 
   if (isBrowser) {
-    window.Pulsar = Pulsar;
+    window.Pulsar = {
+      createClient: function(opt) {
+        if (opt == null) {
+          opt = {};
+        }
+        return ProtoSock.createClient(client(opt));
+      }
+    };
+  } else {
+    module.exports = client;
   }
 
-  module.exports = Pulsar;
-
 }).call(this);
-
-});Pulsar = require('Pulsar');
-})();

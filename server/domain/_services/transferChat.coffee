@@ -9,4 +9,4 @@ module.exports = (res, chatId, sessionId) ->
 
   Session.allSessions.members (err, sessionIds) ->
     ChatSession.add sessionId, chatId, metaInfo, (err) ->
-      res.send err
+      res.reply err

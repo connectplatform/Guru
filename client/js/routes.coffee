@@ -1,5 +1,5 @@
-define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"],
- (dermis, addMiddleware, sidebar, sbTemp) ->
+define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar", 'app/onPageLoad'],
+ (dermis, addMiddleware, sidebar, sbTemp, onPageLoad) ->
 
     # routes for visitors to join chat
     dermis.route '/newChat'
@@ -26,3 +26,5 @@ define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"],
     addMiddleware dermis
 
     dermis.init()
+
+    $ onPageLoad

@@ -24,8 +24,8 @@ module.exports = (res, fields, modelName) ->
       cb null, createdModel
 
   getModel fields, (err, foundModel) ->
-    return res.send err, null if err?
+    return res.reply err, null if err?
     foundModel[key] = value for key, value of fields when key isnt 'id'
     foundModel.save (err) ->
 
-      res.send parseMongooseError(err), filterOutput foundModel
+      res.reply parseMongooseError(err), filterOutput foundModel

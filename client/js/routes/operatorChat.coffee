@@ -9,9 +9,6 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
       # helper function
       renderId = (id) -> id.replace /:/g, '-'
 
-      # what chat is currently selected
-      status = {}
-
       server.ready (services) ->
         #console.log "server is ready-- services availible: #{services}"
 
@@ -26,10 +23,10 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
           $('#chatTabs a').click (e) ->
             e.preventDefault()
             $(this).tab 'show'
+            currentChat = $(this).attr 'chatid'
 
             # let the server know we read these
-            status.currentChat = $(this).attr 'chatid'
-            sessionUpdates.emit 'viewedMessages', status.currentChat
+            sessionUpdates.emit 'viewedMessages', currentChat, true
 
           # on page load click the first tab
           $('#chatTabs a:first').click()
@@ -61,20 +58,15 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
               console.log 'received unread:', unreadMessages
 
               unreadCount = unreadMessages[chatId] or 0
-              console.log 'unread count:', unreadCount
+              console.log 'unread count:', unreadCount, 'for chatId:', chatId
 
-              if unreadCount > 0 and status.currentChat is chatId
-                console.log 'already viewed:', status.currentChat
-                sessionUpdates.emit 'viewedMessages', chatId
-                content = ''
-              else if unreadCount > 0
+              if unreadCount > 0
                 console.log 'setting badge:', unreadCount
                 content = badge {status: 'important', num: unreadCount}
               else
                 console.log 'unsetting badge'
                 content = ''
 
-              console.log 'chatId:', chatId
               $(".notifyUnread[chatid=#{chatId}]").html content
 
           for chat in chats
@@ -102,7 +94,6 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
             window.rooter.hash.listen (newHash) ->
               unless ran
                 ran = true
-                status.currentChat = undefined
                 channel.removeAllListeners 'serverMessage'
                 sessionUpdates.removeAllListeners 'kickedFromChat'
                 sessionUpdates.removeAllListeners 'unreadMessages'

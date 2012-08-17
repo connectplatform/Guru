@@ -2,13 +2,12 @@
 
   define(["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge) {
     return function(args, templ) {
-      var renderId, sessionId, sessionUpdates, status;
+      var renderId, sessionId, sessionUpdates;
       sessionId = server.cookie("session");
       sessionUpdates = pulsar.channel("notify:session:" + sessionId);
       renderId = function(id) {
         return id.replace(/:/g, '-');
       };
-      status = {};
       return server.ready(function(services) {
         return server.getMyChats(function(err, chats) {
           var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, ran, updateChatBadge, _i, _j, _len, _len2, _results;
@@ -22,10 +21,11 @@
           }));
           console.log('wiring up chatTabs');
           $('#chatTabs a').click(function(e) {
+            var currentChat;
             e.preventDefault();
             $(this).tab('show');
-            status.currentChat = $(this).attr('chatid');
-            return sessionUpdates.emit('viewedMessages', status.currentChat);
+            currentChat = $(this).attr('chatid');
+            return sessionUpdates.emit('viewedMessages', currentChat, true);
           });
           $('#chatTabs a:first').click();
           createSubmitHandler = function(renderedId, channel) {
@@ -65,12 +65,8 @@
               var content, unreadCount;
               console.log('received unread:', unreadMessages);
               unreadCount = unreadMessages[chatId] || 0;
-              console.log('unread count:', unreadCount);
-              if (unreadCount > 0 && status.currentChat === chatId) {
-                console.log('already viewed:', status.currentChat);
-                sessionUpdates.emit('viewedMessages', chatId);
-                content = '';
-              } else if (unreadCount > 0) {
+              console.log('unread count:', unreadCount, 'for chatId:', chatId);
+              if (unreadCount > 0) {
                 console.log('setting badge:', unreadCount);
                 content = badge({
                   status: 'important',
@@ -80,7 +76,6 @@
                 console.log('unsetting badge');
                 content = '';
               }
-              console.log('chatId:', chatId);
               return $(".notifyUnread[chatid=" + chatId + "]").html(content);
             };
           };
@@ -104,7 +99,6 @@
             _results.push(window.rooter.hash.listen(function(newHash) {
               if (!ran) {
                 ran = true;
-                status.currentChat = void 0;
                 channel.removeAllListeners('serverMessage');
                 sessionUpdates.removeAllListeners('kickedFromChat');
                 return sessionUpdates.removeAllListeners('unreadMessages');

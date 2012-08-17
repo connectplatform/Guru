@@ -1,7 +1,7 @@
 (function() {
 
   define(["ext/pulsar"], function(Pulsar) {
-    return new Pulsar({
+    return Pulsar.createClient({
       port: 4001
     });
   });

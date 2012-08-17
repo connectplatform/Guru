@@ -3,7 +3,7 @@ redgoose = require 'redgoose'
 
 module.exports = (res, chatId) ->
   sessionId = res.cookie 'session'
-  ChatSession.getBySession sessionId, (err, chatSessions) ->
-    for chatSession in chatSessions
-      return res.send err, true if chatSession.chat.id is chatId
-    res.send err, false
+  ChatSession.getBySession sessionId, (err, chatSessions=[]) ->
+    if (chatSessions.any (sess) -> sess.chat.id is chatId)
+      return res.reply err, true
+    res.reply err, false

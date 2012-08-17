@@ -7,4 +7,4 @@ module.exports = (res) ->
     all: Chat.allChats.all
     unanswered: Chat.unansweredChats.all
 
-  }, res.send
+  }, res.reply

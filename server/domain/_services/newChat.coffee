@@ -37,4 +37,4 @@ module.exports = (res, userData) ->
 
           createChannel chatId
 
-          res.send null, channel: chatId
+          res.reply null, channel: chatId

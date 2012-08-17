@@ -1,7 +1,7 @@
 (function() {
 
   define(["ext/vein"], function(Vein) {
-    return new Vein;
+    return Vein.createClient();
   });
 
 }).call(this);

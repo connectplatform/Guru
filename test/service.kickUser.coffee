@@ -8,16 +8,16 @@ boiler 'Service - Kick User', ->
     # Setup
     @newChat =>
       @getAuthed =>
-        @client.joinChat @channelName, (err) =>
+        @client.joinChat @chatChannelName, (err) =>
           should.not.exist err
 
           # Kick user
-          @client.kickUser @channelName, (err) =>
+          @client.kickUser @chatChannelName, (err) =>
             should.not.exist err
 
             # Check that kick worked
             {Chat} = redgoose.models
-            Chat.get(@channelName).status.get (err, status) =>
+            Chat.get(@chatChannelName).status.get (err, status) =>
               should.not.exist err
               status.should.eql 'vacant'
               done()

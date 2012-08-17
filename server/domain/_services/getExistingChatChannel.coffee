@@ -3,8 +3,8 @@ redgoose = require 'redgoose'
 {ChatSession} = redgoose.models
 
 module.exports = (res) ->
-  return res.send null, null unless res.cookie 'session'
+  return res.reply null, null unless res.cookie 'session'
 
   ChatSession.getBySession res.cookie('session'), (err, [chatSession]) ->
-    return res.send null, channel: chatSession.chatId if chatSession?
-    res.send null, null
+    return res.reply null, channel: chatSession.chatId if chatSession?
+    res.reply null, null

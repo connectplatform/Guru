@@ -22,39 +22,33 @@ module.exports = (testName, tests) ->
   describe testName, (done)->
 
     before (done) ->
-      @getClient = -> new Vein.Client port: testPort, transports: ['websocket']
-      @getPulsar = -> new Pulsar.Client port: pulsarPort, transports: ['websocket']
+      @getClient = -> Vein.createClient port: testPort
+      @getPulsar = -> Pulsar.createClient port: pulsarPort
       @db = db
+      @getAuthed = (cb) =>
+        @client = @getClient()
+        loginData =
+          email: 'admin@foo.com'
+          password: 'foobar'
+        @client.ready =>
+          @client.login loginData, cb
+
+      @newChat = (cb) =>
+        @visitor = @getClient()
+        @visitor.ready =>
+          data = {username: 'visitor'}
+          @visitor.newChat data, (err, data) =>
+            throw new Error err if err
+            @chatChannelName = data.channel
+            @visitor.disconnect()
+            cb()
+
       initApp ->
         done()
 
     beforeEach (done) ->
-      @client = @getClient()
-      @getAuthed = (cb) =>
-        loginData =
-          email: 'admin@foo.com'
-          password: 'foobar'
-        @client.login loginData, cb
-
-      @newChat = (cb) =>
-        client = @getClient()
-        client.ready =>
-          data = {username: 'visitor'}
-          client.newChat data, (err, data) =>
-            throw new Error err if err
-            @channelName = data.channel
-            @channel = @getPulsar().channel @channelName
-            client.disconnect()
-            cb()
-
-      @client.ready (services) ->
-        flushCache ->
-          seedMongo done
-
-    afterEach (done) ->
-      @client.cookie 'session', null
-      @client.disconnect()
-      done()
+      flushCache ->
+        seedMongo done
 
     after (done) ->
       flushCache ->

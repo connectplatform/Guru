@@ -35,6 +35,7 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
         # maybe pull this and getInvites out into sendChatInvites.coffee?
         chatSession.sessionIndex.members (err, chats) ->
           async.map chats, getInvites, (err, chats) ->
+            #console.log 'notifying:', "notify:session:#{sessionId}"
             notify = pulsar.channel "notify:session:#{sessionId}"
             notify.emit 'chatInvites', compact chats
 

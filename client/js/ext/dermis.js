@@ -2111,7 +2111,8 @@ var requirejs, require, define;
     route: function(expr, setup, teardown) {
       var pattern;
       pattern = "^" + expr + "$";
-      pattern = pattern.replace(/([?=,\/])/g, '\\$1').replace(/:([\w\d]+)/g, '([^/]*)').replace(/(\?)\$/g, '\?(.*)');
+      pattern = pattern.replace(/([?=,\/])/g, '\\$1').replace(/:([\w\d]+)/g, '([^/]*)').replace(/(\\\?)/g, '(?:\\?(.*))?');
+      console.log("pattern: ", pattern);
       rooter.routes[expr] = {
         name: expr,
         paramNames: expr.match(/:([\w\d]+)/g),

@@ -16,7 +16,7 @@
     "async": "*",
     "pulsar": "0.0.7",
     "vein": "0.3.6",
-    "sugar": "*"
+    "sugar": "*",
     "restler": "*"
   },
   "devDependencies": {

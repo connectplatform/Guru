@@ -5,10 +5,12 @@ div.well.chatControls.span4(chatId="#{chat.id}")
     | Visitor: #{chat.visitor.username}
 
   .referrer-data
-    | Referrer Data: #{chat.visitor.referrerData}
+    | ReferrerData:
+    ul(id="referrerTree#{chat.renderedId}", class="treeview")!= chat.visitor.referrerData
 
   .acp-data
-    | ACP Data: #{chat.visitor.acpData}
+    | ACP Data:
+    ul(id="acpTree#{chat.renderedId}", class="treeview")!= chat.visitor.acpData
 
   .actions
     p

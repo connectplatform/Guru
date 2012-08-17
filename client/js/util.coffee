@@ -1,4 +1,4 @@
-define ->
+define ["templates/treeviewParentNode", "templates/li", "templates/treeview"], (treeviewParentNode, li, treeview) ->
   readableSize: (size) ->
     units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     i = 0
@@ -49,3 +49,30 @@ define ->
 
   cleartimers: ->
     clearInterval id for sel, id of @updating
+
+  jsonToUl: (json) ->
+    self = this
+
+    walkJSON = (node) ->
+      nodeType = $.type node
+      switch nodeType
+
+        when 'string'
+          return li input: node
+
+        when 'number', 'boolean', 'date', 'undefined', 'null'
+          return li input: "#{node}"
+
+        when 'array'
+          rows = []
+          rows.push self.jsonToUl element for element in node
+          return rows.join ""
+
+        when 'object'
+          rows = []
+          for k, v of node
+            rows.push treeviewParentNode input: {parentName:k, childData: self.jsonToUl(v)}
+          return rows.join ""
+
+    result = walkJSON json
+    return result

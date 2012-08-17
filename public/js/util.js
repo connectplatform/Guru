@@ -1,6 +1,6 @@
 (function() {
 
-  define(function() {
+  define(["templates/treeviewParentNode", "templates/li", "templates/treeview"], function(treeviewParentNode, li, treeview) {
     return {
       readableSize: function(size) {
         var i, units;
@@ -68,6 +68,49 @@
           _results.push(clearInterval(id));
         }
         return _results;
+      },
+      jsonToUl: function(json) {
+        var result, self, walkJSON;
+        self = this;
+        walkJSON = function(node) {
+          var element, k, nodeType, rows, v, _i, _len;
+          nodeType = $.type(node);
+          switch (nodeType) {
+            case 'string':
+              return li({
+                input: node
+              });
+            case 'number':
+            case 'boolean':
+            case 'date':
+            case 'undefined':
+            case 'null':
+              return li({
+                input: "" + node
+              });
+            case 'array':
+              rows = [];
+              for (_i = 0, _len = node.length; _i < _len; _i++) {
+                element = node[_i];
+                rows.push(self.jsonToUl(element));
+              }
+              return rows.join("");
+            case 'object':
+              rows = [];
+              for (k in node) {
+                v = node[k];
+                rows.push(treeviewParentNode({
+                  input: {
+                    parentName: k,
+                    childData: self.jsonToUl(v)
+                  }
+                }));
+              }
+              return rows.join("");
+          }
+        };
+        result = walkJSON(json);
+        return result;
       }
     };
   });

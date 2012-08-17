@@ -2216,7 +2216,6 @@ var requirejs, require, define;
       while (match = search.exec(query)) {
         queryParams[decode(match[1])] = decode(match[2]);
       }
-      console.log(queryParams);
       return queryParams;
     };
     dermis = {
@@ -2231,7 +2230,6 @@ var requirejs, require, define;
         if (service == null) service = "routes/" + base;
         if (view == null) view = "templates/" + base;
         setup = function(routeArguments, queryString) {
-          console.log("calling route " + base);
           return require([service, view], function(srv, tmpl) {
             if (typeof srv === 'function') {
               return srv(routeArguments, tmpl, parseQueryString(queryString));

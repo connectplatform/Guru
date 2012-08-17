@@ -2,7 +2,6 @@
 
   define(["app/server", "app/notify"], function(server, notify) {
     return function(_, templ, queryString) {
-      console.log("newChats got queryString ", queryString);
       $("#content").html("Loading...");
       return server.ready(function() {
         return server.getExistingChatChannel(function(err, data) {

@@ -1,6 +1,5 @@
 define ["app/server", "app/notify"], (server, notify) ->
   (_, templ, queryString) ->
-    console.log "newChats got queryString ", queryString
     $("#content").html "Loading..."
     server.ready ->
 

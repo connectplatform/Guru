@@ -1,6 +1,6 @@
 (function() {
 
-  define(["ext/vein"], function(Vein) {
+  define(["ext/vein"], function(_) {
     return Vein.createClient();
   });
 

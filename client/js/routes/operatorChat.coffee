@@ -1,5 +1,5 @@
-define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge"],
-  (server, pulsar, notify, controls, chatMessage, serverMessage, badge) ->
+define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "app/util"],
+  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util) ->
     (args, templ) ->
 
       # get notified of new messages
@@ -10,16 +10,31 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
       renderId = (id) -> id.replace /:/g, '-'
 
       server.ready (services) ->
-        #console.log "server is ready-- services availible: #{services}"
 
         server.getMyChats (err, chats) ->
           console.log 'chats:', chats
 
-          chat.renderedId = renderId chat.id for chat in chats
+          for chat in chats
+            chat.renderedId = renderId chat.id
+            chat.visitor.acpData = JSON.parse chat.visitor.acpData
+            chat.visitor.referrerData = JSON.parse chat.visitor.referrerData
+
+            chat.visitor.referrerData = util.jsonToUl chat.visitor.referrerData
+            chat.visitor.acpData = util.jsonToUl chat.visitor.acpData
 
           $('#content').html templ chats: chats
 
-          console.log 'wiring up chatTabs'
+          for chat in chats
+            $("#referrerTree#{chat.renderedId}").treeview {
+              collapsed: true,
+              persist: "location"
+            }
+
+            $("#acpTree#{chat.renderedId}").treeview {
+              collapsed: true,
+              persist: "location"
+            }
+
           $('#chatTabs a').click (e) ->
             e.preventDefault()
             $(this).tab 'show'

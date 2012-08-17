@@ -2,7 +2,7 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
   (server, pulsar, notify, newChat, chatMessage, serverMessage) ->
     ({id}, templ) ->
 
-      server.refresh (services) ->
+      server.ready ->
         server.visitorCanAccessChannel id, (err, canAccess) ->
           console.log "canAccess: #{canAccess}"
           console.log "canAccess is true: #{canAccess is true}"

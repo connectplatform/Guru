@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge) {
+  define(["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "app/util"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util) {
     return function(args, templ) {
       var renderId, sessionId, sessionUpdates;
       sessionId = server.cookie("session");
@@ -10,16 +10,30 @@
       };
       return server.ready(function(services) {
         return server.getMyChats(function(err, chats) {
-          var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, ran, updateChatBadge, _i, _j, _len, _len2, _results;
+          var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, ran, updateChatBadge, _i, _j, _k, _len, _len2, _len3, _results;
           console.log('chats:', chats);
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = renderId(chat.id);
+            chat.visitor.acpData = JSON.parse(chat.visitor.acpData);
+            chat.visitor.referrerData = JSON.parse(chat.visitor.referrerData);
+            chat.visitor.referrerData = util.jsonToUl(chat.visitor.referrerData);
+            chat.visitor.acpData = util.jsonToUl(chat.visitor.acpData);
           }
           $('#content').html(templ({
             chats: chats
           }));
-          console.log('wiring up chatTabs');
+          for (_j = 0, _len2 = chats.length; _j < _len2; _j++) {
+            chat = chats[_j];
+            $("#referrerTree" + chat.renderedId).treeview({
+              collapsed: true,
+              persist: "location"
+            });
+            $("#acpTree" + chat.renderedId).treeview({
+              collapsed: true,
+              persist: "location"
+            });
+          }
           $('#chatTabs a').click(function(e) {
             var currentChat;
             e.preventDefault();
@@ -80,8 +94,8 @@
             };
           };
           _results = [];
-          for (_j = 0, _len2 = chats.length; _j < _len2; _j++) {
-            chat = chats[_j];
+          for (_k = 0, _len3 = chats.length; _k < _len3; _k++) {
+            chat = chats[_k];
             channel = pulsar.channel(chat.id);
             if (chat.isWatching) {
               $("#" + chat.renderedId + " .message-form").hide();

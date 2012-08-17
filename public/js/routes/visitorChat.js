@@ -4,7 +4,7 @@
     return function(_arg, templ) {
       var id;
       id = _arg.id;
-      return server.refresh(function(services) {
+      return server.ready(function() {
         return server.visitorCanAccessChannel(id, function(err, canAccess) {
           var appendChat, channel;
           console.log("canAccess: " + canAccess);

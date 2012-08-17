@@ -1,6 +1,7 @@
-define ["app/server", "app/notify", "app/registerSessionUpdates"],
-  (server, notify, registerSessionUpdates) ->
+define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util", "app/registerSessionUpdates"],
+  (server, notify, sidebar, sbTemp, util, registerSessionUpdates) ->
     (args, templ) ->
+
       $('#content').html ''
 
       $('#content').append templ()

@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify", "app/registerSessionUpdates"], function(server, notify, registerSessionUpdates) {
+  define(["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util", "app/registerSessionUpdates"], function(server, notify, sidebar, sbTemp, util, registerSessionUpdates) {
     return function(args, templ) {
       $('#content').html('');
       $('#content').append(templ());

@@ -1,7 +1,7 @@
 (function() {
 
   define(["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar", 'app/onPageLoad'], function(dermis, addMiddleware, sidebar, sbTemp, onPageLoad) {
-    dermis.route('/newChat?');
+    dermis.route('/newChat');
     dermis.route('/visitorChat/:id');
     dermis.route('/', 'routes/index');
     dermis.route('/login');

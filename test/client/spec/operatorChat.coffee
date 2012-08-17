@@ -3,8 +3,8 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'app/pulsar'],
 
     describe 'Operator Chat', ->
       beforeEach ->
-        mock.loggedIn()
         mock.services()
+        mock.loggedIn()
 
         # given I have 2 current chats
         mock.hasChats()

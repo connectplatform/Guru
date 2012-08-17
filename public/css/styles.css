@@ -60,7 +60,10 @@ blockquote {
 
 .message-form input {
   width: 300px;
-  margin-right: 4px;
+}
+
+form input {
+  margin-right: 6px;
 }
 
 .page-content {

@@ -16,8 +16,8 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
 
           for chat in chats
             chat.renderedId = renderId chat.id
-            chat.visitor.acpData = JSON.parse chat.visitor.acpData
-            chat.visitor.referrerData = JSON.parse chat.visitor.referrerData
+            chat.visitor.acpData = JSON.parse chat.visitor.acpData if chat.visitor.acpData?
+            chat.visitor.referrerData = JSON.parse chat.visitor.referrerData if chat.visitor.referrerData?
 
             chat.visitor.referrerData = util.jsonToUl chat.visitor.referrerData
             chat.visitor.acpData = util.jsonToUl chat.visitor.acpData

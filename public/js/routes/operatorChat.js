@@ -15,8 +15,12 @@
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = renderId(chat.id);
-            chat.visitor.acpData = JSON.parse(chat.visitor.acpData);
-            chat.visitor.referrerData = JSON.parse(chat.visitor.referrerData);
+            if (chat.visitor.acpData != null) {
+              chat.visitor.acpData = JSON.parse(chat.visitor.acpData);
+            }
+            if (chat.visitor.referrerData != null) {
+              chat.visitor.referrerData = JSON.parse(chat.visitor.referrerData);
+            }
             chat.visitor.referrerData = util.jsonToUl(chat.visitor.referrerData);
             chat.visitor.acpData = util.jsonToUl(chat.visitor.acpData);
           }

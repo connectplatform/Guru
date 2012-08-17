@@ -18,7 +18,7 @@ boiler 'Service - Get Active Chats', ->
 
     # get active chats
     @client.getActiveChats (err, [chatData]) ->
-      false.should.eql err?
+      should.not.exist err
       chatData.visitor.username.should.eql 'foo'
       chatData.status.should.eql 'waiting'
       new Date chatData.creationDate #just need this to not cause an error
@@ -31,7 +31,7 @@ boiler 'Service - Get Active Chats', ->
 
       # get active chats
       @client.getActiveChats (err, [chatData]) ->
-        false.should.eql err?
+        should.not.exist err
         should.exist chatData.operators
         chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
 

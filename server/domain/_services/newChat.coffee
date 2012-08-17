@@ -2,6 +2,8 @@ async = require 'async'
 createChannel = require '../createChannel'
 redgoose = require 'redgoose'
 
+populateVisitorAcpData = require '../populateVisitorAcpData'
+
 module.exports = (res, userData) ->
   username = userData.username or 'anonymous'
 
@@ -26,11 +28,11 @@ module.exports = (res, userData) ->
 
         visitorMeta =
           username: username
-          website: null
           department: null
+          referrerData: userData.referrerData || null
 
         async.series [
-          chat.visitor.set visitorMeta
+          chat.visitor.mset visitorMeta
 
         ], (err) ->
           console.log "redis error in newChat: #{err}" if err
@@ -38,3 +40,7 @@ module.exports = (res, userData) ->
           createChannel chatId
 
           res.reply null, channel: chatId
+
+          #We don't want the visitor to have to wait on this
+          if userData.referrerData
+            populateVisitorAcpData userData.referrerData, chatId

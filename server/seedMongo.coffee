@@ -3,6 +3,7 @@ async = require 'async'
 mongo = require './mongo'
 User = mongo.model 'User'
 Role = mongo.model 'Role'
+Website = mongo.model 'Website'
 
 module.exports = (done) ->
   mongo.wipe ->
@@ -13,6 +14,9 @@ module.exports = (done) ->
 
     createRole = (role, cb) ->
       Role.create role, cb
+
+    createWebsite = (website, cb) ->
+      Website.create website, cb
 
     operators = [
         email: 'admin@foo.com'
@@ -45,7 +49,14 @@ module.exports = (done) ->
         {name: "Supervisor"}
     ]
 
+    websites = [
+        name: "example.com"
+        url: "http://www.example.com"
+        acpEndpoint: "http://localhost:8675"
+    ]
+
     async.parallel [
       (cb) -> async.map operators, createUser, cb
       (cb) -> async.map roles, createRole, cb
+      (cb) -> async.map websites, createWebsite, cb
     ], done

@@ -16,5 +16,11 @@ module.exports = (referrerData, chatId) ->
     acpEndpoint = site?.acpEndpoint
     return unless acpEndpoint
     targetUrl = "#{acpEndpoint}?#{querystring.stringify referrerData}"
-    restler.get(targetUrl).on 'complete', (acpData) ->
+    headers = {
+      'Accept': '*/*',
+      'User-Agent': 'Restler for node.js'
+    }
+    headers['Authorization'] = "Basic #{site.acpApiKey}" if site.acpApiKey
+    requestOptions = {headers: headers}
+    restler.get(targetUrl, requestOptions).on 'complete', (acpData) ->
       Chat.get(chatId).visitor.set 'acpData', acpData, (err) ->

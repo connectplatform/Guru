@@ -13,14 +13,14 @@
         return $(selector).html(content);
       };
       return server.ready(function() {
-        var operatorUpdates, sessionID, sessionUpdates;
+        var operatorUpdates, sessionID, sessionUpdates, updateUnreadMessages;
         sessionID = server.cookie('session');
         operatorUpdates = pulsar.channel('notify:operators');
         sessionUpdates = pulsar.channel("notify:session:" + sessionID);
         server.getChatStats(function(err, stats) {
           return updateBadge(".notifyUnanswered", stats.unanswered.length);
         });
-        updateUnreadMessages(function(unread) {
+        updateUnreadMessages = function(unread) {
           var chat, count, total;
           total = 0;
           for (chat in unread) {
@@ -28,7 +28,7 @@
             total += count;
           }
           return updateBadge(".notifyUnread", total);
-        });
+        };
         operatorUpdates.on('unansweredCount', function(num) {
           return updateBadge(".notifyUnanswered", num);
         });

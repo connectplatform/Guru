@@ -14,6 +14,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
               url: $('#editWebsite .url').val()
               specialties: ($(thing).val() for thing in $('#editWebsite .specialties :checkbox:checked'))
               acpEndpoint: $('#editWebsite .acpEndpoint').val()
+              acpApiKey: $('#editWebsite .acpApiKey').val()
             }
 
           extraDataPacker = (website) ->
@@ -26,6 +27,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "temp
               url: ""
               specialties: []
               acpEndpoint: ""
+              acpApiKey: ""
             }
             console.log site
             site

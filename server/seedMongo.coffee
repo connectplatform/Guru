@@ -53,6 +53,7 @@ module.exports = (done) ->
         name: "example.com"
         url: "http://www.example.com"
         acpEndpoint: "http://localhost:8675"
+        acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
     ]
 
     async.parallel [

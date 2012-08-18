@@ -7,8 +7,6 @@
       return server.ready(function() {
         return server.visitorCanAccessChannel(chatId, function(err, canAccess) {
           var appendChat, channel;
-          console.log("canAccess: " + canAccess);
-          console.log("canAccess is true: " + (canAccess === true));
           if (!canAccess) return window.location.hash = '/newChat';
           $("#content").html(templ());
           $("#message-form #message").focus();

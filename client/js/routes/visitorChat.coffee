@@ -4,8 +4,6 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
 
       server.ready ->
         server.visitorCanAccessChannel chatId, (err, canAccess) ->
-          console.log "canAccess: #{canAccess}"
-          console.log "canAccess is true: #{canAccess is true}"
           return window.location.hash = '/newChat' unless canAccess
 
           $("#content").html templ()

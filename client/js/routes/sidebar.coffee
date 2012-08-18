@@ -16,10 +16,13 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
       server.getChatStats (err, stats) ->
         updateBadge ".notifyUnanswered", stats.unanswered.length
 
-      # update badge number on change
-      operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
-      sessionUpdates.on 'unreadMessages', (unread) ->
+      updateUnreadMessages (unread) ->
         total = 0
         for chat, count of unread
           total += count
         updateBadge ".notifyUnread", total
+
+      # update badge number on change
+      operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
+      sessionUpdates.on 'unreadMessages', updateUnreadMessages
+      sessionUpdates.on 'viewedMessages', updateUnreadMessages

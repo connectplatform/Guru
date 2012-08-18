@@ -11,7 +11,7 @@
         return next();
       };
       dermis.before(all, [getRole]);
-      dermis.before(['/newChat', '/visitorChat/:id', '/users', '/websites', '/specialties'], [redirectOperators]);
+      dermis.before(['/newChat', '/visitorChat/:chatId', '/users', '/websites', '/specialties'], [redirectOperators]);
       dermis.before(['/', '/login', '/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'], [redirectVisitors]);
       return dermis.before(['/dashboard', '/userAdmin', '/operatorChat', '/users', '/websites', '/specialties'], [redirectGuestsToLogin, renderSidebar]);
     };

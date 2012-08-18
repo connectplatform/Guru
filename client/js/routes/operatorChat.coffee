@@ -41,7 +41,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
             currentChat = $(this).attr 'chatid'
 
             # let the server know we read these
-            sessionUpdates.emit 'viewedMessages', currentChat, true
+            sessionUpdates.emit 'viewedMessages', currentChat
 
           # on page load click the first tab
           $('#chatTabs a:first').click()

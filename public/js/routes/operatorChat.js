@@ -43,7 +43,7 @@
             e.preventDefault();
             $(this).tab('show');
             currentChat = $(this).attr('chatid');
-            return sessionUpdates.emit('viewedMessages', currentChat, true);
+            return sessionUpdates.emit('viewedMessages', currentChat);
           });
           $('#chatTabs a:first').click();
           createSubmitHandler = function(renderedId, channel) {

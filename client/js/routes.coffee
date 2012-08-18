@@ -3,7 +3,7 @@ define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar", 'a
 
     # routes for visitors to join chat
     dermis.route '/newChat'
-    dermis.route '/visitorChat/:id'
+    dermis.route '/visitorChat/:chatId'
 
     # login for backend users
     dermis.route '/', 'routes/index'

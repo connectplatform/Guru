@@ -20,10 +20,7 @@
         server.getChatStats(function(err, stats) {
           return updateBadge(".notifyUnanswered", stats.unanswered.length);
         });
-        operatorUpdates.on('unansweredCount', function(num) {
-          return updateBadge(".notifyUnanswered", num);
-        });
-        return sessionUpdates.on('unreadMessages', function(unread) {
+        updateUnreadMessages(function(unread) {
           var chat, count, total;
           total = 0;
           for (chat in unread) {
@@ -32,6 +29,11 @@
           }
           return updateBadge(".notifyUnread", total);
         });
+        operatorUpdates.on('unansweredCount', function(num) {
+          return updateBadge(".notifyUnanswered", num);
+        });
+        sessionUpdates.on('unreadMessages', updateUnreadMessages);
+        return sessionUpdates.on('viewedMessages', updateUnreadMessages);
       });
     };
   });

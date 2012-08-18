@@ -28,7 +28,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
       # access controls
       dermis.before [
         '/newChat'
-        '/visitorChat/:id'
+        '/visitorChat/:chatId'
         '/users'
         '/websites'
         '/specialties'

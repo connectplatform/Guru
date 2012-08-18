@@ -5,10 +5,9 @@
       var id;
       id = _arg.id;
       return server.ready(function() {
+        console.log("id in visitorChat: ", id);
         return server.visitorCanAccessChannel(id, function(err, canAccess) {
           var appendChat, channel;
-          console.log("canAccess: " + canAccess);
-          console.log("canAccess is true: " + (canAccess === true));
           if (!canAccess) return window.location.hash = '/newChat';
           $("#content").html(templ());
           $("#message-form #message").focus();
@@ -30,7 +29,7 @@
           appendChat = function(data) {
             return $(".chat-display-box").append(chatMessage(data));
           };
-          return server.getChatHistory(channel, function(err, history) {
+          return server.getChatHistory(id, function(err, history) {
             var msg, ran, _i, _len;
             if (err) notify.error("Error loading chat history: " + err);
             for (_i = 0, _len = history.length; _i < _len; _i++) {

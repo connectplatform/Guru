@@ -4,8 +4,6 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
 
       server.ready ->
         server.visitorCanAccessChannel id, (err, canAccess) ->
-          console.log "canAccess: #{canAccess}"
-          console.log "canAccess is true: #{canAccess is true}"
           return window.location.hash = '/newChat' unless canAccess
 
           $("#content").html templ()
@@ -26,7 +24,7 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
           appendChat = (data)->
             $(".chat-display-box").append chatMessage data
 
-          server.getChatHistory channel, (err, history)->
+          server.getChatHistory id, (err, history)->
             notify.error "Error loading chat history: #{err}" if err
             appendChat null, msg for msg in history
 

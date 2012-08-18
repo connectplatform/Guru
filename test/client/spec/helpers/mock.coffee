@@ -5,22 +5,28 @@ define ['app/server', 'app/pulsar', 'app/registerSessionUpdates'],
       loggedIn: ->
         server.cookie 'session', 'session_foo'
         registerSessionUpdates()
+        server.getMyRole = (args..., cb) ->
+          cb null, 'Operator'
 
       loggedOut: ->
         server.cookie 'session', null
+        server.getMyRole = (args..., cb) ->
+          cb null, 'None'
 
       services: ->
         server.login = (args..., cb) ->
           mock.loggedIn()
           cb null, {name: 'Bob'}
         server.getMyRole = (args..., cb) ->
-          cb null, 'Operator'
+          cb null, 'None'
         server.getMyChats = (args..., cb) ->
           cb null, []
         server.getChatStats = (args..., cb) ->
           cb null, {unanswered: 0}
         server.getActiveChats = (args..., cb) ->
           cb null, []
+        server.getExistingChatChannel = (args..., cb) ->
+          cb null, null
 
       hasChats: ->
         server.getMyChats = (args..., cb) ->

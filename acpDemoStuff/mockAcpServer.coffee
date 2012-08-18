@@ -32,9 +32,10 @@ referrerData = {
   websiteUrl: 'http://www.example.com'
 }
 
-console.log querystring.stringify referrerData
-
 response = (req, res) ->
+  # Security
+  return unless req.headers.authorization is "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
+
   query = querystring.parse req._parsedUrl.query
   if (query.customerId == referrerData.customerId) && (query.referrer == referrerData.referrer)
     res.end JSON.stringify acpData

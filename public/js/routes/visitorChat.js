@@ -5,7 +5,6 @@
       var id;
       id = _arg.id;
       return server.ready(function() {
-        console.log("id in visitorChat: ", id);
         return server.visitorCanAccessChannel(id, function(err, canAccess) {
           var appendChat, channel;
           if (!canAccess) return window.location.hash = '/newChat';

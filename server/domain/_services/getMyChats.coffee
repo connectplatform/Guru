@@ -1,6 +1,6 @@
 async = require 'async'
-redgoose = require 'redgoose'
-{ChatSession, Chat} = redgoose.models
+stoic = require 'stoic'
+{ChatSession, Chat} = stoic.models
 
 module.exports = (res) ->
   # get all my chats

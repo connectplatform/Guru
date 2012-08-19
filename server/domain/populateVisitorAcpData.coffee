@@ -3,8 +3,8 @@ querystring = require 'querystring'
 db = require '../mongo'
 {Website} = db.models
 
-redgoose = require 'redgoose'
-{Chat} = redgoose.models
+stoic = require 'stoic'
+{Chat} = stoic.models
 
 module.exports = (referrerData, chatId) ->
   websiteUrl = referrerData?.websiteUrl

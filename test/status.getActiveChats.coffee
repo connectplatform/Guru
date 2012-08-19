@@ -1,6 +1,6 @@
 should = require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 getActiveChats = require '../server/domain/_services/getActiveChats'
 

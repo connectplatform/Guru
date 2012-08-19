@@ -1,5 +1,5 @@
 should = require 'should'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 boiler = require './util/boilerplate'
 
 boiler 'Service - Kick User', ->
@@ -16,7 +16,7 @@ boiler 'Service - Kick User', ->
             should.not.exist err
 
             # Check that kick worked
-            {Chat} = redgoose.models
+            {Chat} = stoic.models
             Chat.get(@chatChannelName).status.get (err, status) =>
               should.not.exist err
               status.should.eql 'vacant'

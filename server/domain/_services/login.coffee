@@ -1,4 +1,4 @@
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 {digest_s} = require 'md5'
 db = require '../../mongo'
 {User} = db.models
@@ -11,7 +11,7 @@ module.exports = (res, fields) ->
 
     username = if user.lastName is not "" then "#{user.firstName} #{user.lastName}" else "#{user.firstName}"
 
-    {Session} = redgoose.models
+    {Session} = stoic.models
     Session.sessionIdsByOperator.get user.id, (err, sessionId) ->
       if sessionId?
         res.cookie 'session', sessionId

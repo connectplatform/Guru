@@ -7,7 +7,7 @@ pulsar = require "./pulsar"
 config = require './config'
 flushCache = require '../lib/flushCache'
 http = require 'http'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 module.exports = (cb) ->
 
@@ -23,8 +23,8 @@ module.exports = (cb) ->
   server = app.listen port
 
   # Redgoose
-  redgoose.init()
-  redgoose.load require model for model in [
+  stoic.init()
+  stoic.load require model for model in [
     './domain/_models/sessions'
     './domain/_models/chats'
     './domain/_models/chatSession'

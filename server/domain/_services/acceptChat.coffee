@@ -1,8 +1,8 @@
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 module.exports = (res, chatId) ->
   operatorId = unescape(res.cookie('session'))
-  {Chat, ChatSession} = redgoose.models
+  {Chat, ChatSession} = stoic.models
 
   Chat.get(chatId).status.getset 'active', (err, status) ->
     if status is 'active'

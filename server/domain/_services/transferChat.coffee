@@ -1,5 +1,5 @@
-redgoose = require 'redgoose'
-{Session, ChatSession} = redgoose.models
+stoic = require 'stoic'
+{Session, ChatSession} = stoic.models
 
 module.exports = (res, chatId, sessionId) ->
   metaInfo =

@@ -1,13 +1,13 @@
 async = require 'async'
 createChannel = require '../createChannel'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 populateVisitorAcpData = require '../populateVisitorAcpData'
 
 module.exports = (res, userData) ->
   username = userData.username or 'anonymous'
 
-  {Chat, Session, ChatSession} = redgoose.models
+  {Chat, Session, ChatSession} = stoic.models
   Chat.create (err, chat) ->
     console.log "error creating chat: #{err}" if err
     chatId = chat.id

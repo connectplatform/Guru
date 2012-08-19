@@ -1,12 +1,12 @@
 async = require 'async'
 should = require 'should'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 boiler = require './util/boilerplate'
 
 boiler 'Model - Session Chat', ->
 
   it 'should associate an operator and chat', (done)->
-    {ChatSession} = redgoose.models
+    {ChatSession} = stoic.models
 
     async.series [
       # add and get chat/operator pairs

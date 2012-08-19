@@ -1,6 +1,6 @@
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 pulsar = require '../../pulsar'
-{ChatSession} = redgoose.models
+{ChatSession} = stoic.models
 
 module.exports = (res, chatId) ->
   newMeta =

@@ -1,6 +1,6 @@
 should = require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 beforeEach (done) ->
   @loginOperator = (cb) =>

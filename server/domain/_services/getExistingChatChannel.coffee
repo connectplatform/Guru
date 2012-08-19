@@ -1,6 +1,6 @@
 pulsar = require '../../pulsar'
-redgoose = require 'redgoose'
-{ChatSession} = redgoose.models
+stoic = require 'stoic'
+{ChatSession} = stoic.models
 
 module.exports = (res) ->
   return res.reply null, null unless res.cookie 'session'

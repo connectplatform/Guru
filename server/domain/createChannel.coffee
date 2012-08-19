@@ -1,7 +1,7 @@
 async = require 'async'
 pulsar = require '../pulsar'
-redgoose = require 'redgoose'
-{Session, Chat, ChatSession} = redgoose.models
+stoic = require 'stoic'
+{Session, Chat, ChatSession} = stoic.models
 
 module.exports = (channelName) ->
 

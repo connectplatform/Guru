@@ -1,6 +1,6 @@
 should = require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 Pulsar = require 'pulsar'
 
 boiler 'Service - Invite Operator', ->
@@ -38,7 +38,7 @@ boiler 'Service - Invite Operator', ->
 
       # Check whether operator was invited
       # TODO: once they're updated, use accept invite or getActiveChats to test this instead
-      {ChatSession} = redgoose.models
+      {ChatSession} = stoic.models
       ChatSession.getByChat @chatChannelName, (err, chatSessions) =>
         should.not.exist err
         for cs in chatSessions when cs.sessionId is @targetSession

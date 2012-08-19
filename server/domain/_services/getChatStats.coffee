@@ -1,6 +1,6 @@
 async = require 'async'
-redgoose = require 'redgoose'
-{Chat} = redgoose.models
+stoic = require 'stoic'
+{Chat} = stoic.models
 
 module.exports = (res) ->
   async.parallel {

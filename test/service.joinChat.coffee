@@ -1,6 +1,6 @@
 require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 boiler 'Service - Join Chat', ->
 
@@ -16,7 +16,7 @@ boiler 'Service - Join Chat', ->
             id = @client.cookie('session')
 
             #TODO refactor this to check at a higher level than cache contents
-            {ChatSession} = redgoose.models
+            {ChatSession} = stoic.models
             ChatSession.getBySession id, (err, [chat]) =>
               false.should.eql err?
               chat.chatId.should.eql channel

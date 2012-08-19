@@ -40,9 +40,9 @@ boiler 'Service - Populate Visitor ACP Data', ->
 
       chatId = response.channel
 
-      #check that data is in redgoose
-      redgoose = require 'redgoose'
-      {Chat} = redgoose.models
+      #check that data is in stoic
+      stoic = require 'stoic'
+      {Chat} = stoic.models
 
       verifyResult = ->
         visitor= Chat.get(chatId).visitor

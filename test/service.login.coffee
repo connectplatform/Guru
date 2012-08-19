@@ -1,6 +1,6 @@
 should = require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 boiler 'Service - Login', ->
 
@@ -13,7 +13,7 @@ boiler 'Service - Login', ->
       should.not.exist err
       id = @client.cookie('session')
 
-      {Session} = redgoose.models
+      {Session} = stoic.models
       Session.get(id).chatName.get (err, chatName) ->
         should.not.exist err
         chatName.should.eql "Admin"

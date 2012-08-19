@@ -1,5 +1,5 @@
-redgoose = require 'redgoose'
-{Session} = redgoose.models
+stoic = require 'stoic'
+{Session} = stoic.models
 
 module.exports = (res) ->
   sessionId = res.cookie 'session'

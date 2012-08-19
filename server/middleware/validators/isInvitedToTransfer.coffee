@@ -1,5 +1,5 @@
-redgoose = require 'redgoose'
-{ChatSession} = redgoose.models
+stoic = require 'stoic'
+{ChatSession} = stoic.models
 
 module.exports = (args, cookies, cb) ->
   [chatId] = args

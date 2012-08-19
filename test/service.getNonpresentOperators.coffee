@@ -1,6 +1,6 @@
 should = require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 boiler 'Service - Get Nonpresent Opertors', ->
   it "should return a list of operators not currently visible in chat", (done) ->
@@ -19,7 +19,7 @@ boiler 'Service - Get Nonpresent Opertors', ->
             operatorSessions[0].role.should.eql "Administrator"
 
             # Make sure we have the right id
-            {Session} = redgoose.models
+            {Session} = stoic.models
             Session.get(operatorSessions[0].id).chatName.get (err, chatName) =>
               chatName.should.eql "Admin"
               done()

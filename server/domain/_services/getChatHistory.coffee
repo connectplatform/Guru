@@ -1,5 +1,5 @@
-redgoose = require 'redgoose'
-{Chat} = redgoose.models
+stoic = require 'stoic'
+{Chat} = stoic.models
 
 module.exports = (res, id) ->
   Chat.get(id).history.all (err, data) ->

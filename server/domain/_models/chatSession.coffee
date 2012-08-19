@@ -1,7 +1,7 @@
 async = require 'async'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 {tandoor, compact} = require '../../../lib/util'
-{Chat, Session} = redgoose.models
+{Chat, Session} = stoic.models
 pulsar = require '../../pulsar'
 
 # Interface for document

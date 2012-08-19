@@ -1,8 +1,8 @@
 async = require 'async'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 getChatsFromIdList = (list, done) ->
-  {Chat, ChatSession} = redgoose.models
+  {Chat, ChatSession} = stoic.models
 
   #this is a bogus chatID added by the redis query TODO: should I worry about this?
   chatIDs = list.filter (element) -> element != 'true'
@@ -45,7 +45,7 @@ getChatsFromIdList = (list, done) ->
   async.map chatIDs, getChat, done
 
 module.exports = (res) ->
-  {Chat, ChatSession} = redgoose.models
+  {Chat, ChatSession} = stoic.models
   Chat.allChats.all (err, chats) ->
     getChatsFromIdList chats, (err1, chats) ->
 

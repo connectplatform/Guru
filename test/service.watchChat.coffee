@@ -1,6 +1,6 @@
 require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 boiler 'Service - Watch Chat', ->
 

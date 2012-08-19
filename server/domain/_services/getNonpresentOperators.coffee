@@ -1,6 +1,6 @@
 async = require 'async'
-redgoose = require 'redgoose'
-{ChatSession, Session} = redgoose.models
+stoic = require 'stoic'
+{ChatSession, Session} = stoic.models
 
 {getType} = require '../../../lib/util'
 

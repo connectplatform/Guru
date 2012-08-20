@@ -11,7 +11,6 @@
       return server.ready(function(services) {
         return server.getMyChats(function(err, chats) {
           var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, ran, updateChatBadge, _i, _j, _k, _len, _len2, _len3, _results;
-          console.log('chats:', chats);
           for (_i = 0, _len = chats.length; _i < _len; _i++) {
             chat = chats[_i];
             chat.renderedId = renderId(chat.id);
@@ -81,17 +80,13 @@
           updateChatBadge = function(chatId) {
             return function(unreadMessages) {
               var content, unreadCount;
-              console.log('received unread:', unreadMessages);
               unreadCount = unreadMessages[chatId] || 0;
-              console.log('unread count:', unreadCount, 'for chatId:', chatId);
               if (unreadCount > 0) {
-                console.log('setting badge:', unreadCount);
                 content = badge({
                   status: 'important',
                   num: unreadCount
                 });
               } else {
-                console.log('unsetting badge');
                 content = '';
               }
               return $(".notifyUnread[chatid=" + chatId + "]").html(content);

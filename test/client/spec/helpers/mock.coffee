@@ -27,6 +27,12 @@ define ['app/server', 'app/pulsar', 'app/registerSessionUpdates'],
           cb null, []
         server.getExistingChatChannel = (args..., cb) ->
           cb null, null
+        server.newChat = (args..., cb) ->
+          cb null, {chatId: 'foo'}
+        server.visitorCanAccessChannel = (args..., cb) ->
+          cb null, 'true'
+        server.getChatHistory = (args..., cb) ->
+          cb null, []
 
       hasChats: ->
         server.getMyChats = (args..., cb) ->

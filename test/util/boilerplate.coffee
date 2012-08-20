@@ -1,6 +1,6 @@
 db = require '../../server/mongo'
 flushCache = require '../../lib/flushCache'
-seedMongo = require '../../server/seedMongo'
+sampleData = require '../../server/sampleData'
 stoic = require 'stoic'
 async = require 'async'
 
@@ -97,7 +97,7 @@ module.exports = (testName, tests) ->
 
     beforeEach (done) ->
       flushCache ->
-        seedMongo done
+        sampleData done
 
     after (done) ->
       flushCache ->

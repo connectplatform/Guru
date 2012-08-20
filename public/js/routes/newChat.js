@@ -17,7 +17,7 @@
             if (!queryString.websiteUrl) {
               referrer = document.referrer || "";
               referrerArray = referrer.split("/");
-              if (referrerAray.length >= 2) {
+              if (referrerArray.length >= 2) {
                 queryString.websiteUrl = referrerArray[0] + referrerArray[1] + referrerArray[2];
               }
             }

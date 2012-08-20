@@ -15,6 +15,7 @@
     "pulsar": "0.0.7",
     "vein": "0.3.6",
     "sugar": "*",
+    "stoic": "*",
     "restler": "*"
   },
   "devDependencies": {

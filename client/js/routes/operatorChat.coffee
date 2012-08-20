@@ -12,7 +12,6 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
       server.ready (services) ->
 
         server.getMyChats (err, chats) ->
-          console.log 'chats:', chats
 
           for chat in chats
             chat.renderedId = renderId chat.id
@@ -70,16 +69,12 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
 
           updateChatBadge = (chatId) ->
             (unreadMessages) ->
-              console.log 'received unread:', unreadMessages
 
               unreadCount = unreadMessages[chatId] or 0
-              console.log 'unread count:', unreadCount, 'for chatId:', chatId
 
               if unreadCount > 0
-                console.log 'setting badge:', unreadCount
                 content = badge {status: 'important', num: unreadCount}
               else
-                console.log 'unsetting badge'
                 content = ''
 
               $(".notifyUnread[chatid=#{chatId}]").html content

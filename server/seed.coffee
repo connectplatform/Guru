@@ -1,4 +1,4 @@
-seed = require './seedMongo'
+seed = require './sampleData'
 
 seed (err, data) ->
   console.log 'Error: ', err if err?

@@ -9,3 +9,9 @@ require ['spec/helpers/mock', 'spec/helpers/util'],
 
       it 'should display a prompt for a new chat', (done) ->
         expect($ '#newChat-form input#username').toExist()
+
+      it 'should create a new chat', (done) ->
+        $('#newChat-form input#username').val 'Bob'
+        $('#newChat-form button[type=submit]').click()
+
+        waitsFor exists('.chatPage input.message'), 'chat window did not load', 200

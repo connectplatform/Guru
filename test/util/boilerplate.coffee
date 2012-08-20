@@ -1,6 +1,8 @@
 db = require '../../server/mongo'
 flushCache = require '../../lib/flushCache'
 seedMongo = require '../../server/seedMongo'
+stoic = require 'stoic'
+async = require 'async'
 
 # pick a port that server and client will run on
 testPort = process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
@@ -25,6 +27,7 @@ module.exports = (testName, tests) ->
       @getClient = -> Vein.createClient port: testPort
       @getPulsar = -> Pulsar.createClient port: pulsarPort
       @db = db
+
       @getAuthed = (cb) =>
         @client = @getClient()
         loginData =
@@ -42,6 +45,52 @@ module.exports = (testName, tests) ->
             @chatChannelName = data.channel
             @visitor.disconnect()
             cb()
+
+      @createChats = (cb) ->
+        {Chat} = stoic.models
+        now = Date.create().getTime()
+
+        chats = [
+          {
+            visitor:
+              username: 'Bob'
+            status: 'waiting' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+          {
+            visitor:
+              username: 'Suzie'
+            status: 'active' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+          {
+            visitor:
+              username: 'Ralph'
+            status: 'active' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+          {
+            visitor:
+              username: 'Frank'
+            status: 'vacant' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+        ]
+
+        createChat = (chat, cb) ->
+          Chat.create (err, c) ->
+            async.parallel [
+              c.visitor.mset chat.visitor
+              c.status.set chat.status
+              c.creationDate.set chat.creationDate
+              #c.history.rpush chat.history... #this needs to be a loop
+            ], (err) -> cb err, c
+
+        async.map chats, createChat, cb
 
       initApp ->
         done()

@@ -33,6 +33,7 @@ face = (decorators) ->
 
       visitor chat, ({before, after}) ->
         # JSON serialize/deserialize
+        # TODO: code review
         dehydrateJSON = (obj) ->
           newObj = {}
           for key, value of obj
@@ -43,7 +44,8 @@ face = (decorators) ->
           newObj
 
         before ['set'], (context, [key, value], next) ->
-          next null, [key, JSON.stringify value] if (value is 'acpData') or (value is 'referrerData')
+          if (value in ['acpData', 'referrerData'])
+            value = JSON.stringify value
           next null, [key, value]
 
         before ['mset'], (context, args, next) ->
@@ -52,7 +54,13 @@ face = (decorators) ->
         after ['get'], (context, data, next) ->
           next null, JSON.parse(data)
 
-      creationDate chat
+      creationDate chat, ({before, after}) ->
+        before ['getset', 'set'], (context, [date], next) ->
+          next null, [Date.create(date).getTime()]
+
+        after ['get'], (context, [date], next) ->
+          next null, Date.create parseInt date
+
       status chat, ({before, after}) ->
 
         # whenever a chat's unanswered status is set, add/remove it from the unanswered chats list
@@ -82,7 +90,6 @@ face = (decorators) ->
 
         }, (err, chat) ->
           chat.id = id
-          chat.creationDate = new Date parseInt chat.creationDate
           cb err, chat
 
       return chat

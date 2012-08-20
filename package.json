@@ -8,8 +8,6 @@
     "coffee-script": "*",
     "md5": "*",
     "mongoose": "*",
-    "hiredis": "*",
-    "redis": "*",
     "async": "*",
     "should": "*",
     "connect": "2.3.4",

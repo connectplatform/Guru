@@ -37,3 +37,5 @@ module.exports = ->
   beforeFilter ['firstArgumentIsObject'], only: [ 'findModel', 'saveModel', 'newChat', 'login' ]
 
   beforeFilter ['loginObjectIsValid'], only: ['login']
+
+  beforeFilter ['bothArgsAreStrings'], only: ['changePassword']

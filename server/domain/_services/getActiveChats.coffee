@@ -5,8 +5,7 @@ stoic = require 'stoic'
 getChatsFromIdList = (list, done) ->
   {Chat, ChatSession} = stoic.models
 
-  #this is a bogus chatID added by the redis query TODO: should I worry about this?
-  chatIDs = list.filter (element) -> element != 'true'
+  chatIDs = list
 
   # get chats I've been invited to
   invites =

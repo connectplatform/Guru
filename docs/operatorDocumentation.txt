@@ -1,0 +1,13 @@
+Operator documentation
+
+Types of Chats
+
+Waiting: A chat with a status of "waiting" has a visitor in it but no operators.  The first operator to click "Accept" for such a chat will be placed into the chat, and the chat will be marked as "Active"
+
+Active: An active chat has a visitor and one or more operators in it.
+
+Invite: If a chat is marked with an "Invite" status it indicates that the currently active operator has been invited to join the chat by another operator.  Clicking "Accept" will cause the invited operator to enter the chat, and will change the chat status to "Active".  Only the currently invited operator will see the status of a chat as "Invite"
+
+Transfer: If a chat is marked with an "Transfer" status it indicates that the currently active operator has been invited to take over the chat by another operator.  Clicking "Assume" will cause the invited operator to enter the chat, will eject the operator who requested the transfer from the chat room, and will change the chat status to "Active".  Only the operator who is currently invited to assume a transfer will see the status of a chat as "Transfer"
+
+Vacant: A chat with the status of "Vacant" has no visitors in it.

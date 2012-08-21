@@ -1,0 +1,9 @@
+Guide to ACP integration with chat system
+
+Customers should be referred to the new chat page by a link which contains a querystring.  This querystring should contain all key/value pairs necessary to identify the referred customer in the ACP system.  The contents of this querystring will be passed to the ACP server when requesting ACP data.  The querystring of the referring link should contain, at minimum, the key "websiteUrl" with the URL of the website whose ACP server a request should be made to.  This URL must be the same as the URL the chat site administrator entered on the website configuration page.  The information in the querystring will be displayed to any operators who join a chat with the customer who the request was made for, under the heading "Referrer data".
+
+An ACP endpoint can be entered into the chat system for each website.  A GET request will be made to this endpoint when a customer creates a new chat.  The request will have a querystring containing all of the data that was in the querystring of the referring link (see previous paragraph.)  If the querystring of the referrer does not contain the key "websiteUrl", the only data passed to the ACP server will be the key "websiteUrl" with a value of the referring site.
+
+Requests to the ACP server will optionally use HTTP basic authentication.  The single Base64 encoded access string must be made availible to the administrator of the chat site, who will enter it into the chat system along with the ACP endpoint.  For more information, please see http://en.wikipedia.org/wiki/Basic_access_authentication
+
+The ACP server should respond to requests in JSON format.  This JSON object returned will be displayed any operators who join a chat with the customer who the request was made for, under the heading "ACP data".

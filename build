@@ -17,7 +17,8 @@ coffee -o ./public/js/ -c ./client/js/
 # uglifyjs -nc --unsafe -mt -o ./public/js/main.min.js ./public/js/main.js
 
 # Vein
-cp ./node_modules/vein/vein.js ./client/js/ext/vein.js
+# readd when contra updates vein to newly built version
+# cp ./node_modules/vein/vein.js ./client/js/ext/vein.js
 
 # Pulsar
 cp ./node_modules/pulsar/pulsar.js ./client/js/ext/pulsar.js

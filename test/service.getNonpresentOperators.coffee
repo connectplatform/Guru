@@ -1,16 +1,16 @@
 should = require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 boiler 'Service - Get Nonpresent Opertors', ->
   it "should return a list of operators not currently visible in chat", (done) ->
     # Setup
     @newChat =>
       @getAuthed =>
-        @client.watchChat @channelName, (err) =>
+        @client.watchChat @chatChannelName, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators @channelName, (err, operatorSessions) =>
+          @client.getNonpresentOperators @chatChannelName, (err, operatorSessions) =>
             should.not.exist err
 
             # Validate returned data
@@ -19,7 +19,7 @@ boiler 'Service - Get Nonpresent Opertors', ->
             operatorSessions[0].role.should.eql "Administrator"
 
             # Make sure we have the right id
-            {Session} = redgoose.models
+            {Session} = stoic.models
             Session.get(operatorSessions[0].id).chatName.get (err, chatName) =>
               chatName.should.eql "Admin"
               done()
@@ -28,10 +28,10 @@ boiler 'Service - Get Nonpresent Opertors', ->
     # Setup
     @newChat =>
       @getAuthed =>
-        @client.acceptChat @channelName, (err) =>
+        @client.acceptChat @chatChannelName, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators @channelName, (err, operatorSessions) =>
+          @client.getNonpresentOperators @chatChannelName, (err, operatorSessions) =>
             should.not.exist err
 
             # Validate returned data

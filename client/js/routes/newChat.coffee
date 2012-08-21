@@ -1,6 +1,5 @@
 define ["app/server", "app/notify"], (server, notify) ->
-  (_, templ, queryString) ->
-    console.log "newChats got queryString ", queryString
+  (_, templ, queryString={}) ->
     $("#content").html "Loading..."
     server.ready ->
 
@@ -9,11 +8,15 @@ define ["app/server", "app/notify"], (server, notify) ->
 
         $("#content").html templ()
         $("#newChat-form #username").focus()
-
         $("#newChat-form").submit ->
 
           username = $("#newChat-form #username").val()
 
+          #fall back to referrer if queryString doesn't give us the website we came from
+          unless queryString.websiteUrl
+            referrer = document.referrer or ""
+            referrerArray = referrer.split "/"
+            queryString.websiteUrl = referrerArray[0] + referrerArray[1] + referrerArray[2] if referrerArray.length >= 2
           server.newChat {username: username, referrerData: queryString}, (err, data) ->
             if err?
               $("#content").html templ()

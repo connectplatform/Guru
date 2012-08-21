@@ -1,5 +1,5 @@
-redgoose = require 'redgoose'
-{Chat, ChatSession} = redgoose.models
+stoic = require 'stoic'
+{Chat, ChatSession} = stoic.models
 
 module.exports = (res, chatId) ->
   operatorId = unescape(res.cookie('session'))
@@ -13,6 +13,6 @@ module.exports = (res, chatId) ->
         if status is 'active' and chatSessions.length is 1
           Chat.get(chatId).status.set 'waiting', (err) ->
             console.log "Error setting chat status: #{err}" if err?
-            res.send err, chatId
+            res.reply err, chatId
         else
-          res.send err, chatId
+          res.reply err, chatId

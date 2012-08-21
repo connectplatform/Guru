@@ -27,7 +27,8 @@
                 }
                 return _results;
               })(),
-              acpEndpoint: $('#editWebsite .acpEndpoint').val()
+              acpEndpoint: $('#editWebsite .acpEndpoint').val(),
+              acpApiKey: $('#editWebsite .acpApiKey').val()
             };
           };
           extraDataPacker = function(website) {
@@ -40,7 +41,8 @@
               name: "",
               url: "",
               specialties: [],
-              acpEndpoint: ""
+              acpEndpoint: "",
+              acpApiKey: ""
             });
             console.log(site);
             return site;

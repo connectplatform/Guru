@@ -9,23 +9,20 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
     # init badge number
     server.ready ->
 
-      # TODO: move this to 'before' middleware
-      server.getMyRole (err, role) ->
-        unless role in ['Operator', 'Supervisor', 'Administrator']
-          window.location.hash = '#/logout'
+      sessionID = server.cookie 'session'
+      operatorUpdates = pulsar.channel 'notify:operators'
+      sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
 
-        else
-          sessionID = server.cookie 'session'
-          operatorUpdates = pulsar.channel 'notify:operators'
-          sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
+      server.getChatStats (err, stats) ->
+        updateBadge ".notifyUnanswered", stats.unanswered.length
 
-          server.getChatStats (err, stats) ->
-            updateBadge ".notifyUnanswered", stats.unanswered.length
+      updateUnreadMessages = (unread) ->
+        total = 0
+        for chat, count of unread
+          total += count
+        updateBadge ".notifyUnread", total
 
-          # update badge number on change
-          operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
-          sessionUpdates.on 'unreadMessages', (unread) ->
-            total = 0
-            for chat, count of unread
-              total += count
-            updateBadge ".notifyUnread", total
+      # update badge number on change
+      operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
+      sessionUpdates.on 'unreadMessages', updateUnreadMessages
+      sessionUpdates.on 'viewedMessages', updateUnreadMessages

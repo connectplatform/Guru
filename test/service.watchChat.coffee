@@ -1,6 +1,6 @@
 require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 boiler 'Service - Watch Chat', ->
 
@@ -12,7 +12,7 @@ boiler 'Service - Watch Chat', ->
     visitorClient.ready =>
       visitorClient.newChat {username: 'foo'}, (err, {channel}) =>
         sessionId = visitorClient.cookie 'session'
-        visitorClient.refresh =>
+        visitorClient.ready =>
           visitorClient.disconnect()
           message = "hello, world!"
 

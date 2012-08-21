@@ -1,3 +1,5 @@
+require 'sugar'
+Object.extend()
 connect = require "connect"
 Vein = require "vein"
 mongo = require "./mongo"
@@ -5,7 +7,7 @@ pulsar = require "./pulsar"
 config = require './config'
 flushCache = require '../lib/flushCache'
 http = require 'http'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 module.exports = (cb) ->
 
@@ -20,16 +22,16 @@ module.exports = (cb) ->
 
   server = app.listen port
 
-  # Redgoose
-  redgoose.init()
-  redgoose.load require model for model in [
+  # Stoic
+  stoic.init()
+  stoic.load require model for model in [
     './domain/_models/sessions'
     './domain/_models/chats'
     './domain/_models/chatSession'
   ]
 
   # Vein
-  vein = new Vein server
+  vein = Vein.createServer server: server
   vein.addFolder __dirname + '/domain/_services/'
 
   veinMiddlewareGlue = require './middleware/veinMiddlewareGlue'

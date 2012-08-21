@@ -1,6 +1,6 @@
 should = require 'should'
 boiler = require './util/boilerplate'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 
 beforeEach (done) ->
   @loginOperator = (cb) =>
@@ -22,17 +22,17 @@ boiler 'Service - Transfer Chat', ->
     @newChat =>
       @loginOperator =>
         @getAuthed =>
-          @client.acceptChat @channelName, (err) =>
+          @client.acceptChat @chatChannelName, (err) =>
             should.not.exist err
 
             # Try to transfer
-            @client.transferChat @channelName, @targetSession, (err) =>
+            @client.transferChat @chatChannelName, @targetSession, (err) =>
               should.not.exist err
 
               # Check whether transfer worked
               # TODO: once it's updated, use getActiveChats to test this instead
-              {ChatSession} = redgoose.models
-              ChatSession.getByChat @channelName, (err, chatSessions) =>
+              {ChatSession} = stoic.models
+              ChatSession.getByChat @chatChannelName, (err, chatSessions) =>
                 should.not.exist err
                 for cs in chatSessions when cs.sessionId is @targetSession
                   chatSession = cs

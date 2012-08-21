@@ -1,5 +1,5 @@
 should = require 'should'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 boiler = require './util/boilerplate'
 
 boiler 'Model - Session ', ->

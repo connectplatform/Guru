@@ -1,16 +1,14 @@
 define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage"],
   (server, pulsar, notify, newChat, chatMessage, serverMessage) ->
-    ({id}, templ) ->
+    ({chatId}, templ) ->
 
-      server.refresh (services) ->
-        server.visitorCanAccessChannel id, (err, canAccess) ->
-          console.log "canAccess: #{canAccess}"
-          console.log "canAccess is true: #{canAccess is true}"
+      server.ready ->
+        server.visitorCanAccessChannel chatId, (err, canAccess) ->
           return window.location.hash = '/newChat' unless canAccess
 
           $("#content").html templ()
           $("#message-form #message").focus()
-          channel = pulsar.channel id
+          channel = pulsar.channel chatId
 
           $(".message-form").submit (evt) ->
             evt.preventDefault()
@@ -26,9 +24,9 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
           appendChat = (data)->
             $(".chat-display-box").append chatMessage data
 
-          server.getChatHistory channel, (err, history)->
+          server.getChatHistory chatId, (err, history)->
             notify.error "Error loading chat history: #{err}" if err
-            appendChat null, msg for msg in history
+            appendChat msg for msg in history
 
             channel.on 'serverMessage', appendChat
             channel.on 'chatEnded', ->

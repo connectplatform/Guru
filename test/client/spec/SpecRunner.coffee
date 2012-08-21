@@ -1,8 +1,14 @@
-define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', 'spec/helpers/mock', 'spec/login', 'spec/operatorChat'],
-  (jasmineHtml, jjq, {delay}, mock, login, operatorChat) ->
+define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', 'spec/helpers/mock',
+
+    # spec files
+    'spec/login',
+    'spec/operatorChat',
+    'spec/newChat'
+  ], (jasmineHtml, jjq, {delay}, mock, login, operatorChat, newChat) ->
 
     $('head').append '<link rel="stylesheet" type="text/css" href="/js/ext/jasmine-1.2.0/jasmine.css">'
 
+    window.location.hash = '/test'
     mock.services()
 
     jasmineEnv = jasmine.getEnv()
@@ -13,6 +19,4 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
       htmlReporter.specFilter spec
 
     $ ->
-      delay 40, ->
-        console.log 'login spec:', login
-        jasmineEnv.execute()
+      delay 100, -> jasmineEnv.execute()

@@ -1,5 +1,5 @@
-redgoose = require 'redgoose'
-{Session, ChatSession} = redgoose.models
+stoic = require 'stoic'
+{Session, ChatSession} = stoic.models
 
 module.exports = (res, chatId, sessionId) ->
   metaInfo =
@@ -9,4 +9,4 @@ module.exports = (res, chatId, sessionId) ->
 
   Session.allSessions.members (err, sessionIds) ->
     ChatSession.add sessionId, chatId, metaInfo, (err) ->
-      res.send err
+      res.reply err

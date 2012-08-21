@@ -8,14 +8,14 @@
     "coffee-script": "*",
     "md5": "*",
     "mongoose": "*",
-    "hiredis": "*",
-    "redis": "*",
     "async": "*",
     "should": "*",
     "connect": "2.3.4",
     "async": "*",
-    "pulsar": "0.0.4",
-    "vein": "0.3.4",
+    "pulsar": "0.0.7",
+    "vein": "0.3.6",
+    "sugar": "*",
+    "stoic": "*",
     "restler": "*"
   },
   "devDependencies": {

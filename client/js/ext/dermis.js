@@ -2111,12 +2111,11 @@ var requirejs, require, define;
     route: function(expr, setup, teardown) {
       var pattern;
       pattern = "^" + expr + "$";
-      pattern = pattern.replace(/([?=,\/])/g, '\\$1').replace(/:([\w\d]+)/g, '([^/]*)').replace(/(\?)\$/g, '\?(.*)');
+      pattern = pattern.replace(/([?=,\/])/g, '\\$1').replace(/:([\w\d]+)/g, '([^/]*)').replace(/(\$)$/g, '(?:\\?(.*))?$');
       rooter.routes[expr] = {
         name: expr,
         paramNames: expr.match(/:([\w\d]+)/g),
         pattern: new RegExp(pattern),
-        queryString: expr.indexOf('?') === -1 ? false : true,
         setup: setup,
         teardown: teardown ? teardown : function(cb) {
           return cb();
@@ -2160,7 +2159,7 @@ var requirejs, require, define;
           routeInput[name.substring(1)] = args[idx];
         }
       }
-      if (destination.queryString && attemptedHash.indexOf('?' !== -1)) {
+      if (attemptedHash.indexOf('?' !== -1)) {
         junk = 2 <= matches.length ? __slice.call(matches, 0, _i = matches.length - 1) : (_i = 0, []), queryString = matches[_i++];
       }
       return rooter.runBeforeFilters(destination, routeInput, function(err) {
@@ -2216,7 +2215,6 @@ var requirejs, require, define;
       while (match = search.exec(query)) {
         queryParams[decode(match[1])] = decode(match[2]);
       }
-      console.log(queryParams);
       return queryParams;
     };
     dermis = {
@@ -2231,7 +2229,6 @@ var requirejs, require, define;
         if (service == null) service = "routes/" + base;
         if (view == null) view = "templates/" + base;
         setup = function(routeArguments, queryString) {
-          console.log("calling route " + base);
           return require([service, view], function(srv, tmpl) {
             if (typeof srv === 'function') {
               return srv(routeArguments, tmpl, parseQueryString(queryString));

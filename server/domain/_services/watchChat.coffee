@@ -1,6 +1,6 @@
 #TODO this is 5 characters different from joinChat.  Refactor.
-redgoose = require 'redgoose'
-{ChatSession} = redgoose.models
+stoic = require 'stoic'
+{ChatSession} = stoic.models
 
 module.exports = (res, chatId) ->
   operatorId = unescape(res.cookie('session'))
@@ -9,4 +9,4 @@ module.exports = (res, chatId) ->
     type: 'member'
   ChatSession.add operatorId, chatId, relationMeta, (err)->
     console.log "Error adding ChatSession in joinChat: #{err}" if err
-    res.send null, true
+    res.reply null, true

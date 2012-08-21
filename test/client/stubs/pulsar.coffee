@@ -1,4 +1,8 @@
 define ['app/EventEmitter'], (EventEmitter) ->
-  channels: {}
-  channel: (name) ->
-    @channels[name] = new EventEmitter
+  pulsar =
+    channels: {}
+    channel: (name) ->
+      @channels[name] ?= new EventEmitter
+
+  window.pulsar = pulsar
+  return pulsar

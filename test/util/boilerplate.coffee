@@ -1,6 +1,8 @@
 db = require '../../server/mongo'
 flushCache = require '../../lib/flushCache'
-seedMongo = require '../../server/seedMongo'
+sampleData = require '../../server/sampleData'
+stoic = require 'stoic'
+async = require 'async'
 
 # pick a port that server and client will run on
 testPort = process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
@@ -22,39 +24,81 @@ module.exports = (testName, tests) ->
   describe testName, (done)->
 
     before (done) ->
-      @getClient = -> new Vein.Client port: testPort, transports: ['websocket']
-      @getPulsar = -> new Pulsar.Client port: pulsarPort, transports: ['websocket']
+      @getClient = -> Vein.createClient port: testPort
+      @getPulsar = -> Pulsar.createClient port: pulsarPort
       @db = db
+
+      @getAuthed = (cb) =>
+        @client = @getClient()
+        loginData =
+          email: 'admin@foo.com'
+          password: 'foobar'
+        @client.ready =>
+          @client.login loginData, cb
+
+      @newChat = (cb) =>
+        @visitor = @getClient()
+        @visitor.ready =>
+          data = {username: 'visitor'}
+          @visitor.newChat data, (err, data) =>
+            @visitorSession = @visitor.cookie 'session'
+            throw new Error err if err
+            @chatChannelName = data.channel
+            @visitor.disconnect()
+            cb()
+
+      @createChats = (cb) ->
+        {Chat} = stoic.models
+        now = Date.create().getTime()
+
+        chats = [
+          {
+            visitor:
+              username: 'Bob'
+            status: 'waiting' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+          {
+            visitor:
+              username: 'Suzie'
+            status: 'active' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+          {
+            visitor:
+              username: 'Ralph'
+            status: 'active' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+          {
+            visitor:
+              username: 'Frank'
+            status: 'vacant' # transfer, invite, waiting, active, vacant
+            creationDate: now
+            history: []
+          }
+        ]
+
+        createChat = (chat, cb) ->
+          Chat.create (err, c) ->
+            async.parallel [
+              c.visitor.mset chat.visitor
+              c.status.set chat.status
+              c.creationDate.set chat.creationDate
+              #c.history.rpush chat.history... #this needs to be a loop
+            ], (err) -> cb err, c
+
+        async.map chats, createChat, cb
+
       initApp ->
         done()
 
     beforeEach (done) ->
-      @client = @getClient()
-      @getAuthed = (cb) =>
-        loginData =
-          email: 'admin@foo.com'
-          password: 'foobar'
-        @client.login loginData, cb
-
-      @newChat = (cb) =>
-        client = @getClient()
-        client.ready =>
-          data = {username: 'visitor'}
-          client.newChat data, (err, data) =>
-            throw new Error err if err
-            @channelName = data.channel
-            @channel = @getPulsar().channel @channelName
-            client.disconnect()
-            cb()
-
-      @client.ready (services) ->
-        flushCache ->
-          seedMongo done
-
-    afterEach (done) ->
-      @client.cookie 'session', null
-      @client.disconnect()
-      done()
+      flushCache ->
+        sampleData done
 
     after (done) ->
       flushCache ->

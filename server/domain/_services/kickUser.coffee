@@ -1,7 +1,7 @@
 async = require 'async'
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 pulsar = require '../../pulsar'
-{ChatSession, Chat} = redgoose.models
+{ChatSession, Chat} = stoic.models
 
 module.exports = (res, chatId) ->
   ChatSession.getByChat chatId, (err, chatSessions) ->
@@ -23,4 +23,4 @@ module.exports = (res, chatId) ->
             notify = pulsar.channel chatId
             notify.emit 'chatEnded'
 
-            res.send null, null
+            res.reply null, null

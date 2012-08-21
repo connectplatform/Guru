@@ -1,12 +1,12 @@
 async = require 'async'
-redgoose = require 'redgoose'
-{ChatSession, Chat} = redgoose.models
+stoic = require 'stoic'
+{ChatSession, Chat} = stoic.models
 
 module.exports = (res) ->
   # get all my chats
   operatorId = unescape(res.cookie 'session')
   ChatSession.getBySession operatorId, (err, sessionChats) ->
-    res.send err, null if err
+    res.reply err, null if err
 
     # get the isWatching field from sessionChat
     getIsWatching = (sessionChat, cb) ->
@@ -23,4 +23,4 @@ module.exports = (res) ->
           data.isWatching = isWatching == "true" ? true : false
           cb err, data
 
-      async.map arr, doLookup, res.send
+      async.map arr, doLookup, res.reply

@@ -3,4 +3,4 @@ db = require '../../mongo'
 
 module.exports = (res) ->
   Role.find {}, (err, roles) ->
-    res.send err, (role.name for role in roles)
+    res.reply err, (role.name for role in roles)

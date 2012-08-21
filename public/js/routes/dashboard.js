@@ -4,7 +4,6 @@
   define(["app/server", "app/notify", "app/util", "app/pulsar"], function(server, notify, util, pulsar) {
     return function(args, templ) {
       var updateDashboard;
-      console.log("wheeeee!");
       if (!server.cookie('session')) {
         return window.location.hash = '/';
       }

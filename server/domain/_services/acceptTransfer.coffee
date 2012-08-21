@@ -1,6 +1,6 @@
-redgoose = require 'redgoose'
+stoic = require 'stoic'
 pulsar = require '../../pulsar'
-{ChatSession} = redgoose.models
+{ChatSession} = stoic.models
 
 module.exports = (res, chatId) ->
   newMeta =
@@ -16,4 +16,4 @@ module.exports = (res, chatId) ->
         notifySession = pulsar.channel "notify:session:#{requestor}"
         notifySession.emit 'kickedFromChat', chatId
 
-        res.send err1 or err2 or err3, chatId
+        res.reply err1 or err2 or err3, chatId

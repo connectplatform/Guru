@@ -1,6 +1,6 @@
 async = require 'async'
-redgoose = require 'redgoose'
-{ChatSession, Session} = redgoose.models
+stoic = require 'stoic'
+{ChatSession, Session} = stoic.models
 
 {getType} = require '../../../lib/util'
 
@@ -50,7 +50,7 @@ module.exports = (res, chatId) ->
   Session.allSessions.members (err, sessionIds) ->
     if err
       console.log "Error retrieving sessions in getNonpresentOperators: #{err}"
-      return res.send err, null
+      return res.reply err, null
     filterSessions sessionIds, chatId, (err, operatorIds) ->
 
       #We have the ids of everyone we want to display, now pack their session data
@@ -58,4 +58,4 @@ module.exports = (res, chatId) ->
         #async.map handles edge cases poorlyhandles edge cases poorly
         operatorSessions = [] if operatorSessions is undefined
         operatorSessions = [operatorSessions] unless getType(operatorSessions) is '[object Array]'
-        res.send err, operatorSessions
+        res.reply err, operatorSessions

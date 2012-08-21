@@ -1,9 +1,9 @@
-define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"],
- (dermis, addMiddleware, sidebar, sbTemp) ->
+define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar", 'app/onPageLoad'],
+ (dermis, addMiddleware, sidebar, sbTemp, onPageLoad) ->
 
     # routes for visitors to join chat
-    dermis.route '/newChat?'
-    dermis.route '/visitorChat/:id'
+    dermis.route '/newChat'
+    dermis.route '/visitorChat/:chatId'
 
     # login for backend users
     dermis.route '/', 'routes/index'
@@ -27,16 +27,4 @@ define ["dermis", "app/addMiddleware", "routes/sidebar", "templates/sidebar"],
 
     dermis.init()
 
-    operatorPages = [
-      '/dashboard',
-      '/userAdmin',
-      '/operatorChat',
-      '/users',
-      '/websites',
-      '/specialties'
-    ]
-
-    $ ->
-      hash = window.rooter.hash.value()
-      if hash in operatorPages
-        sidebar {}, sbTemp
+    $ onPageLoad

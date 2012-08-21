@@ -13,6 +13,7 @@ module.exports = (channelName) ->
 
     sess = Session.get(contents.session)
     chat = Chat.get(channelName)
+    return unless sess and chat
 
     # get user's identity and operators present
     async.parallel [
@@ -28,9 +29,8 @@ module.exports = (channelName) ->
         username: username
         timestamp: Date.now()
       chat.history.rpush history, ->
+        # notify operators
+        async.forEach operators, (op, cb) ->
+          Session.get(op).unreadMessages.incrby channelName, 1, cb
 
-      # notify operators
-      async.forEach operators, (op, cb) ->
-        Session.get(op).unreadMessages.incrby channelName, 1, cb
-
-      channel.emit 'serverMessage', history
+        channel.emit 'serverMessage', history

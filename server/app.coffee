@@ -22,7 +22,7 @@ module.exports = (cb) ->
 
   server = app.listen port
 
-  # Redgoose
+  # Stoic
   stoic.init()
   stoic.load require model for model in [
     './domain/_models/sessions'

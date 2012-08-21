@@ -41,6 +41,7 @@ module.exports = (testName, tests) ->
         @visitor.ready =>
           data = {username: 'visitor'}
           @visitor.newChat data, (err, data) =>
+            @visitorSession = @visitor.cookie 'session'
             throw new Error err if err
             @chatChannelName = data.channel
             @visitor.disconnect()

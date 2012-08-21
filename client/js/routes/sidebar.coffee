@@ -1,6 +1,5 @@
 define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, notify, pulsar, badge) ->
   (args, templ) ->
-    $('#sidebar').html templ()
 
     updateBadge = (selector, num) ->
       content = if num > 0 then badge {status: 'important', num: num} else ''
@@ -8,21 +7,24 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
 
     # init badge number
     server.ready ->
+      server.getMyRole (err, role) ->
 
-      sessionID = server.cookie 'session'
-      operatorUpdates = pulsar.channel 'notify:operators'
-      sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
+        $('#sidebar').html templ role: role
 
-      server.getChatStats (err, stats) ->
-        updateBadge ".notifyUnanswered", stats.unanswered.length
+        sessionID = server.cookie 'session'
+        operatorUpdates = pulsar.channel 'notify:operators'
+        sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
 
-      updateUnreadMessages = (unread) ->
-        total = 0
-        for chat, count of unread
-          total += count
-        updateBadge ".notifyUnread", total
+        server.getChatStats (err, stats) ->
+          updateBadge ".notifyUnanswered", stats.unanswered.length
 
-      # update badge number on change
-      operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
-      sessionUpdates.on 'unreadMessages', updateUnreadMessages
-      sessionUpdates.on 'viewedMessages', updateUnreadMessages
+        updateUnreadMessages = (unread) ->
+          total = 0
+          for chat, count of unread
+            total += count
+          updateBadge ".notifyUnread", total
+
+        # update badge number on change
+        operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
+        sessionUpdates.on 'unreadMessages', updateUnreadMessages
+        sessionUpdates.on 'viewedMessages', updateUnreadMessages

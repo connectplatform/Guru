@@ -1,5 +1,5 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "app/formBuilder"],
-  (server, notify, sidebar, sbTemp, editWebsite, deleteWebsite, websiteRow, formBuilder) ->
+define ["app/server", "app/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "app/formBuilder"],
+  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 

@@ -4,32 +4,32 @@ boiler = require './util/boilerplate'
 
 boiler 'Service - Get Active Chats', ->
 
-  #it 'should return data on all existing chats', (done) ->
-    #@newChat =>
-      #@getAuthed =>
+  it 'should return data on all existing chats', (done) ->
+    @newChat =>
+      @getAuthed =>
 
-        ## get active chats
-        #@client.getActiveChats (err, [chatData]) ->
-          #should.not.exist err
-          #chatData.visitor.username.should.eql 'visitor'
-          #chatData.status.should.eql 'waiting'
-          #new Date chatData.creationDate #just need this to not cause an error
-          #done()
+        # get active chats
+        @client.getActiveChats (err, [chatData]) ->
+          should.not.exist err
+          chatData.visitor.username.should.eql 'visitor'
+          chatData.status.should.eql 'waiting'
+          new Date chatData.creationDate #just need this to not cause an error
+          done()
 
-  #it 'should return operators for chats', (done) ->
-    #@newChat =>
-      #@getAuthed =>
+  it 'should return operators for chats', (done) ->
+    @newChat =>
+      @getAuthed =>
 
-        ## have our operator join the chat
-        #@client.joinChat @chatChannelName, =>
+        # have our operator join the chat
+        @client.joinChat @chatChannelName, =>
 
-          ## get active chats
-          #@client.getActiveChats (err, [chatData]) ->
-            #should.not.exist err
-            #should.exist chatData.operators
-            #chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
+          # get active chats
+          @client.getActiveChats (err, [chatData]) ->
+            should.not.exist err
+            should.exist chatData.operators
+            chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
 
-            #done()
+            done()
 
   it 'should sort the chats', (done) ->
     @createChats (err, chats) =>

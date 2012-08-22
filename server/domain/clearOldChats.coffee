@@ -28,6 +28,8 @@ removeOldChats = (chat, minutesToTimeout, cb) ->
     else
       cb null
 
+#TODO: refactor so that the pipeline 1) filters, 2) removes
+# next add an additional step to archive to mongo
 module.exports = (cb) ->
   Chat.allChats.members (err, chatIds) ->
     return cb err if err

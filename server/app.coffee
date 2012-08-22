@@ -7,7 +7,7 @@ pulsar = require "./pulsar"
 config = require './config'
 flushCache = require '../lib/flushCache'
 http = require 'http'
-stoic = require 'stoic'
+stoic = require './initStoic'
 
 module.exports = (cb) ->
 
@@ -21,14 +21,6 @@ module.exports = (cb) ->
   app.use connect.static __dirname + '/../public/'
 
   server = app.listen port
-
-  # Stoic
-  stoic.init()
-  stoic.load require model for model in [
-    './domain/_models/sessions'
-    './domain/_models/chats'
-    './domain/_models/chatSession'
-  ]
 
   # Vein
   vein = Vein.createServer server: server

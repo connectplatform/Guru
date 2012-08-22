@@ -2,7 +2,11 @@ Administrator documentation
 
 General
 
-An administrator has all of the capabilities that an operator does, and should read the operator documentation as well.  Most importantly, an administrator should change their password upon first login.  There in not yet a method to recover a lost password, so if there is not more than one administrator, it is important that the administrator not lose their password.
+An administrator has all of the capabilities that an operator does, and should read the operator documentation as well.
+
+This Release
+
+Most importantly, an administrator should change their password upon first login.  There in not yet a method to recover a lost password, so if there is not more than one administrator, it is important that the administrator not lose their password.
 
 Managing Users
 
@@ -19,3 +23,7 @@ Locate the user whose data you wish to edit, and click the "Edit" link in the ro
 Deleting a user
 
 Locate the user who you wish to delete, and click the "Delete" link in the row for that user.  A confirmation box will ask whether you are sure you wish to delete the user.  Clicking "Delete" will cause the user to be deleted.  Clicking "Cancel" or pressing the escape button on the keyboard will cancel the deletion.  Warning: There is no "undo" button for deleting a user.  Deleting the only remaining administrator will cause you to be locked out of the system.
+
+Creating and editing websites and specialties
+
+Process is the same as working with users

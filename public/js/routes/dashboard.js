@@ -89,10 +89,7 @@
         updates = pulsar.channel('notify:operators');
         sessionUpdates = pulsar.channel("notify:session:" + sessionId);
         updates.on('unansweredCount', updateDashboard);
-        sessionUpdates.on('invite', function(chatId) {
-          console.log('received invite:', chatId);
-          return updateDashboard();
-        });
+        sessionUpdates.on('newInvites', updateDashboard);
         ran = false;
         return window.rooter.hash.listen(function(newHash) {
           if (!ran) {

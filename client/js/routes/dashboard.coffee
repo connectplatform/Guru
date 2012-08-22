@@ -81,9 +81,7 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
         sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
 
         updates.on 'unansweredCount', updateDashboard
-        sessionUpdates.on 'invite', (chatId) ->
-          console.log 'received invite:', chatId
-          updateDashboard()
+        sessionUpdates.on 'newInvites', updateDashboard
 
         # stop listening for pulsar events when we leave the page
         ran = false

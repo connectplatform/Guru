@@ -128,3 +128,6 @@ form input {
   overflow-y: scroll;
 }
 
+#sidebar .badge {
+  margin-right: 2px;
+}

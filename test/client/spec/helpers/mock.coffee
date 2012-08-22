@@ -1,7 +1,10 @@
-define ['app/server', 'app/pulsar', 'app/registerSessionUpdates'],
-  (server, pulsar, registerSessionUpdates) ->
+define ['app/server', 'app/pulsar', 'app/registerSessionUpdates', 'templates/sidebar', 'routes/sidebar'],
+  (server, pulsar, registerSessionUpdates, sbTemp, sidebar) ->
 
     mock =
+      renderSidebar: ->
+        sidebar {}, sbTemp
+
       loggedIn: ->
         server.cookie 'session', 'session_foo'
         registerSessionUpdates()
@@ -41,19 +44,19 @@ define ['app/server', 'app/pulsar', 'app/registerSessionUpdates'],
           now = (new Date).getTime()
           cb null, [
             {
-              id: 'chat_1'
-              visitor:
-                username: 'Bob'
-              status: 'waiting'
-              creationDate: now
-              history: []
-            }
-            {
               id: 'chat_3'
               visitor:
                 username: 'Ralph'
               status: 'active'
               relation: 'invite'
+              creationDate: now
+              history: []
+            }
+            {
+              id: 'chat_1'
+              visitor:
+                username: 'Bob'
+              status: 'waiting'
               creationDate: now
               history: []
             }

@@ -2,8 +2,8 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
   (args, templ) ->
     $('#sidebar').html templ()
 
-    updateBadge = (selector, num) ->
-      content = if num > 0 then badge {status: 'important', num: num} else ''
+    updateBadge = (selector, num, status='important') ->
+      content = if num > 0 then badge {status: status, num: num} else ''
       $(selector).html content
 
     # init badge number
@@ -15,6 +15,7 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
 
       server.getChatStats (err, stats) ->
         updateBadge ".notifyUnanswered", stats.unanswered.length
+        updateBadge ".notifyInvites", stats.invites.length
 
       updateUnreadMessages = (unread) ->
         total = 0
@@ -22,7 +23,10 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
           total += count
         updateBadge ".notifyUnread", total
 
+
       # update badge number on change
       operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
       sessionUpdates.on 'unreadMessages', updateUnreadMessages
       sessionUpdates.on 'viewedMessages', updateUnreadMessages
+      sessionUpdates.on 'newInvites', (invites) ->
+        updateBadge ".notifyInvites", invites.keys().length, 'warning'

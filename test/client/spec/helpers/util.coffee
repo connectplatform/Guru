@@ -4,7 +4,7 @@ define ->
   hasText: (selector, value) ->
     -> ($(selector).text() is value)
 
-  exists: (selector, value) ->
+  exists: (selector) ->
     -> $(selector).length > 0
 
   # sugar to allow convenient time delays

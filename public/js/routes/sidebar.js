@@ -4,10 +4,11 @@
     return function(args, templ) {
       var updateBadge;
       $('#sidebar').html(templ());
-      updateBadge = function(selector, num) {
+      updateBadge = function(selector, num, status) {
         var content;
+        if (status == null) status = 'important';
         content = num > 0 ? badge({
-          status: 'important',
+          status: status,
           num: num
         }) : '';
         return $(selector).html(content);
@@ -33,7 +34,11 @@
           return updateBadge(".notifyUnanswered", num);
         });
         sessionUpdates.on('unreadMessages', updateUnreadMessages);
-        return sessionUpdates.on('viewedMessages', updateUnreadMessages);
+        sessionUpdates.on('viewedMessages', updateUnreadMessages);
+        return sessionUpdates.on('newInvites', function(invites) {
+          console.log('received invites:', invites);
+          return updateBadge(".notifyInvites", invites.keys().length, 'warning');
+        });
       });
     };
   });

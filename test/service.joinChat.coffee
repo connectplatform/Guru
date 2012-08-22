@@ -1,4 +1,4 @@
-require 'should'
+should = require 'should'
 boiler = require './util/boilerplate'
 stoic = require 'stoic'
 

@@ -14,9 +14,13 @@ define ->
 
       # thread args through middleware
       chain = ([first, rest...], args...) ->
-        unless first?
-          return args
-        next = (args...) -> chain rest, args...
+        return args unless first?
+
+        # pass filtered args or default args
+        next = (filteredArgs...) ->
+          filteredArgs = args if filteredArgs.length is 0
+          chain rest, filteredArgs...
+
         return first next, event, args...
 
       args = chain @middleware, args...

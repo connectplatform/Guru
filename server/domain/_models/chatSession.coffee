@@ -1,8 +1,10 @@
 async = require 'async'
-stoic = require 'stoic'
-{tandoor, compact} = require '../../../lib/util'
-{Chat, Session} = stoic.models
+{tandoor} = require '../../../lib/util'
 pulsar = require '../../pulsar'
+getInvites = require '../getInvites'
+
+stoic = require 'stoic'
+{Chat, Session} = stoic.models
 
 # Interface for document
 face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
@@ -22,7 +24,13 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
       after ['members'], (context, chatIds, next) ->
         next null, (get sessionId, chatId for chatId in chatIds)
 
-    relationMeta chatSession
+    relationMeta chatSession, ({before}) ->
+      before ['mset', 'set'], (context, args, next) ->
+        getInvites chatSession, (err, chats) ->
+          notify = pulsar.channel "notify:session:#{sessionId}"
+          notify.emit 'newInvites', chats
+
+        next null, args
 
     # relations
     chatSession.session = Session.get sessionId
@@ -44,11 +52,7 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
         cs.relationMeta.mset metaInfo
 
       ], (err) ->
-
-        {type} = metaInfo
-        if type in ['invite', 'transfer']
-          pulsar.channel("notify:session:#{sessionId}").emit 'invite', chatId unless err?
-
+        console.log "Error adding chatSession: #{err}" if err?
         cb err, cs
 
     remove: tandoor (sessionId, chatId, cb) ->

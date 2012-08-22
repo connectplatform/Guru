@@ -73,5 +73,4 @@ module.exports = (res) ->
       ChatSession.getBySession res.cookie('session'), (err, myChatSessions) ->
         async.forEach myChatSessions, assignStatus, (err) ->
           chats = chats.sortBy chatOrder
-          console.log chats
           res.reply err, chats

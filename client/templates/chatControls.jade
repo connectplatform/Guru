@@ -1,16 +1,24 @@
-//TODO: this formatting is a rough draft
 div.well.chatControls.span4(chatId="#{chat.id}")
+
 
   .visitor-info
     | Visitor: #{chat.visitor.username}
 
-  .referrer-data
-    | ReferrerData:
-    ul(id="referrerTree#{chat.renderedId}", class="treeview")!= chat.visitor.referrerData
+    .referrer-data
+      | ReferrerData:
+      if chat.visitor.referrerData
+        ul(id="referrerTree#{chat.renderedId}", class="treeview")!= chat.visitor.referrerData
+      else
+        .clear
+        | No data availible
 
-  .acp-data
-    | ACP Data:
-    ul(id="acpTree#{chat.renderedId}", class="treeview")!= chat.visitor.acpData
+    .acp-data
+      | ACP Data:
+      if chat.visitor.acpData
+        ul(id="acpTree#{chat.renderedId}", class="treeview")!= chat.visitor.acpData
+      else
+        .clear
+        | No data availible
 
   .actions
     p

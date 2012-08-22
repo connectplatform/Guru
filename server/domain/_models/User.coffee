@@ -45,6 +45,7 @@ user = new Schema
   websites:
     type: [String]
     default: []
+#TODO: 
 #    validate: [validateWebsite, "Invalid website"]
 
   specialties:

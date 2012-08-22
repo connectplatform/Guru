@@ -1,9 +1,9 @@
 (function() {
 
   define(["app/server", "app/notify", "app/pulsar", 'templates/badge'], function(server, notify, pulsar, badge) {
-    return function(args, templ) {
-      var updateBadge;
-      $('#sidebar').html(templ());
+    return function(_arg, templ) {
+      var role, updateBadge;
+      role = _arg.role;
       updateBadge = function(selector, num, status) {
         var content;
         if (status == null) status = 'important';
@@ -14,30 +14,33 @@
         return $(selector).html(content);
       };
       return server.ready(function() {
-        var operatorUpdates, sessionID, sessionUpdates, updateUnreadMessages;
-        sessionID = server.cookie('session');
-        operatorUpdates = pulsar.channel('notify:operators');
-        sessionUpdates = pulsar.channel("notify:session:" + sessionID);
-        server.getChatStats(function(err, stats) {
-          return updateBadge(".notifyUnanswered", stats.unanswered.length);
-        });
-        updateUnreadMessages = function(unread) {
-          var chat, count, total;
-          total = 0;
-          for (chat in unread) {
-            count = unread[chat];
-            total += count;
-          }
-          return updateBadge(".notifyUnread", total);
-        };
-        operatorUpdates.on('unansweredCount', function(num) {
-          return updateBadge(".notifyUnanswered", num);
-        });
-        sessionUpdates.on('unreadMessages', updateUnreadMessages);
-        sessionUpdates.on('viewedMessages', updateUnreadMessages);
-        return sessionUpdates.on('newInvites', function(invites) {
-          console.log('received invites:', invites);
-          return updateBadge(".notifyInvites", invites.keys().length, 'warning');
+        $('#sidebar').html(templ({
+          role: role
+        }));
+        return server.getChatStats(function(err, stats) {
+          var operatorUpdates, sessionID, sessionUpdates, updateUnreadMessages;
+          updateBadge(".notifyUnanswered", stats.unanswered.length);
+          updateBadge(".notifyInvites", stats.invites.length);
+          sessionID = server.cookie('session');
+          operatorUpdates = pulsar.channel('notify:operators');
+          sessionUpdates = pulsar.channel("notify:session:" + sessionID);
+          updateUnreadMessages = function(unread) {
+            var chat, count, total;
+            total = 0;
+            for (chat in unread) {
+              count = unread[chat];
+              total += count;
+            }
+            return updateBadge(".notifyUnread", total);
+          };
+          operatorUpdates.on('unansweredCount', function(num) {
+            return updateBadge(".notifyUnanswered", num);
+          });
+          sessionUpdates.on('unreadMessages', updateUnreadMessages);
+          sessionUpdates.on('viewedMessages', updateUnreadMessages);
+          return sessionUpdates.on('newInvites', function(invites) {
+            return updateBadge(".notifyInvites", invites.keys().length, 'warning');
+          });
         });
       });
     };

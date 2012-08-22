@@ -16,22 +16,28 @@
       span.notifyUnread
 
     li
+      a(href="#/userAdmin")
+        i.icon-user
+        | My Profile
+
+    li
       a(href="#/logout")
         i.icon-off
         | Logout
 
-    li.nav-header
-      | Admin
+    if role == "Administrator"
+      li.nav-header
+        | Admin
 
-    li
-      a(href="#/users")
-        i.icon-user
-        | Users
-     li
-      a(href="#/websites")
-        i.icon-list-alt
-        | Websites
-    li
-      a(href="#/specialties")
-        i.icon-tag
-        | Specialties
+      li
+        a(href="#/users")
+          i.icon-user
+          | Users
+       li
+        a(href="#/websites")
+          i.icon-list-alt
+          | Websites
+      li
+        a(href="#/specialties")
+          i.icon-tag
+          | Specialties

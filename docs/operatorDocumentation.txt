@@ -1,0 +1,65 @@
+Operator documentation
+
+Passwords
+
+Operators log in using their email address and a password.  After logging in, clicking "My profile" in the left sidebar will show a page with a password change form.  All operators have the default password "password" when they are created, and should change to a more secure password immediately after their first login.
+
+The Dashboard
+
+This is the main page after logging in.  It shows information and actions that can be taken on all currently active chats.
+
+Types of Chats
+
+Waiting: A chat with a status of "waiting" has a visitor in it but no operators.  The first operator to click "Accept" for such a chat will be placed into the chat, and the chat will be marked as "Active"
+
+Active: An active chat has a visitor and one or more operators in it.
+
+Invite: If a chat is marked with an "Invite" status it indicates that the currently active operator has been invited to join the chat by another operator.  Clicking "Accept" will cause the invited operator to enter the chat, and will change the chat status to "Active".  Only the currently invited operator will see the status of a chat as "Invite"
+
+Transfer: If a chat is marked with an "Transfer" status it indicates that the currently active operator has been invited to take over the chat by another operator.  Clicking "Assume" will cause the invited operator to enter the chat, will eject the operator who requested the transfer from the chat room, and will change the chat status to "Active".  Only the operator who is currently invited to assume a transfer will see the status of a chat as "Transfer"
+
+Vacant: A chat with the status of "Vacant" has no visitors in it.
+
+Additional Chat actions
+
+Join: Join a chat that is already in progress.  Any number of operators may join a chat
+
+Watch: Enter a chat invisible to other chat members.  You will recieve any messages posted in the room but will not be able to post.
+
+The "My Chats" page
+
+This page has a tab for each chat the operator is currently in.  Clicking on the tabs will switch between chats.  An operator may safely navigate away from this page; their chats will still be open when they return.  Each tab contains three sections:
+
+1) The main chat window.  This shows all messages posted in the chat room.  It also shows system notifications when an operator enters or leaves, or when the user is kicked.
+2) The message entry bar.
+3) The chat sidebar.  This shows information on the customer that was provided by the referring website under the label "Referrer Data" and information provided by the ACP server under the label "ACP Data".  These are shown in treeviews: clicking on a field will expand it and show its subfields.  The chat sidebar also shows control buttons for the chat.
+
+The Chat Control Buttons
+
+Invite: This allows you to invite another operator to the chat.  Clicking it will open a user selection box displaying all other operators who are currently online.  Select one to invite them.
+
+Transfer: This allows you to transfer a chat to another operator.  Transfers are like invites, only when an operator accepts a transfer, the operator who requested the transfer is removed from the room.
+
+Leave: Leave the room.  The visitor and other operators will recieve a message that you left.
+
+Kick: Kick the user from the room.  The user will recieve the message "The operator has ended the chat" and will be unable to see any messages posted in the room after this point.
+
+Notifications
+
+A number inside of a colored circle is a notification badge.  These notifications indicate that something requires an operator's immediate attention.  They can appear several places:
+
+1) In the left sidebar, next to the link to the dashboard.  These notifications show a count of how many chats are waiting for an operator to accept them.  They are cleared when operators accept the chats.
+2) In the left sidebar, next to the "My Chats" link.  These notifications show a count of how many chat messages have been posted and have not been seen by the operator.  They are cleared when an operator navigates to the chat the message was posted in.
+3) In the tab buttons on the "My Chats" page.  These notifications have the same meaning as #2
+
+Expected workflow
+
+It is expected that an operator will be on the dashboards page when they have no chats.  When a chat appears, they should accept it, entering the chat.  When the chat is over, they should click "kick user", and then "leave".
+
+If an operator is in a chat, and a new chat notification appears, they should return to the dashboard, accept the new chat, and then maintain both of their current chats.  The new message notifications on the tabs on the "My Chats" page will inform them when messages are posted in a different tab than they are currently viewing.
+
+If an operator requires assistence in a chat, they should use the "invite" or "transfer" buttons to bring a different operator to the chat.
+
+The "Join chat" button on the dashboard is availible for chats of most statuses.  This is to allow operators who have not been explicitly invited to enter the chat, for instance if an operator verbally requests help or must leave their computer during a chat.
+
+The "Watch chat" button on the dashboard is availible for all chats.  This is to allow a supervisor to monitor an ongoing chat.

@@ -51,6 +51,14 @@ blockquote {
   overflow-y: scroll;
 }
 
+
+.visitor-info {
+  position: relative;
+  height: 75%;
+  width: 100%;
+  overflow-y: scroll;
+}
+
 .message-form {
   position: relative;
   width: 100%;

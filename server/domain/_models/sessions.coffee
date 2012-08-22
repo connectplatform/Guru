@@ -3,7 +3,7 @@ rand = require '../../../lib/rand'
 pulsar = require '../../pulsar'
 
 face = (decorators) ->
-  {session: {role, chatName, unreadMessages, allSessions, sessionIdsByOperator}} = decorators
+  {session: {role, chatName, unreadMessages, operatorId, allSessions, sessionIdsByOperator}} = decorators
 
   faceValue =
     create:  (fields, cb) ->
@@ -12,7 +12,10 @@ face = (decorators) ->
 
       addOperatorId = (cb) =>
         return cb() unless fields.operatorId?
-        @sessionIdsByOperator.set fields.operatorId, id, cb
+        async.parallel [
+          session.operatorId.set fields.operatorId
+          @sessionIdsByOperator.set fields.operatorId, id
+        ], cb
 
       async.parallel [
         session.role.set fields.role
@@ -31,6 +34,7 @@ face = (decorators) ->
 
       role session
       chatName session
+      operatorId session
 
       unreadMessages session, ({after}) ->
 
@@ -71,6 +75,7 @@ schema =
     role: 'String'
     chatName: 'String'
     unreadMessages: 'Hash' # k: chatId, v: unreadCount
+    operatorId: 'String' #optional
   session:
     allSessions: 'Set'
     sessionIdsByOperator: 'Hash' #k: operatorId, v: sessionId

@@ -3,7 +3,7 @@ define ['app/server', 'app/pulsar', 'app/registerSessionUpdates', 'templates/sid
 
     mock =
       renderSidebar: ->
-        sidebar {}, sbTemp
+        sidebar {role: 'Administrator'}, sbTemp
 
       loggedIn: ->
         server.cookie 'session', 'session_foo'
@@ -25,7 +25,7 @@ define ['app/server', 'app/pulsar', 'app/registerSessionUpdates', 'templates/sid
         server.getMyChats = (args..., cb) ->
           cb null, []
         server.getChatStats = (args..., cb) ->
-          cb null, {unanswered: 0}
+          cb null, {all: [], unanswered: [], invites: []}
         server.getActiveChats = (args..., cb) ->
           cb null, []
         server.getExistingChatChannel = (args..., cb) ->

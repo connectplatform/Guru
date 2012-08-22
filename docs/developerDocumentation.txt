@@ -1,0 +1,17 @@
+Guide to ACP integration with chat system
+
+Customers should be referred to the new chat page by a link which contains a querystring.  This querystring should contain all key/value pairs necessary to identify the referred customer in the ACP system.  The contents of this querystring will serve three purposes:
+
+1) It will be shown to any operators who join a chat with this customer
+2) It will be sent to the ACP server to request additional information
+3) The value of its "websiteUrl" key will be used to associate this chat with a particular website
+
+If the querystring does not contain the key "websiteUrl", this will default to the value of document.referrer on the visitor's new chat page.  This URL must be the same as the URL the chat site administrator entered on the website configuration page.  The information in the querystring will be displayed to any operators who join a chat with the customer who the request was made for, under the heading "Referrer data".
+
+An ACP endpoint can be configured for each website.  The ACP server must expose a REST endpoint which accepts a GET request using HTTP basic authentication.  For more information, please see http://en.wikipedia.org/wiki/Basic_access_authentication
+
+The single Base64 encoded access string must be entered in the website configuration.
+
+A GET request will be made to this endpoint when a customer creates a new chat.  The request will have a querystring containing all of the data that was in the querystring of the referring link (see above.)
+
+The ACP server should return a JSON response containing any fields you wish the operator to have access to.  This data will be displayed in a treeview to the chat operator.

@@ -59,6 +59,7 @@ face = (decorators) ->
             session.chatName.del
             session.unreadMessages.del
           ], cb
+#TODO: shouldn't this be removing the session from allChats too?
 
       notifySession.on 'viewedMessages', (chatId) ->
         session.unreadMessages.hdel chatId, ->

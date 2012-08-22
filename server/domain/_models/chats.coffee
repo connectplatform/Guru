@@ -1,6 +1,7 @@
 pulsar = require '../../pulsar'
 async = require 'async'
 rand = require '../../../lib/rand'
+sugar = require 'sugar'
 {getType} = require '../../../lib/util'
 
 face = (decorators) ->
@@ -20,7 +21,7 @@ face = (decorators) ->
 
       # initialization
       async.parallel [
-        chat.creationDate.set Date.now()
+        chat.creationDate.set Date.create()
         chat.status.set 'waiting'
         @allChats.add id
       ], (err) ->
@@ -56,10 +57,10 @@ face = (decorators) ->
 
       creationDate chat, ({before, after}) ->
         before ['getset', 'set'], (context, [date], next) ->
-          next null, [Date.create(date).getTime()]
+          next null, [JSON.stringify date]
 
-        after ['get'], (context, [date], next) ->
-          next null, Date.create parseInt date
+        after ['get'], (context, date, next) ->
+          next null, Date.create(JSON.parse(date))
 
       status chat, ({before, after}) ->
 
@@ -92,6 +93,14 @@ face = (decorators) ->
           chat.id = id
           cb err, chat
 
+      chat.delete = (cb) ->
+        async.parallel [
+          chat.visitor.del
+          chat.status.del
+          chat.creationDate.del
+          chat.history.del
+        ], cb
+
       return chat
 
   allChats faceValue
@@ -110,7 +119,7 @@ face = (decorators) ->
 
 schema =
   'chat:!{id}':
-    visitor: 'Hash' #TODO: make this a hash
+    visitor: 'Hash'
     status: 'String' # transfer, invite, waiting, active, vacant
     creationDate: 'String'
     history: 'List' # message, username, timestamp

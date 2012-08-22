@@ -43,3 +43,23 @@ Transfer: This allows you to transfer a chat to another operator.  Transfers are
 Leave: Leave the room.  The visitor and other operators will recieve a message that you left.
 
 Kick: Kick the user from the room.  The user will recieve the message "The operator has ended the chat" and will be unable to see any messages posted in the room after this point.
+
+Notifications
+
+A number inside of a colored circle is a notification badge.  These notifications indicate that something requires an operator's immediate attention.  They can appear several places:
+
+1) In the left sidebar, next to the link to the dashboard.  These notifications show a count of how many chats are waiting for an operator to accept them.  They are cleared when operators accept the chats.
+2) In the left sidebar, next to the "My Chats" link.  These notifications show a count of how many chat messages have been posted and have not been seen by the operator.  They are cleared when an operator navigates to the chat the message was posted in.
+3) In the tab buttons on the "My Chats" page.  These notifications have the same meaning as #2
+
+Expected workflow
+
+It is expected that an operator will be on the dashboards page when they have no chats.  When a chat appears, they should accept it, entering the chat.  When the chat is over, they should click "kick user", and then "leave".
+
+If an operator is in a chat, and a new chat notification appears, they should return to the dashboard, accept the new chat, and then maintain both of their current chats.  The new message notifications on the tabs on the "My Chats" page will inform them when messages are posted in a different tab than they are currently viewing.
+
+If an operator requires assistence in a chat, they should use the "invite" or "transfer" buttons to bring a different operator to the chat.
+
+The "Join chat" button on the dashboard is availible for chats of most statuses.  This is to allow operators who have not been explicitly invited to enter the chat, for instance if an operator verbally requests help or must leave their computer during a chat.
+
+The "Watch chat" button on the dashboard is availible for all chats.  This is to allow a supervisor to monitor an ongoing chat.

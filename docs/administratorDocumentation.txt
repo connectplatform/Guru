@@ -10,20 +10,24 @@ Most importantly, an administrator should change their password upon first login
 
 Managing Users
 
-After logging in, an administrator may click on "Users" in the "admin" section of the sidebar.  This will bring up the Users page, where user accounts may be created, edited, or deleted.  A table displays information on all users which currently exist in the system.
+  After logging in, you can click on "Users" in the "admin" section of the sidebar.  This will bring up the Users page, where user accounts may be created, edited, or deleted.  A table displays information on all users which currently exist in the system.
 
-Creating a User
+  Creating a User
 
-Click the "Add New User" button.  A dialog box will prompt you for information on that user.  The first and last name fields are the name of the operator, and will be displayed to visitors who the operator chats with.  These fields are optional.  The email field is the operator's email address, which the operator will use to log in.  The role selection box allows the administrator to select a value of "Administrator", "Operator", or "Supervisor" for the user.  Only users who are expected to add, remove or edit users, websites or specialties should be marked as Administrators.  The website selection box will allow the administrator to mark a user as responsible for chats for a given website.  Only sites that have been created on the website management page will be visible here.  Selection of websites is optional.  The specialties selection box will allow the administrator to mark a user as possessing a given specialty.  Only specialties which have been created on the specialties management page will be displayed here.  Selection of specialties is optional.  After all information has been entered, clicking "save" will add the user to the system.
+    Click the "Add New User" button.  A dialog box will prompt you for information on that user.  The first and last name fields are optional, and will be displayed to visitors who the operator chats with.  The email field is used by the operator to log in.  The role selection box allows the administrator to select a value of "Administrator", "Operator", or "Supervisor" for the user.  Only users who are expected to add, remove or edit users, websites or specialties should be marked as Administrators.  Websites and Specialties are optional, and will only appear if they have been created on the website and specialty management pages.
 
-Editing a user
+  Editing a user
 
-Locate the user whose data you wish to edit, and click the "Edit" link in the row for that user.  This will open the same dialog box as when creating a user.  Making changes and clicking "Save" will cause the user's data to be updated in the system.
+    Locate the user whose data you wish to edit, and click the "Edit" link in the row for that user.  This will open the same dialog box as when creating a user.
 
-Deleting a user
+  Deleting a user
 
-Locate the user who you wish to delete, and click the "Delete" link in the row for that user.  A confirmation box will ask whether you are sure you wish to delete the user.  Clicking "Delete" will cause the user to be deleted.  Clicking "Cancel" or pressing the escape button on the keyboard will cancel the deletion.  Warning: There is no "undo" button for deleting a user.  Deleting the only remaining administrator will cause you to be locked out of the system.
+    Locate the user who you wish to delete, and click the "Delete" link in the row for that user.  A confirmation box will ask whether you are sure you wish to delete the user.  Warning: There is no "undo" button for deleting a user.  Deleting the only remaining administrator will cause you to be locked out of the system.
 
-Creating and editing websites and specialties
+Managing Websites
 
-Process is the same as working with users
+  Websites have the same type of management page as users.  When editing a website, "name" is for display purposes.  "Url" must be identical to the url passed as referrer by developers on the referring site (see developer documentation for details.)  The ACP endpoint and API key should be provided by developers of the ACP server.  Using an ACP endpoint without an ACP API key is a security risk.
+
+Managing Specialties
+
+  Specialties are managed in the same way as Websites and Users.

@@ -8,8 +8,8 @@
     return function(dermis) {
       var renderSidebar;
       renderSidebar = function(args, next) {
-        sidebar({}, sbTemp);
-        return next();
+        sidebar(args, sbTemp);
+        return next(null, args);
       };
       dermis.before(all, [getRole]);
       dermis.before(['/newChat', '/visitorChat/:chatId', '/users', '/websites', '/specialties'], [redirectOperators]);

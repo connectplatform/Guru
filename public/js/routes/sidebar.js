@@ -2,9 +2,8 @@
 (function() {
 
   define(["app/server", "app/notify", "app/pulsar", 'templates/badge'], function(server, notify, pulsar, badge) {
-    return function(_arg, templ) {
-      var role, updateBadge;
-      role = _arg.role;
+    return function(args, templ) {
+      var updateBadge;
       updateBadge = function(selector, num, status) {
         var content;
         if (status == null) {
@@ -18,7 +17,7 @@
       };
       return server.ready(function() {
         $('#sidebar').html(templ({
-          role: role
+          role: args.role
         }));
         return server.getChatStats(function(err, stats) {
           var operatorUpdates, sessionID, sessionUpdates, updateUnreadMessages;

@@ -20,8 +20,8 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
     (dermis) ->
 
       renderSidebar = (args, next) ->
-        sidebar {}, sbTemp
-        next()
+        sidebar args, sbTemp
+        next null, args
 
       dermis.before all, [getRole]
 

@@ -1,7 +1,8 @@
 define ["app/server"], (server) ->
-  ({role}, next) ->
-    if role is 'None'
+  (args, next) ->
+    if args.role is 'None'
       window.location.hash = "#/login"
       next "redirecting guest to login"
 
-    else next()
+    else
+      next null, args

@@ -2,14 +2,13 @@
 (function() {
 
   define(["app/server"], function(server) {
-    return function(_arg, next) {
-      var role;
-      role = _arg.role;
-      if (role === 'Visitor') {
+    return function(args, next) {
+      console.log("I ran");
+      if (args.role === 'Visitor') {
         window.location.hash = "#/newChat";
         return next("redirecting visitor to newChat");
       } else {
-        return next();
+        return next(null, args);
       }
     };
   });

@@ -1,5 +1,5 @@
 define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, notify, pulsar, badge) ->
-  ({role}, templ) ->
+  (args, templ) ->
 
     updateBadge = (selector, num, status='important') ->
       content = if num > 0 then badge {status: status, num: num} else ''
@@ -8,7 +8,7 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
     # init badge number
     server.ready ->
 
-      $('#sidebar').html templ role: role
+      $('#sidebar').html templ role: args.role
 
       server.getChatStats (err, stats) ->
         updateBadge ".notifyUnanswered", stats.unanswered.length

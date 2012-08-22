@@ -2143,13 +2143,23 @@ var requirejs, require, define;
       };
     },
     runBeforeFilters: function(destination, routeInput, cb) {
-      var filters, runFilters;
+      var currentArgs, filters, runFilters;
+      if (routeInput == null) {
+        routeInput = {};
+      }
+      currentArgs = routeInput;
       runFilters = function(filterArray) {
+        var currentFunction;
         if (filterArray.length === 0) {
-          return cb(null);
+          return cb(null, currentArgs);
         }
-        return filterArray.shift()(routeInput, function(err) {
-          if (err) {
+        currentFunction = filterArray.shift();
+        return currentFunction(currentArgs, function(err, newArgs) {
+          if (newArgs == null) {
+            newArgs = currentArgs;
+          }
+          currentArgs = newArgs;
+          if (err != null) {
             return cb(err);
           }
           return runFilters(filterArray);
@@ -2187,10 +2197,10 @@ var requirejs, require, define;
       if (attemptedHash.indexOf('?' !== -1)) {
         junk = 2 <= matches.length ? __slice.call(matches, 0, _j = matches.length - 1) : (_j = 0, []), queryString = matches[_j++];
       }
-      return rooter.runBeforeFilters(destination, routeInput, function(err) {
+      return rooter.runBeforeFilters(destination, routeInput, function(err, modifiedArgs) {
         if (!err) {
           hash.pendingTeardown = destination.teardown;
-          return destination.setup(routeInput, queryString);
+          return destination.setup(modifiedArgs, queryString);
         }
       });
     },

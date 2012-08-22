@@ -1,7 +1,8 @@
 define ["app/server"], (server) ->
-  ({role}, next) ->
-    if role is 'Visitor'
+  (args, next) ->
+    console.log "I ran"
+    if args.role is 'Visitor'
       window.location.hash = "#/newChat"
       next "redirecting visitor to newChat"
-
-    else next()
+    else
+      next null, args

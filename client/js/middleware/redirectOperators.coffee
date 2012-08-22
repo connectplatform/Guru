@@ -1,8 +1,8 @@
 define ["app/server"], (server) ->
-  ({role}, next) ->
-    if role is "Operator"
+  (args, next) ->
+    console.log "args to redirectOperator: ", args
+    if args.role is "Operator"
       window.location.hash = "#/dashboard"
       next "redirecting operator to dashboard"
-
     else
-      next()
+      next null, args

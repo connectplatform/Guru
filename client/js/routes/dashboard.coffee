@@ -1,7 +1,8 @@
 define ["app/server", "app/notify", "app/util", "app/pulsar"],
   (server, notify, util, pulsar) ->
     (args, templ) ->
-      return window.location.hash = '/' unless server.cookie 'session'
+      sessionId = server.cookie 'session'
+      return window.location.hash = '/' unless sessionId?
 
       updateDashboard = ->
         server.getActiveChats (err, chats) ->
@@ -77,8 +78,12 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
 
         # automatically update when unansweredCount changes
         updates = pulsar.channel 'notify:operators'
-        refresh = (num) -> updateDashboard()
-        updates.on 'unansweredCount', refresh
+        sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
+
+        updates.on 'unansweredCount', updateDashboard
+        sessionUpdates.on 'invite', (chatId) ->
+          console.log 'received invite:', chatId
+          updateDashboard()
 
         # stop listening for pulsar events when we leave the page
         ran = false
@@ -86,4 +91,5 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
           unless ran
             ran = true
             util.cleartimers()
-            updates.removeListener 'unansweredCount', refresh
+            updates.removeListener 'unansweredCount', updateDashboard
+            updates.removeListener 'invite', updateDashboard

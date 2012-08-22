@@ -55,28 +55,28 @@ module.exports = (testName, tests) ->
           {
             visitor:
               username: 'Bob'
-            status: 'waiting' # transfer, invite, waiting, active, vacant
+            status: 'waiting'
             creationDate: now
             history: []
           }
           {
             visitor:
               username: 'Suzie'
-            status: 'active' # transfer, invite, waiting, active, vacant
+            status: 'active'
             creationDate: now
             history: []
           }
           {
             visitor:
               username: 'Ralph'
-            status: 'active' # transfer, invite, waiting, active, vacant
+            status: 'active'
             creationDate: now
             history: []
           }
           {
             visitor:
               username: 'Frank'
-            status: 'vacant' # transfer, invite, waiting, active, vacant
+            status: 'vacant'
             creationDate: now
             history: []
           }

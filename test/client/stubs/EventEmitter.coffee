@@ -21,6 +21,7 @@ define ->
 
       args = chain @middleware, args...
 
+      # call any listeners
       if @listeners[event]?
         for action in @listeners[event]
           action args...
@@ -28,7 +29,7 @@ define ->
     removeListener: (event, fn) ->
       ftext = fn.toString()
       @listeners[event] =
-        @listeners[event].filter (fn) -> ftext == fn.toString()
+        @listeners[event]?.filter (fn) -> ftext == fn.toString()
 
     removeAllListeners: (event) ->
       @listeners[event] = undefined

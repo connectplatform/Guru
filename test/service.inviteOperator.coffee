@@ -56,7 +56,7 @@ boiler 'Service - Invite Operator', ->
 
     # Should receive notification
     recipient = @getPulsar().channel sessionUpdates
-    recipient.on 'chatInvites', ([chat]) ->
+    recipient.on 'invite', ([chat]) ->
       should.exist chat
       done()
 

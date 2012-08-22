@@ -3,8 +3,9 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
     # spec files
     'spec/login',
     'spec/operatorChat',
-    'spec/newChat'
-  ], (jasmineHtml, jjq, {delay}, mock, login, operatorChat, newChat) ->
+    'spec/newChat',
+    'spec/dashboard'
+  ], (jasmineHtml, jjq, {delay}, mock, login, operatorChat, newChat, dashboard) ->
 
     $('head').append '<link rel="stylesheet" type="text/css" href="/js/ext/jasmine-1.2.0/jasmine.css">'
 

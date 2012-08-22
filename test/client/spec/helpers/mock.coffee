@@ -34,6 +34,47 @@ define ['app/server', 'app/pulsar', 'app/registerSessionUpdates'],
         server.getChatHistory = (args..., cb) ->
           cb null, []
 
+      activeChats: ->
+        server.getActiveChats = (args..., cb) ->
+          # this is duplicated in boilerplate for server tests
+          # TODO: refactor into general collection of mocks
+          now = (new Date).getTime()
+          cb null, [
+            {
+              id: 'chat_1'
+              visitor:
+                username: 'Bob'
+              status: 'waiting'
+              creationDate: now
+              history: []
+            }
+            {
+              id: 'chat_3'
+              visitor:
+                username: 'Ralph'
+              status: 'active'
+              relation: 'invite'
+              creationDate: now
+              history: []
+            }
+            {
+              id: 'chat_2'
+              visitor:
+                username: 'Suzie'
+              status: 'active'
+              creationDate: now
+              history: []
+            }
+            {
+              id: 'chat_4'
+              visitor:
+                username: 'Frank'
+              status: 'vacant'
+              creationDate: now
+              history: []
+            }
+          ]
+
       hasChats: ->
         server.getMyChats = (args..., cb) ->
 

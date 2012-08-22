@@ -28,7 +28,6 @@ face = (decorators) ->
       session = id: id
 
       notifySession = pulsar.channel "notify:session:#{id}"
-      #console.log 'created channel:', "notify:session:#{id}"
 
       role session
       chatName session

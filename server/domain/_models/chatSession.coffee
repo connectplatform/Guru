@@ -22,24 +22,7 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
       after ['members'], (context, chatIds, next) ->
         next null, (get sessionId, chatId for chatId in chatIds)
 
-    getInvites = (rel, next) ->
-      rel.relationMeta.get 'type', (err, type) ->
-        if type in ['invite', 'transfer']
-          next null, {chatId: rel.chatId, type: type}
-        else
-          next null, null
-
-    relationMeta chatSession, ({before}) ->
-      before ['mset', 'set'], (context, args, next) ->
-
-        # maybe pull this and getInvites out into sendChatInvites.coffee?
-        chatSession.sessionIndex.members (err, chats) ->
-          async.map chats, getInvites, (err, chats) ->
-            #console.log 'notifying:', "notify:session:#{sessionId}"
-            notify = pulsar.channel "notify:session:#{sessionId}"
-            notify.emit 'chatInvites', compact chats
-
-        next null, args
+    relationMeta chatSession
 
     # relations
     chatSession.session = Session.get sessionId
@@ -61,7 +44,11 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
         cs.relationMeta.mset metaInfo
 
       ], (err) ->
-        console.log "Error adding chatSession: #{err}" if err?
+
+        {type} = metaInfo
+        if type in ['invite', 'transfer']
+          pulsar.channel("notify:session:#{sessionId}").emit 'invite', chatId unless err?
+
         cb err, cs
 
     remove: tandoor (sessionId, chatId, cb) ->

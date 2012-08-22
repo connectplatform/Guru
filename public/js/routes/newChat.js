@@ -8,6 +8,7 @@
       }
       $("#content").html("Loading...");
       return server.ready(function() {
+        delete queryString["undefined"];
         return server.getExistingChatChannel(function(err, data) {
           if ((data != null) && !!data) {
             window.location.hash = "/visitorChat/" + data.channel;

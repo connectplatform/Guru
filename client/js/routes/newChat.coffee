@@ -2,6 +2,7 @@ define ["app/server", "app/notify"], (server, notify) ->
   (_, templ, queryString={}) ->
     $("#content").html "Loading..."
     server.ready ->
+      delete queryString["undefined"]
 
       server.getExistingChatChannel (err, data) ->
         window.location.hash = "/visitorChat/#{data.channel}" if data? and !!data

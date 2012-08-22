@@ -18,11 +18,15 @@
             if (chat.visitor.acpData != null) {
               chat.visitor.acpData = JSON.parse(chat.visitor.acpData);
             }
+            if (chat.visitor.acpData != null) {
+              chat.visitor.acpData = util.jsonToUl(chat.visitor.acpData);
+            }
             if (chat.visitor.referrerData != null) {
               chat.visitor.referrerData = JSON.parse(chat.visitor.referrerData);
             }
-            chat.visitor.referrerData = util.jsonToUl(chat.visitor.referrerData);
-            chat.visitor.acpData = util.jsonToUl(chat.visitor.acpData);
+            if (chat.visitor.referrerData != null) {
+              chat.visitor.referrerData = util.jsonToUl(chat.visitor.referrerData);
+            }
           }
           $('#content').html(templ({
             chats: chats

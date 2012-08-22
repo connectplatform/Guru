@@ -6,11 +6,19 @@ div.well.chatControls.span4(chatId="#{chat.id}")
 
     .referrer-data
       | ReferrerData:
-      ul(id="referrerTree#{chat.renderedId}", class="treeview")!= chat.visitor.referrerData
+      if chat.visitor.referrerData
+        ul(id="referrerTree#{chat.renderedId}", class="treeview")!= chat.visitor.referrerData
+      else
+        .clear
+        | No data availible
 
     .acp-data
       | ACP Data:
-      ul(id="acpTree#{chat.renderedId}", class="treeview")!= chat.visitor.acpData
+      if chat.visitor.acpData
+        ul(id="acpTree#{chat.renderedId}", class="treeview")!= chat.visitor.acpData
+      else
+        .clear
+        | No data availible
 
   .actions
     p

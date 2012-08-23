@@ -10,6 +10,9 @@ mkdir -p ./public/img
 # Templates
 ./node_modules/jaded/bin/jaded -a "jade" -i ./client/templates -o ./public/templates
 
+# Client Config
+coffee ./scripts/buildClientConfig.coffee > ./public/js/config.js
+
 # CoffeeScript
 coffee -o ./public/js/ -c ./client/js/
 

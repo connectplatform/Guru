@@ -1,13 +1,15 @@
 require 'sugar'
 Object.extend()
+
 connect = require "connect"
 Vein = require "vein"
 mongo = require "./mongo"
 pulsar = require "./pulsar"
 config = require './config'
 flushCache = require '../lib/flushCache'
-http = require 'http'
 stoic = require './initStoic'
+
+createServer = require './createServer'
 
 module.exports = (cb) ->
 
@@ -20,7 +22,7 @@ module.exports = (cb) ->
   app.use connect.staticCache()
   app.use connect.static __dirname + '/../public/'
 
-  server = app.listen port
+  server = createServer port, app
 
   # Vein
   vein = Vein.createServer server: server

@@ -1,12 +1,11 @@
 config = require './config'
-http = require 'http'
 Pulsar = require "pulsar"
+createServer = require './createServer'
 
 port = process.env.GURU_PULSAR_PORT or config.app.pulsarPort
 
 unless port is 'DISABLED'
-  server = http.createServer().listen port
-  pulsar = Pulsar.createServer server: server
+  pulsar = Pulsar.createServer server: createServer port
 
   ops = pulsar.channel 'notify:operators'
 

@@ -34,6 +34,17 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'app/pulsar'],
         waitsFor hasText('#chatTabs .notifyUnread[chatid=chat_2]', '3'), 'Did not update unread messages', 200
         expect($ '#chatTabs .notifyUnread[chatid=chat_1]').toBeEmpty()
 
+      it 'should not show duplicate chat messages', ->
+        window.location.hash = "/userAdmin"
+        waitsFor exists(".password-change-form"), 200
+        window.location.hash = "/operatorChat"
+        waitsFor exists(".chat-display-box"), 200
+
+        pulsar.channel("chat_1").emit 'serverMessage', {username: "Bob", message: "aMessage"}
+        waitsFor exists $(".chat-display-box aMessage"), 200
+
+        expect( $(".chat-display-box p").length).toEqual 1
+
       describe 'Sidebar', ->
 
         it 'should only show message count for unread chats', ->

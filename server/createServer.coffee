@@ -20,6 +20,16 @@ module.exports = (port, app) ->
       ca: config.app.ssl.ca.map read
 
     # create server with ssl
-    https.createServer(options, app).listen port
+    server = https.createServer(options, app).listen port
+    if (port is config.app.port) and config.app.ssl.redirectFrom?
+      #http server to redirect to https
+      redirect = (req, res) ->
+        redirectTarget = "https://#{req.headers.host}#{req.url}"
+        res.writeHead 301, {
+          "Location": redirectTarget
+        }
+        res.end()
+      redirectServer = http.createServer(redirect).listen config.app.ssl.redirectFrom
+    return server
   else
     http.createServer(app).listen port

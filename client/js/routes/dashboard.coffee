@@ -5,8 +5,6 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
     setup:
       (args, templ) ->
         self = this
-        sessionId = server.cookie 'session'
-        return window.location.hash = '/' unless sessionId?
 
         self.updateDashboard = ->
           server.getActiveChats (err, chats) ->
@@ -82,12 +80,11 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
 
           # automatically update when unansweredCount changes
           self.updates = pulsar.channel 'notify:operators'
-          sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
+          sessionUpdates = pulsar.channel "notify:session:#{server.cookie 'session'}"
 
           self.updates.on 'unansweredCount', self.updateDashboard
           sessionUpdates.on 'newInvites', self.updateDashboard
 
-        # stop listening for pulsar events when we leave the page
     teardown:
       (cb) ->
         self = this

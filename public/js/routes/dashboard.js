@@ -6,12 +6,8 @@
       updateDashboard: function() {},
       updates: {},
       setup: function(args, templ) {
-        var self, sessionId;
+        var self;
         self = this;
-        sessionId = server.cookie('session');
-        if (sessionId == null) {
-          return window.location.hash = '/';
-        }
         self.updateDashboard = function() {
           return server.getActiveChats(function(err, chats) {
             var chat, statusLevels, _i, _len;
@@ -112,7 +108,7 @@
           var sessionUpdates;
           self.updateDashboard();
           self.updates = pulsar.channel('notify:operators');
-          sessionUpdates = pulsar.channel("notify:session:" + sessionId);
+          sessionUpdates = pulsar.channel("notify:session:" + (server.cookie('session')));
           self.updates.on('unansweredCount', self.updateDashboard);
           return sessionUpdates.on('newInvites', self.updateDashboard);
         });

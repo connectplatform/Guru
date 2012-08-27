@@ -8,7 +8,6 @@
       setup: function(args, templ) {
         var self, sessionId;
         self = this;
-        console.log("dashboard setup was called");
         sessionId = server.cookie('session');
         if (sessionId == null) {
           return window.location.hash = '/';
@@ -115,16 +114,13 @@
           self.updates = pulsar.channel('notify:operators');
           sessionUpdates = pulsar.channel("notify:session:" + sessionId);
           self.updates.on('unansweredCount', self.updateDashboard);
-          sessionUpdates.on('newInvites', self.updateDashboard);
-          return console.log("finished setting up dashboard");
+          return sessionUpdates.on('newInvites', self.updateDashboard);
         });
       },
       teardown: function(cb) {
         var self;
         self = this;
-        console.log("dashboard teardown was called");
         util.cleartimers();
-        console.log("self.updates in teardown: ", self.updates);
         self.updates.removeListener('unansweredCount', self.updateDashboard);
         self.updates.removeListener('invite', self.updateDashboard);
         return cb();

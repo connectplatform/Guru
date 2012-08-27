@@ -5,7 +5,6 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
     setup:
       (args, templ) ->
         self = this
-        console.log "dashboard setup was called"
         sessionId = server.cookie 'session'
         return window.location.hash = '/' unless sessionId?
 
@@ -87,15 +86,12 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
 
           self.updates.on 'unansweredCount', self.updateDashboard
           sessionUpdates.on 'newInvites', self.updateDashboard
-          console.log "finished setting up dashboard"
 
         # stop listening for pulsar events when we leave the page
     teardown:
       (cb) ->
         self = this
-        console.log "dashboard teardown was called"
         util.cleartimers()
-        console.log "self.updates in teardown: ", self.updates
         self.updates.removeListener 'unansweredCount', self.updateDashboard
         self.updates.removeListener 'invite', self.updateDashboard
         cb()

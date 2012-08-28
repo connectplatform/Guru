@@ -6,6 +6,7 @@ mkdir -p ./public/js
 mkdir -p ./public/js/ext
 mkdir -p ./public/css
 mkdir -p ./public/img
+mkdir -p ./public/audio
 
 # Templates
 ./node_modules/jaded/bin/jaded -a "jade" -i ./client/templates -o ./public/templates
@@ -34,5 +35,6 @@ cp ./client/*.html ./public
 cp -R ./client/js/ext/* ./public/js/ext
 cp -R ./client/css/* ./public/css
 cp -R ./client/img/* ./public/img
+cp -R ./client/audio/* ./public/audio
 
 echo "Build completed!"

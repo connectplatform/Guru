@@ -5,6 +5,9 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
       content = if num > 0 then badge {status: status, num: num} else ''
       $(selector).html content
 
+    playSound = (type) ->
+      document.getElementById("#{type}Sound").play()
+
     # init badge number
     server.ready ->
 
@@ -18,15 +21,30 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
         operatorUpdates = pulsar.channel 'notify:operators'
         sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
 
-        updateUnreadMessages = (unread) ->
+        countUnreadMessages = (unread) ->
           total = 0
           for chat, count of unread
             total += count
-          updateBadge ".notifyUnread", total
+          total
+
+        countNewInvites = (invites) ->
+          invites.keys().length
 
         # update badge number on change
-        operatorUpdates.on 'unansweredCount', (num) -> updateBadge ".notifyUnanswered", num
-        sessionUpdates.on 'unreadMessages', updateUnreadMessages
-        sessionUpdates.on 'viewedMessages', updateUnreadMessages
+        sessionUpdates.on 'viewedMessages', (unread) ->
+          newMessages = countUnreadMessages unread
+          updateBadge ".notifyUnread", newMessages
+
+        operatorUpdates.on 'unansweredCount', ({isNew, count}) ->
+          updateBadge ".notifyUnanswered", count
+          playSound "newChat" if isNew
+
+        sessionUpdates.on 'unreadMessages', (unread) ->
+          newMessages = countUnreadMessages unread
+          updateBadge ".notifyUnread", newMessages
+          playSound "newMessage" if newMessages > 0
+
         sessionUpdates.on 'newInvites', (invites) ->
-          updateBadge ".notifyInvites", invites.keys().length, 'warning'
+          newInvites = countNewInvites invites
+          updateBadge ".notifyInvites", newInvites, 'warning'
+          playSound "newInvite" if newInvites > 0

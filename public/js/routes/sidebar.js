@@ -3,7 +3,7 @@
 
   define(["app/server", "app/notify", "app/pulsar", 'templates/badge'], function(server, notify, pulsar, badge) {
     return function(args, templ) {
-      var updateBadge;
+      var playSound, updateBadge;
       updateBadge = function(selector, num, status) {
         var content;
         if (status == null) {
@@ -15,33 +15,60 @@
         }) : '';
         return $(selector).html(content);
       };
+      playSound = function(type) {
+        return document.getElementById("" + type + "Sound").play();
+      };
       return server.ready(function() {
         $('#sidebar').html(templ({
           role: args.role
         }));
         return server.getChatStats(function(err, stats) {
-          var operatorUpdates, sessionID, sessionUpdates, updateUnreadMessages;
+          var countNewInvites, countUnreadMessages, operatorUpdates, sessionID, sessionUpdates;
           updateBadge(".notifyUnanswered", stats.unanswered.length);
           updateBadge(".notifyInvites", stats.invites.length);
           sessionID = server.cookie('session');
           operatorUpdates = pulsar.channel('notify:operators');
           sessionUpdates = pulsar.channel("notify:session:" + sessionID);
-          updateUnreadMessages = function(unread) {
+          countUnreadMessages = function(unread) {
             var chat, count, total;
             total = 0;
             for (chat in unread) {
               count = unread[chat];
               total += count;
             }
-            return updateBadge(".notifyUnread", total);
+            return total;
           };
-          operatorUpdates.on('unansweredCount', function(num) {
-            return updateBadge(".notifyUnanswered", num);
+          countNewInvites = function(invites) {
+            return invites.keys().length;
+          };
+          sessionUpdates.on('viewedMessages', function(unread) {
+            var newMessages;
+            newMessages = countUnreadMessages(unread);
+            return updateBadge(".notifyUnread", newMessages);
           });
-          sessionUpdates.on('unreadMessages', updateUnreadMessages);
-          sessionUpdates.on('viewedMessages', updateUnreadMessages);
+          operatorUpdates.on('unansweredCount', function(_arg) {
+            var count, isNew;
+            isNew = _arg.isNew, count = _arg.count;
+            updateBadge(".notifyUnanswered", count);
+            if (isNew) {
+              return playSound("newChat");
+            }
+          });
+          sessionUpdates.on('unreadMessages', function(unread) {
+            var newMessages;
+            newMessages = countUnreadMessages(unread);
+            updateBadge(".notifyUnread", newMessages);
+            if (newMessages > 0) {
+              return playSound("newMessage");
+            }
+          });
           return sessionUpdates.on('newInvites', function(invites) {
-            return updateBadge(".notifyInvites", invites.keys().length, 'warning');
+            var newInvites;
+            newInvites = countNewInvites(invites);
+            updateBadge(".notifyInvites", newInvites, 'warning');
+            if (newInvites > 0) {
+              return playSound("newInvite");
+            }
           });
         });
       });

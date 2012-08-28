@@ -43,7 +43,7 @@ face = (decorators) ->
             chats ?= {}
             notifySession.emit 'unreadMessages', chats
 
-        after ['hdel', 'incrby'], (context, args, next) ->
+        after ['incrby'], (context, args, next) ->
           notifyUnread()
           next null, args
 

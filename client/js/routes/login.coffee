@@ -2,9 +2,7 @@ define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/
   (server, notify, sidebar, sbTemp, util, registerSessionUpdates) ->
     (args, templ) ->
 
-      $('#content').html ''
-
-      $('#content').append templ()
+      $('#content').html templ()
       $('#login-modal').modal()
       $('#login-modal #email').focus()
 

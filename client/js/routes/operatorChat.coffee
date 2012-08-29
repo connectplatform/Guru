@@ -3,6 +3,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
     channels: []
     setup:
       (args, templ) ->
+        console.log "called setup in operatorChat"
         self = this
         self.channels = []
 
@@ -103,12 +104,15 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
               $("##{chat.renderedId} .transferButton").click controls.createTransferHandler chat.id
               $("##{chat.renderedId} .kickButton").click controls.createKickHandler chat.id, chat.renderedId
               $("##{chat.renderedId} .leaveButton").click controls.createLeaveHandler chat.id
+            console.log "finished setup in operatorChat"
 
     teardown:
       (cb) ->
+        console.log "called teardown in operatorChat"
         self = this
         channel.removeAllListeners 'serverMessage' for channel in self.channels
         self.sessionUpdates.removeAllListeners 'kickedFromChat'
         self.sessionUpdates.removeAllListeners 'unreadMessages'
         self.channels = []
+        console.log "finished teardown in operatorChat"
         cb()

@@ -6,6 +6,7 @@
       channels: [],
       setup: function(args, templ) {
         var renderId, self, sessionId;
+        console.log("called setup in operatorChat");
         self = this;
         self.channels = [];
         sessionId = server.cookie("session");
@@ -15,7 +16,7 @@
         };
         return server.ready(function(services) {
           return server.getMyChats(function(err, chats) {
-            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, updateChatBadge, _i, _j, _k, _len, _len1, _len2, _results;
+            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, updateChatBadge, _i, _j, _k, _len, _len1, _len2;
             for (_i = 0, _len = chats.length; _i < _len; _i++) {
               chat = chats[_i];
               chat.renderedId = renderId(chat.id);
@@ -103,7 +104,6 @@
                 return $(".notifyUnread[chatid=" + chatId + "]").html(content);
               };
             };
-            _results = [];
             for (_k = 0, _len2 = chats.length; _k < _len2; _k++) {
               chat = chats[_k];
               channel = pulsar.channel(chat.id);
@@ -119,14 +119,15 @@
               $("#" + chat.renderedId + " .inviteButton").click(controls.createInviteHandler(chat.id));
               $("#" + chat.renderedId + " .transferButton").click(controls.createTransferHandler(chat.id));
               $("#" + chat.renderedId + " .kickButton").click(controls.createKickHandler(chat.id, chat.renderedId));
-              _results.push($("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id)));
+              $("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id));
             }
-            return _results;
+            return console.log("finished setup in operatorChat");
           });
         });
       },
       teardown: function(cb) {
         var channel, self, _i, _len, _ref;
+        console.log("called teardown in operatorChat");
         self = this;
         _ref = self.channels;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -136,6 +137,7 @@
         self.sessionUpdates.removeAllListeners('kickedFromChat');
         self.sessionUpdates.removeAllListeners('unreadMessages');
         self.channels = [];
+        console.log("finished teardown in operatorChat");
         return cb();
       }
     };

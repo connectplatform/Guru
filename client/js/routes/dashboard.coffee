@@ -7,6 +7,7 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
         self = this
 
         self.updateDashboard = ->
+          return unless window.location.hash is "#/dashboard"
           server.getActiveChats (err, chats) ->
             console.log "err retrieving chats: #{err}" if err?
 
@@ -89,6 +90,6 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
       (cb) ->
         self = this
         util.cleartimers()
-        self.updates.removeListener 'unansweredCount', self.updateDashboard
-        self.updates.removeListener 'invite', self.updateDashboard
+        self.updates.removeAllListeners 'newInvites'
+        self.updates.removeAllListeners 'unansweredCount'
         cb()

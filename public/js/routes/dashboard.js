@@ -9,6 +9,9 @@
         var self;
         self = this;
         self.updateDashboard = function() {
+          if (window.location.hash !== "#/dashboard") {
+            return;
+          }
           return server.getActiveChats(function(err, chats) {
             var chat, statusLevels, _i, _len;
             if (err != null) {
@@ -117,8 +120,8 @@
         var self;
         self = this;
         util.cleartimers();
-        self.updates.removeListener('unansweredCount', self.updateDashboard);
-        self.updates.removeListener('invite', self.updateDashboard);
+        self.updates.removeAllListeners('newInvites');
+        self.updates.removeAllListeners('unansweredCount');
         return cb();
       }
     };

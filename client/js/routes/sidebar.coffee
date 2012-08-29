@@ -1,12 +1,21 @@
+countNewInvites = (invites) ->
+  invites.keys().length
+
+countUnreadMessages = (unread) ->
+  total = 0
+  for chat, count of unread
+    total += count
+  total
+
+playSound = (type) ->
+  document.getElementById("#{type}Sound").play()
+
 define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, notify, pulsar, badge) ->
   (args, templ) ->
 
     updateBadge = (selector, num, status='important') ->
       content = if num > 0 then badge {status: status, num: num} else ''
       $(selector).html content
-
-    playSound = (type) ->
-      document.getElementById("#{type}Sound").play()
 
     # init badge number
     server.ready ->
@@ -16,24 +25,16 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
       server.getChatStats (err, stats) ->
         updateBadge ".notifyUnanswered", stats.unanswered.length
         updateBadge ".notifyInvites", stats.invites.length
+        updateBadge ".sidebarNotifyUnread", countUnreadMessages stats.unreadMessages
 
         sessionID = server.cookie 'session'
         operatorUpdates = pulsar.channel 'notify:operators'
         sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
 
-        countUnreadMessages = (unread) ->
-          total = 0
-          for chat, count of unread
-            total += count
-          total
-
-        countNewInvites = (invites) ->
-          invites.keys().length
-
         # update badge number on change
         sessionUpdates.on 'viewedMessages', (unread) ->
           newMessages = countUnreadMessages unread
-          updateBadge ".notifyUnread", newMessages
+          updateBadge ".sidebarNotifyUnread", newMessages
 
         operatorUpdates.on 'unansweredCount', ({isNew, count}) ->
           updateBadge ".notifyUnanswered", count
@@ -41,7 +42,7 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
 
         sessionUpdates.on 'unreadMessages', (unread) ->
           newMessages = countUnreadMessages unread
-          updateBadge ".notifyUnread", newMessages
+          updateBadge ".sidebarNotifyUnread", newMessages
           playSound "newMessage" if newMessages > 0
 
         sessionUpdates.on 'newInvites', (invites) ->

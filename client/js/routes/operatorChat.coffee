@@ -43,6 +43,7 @@ define ["app/server", "app/pulsar", "app/notify", "routes/chatControls", "templa
               e.preventDefault()
               $(this).tab 'show'
               currentChat = $(this).attr 'chatid'
+              $(".notifyUnread[chatid=#{currentChat}]").html ''
 
               # let the server know we read these
               self.sessionUpdates.emit 'viewedMessages', currentChat

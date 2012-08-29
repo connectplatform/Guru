@@ -1,9 +1,5 @@
 (function() {
-  var countNewInvites, countUnreadMessages, playSound;
-
-  countNewInvites = function(invites) {
-    return invites.keys().length;
-  };
+  var countUnreadMessages, playSound;
 
   countUnreadMessages = function(unread) {
     var chat, count, total;
@@ -37,34 +33,34 @@
         }));
         return server.getChatStats(function(err, stats) {
           var operatorUpdates, sessionID, sessionUpdates;
-          updateBadge(".sidebar-nav .notifyUnanswered", stats.unanswered.length);
-          updateBadge(".sidebar-nav .notifyInvites", stats.invites.length);
-          updateBadge(".sidebar-nav .notifyUnread", countUnreadMessages(stats.unreadMessages));
+          updateBadge("#sidebar .notifyUnanswered", stats.unanswered.length);
+          updateBadge("#sidebar .notifyInvites", stats.invites.length);
+          updateBadge("#sidebar .notifyUnread", countUnreadMessages(stats.unreadMessages));
           sessionID = server.cookie('session');
           operatorUpdates = pulsar.channel('notify:operators');
           sessionUpdates = pulsar.channel("notify:session:" + sessionID);
-          sessionUpdates.on('viewedMessages', function(unread) {
-            var newMessages;
-            newMessages = countUnreadMessages(unread);
-            return updateBadge(".sidebar-nav .notifyUnread", newMessages);
-          });
           operatorUpdates.on('unansweredCount', function(_arg) {
             var count, isNew;
             isNew = _arg.isNew, count = _arg.count;
-            updateBadge(".sidebar-nav .notifyUnanswered", count);
+            updateBadge("#sidebar .notifyUnanswered", count);
             if (isNew) return playSound("newChat");
+          });
+          sessionUpdates.on('newInvites', function(invites) {
+            var newInvites;
+            newInvites = invites.keys().length;
+            updateBadge("#sidebar .notifyInvites", newInvites, 'warning');
+            if (newInvites > 0) return playSound("newInvite");
           });
           sessionUpdates.on('unreadMessages', function(unread) {
             var newMessages;
             newMessages = countUnreadMessages(unread);
-            updateBadge(".sidebar-nav .notifyUnread", newMessages);
+            updateBadge("#sidebar .notifyUnread", newMessages);
             if (newMessages > 0) return playSound("newMessage");
           });
-          return sessionUpdates.on('newInvites', function(invites) {
-            var newInvites;
-            newInvites = countNewInvites(invites);
-            updateBadge(".notifyInvites", newInvites, 'warning');
-            if (newInvites > 0) return playSound("newInvite");
+          return sessionUpdates.on('viewedMessages', function(unread) {
+            var newMessages;
+            newMessages = countUnreadMessages(unread);
+            return updateBadge("#sidebar .notifyUnread", newMessages);
           });
         });
       });

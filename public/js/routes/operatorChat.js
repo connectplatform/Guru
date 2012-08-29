@@ -51,6 +51,7 @@
               e.preventDefault();
               $(this).tab('show');
               currentChat = $(this).attr('chatid');
+              $(".notifyUnread[chatid=" + currentChat + "]").html('');
               return self.sessionUpdates.emit('viewedMessages', currentChat);
             });
             $('#chatTabs a:first').click();

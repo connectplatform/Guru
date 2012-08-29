@@ -3,6 +3,9 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'app/pulsar'], (mock, {hasTex
   sendInvite = ->
     pulsar.channel('notify:session:session_foo').emit 'newInvites', {chatId: 'chat_3', type: 'invite'}
 
+  sendWaitingChats = ->
+    pulsar.channel('notify:operators').emit 'unansweredCount', {isNew: true, count: 3}
+
   describe 'Dashboard', ->
     beforeEach ->
       mock.services()
@@ -28,7 +31,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'app/pulsar'], (mock, {hasTex
       # should see chats
       waitsFor hasChats, 'dashboard to refresh', 200
 
-    it 'should show a badge on the sidebar', ->
+    it 'should show an invite badge on the sidebar', ->
 
       expect($ '#sidebar .notifyInvites .badge').not.toExist()
 
@@ -37,4 +40,14 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'app/pulsar'], (mock, {hasTex
       sendInvite()
 
       # should see invite badge in sidebar
-      waitsFor exists('#sidebar .notifyInvites .badge'), 'invite badge in sidebar', 200
+      waitsFor hasText('#sidebar .notifyInvites .badge', '2'), 'invite badge in sidebar', 200
+
+    it 'should show an unread badge on the sidebar', ->
+
+      expect($ '#sidebar .notifyUnanswered .badge').not.toExist()
+
+      # send pulsar event
+      sendWaitingChats()
+
+      # should see invite badge in sidebar
+      waitsFor hasText('#sidebar .notifyUnanswered .badge', '3'), 'unread badge in sidebar', 200

@@ -25,7 +25,7 @@ define ['app/server', 'app/pulsar', 'app/registerSessionUpdates', 'templates/sid
         server.getMyChats = (args..., cb) ->
           cb null, []
         server.getChatStats = (args..., cb) ->
-          cb null, {all: [], unanswered: [], invites: []}
+          cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
         server.getActiveChats = (args..., cb) ->
           cb null, []
         server.getExistingChatChannel = (args..., cb) ->

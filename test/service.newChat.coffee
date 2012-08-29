@@ -21,8 +21,8 @@ boiler 'Service - New Chat', ->
 
   it 'should notify operators of a new chat', (done) ->
     notify = @getPulsar().channel 'notify:operators'
-    notify.on 'unansweredCount', (num) ->
-      num.should.eql 1
+    notify.on 'unansweredCount', ({count}) ->
+      count.should.eql 1
       notify.removeAllListeners 'unansweredCount'
       done()
 

@@ -1,12 +1,8 @@
 define ["app/server", "app/notify", "app/util", "app/pulsar"],
   (server, notify, util, pulsar) ->
-    updateDashboard: ->
-    updates: {}
     setup:
       (args, templ) ->
-        self = this
-
-        self.updateDashboard = ->
+        updateDashboard = ->
           return unless window.location.hash is "#/dashboard"
           server.getActiveChats (err, chats) ->
             console.log "err retrieving chats: #{err}" if err?
@@ -49,7 +45,7 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
                   window.location.hash = '/operatorChat'
                 else
                   notify.alert "Another operator already accepted this chat"
-                  self.updateDashboard()
+                  updateDashboard()
               false
 
             $('.leaveChat').click (evt) ->
@@ -57,7 +53,7 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
               chatId = $(this).attr 'chatId'
               server.leaveChat chatId, (err) ->
                 console.log "error leaving chat: #{err}" if err?
-                self.updateDashboard()
+                updateDashboard()
 
             $('.acceptInvite').click (evt) ->
               evt.preventDefault()
@@ -77,19 +73,21 @@ define ["app/server", "app/notify", "app/util", "app/pulsar"],
             util.autotimer '.counter'
 
         server.ready ->
-          self.updateDashboard()
+          updateDashboard()
 
           # automatically update when unansweredCount changes
-          self.updates = pulsar.channel 'notify:operators'
+          updates = pulsar.channel 'notify:operators'
           sessionUpdates = pulsar.channel "notify:session:#{server.cookie 'session'}"
 
-          self.updates.on 'unansweredCount', self.updateDashboard
-          sessionUpdates.on 'newInvites', self.updateDashboard
+          updates.on 'unansweredCount', updateDashboard
+          sessionUpdates.on 'newInvites', updateDashboard
 
     teardown:
       (cb) ->
-        self = this
         util.cleartimers()
-        self.updates.removeAllListeners 'newInvites'
-        self.updates.removeAllListeners 'unansweredCount'
+        updates = pulsar.channel 'notify:operators'
+        sessionUpdates = pulsar.channel "notify:session:#{server.cookie 'session'}"
+
+        sessionUpdates.removeAllListeners 'newInvites'
+        updates.removeAllListeners 'unansweredCount'
         cb()

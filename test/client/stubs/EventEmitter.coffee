@@ -7,6 +7,7 @@ define ->
       @middleware = []
 
     on: (event, action) ->
+      throw new Error "'#{event}' arg is not a function" if typeof action isnt 'function'
       @listeners[event] ?= []
       @listeners[event].push action
 
@@ -36,7 +37,7 @@ define ->
         @listeners[event]?.filter (fn) -> ftext == fn.toString()
 
     removeAllListeners: (event) ->
-      @listeners[event] = undefined
+      delete @listeners[event]
 
     use: (fn) ->
       @middleware.push fn

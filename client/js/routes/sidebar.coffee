@@ -23,9 +23,9 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
       $('#sidebar').html templ role: args.role
 
       server.getChatStats (err, stats) ->
-        updateBadge ".notifyUnanswered", stats.unanswered.length
-        updateBadge ".notifyInvites", stats.invites.length
-        updateBadge ".sidebarNotifyUnread", countUnreadMessages stats.unreadMessages
+        updateBadge ".sidebar-nav .notifyUnanswered", stats.unanswered.length
+        updateBadge ".sidebar-nav .notifyInvites", stats.invites.length
+        updateBadge ".sidebar-nav .notifyUnread", countUnreadMessages stats.unreadMessages
 
         sessionID = server.cookie 'session'
         operatorUpdates = pulsar.channel 'notify:operators'
@@ -34,15 +34,15 @@ define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, n
         # update badge number on change
         sessionUpdates.on 'viewedMessages', (unread) ->
           newMessages = countUnreadMessages unread
-          updateBadge ".sidebarNotifyUnread", newMessages
+          updateBadge ".sidebar-nav .notifyUnread", newMessages
 
         operatorUpdates.on 'unansweredCount', ({isNew, count}) ->
-          updateBadge ".notifyUnanswered", count
+          updateBadge ".sidebar-nav .notifyUnanswered", count
           playSound "newChat" if isNew
 
         sessionUpdates.on 'unreadMessages', (unread) ->
           newMessages = countUnreadMessages unread
-          updateBadge ".sidebarNotifyUnread", newMessages
+          updateBadge ".sidebar-nav .notifyUnread", newMessages
           playSound "newMessage" if newMessages > 0
 
         sessionUpdates.on 'newInvites', (invites) ->

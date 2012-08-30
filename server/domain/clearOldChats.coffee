@@ -1,7 +1,7 @@
 stoic = require 'stoic'
 async = require 'async'
 sugar = require 'sugar'
-{Chat} = stoic.models
+{Chat, ChatSession} = stoic.models
 
 shouldDeleteChat = (chat, minutesToTimeout, cb) ->
   dateCutoff = Date.create("#{minutesToTimeout} minutes ago")
@@ -14,16 +14,24 @@ shouldDeleteChat = (chat, minutesToTimeout, cb) ->
       chat.creationDate.get (err, creationDate) ->
         cb err, creationDate < dateCutoff
 
+deleteChatSession = (chatSession, cb) ->
+  ChatSession.remove chatSession.sessionId, chatSession.chatId, cb
+
 removeOldChats = (chat, minutesToTimeout, cb) ->
   shouldDeleteChat chat, minutesToTimeout, (err, shouldDelete) ->
     return cb err if err
     if shouldDelete
+      #remove all operators from the chat
+      ChatSession.getByChat chat.id, (err, chatSessions) ->
+        async.forEach chatSessions, deleteChatSession, (err) ->
+          console.log "error deleting chat session: #{err}" if err
 
-      async.parallel [
-        chat.delete
-        Chat.allChats.srem chat.id
-        Chat.unansweredChats.srem chat.id
-      ], cb
+          #delete chat
+          async.parallel [
+            chat.delete
+            Chat.allChats.srem chat.id
+            Chat.unansweredChats.srem chat.id
+          ], cb
 
     else
       cb null

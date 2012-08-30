@@ -1,5 +1,5 @@
-define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage"],
-  (server, pulsar, notify, newChat, chatMessage, serverMessage) ->
+define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "app/wireUpChatAppender"],
+  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
@@ -22,14 +22,13 @@ define ["app/server", "app/pulsar", "app/notify", "templates/newChat", "template
               $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
             false
 
-          appendChat = (data)->
-            $(".chat-display-box").append chatMessage data
-
+          appendChatMessage = (message) ->
+            $(".chat-display-box").append chatMessage message
           server.getChatHistory chatId, (err, history)->
             notify.error "Error loading chat history: #{err}" if err
-            appendChat msg for msg in history
+            appendChatMessage msg for msg in history
 
-            self.channel.on 'serverMessage', appendChat
+            wireUpChatAppender appendChatMessage, self.channel  #TODO: this is a workaround for multiple chat display bug
             self.channel.on 'chatEnded', ->
               $(".chat-display-box").append serverMessage message: "The operator has ended the chat"
               self.channel.removeAllListeners 'serverMessage'

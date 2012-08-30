@@ -120,3 +120,36 @@ boiler 'Service - Delete Old Chats', ->
                   should.not.exist err
                   chats.length.should.eql 0
                   done()
+
+  it 'should let a visitor create a new chat if their old one was deleted', (done) ->
+    clearOldChats = require '../server/domain/clearOldChats'
+    {Chat} = stoic.models
+
+    #create the chat
+    visitor = @getClient()
+    visitor.ready ->
+      newChatData = {username: 'visitor'}
+      visitor.newChat newChatData, (err, createdChat) ->
+        visitorSession = visitor.cookie 'session'
+        chatChannelName = createdChat.channel
+
+        #modify the chat's creation date
+        chat = Chat.get chatChannelName
+        chat.creationDate.set Date.create("30 minutes ago"), (err) ->
+          should.not.exist err
+
+          #delete the chat
+          clearOldChats (err) =>
+            should.not.exist err
+
+            #Chat should delete, even with user in it
+            Chat.allChats.members (err, allChats) =>
+              should.not.exist err
+              allChats.length.should.eql 0
+
+              #Create a new chat and make sure it's different than the one we had
+              visitor.newChat newChatData, (err, createdChat) ->
+                should.not.exist err
+                visitorSession.should.not.eql visitor.cookie 'session'
+                chatChannelName.should.not.eql createdChat.channel
+                done()

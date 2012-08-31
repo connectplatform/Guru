@@ -9,4 +9,10 @@ unless port is 'DISABLED'
 
   ops = pulsar.channel 'notify:operators'
 
+else
+  pulsar =
+    channel: ->
+      on: ->
+      emit: ->
+
 module.exports = pulsar

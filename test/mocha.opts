@@ -1,5 +1,8 @@
 --compilers coffee:coffee-script
 -r should
+-r coffee-script
+-r app/config.coffee
+-r test/server/util/boilerplate.coffee
 -R spec
 --ui bdd
---globals app,___eio
+--globals app,config,boiler,___eio

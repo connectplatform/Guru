@@ -1,4 +1,4 @@
-define ['app/server', 'app/pulsar', 'app/registerSessionUpdates', 'templates/sidebar', 'routes/sidebar'],
+define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'templates/sidebar', 'routes/sidebar'],
   (server, pulsar, registerSessionUpdates, sbTemp, sidebar) ->
 
     mock =

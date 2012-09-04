@@ -1,4 +1,4 @@
-require ['spec/helpers/mock', 'spec/helpers/util', 'app/pulsar'],
+require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
   (mock, {hasText, exists, delay}, pulsar) ->
 
     describe 'Operator Chat', ->

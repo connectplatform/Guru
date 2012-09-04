@@ -1,0 +1,23 @@
+#!/bin/bash
+current=$(dirname $0)
+root=$current/../..
+public=$root/app/public
+testpub=$root/test/client/public
+testclient=$root/test/client
+
+$current/build
+
+# create test sandbox
+rm -rf $testpub
+cp -r $public $testpub
+cp -r $testclient/jasmine-1.2.0 $testpub/js/vendor/jasmine-1.2.0
+
+# overwrite dependencies
+coffee -o $testpub/js/load/ -c $testclient/stubs/
+
+# compile spec files
+coffee -o $testpub/js/spec/ -c $testclient/spec/
+
+# run server
+open http://localhost:4003
+#coffee test/client/SpecServer.coffee

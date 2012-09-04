@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/config", "ext/vein"], function(config, _) {
+  define(["config", "vendor/vein"], function(config, _) {
     return Vein.createClient({
       port: config.port
     });

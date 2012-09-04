@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "templates/serverMessage", "templates/selectUser"], function(server, serverMessage, selectUser) {
+  define(["load/server", "templates/serverMessage", "templates/selectUser"], function(server, serverMessage, selectUser) {
     return {
       createInviteHandler: function(chatId) {
         return function(evt) {

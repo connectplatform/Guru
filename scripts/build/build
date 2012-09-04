@@ -1,40 +1,44 @@
 #!/bin/bash
+current=$(dirname $0)
+root=$current/../..
+public=$root/app/public
+client=$root/app/client
 
-rm -rf ./public
-mkdir -p ./public/templates
-mkdir -p ./public/js
-mkdir -p ./public/js/ext
-mkdir -p ./public/css
-mkdir -p ./public/img
-mkdir -p ./public/audio
+rm -rf   $public
+mkdir -p $public/templates
+mkdir -p $public/js
+mkdir -p $public/js/vendor
+mkdir -p $public/css
+mkdir -p $public/img
+mkdir -p $public/audio
 
 # Templates
-./node_modules/jaded/bin/jaded -a "jade" -i ./client/templates -o ./public/templates
+$root/node_modules/jaded/bin/jaded -a "jade" -i $client/templates -o $public/templates
 
 # Client Config
-coffee ./scripts/buildClientConfig.coffee > ./public/js/config.js
+coffee $root/scripts/build/buildClientConfig.coffee > $public/js/config.js
 
 # CoffeeScript
-coffee -o ./public/js/ -c ./client/js/
+coffee -o $public/js/ -c $client/js/
 
 # TODO - process that minifies all js
-# uglifyjs -nc --unsafe -mt -o ./public/js/main.min.js ./public/js/main.js
+# uglifyjs -nc --unsafe -mt -o $public/js/main.min.js $public/js/main.js
 
 # Vein
 # readd when contra updates vein to newly built version
-#cp ./node_modules/vein/vein.js ./client/js/ext/vein.js
+#cp $root/node_modules/vein/vein.js $client/js/vendor/vein.js
 
 # Pulsar
-cp ./node_modules/pulsar/pulsar.js ./client/js/ext/pulsar.js
+cp $root/node_modules/pulsar/pulsar.js $client/js/vendor/pulsar.js
 
 # Jade
-cp ./node_modules/jaded/node_modules/jade/runtime.min.js ./client/js/ext/jade-runtime.js
+cp $root/node_modules/jaded/node_modules/jade/runtime.min.js $client/js/vendor/jade-runtime.js
 
 # Non-built files
-cp ./client/*.html ./public
-cp -R ./client/js/ext/* ./public/js/ext
-cp -R ./client/css/* ./public/css
-cp -R ./client/img/* ./public/img
-cp -R ./client/audio/* ./public/audio
+cp $client/*.html $public
+cp -R $client/js/vendor/* $public/js/vendor
+cp -R $client/css/* $public/css
+cp -R $client/img/* $public/img
+cp -R $client/audio/* $public/audio
 
 echo "Build completed!"

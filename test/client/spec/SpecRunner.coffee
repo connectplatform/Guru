@@ -7,7 +7,7 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
     'spec/dashboard'
   ], (jasmineHtml, jjq, {delay}, mock, login, operatorChat, newChat, dashboard) ->
 
-    $('head').append '<link rel="stylesheet" type="text/css" href="/js/ext/jasmine-1.2.0/jasmine.css">'
+    $('head').append '<link rel="stylesheet" type="text/css" href="/js/vendor/jasmine-1.2.0/jasmine.css">'
 
     window.location.hash = '/test'
     mock.services()

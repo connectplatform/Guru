@@ -1,4 +1,4 @@
-define ["app/server"], (server) ->
+define ["load/server"], (server) ->
   (args, next) ->
     console.log "args to redirectOperator: ", args
     if args.role is "Operator"

@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server"], function(server) {
+  define(["load/server"], function(server) {
     return function(args, next) {
       return server.ready(function() {
         return server.getMyRole(function(err, role) {

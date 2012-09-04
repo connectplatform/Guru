@@ -1,25 +1,25 @@
 (function() {
 
-  define(["app/server", "app/pulsar", "app/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "app/wireUpChatAppender"], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender) {
+  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage"], function(server, pulsar, notify, newChat, chatMessage, serverMessage) {
     return {
       channel: {},
       setup: function(_arg, templ) {
-        var chatId, self;
+        var chatId,
+          _this = this;
         chatId = _arg.chatId;
-        self = this;
         return server.ready(function() {
           return server.visitorCanAccessChannel(chatId, function(err, canAccess) {
             var appendChatMessage;
             if (!canAccess) return window.location.hash = '/newChat';
             $("#content").html(templ());
             $("#message-form #message").focus();
-            self.channel = pulsar.channel(chatId);
+            _this.channel = pulsar.channel(chatId);
             $(".message-form").submit(function(evt) {
               var message;
               evt.preventDefault();
               if ($(".message").val() !== "") {
                 message = $(".message").val();
-                self.channel.emit('clientMessage', {
+                this.channel.emit('clientMessage', {
                   message: message,
                   session: server.cookie('session')
                 });
@@ -38,12 +38,12 @@
                 msg = history[_i];
                 appendChatMessage(msg);
               }
-              wireUpChatAppender(appendChatMessage, self.channel);
-              return self.channel.on('chatEnded', function() {
+              this.channel.on('serverMessage', appendChatMessage);
+              return this.channel.on('chatEnded', function() {
                 $(".chat-display-box").append(serverMessage({
                   message: "The operator has ended the chat"
                 }));
-                self.channel.removeAllListeners('serverMessage');
+                this.channel.removeAllListeners('serverMessage');
                 return $(".message-form").hide();
               });
             });
@@ -54,8 +54,8 @@
         var ran, self;
         self = this;
         ran = true;
-        self.channel.removeAllListeners('serverMessage');
-        self.channel.removeAllListeners('chatEnded');
+        this.channel.removeAllListeners('serverMessage');
+        this.channel.removeAllListeners('chatEnded');
         return cb();
       }
     };

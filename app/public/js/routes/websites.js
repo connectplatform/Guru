@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "app/formBuilder"], function(server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder) {
+  define(["load/server", "load/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "helpers/formBuilder"], function(server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder) {
     return function(args, templ) {
       if (!server.cookie('session')) return window.location.hash = '/';
       return server.ready(function() {

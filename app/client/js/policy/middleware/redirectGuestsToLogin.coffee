@@ -1,4 +1,4 @@
-define ["app/server"], (server) ->
+define ["load/server"], (server) ->
   (args, next) ->
     if args.role is 'None'
       window.location.hash = "#/login"

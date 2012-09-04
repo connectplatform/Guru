@@ -1,4 +1,4 @@
-define ["app/server"], (server) ->
+define ["load/server"], (server) ->
   ->
     server.cookie 'session', null # delete login cookie
     window.location = '/'

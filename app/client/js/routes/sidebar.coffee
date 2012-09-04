@@ -7,7 +7,7 @@ countUnreadMessages = (unread) ->
 playSound = (type) ->
   document.getElementById("#{type}Sound").play()
 
-define ["app/server", "app/notify", "app/pulsar", 'templates/badge'], (server, notify, pulsar, badge) ->
+define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server, notify, pulsar, badge) ->
   (args, templ) ->
 
     updateBadge = (selector, num, status='important') ->

@@ -15,7 +15,7 @@
     return document.getElementById("" + type + "Sound").play();
   };
 
-  define(["app/server", "app/notify", "app/pulsar", 'templates/badge'], function(server, notify, pulsar, badge) {
+  define(["load/server", "load/notify", "load/pulsar", 'templates/badge'], function(server, notify, pulsar, badge) {
     return function(args, templ) {
       var updateBadge;
       updateBadge = function(selector, num, status) {

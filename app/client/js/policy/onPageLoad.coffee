@@ -1,3 +1,3 @@
-define ["app/registerSessionUpdates"],
+define ["policy/registerSessionUpdates"],
  (registerSessionUpdates) ->
    registerSessionUpdates()

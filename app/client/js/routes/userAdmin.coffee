@@ -1,4 +1,4 @@
-define ["app/server", "app/notify"], (server, notify) ->
+define ["load/server", "load/notify"], (server, notify) ->
   (_, templ) ->
     $('#content').html templ()
     server.ready ->

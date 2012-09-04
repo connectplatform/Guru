@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server"], function(server) {
+  define(["load/server"], function(server) {
     return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName) {
       var elements, formBuilder, getElementById, uppercaseName,
         _this = this;

@@ -1,4 +1,4 @@
-define ["app/server"], (server) ->
+define ["load/server"], (server) ->
   (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName)->
 
     uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1)

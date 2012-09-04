@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify", "app/util", "app/pulsar"], function(server, notify, util, pulsar) {
+  define(["load/server", "load/notify", "helpers/util", "load/pulsar"], function(server, notify, util, pulsar) {
     return {
       setup: function(args, templ) {
         var updateDashboard;

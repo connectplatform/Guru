@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server"], function(server) {
+  define(["load/server"], function(server) {
     return function(args, next) {
       if (args.role === 'Visitor') {
         window.location.hash = "#/newChat";

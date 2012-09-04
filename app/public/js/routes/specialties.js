@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify", "templates/editSpecialty", "templates/deleteSpecialty", "templates/specialtyRow", "app/formBuilder"], function(server, notify, editSpecialty, deleteSpecialty, specialtyRow, formBuilder) {
+  define(["load/server", "load/notify", "templates/editSpecialty", "templates/deleteSpecialty", "templates/specialtyRow", "helpers/formBuilder"], function(server, notify, editSpecialty, deleteSpecialty, specialtyRow, formBuilder) {
     return function(args, templ) {
       if (!server.cookie('session')) return window.location.hash = '/';
       return server.ready(function() {

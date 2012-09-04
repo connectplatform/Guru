@@ -1,7 +1,7 @@
 (function() {
   var __slice = Array.prototype.slice;
 
-  define(["app/pulsar", "app/server"], function(pulsar, server) {
+  define(["load/pulsar", "load/server"], function(pulsar, server) {
     return function() {
       var session, sessionUpdates;
       session = server.cookie('session');

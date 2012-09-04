@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify"], function(server, notify) {
+  define(["load/server", "load/notify"], function(server, notify) {
     return function(_, templ, queryString) {
       if (queryString == null) queryString = {};
       $("#content").html("Loading...");

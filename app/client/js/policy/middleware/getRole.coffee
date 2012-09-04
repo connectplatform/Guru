@@ -1,4 +1,4 @@
-define ["app/server"], (server) ->
+define ["load/server"], (server) ->
   (args, next) ->
     server.ready ->
       server.getMyRole (err, role) ->

@@ -1,4 +1,4 @@
-define ["app/server", "app/notify", "app/util", "app/pulsar"],
+define ["load/server", "load/notify", "helpers/util", "load/pulsar"],
   (server, notify, util, pulsar) ->
     setup:
       (args, templ) ->

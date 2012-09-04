@@ -1,4 +1,4 @@
-define ["app/server", "templates/serverMessage", "templates/selectUser"], (server, serverMessage, selectUser) ->
+define ["load/server", "templates/serverMessage", "templates/selectUser"], (server, serverMessage, selectUser) ->
   createInviteHandler: (chatId) ->
     (evt) ->
       evt.preventDefault()

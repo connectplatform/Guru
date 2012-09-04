@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify", "templates/editUser", "templates/deleteUser", "templates/userRow", "app/formBuilder"], function(server, notify, editUser, deleteUser, userRow, formBuilder) {
+  define(["load/server", "load/notify", "templates/editUser", "templates/deleteUser", "templates/userRow", "helpers/formBuilder"], function(server, notify, editUser, deleteUser, userRow, formBuilder) {
     return function(args, templ) {
       if (!server.cookie('session')) return window.location.hash = '/';
       return server.ready(function() {

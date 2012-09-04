@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify", "templates/signup"], function(server, notify, templ) {
+  define(["load/server", "load/notify", "templates/signup"], function(server, notify, templ) {
     return function() {
       $('#content').append(templ());
       $('#signup-modal').modal();

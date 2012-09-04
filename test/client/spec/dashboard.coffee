@@ -1,4 +1,4 @@
-require ['spec/helpers/mock', 'spec/helpers/util', 'app/pulsar'], (mock, {hasText, exists}, pulsar) ->
+require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'], (mock, {hasText, exists}, pulsar) ->
 
   sendInvite = ->
     pulsar.channel('notify:session:session_foo').emit 'newInvites', {chatId: 'chat_3', type: 'invite'}

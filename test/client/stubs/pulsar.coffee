@@ -1,4 +1,4 @@
-define ['app/EventEmitter'], (EventEmitter) ->
+define ['load/EventEmitter'], (EventEmitter) ->
   pulsar =
     channels: {}
     channel: (name) ->

@@ -1,4 +1,4 @@
-define ["app/pulsar", "app/server"], (pulsar, server) ->
+define ["load/pulsar", "load/server"], (pulsar, server) ->
     ->
       session = server.cookie 'session'
       if session?

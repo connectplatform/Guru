@@ -1,4 +1,4 @@
-define ["app/server", "app/notify"], (server, notify) ->
+define ["load/server", "load/notify"], (server, notify) ->
   (args, templ) ->
 
     server.ready ->

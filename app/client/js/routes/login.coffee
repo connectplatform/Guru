@@ -1,4 +1,4 @@
-define ["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util", "app/registerSessionUpdates"],
+define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"],
   (server, notify, sidebar, sbTemp, util, registerSessionUpdates) ->
     (args, templ) ->
 

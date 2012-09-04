@@ -1,6 +1,6 @@
 (function() {
 
-  define(["app/server", "app/notify", "routes/sidebar", "templates/sidebar", "app/util", "app/registerSessionUpdates"], function(server, notify, sidebar, sbTemp, util, registerSessionUpdates) {
+  define(["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"], function(server, notify, sidebar, sbTemp, util, registerSessionUpdates) {
     return function(args, templ) {
       $('#content').html(templ());
       $('#login-modal').modal();

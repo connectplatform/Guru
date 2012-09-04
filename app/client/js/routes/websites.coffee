@@ -1,4 +1,4 @@
-define ["app/server", "app/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "app/formBuilder"],
+define ["load/server", "load/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "helpers/formBuilder"],
   (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'

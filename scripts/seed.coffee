@@ -1,4 +1,5 @@
-seed = require './sampleData'
+require '../app/config'
+seed = config.require 'policy/sampleData'
 
 seed (err, data) ->
   console.log 'Error: ', err if err?

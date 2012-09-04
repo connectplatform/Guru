@@ -4,22 +4,22 @@
     return {
       channel: {},
       setup: function(_arg, templ) {
-        var chatId,
-          _this = this;
+        var chatId, self;
         chatId = _arg.chatId;
+        self = this;
         return server.ready(function() {
           return server.visitorCanAccessChannel(chatId, function(err, canAccess) {
             var appendChatMessage;
             if (!canAccess) return window.location.hash = '/newChat';
             $("#content").html(templ());
             $("#message-form #message").focus();
-            _this.channel = pulsar.channel(chatId);
+            self.channel = pulsar.channel(chatId);
             $(".message-form").submit(function(evt) {
               var message;
               evt.preventDefault();
               if ($(".message").val() !== "") {
                 message = $(".message").val();
-                this.channel.emit('clientMessage', {
+                self.channel.emit('clientMessage', {
                   message: message,
                   session: server.cookie('session')
                 });
@@ -38,12 +38,12 @@
                 msg = history[_i];
                 appendChatMessage(msg);
               }
-              this.channel.on('serverMessage', appendChatMessage);
-              return this.channel.on('chatEnded', function() {
+              self.channel.on('serverMessage', appendChatMessage);
+              return self.channel.on('chatEnded', function() {
                 $(".chat-display-box").append(serverMessage({
                   message: "The operator has ended the chat"
                 }));
-                this.channel.removeAllListeners('serverMessage');
+                self.channel.removeAllListeners('serverMessage');
                 return $(".message-form").hide();
               });
             });
@@ -51,8 +51,7 @@
         });
       },
       teardown: function(cb) {
-        var ran, self;
-        self = this;
+        var ran;
         ran = true;
         this.channel.removeAllListeners('serverMessage');
         this.channel.removeAllListeners('chatEnded');

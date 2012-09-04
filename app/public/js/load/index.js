@@ -4,8 +4,8 @@
     baseUrl: ".",
     packages: [
       {
-        name: "config",
-        location: "js/config"
+        name: "app",
+        location: "js"
       }, {
         name: "templates",
         location: "templates"

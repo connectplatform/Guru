@@ -1,7 +1,7 @@
 require
   baseUrl: "."
   packages: [
-    {name: "config", location: "js/config"}
+    {name: "app", location: "js"}
     {name: "templates", location: "templates"}
     {name: "load", location: "js/load"}
     {name: "helpers", location: "js/helpers"}

@@ -53,20 +53,19 @@ face = (decorators) ->
             unreadMessages[chat] = parseInt num
           next null, unreadMessages
 
-      session.delete = (cb) ->
+      session.delete = (cb) =>
         async.parallel [
             session.role.del
             session.chatName.del
             session.unreadMessages.del
+            @allSessions.srem session.id
           ], cb
-#TODO: shouldn't this be removing the session from allChats too?
 
       notifySession.on 'viewedMessages', (chatId) ->
         session.unreadMessages.hdel chatId, ->
           #TODO: this is a hack to avoid a client side race condition: replace with client side unread chat model
-          session.unreadMessages.getall (err, chats) ->
-            chats ?= {}
-            notifySession.emit 'viewedMessages', chats
+          session.unreadMessages.getall (err, chats={}) ->
+            notifySession.emit 'echoViewed', chats
 
       return session
 

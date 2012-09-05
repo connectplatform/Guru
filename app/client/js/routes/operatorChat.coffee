@@ -101,8 +101,8 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               self.sessionUpdates.on 'unreadMessages', updateChatBadge chat.id
 
               #wire up control buttons
-              $("##{chat.renderedId} .inviteButton").click controls.createInviteHandler chat.id
-              $("##{chat.renderedId} .transferButton").click controls.createTransferHandler chat.id
+              $("##{chat.renderedId} .inviteButton").click controls.createHandler 'inviteOperator', chat.id
+              $("##{chat.renderedId} .transferButton").click controls.createHandler 'transferChat', chat.id
               $("##{chat.renderedId} .kickButton").click controls.createKickHandler chat.id, chat.renderedId
               $("##{chat.renderedId} .leaveButton").click controls.createLeaveHandler chat.id
             console.log "finished setup in operatorChat"

@@ -114,8 +114,8 @@
               channel.on('serverMessage', createChatAppender(chat.renderedId));
               self.sessionUpdates.on('kickedFromChat', createChatRemover(chat.id, channel));
               self.sessionUpdates.on('unreadMessages', updateChatBadge(chat.id));
-              $("#" + chat.renderedId + " .inviteButton").click(controls.createInviteHandler(chat.id));
-              $("#" + chat.renderedId + " .transferButton").click(controls.createTransferHandler(chat.id));
+              $("#" + chat.renderedId + " .inviteButton").click(controls.createHandler('inviteOperator', chat.id));
+              $("#" + chat.renderedId + " .transferButton").click(controls.createHandler('transferChat', chat.id));
               $("#" + chat.renderedId + " .kickButton").click(controls.createKickHandler(chat.id, chat.renderedId));
               $("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id));
             }

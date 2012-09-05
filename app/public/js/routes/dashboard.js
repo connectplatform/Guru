@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/notify", "helpers/util", "load/pulsar"], function(server, notify, util, pulsar) {
+  define(["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/dashboardAction'], function(server, notify, util, pulsar, dashboardAction) {
     return {
       setup: function(args, templ) {
         var updateDashboard;
@@ -21,64 +21,20 @@
             $('#content').html(templ({
               chats: chats
             }));
-            $('.joinChat').click(function(evt) {
-              var chatId;
-              chatId = $(this).attr('chatId');
-              server.joinChat(chatId, {}, function(err, data) {
-                if (err != null) console.log("Error joining chat: " + err);
-                if (data) return window.location.hash = '/operatorChat';
-              });
-              return false;
-            });
-            $('.watchChat').click(function(evt) {
-              var chatId;
-              chatId = $(this).attr('chatId');
-              server.watchChat(chatId, {}, function(err, data) {
-                if (err != null) console.log("Error watching chat: " + err);
-                if (data) return window.location.hash = '/operatorChat';
-              });
-              return false;
-            });
-            $('.acceptChat').click(function(evt) {
-              var chatId;
-              chatId = $(this).attr('chatId');
-              server.acceptChat(chatId, function(err, result) {
-                if (err != null) console.log("Error accepting chat: " + err);
-                if (result.status === 'OK') {
-                  return window.location.hash = '/operatorChat';
-                } else {
-                  notify.alert("Another operator already accepted this chat");
-                  return updateDashboard();
-                }
-              });
-              return false;
-            });
-            $('.leaveChat').click(function(evt) {
-              var chatId;
-              evt.preventDefault();
-              chatId = $(this).attr('chatId');
-              return server.leaveChat(chatId, function(err) {
-                if (err != null) console.log("error leaving chat: " + err);
+            dashboardAction('joinChat');
+            dashboardAction('watchChat');
+            dashboardAction('acceptInvite');
+            dashboardAction('acceptTransfer');
+            dashboardAction('acceptChat', function(err, result) {
+              if (result.status === 'OK') {
+                return window.location.hash = '/operatorChat';
+              } else {
+                notify.alert("Another operator already accepted this chat");
                 return updateDashboard();
-              });
+              }
             });
-            $('.acceptInvite').click(function(evt) {
-              var chatId;
-              evt.preventDefault();
-              chatId = $(this).attr('chatId');
-              return server.acceptInvite(chatId, function(err, chatId) {
-                if (err != null) console.log("error accepting invite: " + err);
-                return window.location.hash = '/operatorChat';
-              });
-            });
-            $('.acceptTransfer').click(function(evt) {
-              var chatId;
-              evt.preventDefault();
-              chatId = $(this).attr('chatId');
-              return server.acceptTransfer(chatId, function(err, chatId) {
-                if (err != null) console.log("error accepting transfer: " + err);
-                return window.location.hash = '/operatorChat';
-              });
+            dashboardAction('leaveChat', function() {
+              return updateDashboard();
             });
             return util.autotimer('.counter');
           });

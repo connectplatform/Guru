@@ -16,7 +16,7 @@ Pulsar = require 'pulsar'
 # initialize app server
 initApp = (cb) ->
   return cb() if @app?
-  @app = config.require 'server/load/app'
+  @app = config.require 'load/app'
   @app cb
 
 module.exports = global.boiler = (testName, tests) ->

@@ -1,6 +1,9 @@
-{join, resolve} = require 'path'
+{join} = require 'path'
 require 'sugar'
 Object.extend()
+
+rel = (path) ->
+  join __dirname, '../', path
 
 environment = process.env.NODE_ENV or 'development'
 
@@ -26,19 +29,19 @@ config =
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
 
 paths =
-  root:       resolve '.'
-  npmBin:     resolve './node_modules/.bin'
+  root:       rel '.'
+  npmBin:     rel './node_modules/.bin'
 
-  app:        resolve './app'
-  client:     resolve './app/client'
-  public:     resolve './app/public'
+  app:        rel './app'
+  client:     rel './app/client'
+  public:     rel './app/public'
 
-  server:     resolve './app/server'
-  load:       resolve './app/server/load'
-  models:     resolve './app/server/models'
-  services:   resolve './app/server/services'
-  policy:     resolve './app/server/policy'
-  middleware: resolve './app/server/middleware'
+  server:     rel './app/server'
+  load:       rel './app/server/load'
+  models:     rel './app/server/models'
+  services:   rel './app/server/services'
+  policy:     rel './app/server/policy'
+  middleware: rel './app/server/middleware'
 
 
 path = (spec) ->

@@ -18,9 +18,9 @@ config =
       port: 443
       pulsarPort: 4001
       ssl:
-        key: "../../certs/privatekey.pem"
-        cert: "../../certs/livechathost.com.crt"
-        ca: ["../../certs/gd_bundle.crt"]
+        key: resolve "../../certs/privatekey.pem"
+        cert: resolve "../../certs/livechathost.com.crt"
+        ca: [resolve "../../certs/gd_bundle.crt"]
         redirectFrom: 80
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'

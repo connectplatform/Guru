@@ -44,6 +44,7 @@ paths =
 path = (spec) ->
   parts = spec.split '/'
   root = parts.shift()
+  throw new Error "'#{root}' is not a path in config.coffee" unless paths[root]?
   join paths[root], parts.join '/'
 
 global.config = config[environment].merge

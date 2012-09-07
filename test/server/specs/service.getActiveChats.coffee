@@ -12,7 +12,7 @@ boiler 'Service - Get Active Chats', ->
           should.not.exist err
           chatData.visitor.username.should.eql 'visitor'
           chatData.status.should.eql 'waiting'
-          new Date chatData.creationDate #just need this to not cause an error
+          should.exist new Date chatData.creationDate
           done()
 
   it 'should return operators for chats', (done) ->

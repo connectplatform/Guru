@@ -1,7 +1,7 @@
 stoic = require 'stoic'
 async = require 'async'
 sugar = require 'sugar'
-{Chat, ChatSession} = stoic.models
+{Chat, ChatSession, Session} = stoic.models
 
 shouldDeleteChat = (chat, minutesToTimeout, cb) ->
   dateCutoff = Date.create("#{minutesToTimeout} minutes ago")
@@ -15,12 +15,16 @@ shouldDeleteChat = (chat, minutesToTimeout, cb) ->
         cb err, creationDate < dateCutoff
 
 deleteChatSession = (chatSession, cb) ->
-  ChatSession.remove chatSession.sessionId, chatSession.chatId, cb
+  async.parallel [
+    ChatSession.remove chatSession.sessionId, chatSession.chatId
+    Session.get(chatSession.sessionId).unreadMessages.hdel chatSession.chatId
+  ], cb
 
 removeOldChats = (chat, minutesToTimeout, cb) ->
   shouldDeleteChat chat, minutesToTimeout, (err, shouldDelete) ->
     return cb err if err
     if shouldDelete
+
       #remove all operators from the chat
       ChatSession.getByChat chat.id, (err, chatSessions) ->
         async.forEach chatSessions, deleteChatSession, (err) ->
@@ -51,4 +55,3 @@ module.exports = (cb) ->
 
     async.forEach chats, removalIterator, (err) ->
       cb err
-

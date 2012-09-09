@@ -1,57 +1,84 @@
-stoic = require 'stoic'
 async = require 'async'
 sugar = require 'sugar'
+stoic = require 'stoic'
+mongo = config.require 'load/mongo'
+
 {Chat, ChatSession, Session} = stoic.models
+{ChatHistory} = mongo.models
 
-shouldDeleteChat = (chat, minutesToTimeout, cb) ->
-  dateCutoff = Date.create("#{minutesToTimeout} minutes ago")
-  chat.history.len (err, historyLength) ->
-    return cb err, false if err
-    if historyLength > 0
-      chat.history.index -1, (err, lastMessage) ->
-        cb err, Date.create(JSON.parse(lastMessage).timestamp) < dateCutoff
-    else
-      chat.creationDate.get (err, creationDate) ->
-        cb err, creationDate < dateCutoff
+getChatModels = (chatIds, next) ->
+  next null, chatIds.map (chatId) -> Chat.get(chatId)
 
-deleteChatSession = (chatSession, cb) ->
-  async.parallel [
-    ChatSession.remove chatSession.sessionId, chatSession.chatId
-    Session.get(chatSession.sessionId).unreadMessages.hdel chatSession.chatId
-  ], cb
+getOldChats = (chats, next) ->
 
-removeOldChats = (chat, minutesToTimeout, cb) ->
-  shouldDeleteChat chat, minutesToTimeout, (err, shouldDelete) ->
-    return cb err if err
-    if shouldDelete
+  shouldDeleteChat = (chat, cb) ->
+    {minutesToTimeout} = config.app.chats
+    dateCutoff = Date.create("#{minutesToTimeout} minutes ago")
+    chat.history.len (err, historyLength) ->
+      return cb false if err
+      if historyLength > 0
+        chat.history.index -1, (err, lastMessage) ->
+          cb Date.create(JSON.parse(lastMessage).timestamp) < dateCutoff
+      else
+        chat.creationDate.get (err, creationDate) ->
+          cb creationDate < dateCutoff
 
-      #remove all operators from the chat
-      ChatSession.getByChat chat.id, (err, chatSessions) ->
-        async.forEach chatSessions, deleteChatSession, (err) ->
-          console.log "error deleting chat session: #{err}" if err
+  async.filter chats, shouldDeleteChat, (filteredChats) ->
+    next null, filteredChats
 
-          #delete chat
-          async.parallel [
-            chat.delete
-            Chat.allChats.srem chat.id
-            Chat.unansweredChats.srem chat.id
-          ], cb
+archiveChats = (chats, next) ->
 
-    else
-      cb null
+  archive = (chat, next) ->
+    async.parallel {
+      chatData: chat.dump
+      chatSessions: ChatSession.getByChat chat.id
 
-#TODO: refactor so that the pipeline 1) filters, 2) removes
-# next add an additional step to archive to mongo
-module.exports = (cb) ->
-  Chat.allChats.members (err, chatIds) ->
-    return cb err if err
+    }, (err, {chatData, chatSessions}) ->
+      return next err if err?
 
-    chats = chatIds.map (chatId) -> Chat.get(chatId)
+      getOperatorId = (chatSession, next) ->
+        chatSession.session.operatorId.get next
 
-    minutesToTimeout = 15
+      async.map chatSessions, getOperatorId, (err, operators) ->
 
-    removalIterator = (chat, cb) ->
-      removeOldChats chat, minutesToTimeout, cb
+        chatRecord =
+          visitor: chatData.visitor
+          creationDate: chatData.creationDate
+          history: chatData.history
+          operators: operators
 
-    async.forEach chats, removalIterator, (err) ->
-      cb err
+        ChatHistory.create chatRecord, next
+
+  async.forEach chats, archive, ->
+    next null, chats
+
+deleteChats = (chats, next) ->
+  deleteChatSession = (chatSession, cb) ->
+    async.parallel [
+      ChatSession.remove chatSession.sessionId, chatSession.chatId
+      Session.get(chatSession.sessionId).unreadMessages.hdel chatSession.chatId
+    ], cb
+
+  removeOldChats = (chat, next) ->
+    # get related chatsessions
+    ChatSession.getByChat chat.id, (err, chatSessions) ->
+
+        #delete everything
+        async.parallel [
+          (next) -> async.forEach chatSessions, deleteChatSession, next
+          chat.delete
+          Chat.allChats.srem chat.id
+          Chat.unansweredChats.srem chat.id
+        ], next
+
+  async.forEach chats, removeOldChats, next
+
+module.exports = (done) ->
+  async.waterfall [
+    Chat.allChats.members
+    getChatModels
+    getOldChats
+    archiveChats
+    deleteChats
+
+  ], done

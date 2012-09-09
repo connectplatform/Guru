@@ -2,6 +2,7 @@ should = require 'should'
 stoic = require 'stoic'
 async = require 'async'
 sugar = require 'sugar'
+mongo = config.require 'load/mongo'
 
 createChat = (chat, cb) ->
   {Chat} = stoic.models
@@ -55,9 +56,9 @@ boiler 'Service - Clear Old Chats', ->
 
     async.map getOldChats(halfHourAgo, almostHalfHourAgo), createChat, =>
       @clearOldChats (err) ->
-        should.not.exist err
+        should.not.exist err, "clearOldChats threw an error:#{err}"
         Chat.allChats.members (err, allChats) ->
-          should.not.exist err
+          should.not.exist err, "allChats threw an error:#{err}"
           allChats.length.should.eql 0
           done()
 
@@ -71,34 +72,6 @@ boiler 'Service - Clear Old Chats', ->
           should.not.exist err
           allChats.length.should.eql 2
           done()
-
-  it 'should remove operators from the deleted chats', (done) ->
-    {Chat} = stoic.models
-
-    async.map getOldChats(halfHourAgo, halfHourAgo), createChat, (err, chats) =>
-      chatId = chats[0].id
-
-      # make sure user has properly joined chat
-      @getAuthed =>
-        @client.joinChat chatId, (err) =>
-          should.not.exist err
-
-          @client.getMyChats (err, chats) =>
-            should.not.exist err
-            chats.length.should.eql 1, 'chat should exist'
-
-            # delete the chat
-            @clearOldChats (err) =>
-              should.not.exist err
-              Chat.allChats.members (err, allChats) =>
-                should.not.exist err
-                allChats.length.should.eql 0, 'all chats should be empty'
-
-                # check that operator was properly removed
-                @client.getMyChats (err, chats) =>
-                  should.not.exist err
-                  chats.length.should.eql 0, 'my chat sessions should be empty'
-                  done()
 
   it 'should let a visitor create a new chat if their old one was deleted', (done) ->
     {Chat} = stoic.models
@@ -131,3 +104,48 @@ boiler 'Service - Clear Old Chats', ->
                 visitorSession.should.not.eql visitor.cookie 'session'
                 chatChannelName.should.not.eql createdChat.channel
                 done()
+
+  describe 'with operator sessions', ->
+    beforeEach (done) ->
+      async.map getOldChats(halfHourAgo, halfHourAgo), createChat, (err, chats) =>
+        chatId = chats[0].id
+
+        # make sure user has properly joined chat
+        @getAuthed =>
+          @client.joinChat chatId, (err) =>
+            should.not.exist err
+            done()
+
+    it 'should show me as joined', (done) ->
+      @client.getMyChats (err, chats) =>
+        should.not.exist err
+        chats.length.should.eql 1, 'chat should exist'
+        done()
+
+    it 'should remove operators from the deleted chats', (done) ->
+      {Chat} = stoic.models
+
+      # delete the chat
+      @clearOldChats (err) =>
+        should.not.exist err
+        Chat.allChats.members (err, allChats) =>
+          should.not.exist err
+          allChats.length.should.eql 0, 'all chats should be empty'
+
+          # check that operator was properly removed
+          @client.getMyChats (err, chats) =>
+            should.not.exist err
+            chats.length.should.eql 0, 'my chat sessions should be empty'
+            done()
+
+    it 'should save a history', (done) ->
+      {ChatHistory} = mongo.models
+
+      # delete the chat
+      @clearOldChats (err) =>
+        should.not.exist err
+        ChatHistory.find {}, (err, history) =>
+          should.not.exist err
+          should.exist history
+          history.length.should.eql 2, 'should have 2 history records'
+          done()

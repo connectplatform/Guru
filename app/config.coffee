@@ -13,6 +13,8 @@ config =
       port: 4000
       pulsarPort: 4001
       ssl: false
+      chats:
+        minutesToTimeout: 15
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
 
@@ -25,6 +27,8 @@ config =
         cert: "../../../../certs/livechathost.com.crt"
         ca: ["../../../../certs/gd_bundle.crt"]
         redirectFrom: 80
+      chats:
+        minutesToTimeout: 15
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
 

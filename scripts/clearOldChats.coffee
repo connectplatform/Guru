@@ -1,6 +1,8 @@
+require '../app/config'
+
 process.env.GURU_PULSAR_PORT = 'DISABLED'
-require '../server/initStoic'
-clear = require '../server/domain/clearOldChats'
+config.require 'load/initStoic'
+clear = config.require 'services/clearOldChats'
 
 clear (err) ->
   console.log "#{new Date} - clear chats running"

@@ -1,6 +1,6 @@
 (function() {
 
-  define(function() {
+  define(['load/server'], function(server) {
     return function(action, next) {
       if (next == null) {
         next = function(err, data) {

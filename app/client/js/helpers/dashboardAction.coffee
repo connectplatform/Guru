@@ -1,4 +1,4 @@
-define ->
+define ['load/server'], (server) ->
   (action, next) ->
     next ?= (err, data) ->
       window.location.hash = '/operatorChat' if data

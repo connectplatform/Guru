@@ -13,10 +13,11 @@
     "connect": "2.3.4",
     "async": "*",
     "pulsar": "*",
-    "vein": "*",
+    "vein": "git://github.com/bitmage/vein.git",
     "sugar": "*",
     "stoic": "*",
-    "restler": "*"
+    "restler": "*",
+    "nodemailer": "*"
   },
   "devDependencies": {
     "node-log": "*",

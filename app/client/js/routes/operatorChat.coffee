@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util"],
-  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util) ->
+define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender"],
+  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender) ->
     channels: []
     setup:
       (args, templ) ->
@@ -96,7 +96,8 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                 $("##{chat.renderedId} .message-form").submit createSubmitHandler chat.renderedId, channel
 
               #display incoming messages
-              channel.on 'serverMessage', createChatAppender chat.renderedId
+              #channel.on 'serverMessage', createChatAppender chat.renderedId
+              wireUpChatAppender createChatAppender(chat.renderedId), channel
               self.sessionUpdates.on 'kickedFromChat', createChatRemover chat.id, channel
               self.sessionUpdates.on 'unreadMessages', updateChatBadge chat.id
 

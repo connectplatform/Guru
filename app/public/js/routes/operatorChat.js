@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util) {
+  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender) {
     return {
       channels: [],
       setup: function(args, templ) {
@@ -111,7 +111,7 @@
               } else {
                 $("#" + chat.renderedId + " .message-form").submit(createSubmitHandler(chat.renderedId, channel));
               }
-              channel.on('serverMessage', createChatAppender(chat.renderedId));
+              wireUpChatAppender(createChatAppender(chat.renderedId), channel);
               self.sessionUpdates.on('kickedFromChat', createChatRemover(chat.id, channel));
               self.sessionUpdates.on('unreadMessages', updateChatBadge(chat.id));
               $("#" + chat.renderedId + " .inviteButton").click(controls.createHandler('inviteOperator', chat.id));

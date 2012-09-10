@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage"], function(server, pulsar, notify, newChat, chatMessage, serverMessage) {
+  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender"], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender) {
     return {
       channel: {},
       setup: function(_arg, templ) {
@@ -38,7 +38,7 @@
                 msg = history[_i];
                 appendChatMessage(msg);
               }
-              self.channel.on('serverMessage', appendChatMessage);
+              wireUpChatAppender(appendChatMessage, self.channel);
               return self.channel.on('chatEnded', function() {
                 $(".chat-display-box").append(serverMessage({
                   message: "The operator has ended the chat"

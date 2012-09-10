@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage"],
-  (server, pulsar, notify, newChat, chatMessage, serverMessage) ->
+define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender"],
+  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
@@ -32,7 +32,8 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
             appendChatMessage msg for msg in history
 
             # display messages when received
-            self.channel.on 'serverMessage', appendChatMessage
+            #self.channel.on 'serverMessage', appendChatMessage
+            wireUpChatAppender appendChatMessage, self.channel
 
             # when you get to the end, stop
             self.channel.on 'chatEnded', ->

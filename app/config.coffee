@@ -15,6 +15,9 @@ config =
       ssl: false
       chats:
         minutesToTimeout: 15
+      mailOptions:
+        transport: 'sendmail'
+        from: 'info@livechathost.com'
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
 
@@ -43,10 +46,9 @@ paths =
   server:     rel './app/server'
   load:       rel './app/server/load'
   models:     rel './app/server/models'
-  services:   rel './app/server/services'
   policy:     rel './app/server/policy'
-  middleware: rel './app/server/middleware'
-
+  services:   rel './app/server/services'
+  views:      rel './app/server/views'
 
 path = (spec) ->
   parts = spec.split '/'

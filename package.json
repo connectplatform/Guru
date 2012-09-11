@@ -17,7 +17,8 @@
     "sugar": "*",
     "stoic": "*",
     "restler": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
+    "jade": "*"
   },
   "devDependencies": {
     "node-log": "*",

@@ -28,7 +28,10 @@
     "node": ">= 0.4.0"
   },
   "subdomain": "guru",
+  "private": true,
   "scripts": {
-    "start": "server/start.coffee"
+    "start": "coffee scripts/server.coffee",
+    "test": "mocha test/server/specs/",
+    "prestart": "scripts/build/build"
   }
 }

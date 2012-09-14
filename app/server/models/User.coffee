@@ -1,6 +1,8 @@
 db = require 'mongoose'
 {Schema} = db
 
+sendRegistrationEmail = config.require 'services/operator/sendRegistrationEmail'
+
 #TODO: remove duplication
 validateRole = (role, cb) ->
   mongo = config.require 'load/mongo'
@@ -20,6 +22,12 @@ validateWebsite = (websiteName, cb) ->
 
 user = new Schema
 
+  sentEmail:
+    type: Boolean
+    default: false
+
+  registrationKey: String
+
   firstName:
     type: String
     default: ""
@@ -34,9 +42,7 @@ user = new Schema
     index:
       unique: true
 
-  password:
-    type: String
-    required: true
+  password: String
 
   role:
     type: String
@@ -46,11 +52,13 @@ user = new Schema
   websites:
     type: [String]
     default: []
-#TODO: 
+#TODO:
 #    validate: [validateWebsite, "Invalid website"]
 
   specialties:
     type: [String]
     default: []
+
+user.pre 'save', (next) -> sendRegistrationEmail @, next
 
 module.exports = user

@@ -6,7 +6,7 @@ jade = require 'jade'
 templPath = config.path 'views/emailTemplates'
 templates = {}
 for file in fs.readdirSync templPath
-  templates[file] = path.join templPath, file
+  templates[path.basename file, '.jade'] = path.join templPath, file
 
 module.exports = (template, options, done) ->
   jade.renderFile templates[template], options, done

@@ -9,11 +9,11 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     dermis.route '/', 'routes/index'
     dermis.route '/login'
     dermis.route '/logout', 'routes/logout', 'routes/logout'
-    #dermis.route '/signup' # don't allow until phase 3?
+    dermis.route '/resetPassword'
 
     # main screens for backend users
     dermis.route '/dashboard'
-    dermis.route '/userAdmin'
+    dermis.route '/userProfile'
     dermis.route '/operatorChat'
 
     # CRUD screens for admin

@@ -5,7 +5,7 @@ policy = require './policy'
 {getType} = config.require 'load/util'
 
 mapArgs = (arg) ->
-  if (getType arg is '[object Object]') and arg.socket? and arg.name? and arg.listeners?
+  if getType(arg) is '[object Object]' and arg.socket? and arg.name? and arg.listeners?
     return arg.name
   else
     return arg
@@ -23,8 +23,7 @@ module.exports = (vein) ->
     args = req.args.map mapArgs
     cookies = req.cookies
 
-    packagedValidators = []
-    packagedValidators.push validator args, cookies for validator in validators
+    packagedValidators = (validator args, cookies for validator in validators)
 
     async.series packagedValidators, (err) ->
       next err

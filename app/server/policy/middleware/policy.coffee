@@ -9,11 +9,14 @@ module.exports = ->
     except: [
       'getMyRole',
       'login',
+      'resetPassword',
       'newChat',
       'getExistingChatChannel',
       'visitorCanAccessChannel',
       'getChatHistory',
-      'deleteModel',#these three are covered by isAdministrator
+
+      # these three are covered by isAdministrator
+      'deleteModel',
       'findModel',
       'saveModel'
     ]

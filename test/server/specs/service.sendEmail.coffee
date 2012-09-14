@@ -6,7 +6,7 @@ describe 'sendEmail', ->
   it 'should send an email', (done) ->
     options =
       name: 'Bob'
-      to: 'bob@torchlightsoftware.com'
+      to: 'brandon@torchlightsoftware.com'
       operatorId: 'asdf'
       subject: 'Yo man'
 

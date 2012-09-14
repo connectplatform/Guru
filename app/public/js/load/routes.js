@@ -6,8 +6,9 @@
     dermis.route('/', 'routes/index');
     dermis.route('/login');
     dermis.route('/logout', 'routes/logout', 'routes/logout');
+    dermis.route('/resetPassword');
     dermis.route('/dashboard');
-    dermis.route('/userAdmin');
+    dermis.route('/userProfile');
     dermis.route('/operatorChat');
     dermis.route('/users');
     dermis.route('/websites');

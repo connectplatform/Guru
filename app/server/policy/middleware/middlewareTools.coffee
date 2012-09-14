@@ -1,3 +1,5 @@
+# Purpose: this sets up the sugar we are using to define vein middleware
+
 {tandoor} = config.require 'load/util'
 
 routeValidators = {}
@@ -23,7 +25,7 @@ module.exports =
         routeValidators[route].push tandoor validator for validator in validators
 
     else if targetObject.except?
-      allOtherRoutes = (routeName for routeName of routeValidators when targetObject.except.indexOf(routeName) is -1)
+      allOtherRoutes = (routeName for routeName of routeValidators when routeName not in targetObject.except)
       for route in allOtherRoutes
         routeValidators[route].push tandoor validator for validator in validators
 

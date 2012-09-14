@@ -1,13 +1,10 @@
-{digest_s} = require 'md5'
-
 module.exports =
-  createFields: (inModel) ->
-    #TODO: generate a random password that we can email to the user
-    outModel = inModel
-    outModel.password = digest_s 'password'
-    outModel
+  createFields: (inModel) -> inModel #TODO: don't call createFields
 
   filterOutput: (inModel) ->
-    outModel = {id: inModel['_id']}
-    outModel[key] = value for key, value of inModel._doc when key isnt 'password' and key isnt '_id'
-    outModel
+    # TODO: take this out, it will cause a mismatch if the data is obtained without this filter
+    user = {id: inModel['_id']}
+    for key, value of inModel._doc when (key isnt 'password' and key isnt '_id')
+      user[key] = value
+
+    user

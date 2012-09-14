@@ -1,9 +1,9 @@
 define ["load/server", "load/notify"], (server, notify) ->
   (_, templ) ->
     $('#content').html templ()
+
     server.ready ->
       $(".password-change-form").submit (evt) ->
-        console.log "form submitted"
         evt.preventDefault()
 
         #scrape and clear form, disable button
@@ -16,7 +16,6 @@ define ["load/server", "load/notify"], (server, notify) ->
         $("#newPasswordConfirmation").val ""
 
         unless newPassword is passwordConfirm
-          console.log "passwords don't match"
           $(".submit-button").removeAttr("disabled")
           notify.error "Passwords do not match"
           return

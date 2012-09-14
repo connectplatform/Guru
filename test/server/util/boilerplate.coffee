@@ -97,8 +97,11 @@ module.exports = global.boiler = (testName, tests) ->
         done()
 
     beforeEach (done) ->
-      flushCache ->
-        sampleData done
+      flushCache =>
+        sampleData (err, data) =>
+          @adminUser = data[0][0]
+          console.log 'error:', err if err?
+          done()
 
     after (done) ->
       flushCache ->

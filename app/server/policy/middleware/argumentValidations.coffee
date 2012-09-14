@@ -8,6 +8,7 @@ module.exports = ->
       'getChatStats',
       'getExistingChatChannel',
       'getRoles',
+      'resetPassword',
       'login',
       'newChat',
       'getMyRole',

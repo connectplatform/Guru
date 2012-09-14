@@ -19,23 +19,28 @@ module.exports = (done) ->
 
     operators = [
         email: 'admin@foo.com'
+        sentEmail: true
+        registrationKey: 'abcd'
         password: 'foobar'
         role: 'Administrator'
         firstName: 'Admin'
         lastName: 'Guy'
       ,
         email: 'guru1@foo.com'
+        sentEmail: true
         password: 'foobar'
         role: 'Operator'
         firstName: 'First'
         lastName: 'Guru'
       ,
         email: 'guru2@foo.com'
+        sentEmail: true
         password: 'foobar'
         role: 'Operator'
         websites: ['test.com']
       ,
         email: 'guru3@foo.com'
+        sentEmail: true
         password: 'foobar'
         role: 'Operator'
         websites: ['test.com']

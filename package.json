@@ -18,6 +18,7 @@
     "stoic": "*",
     "restler": "*",
     "nodemailer": "*",
+    "markdown": "*",
     "jade": "*"
   },
   "devDependencies": {

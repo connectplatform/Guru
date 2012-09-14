@@ -1,13 +1,13 @@
 nodemailer = require 'nodemailer'
 getBody = config.require 'services/email/getBody'
-{from, transport} = config.app.mailOptions
+{transport, options} = config.app.mail
 
-module.exports = (template, options, done) ->
+module.exports = (template, vars, done) ->
+  vars.merge from: options.from
 
-  sender = nodemailer.createTransport transport, {
-    args: ["-f #{from}"]
-  }
+  sender = nodemailer.createTransport transport, options
 
-  getBody template, options, (err, body) ->
-    options.html = body
-    sender.sendMail options, done
+  getBody template, vars, (err, body) ->
+    return done err if err?
+    vars.html = body
+    sender.sendMail vars, done

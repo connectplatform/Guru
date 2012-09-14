@@ -15,17 +15,18 @@ module.exports = (res, fields, modelName) ->
 
   {createFields, filterOutput} = config.require "models/#{modelName}Filters"
 
+  # get or create
   getModel = (fields, cb) ->
     if fields.id?
       Model.findOne {_id: fields.id}, (err, foundModel) ->
         cb err, foundModel
     else
-      createdModel = createFields new Model
-      cb null, createdModel
+      cb null, createFields new Model
 
+  # update field data
   getModel fields, (err, foundModel) ->
     return res.reply err, null if err?
     foundModel[key] = value for key, value of fields when key isnt 'id'
-    foundModel.save (err) ->
-
-      res.reply parseMongooseError(err), filterOutput foundModel
+    foundModel.save (err, savedModel) ->
+      savedModel = filterOutput savedModel unless err?
+      res.reply parseMongooseError(err), savedModel

@@ -10,19 +10,22 @@ environment = process.env.NODE_ENV or 'development'
 config =
   development:
     app:
+      name: 'Guru'
       port: 4000
       pulsarPort: 4001
       ssl: false
       chats:
         minutesToTimeout: 15
-      mailOptions:
+      mail:
         transport: 'sendmail'
-        from: 'info@livechathost.com'
+        options:
+          args: ["-f info@livechathost.com"]
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
 
   production:
     app:
+      name: 'Live Chat Host'
       port: 443
       pulsarPort: 4001
       ssl:
@@ -32,6 +35,13 @@ config =
         redirectFrom: 80
       chats:
         minutesToTimeout: 15
+      mail:
+        transport: 'SES'
+        options:
+          AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
+          AWSSecretKey: '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'
+          from: 'brandon@torchlightsoftware.com'
+
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
 

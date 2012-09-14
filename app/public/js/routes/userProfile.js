@@ -6,7 +6,6 @@
       return server.ready(function() {
         return $(".password-change-form").submit(function(evt) {
           var newPassword, oldPassword, passwordConfirm;
-          console.log("form submitted");
           evt.preventDefault();
           $(".submit-button").attr("disabled", "disabled");
           oldPassword = $("#oldPassword").val();
@@ -16,7 +15,6 @@
           $("#newPassword").val("");
           $("#newPasswordConfirmation").val("");
           if (newPassword !== passwordConfirm) {
-            console.log("passwords don't match");
             $(".submit-button").removeAttr("disabled");
             notify.error("Passwords do not match");
             return;

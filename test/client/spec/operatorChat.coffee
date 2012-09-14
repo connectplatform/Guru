@@ -36,7 +36,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
         ###
 #TODO: somehow hashchanges refuse to work here, and every change goes to "/operatorChat"
       it 'should not show duplicate chat messages', ->
-        window.location.hash = "/userAdmin"
+        window.location.hash = "/userProfile"
         waitsFor exists(".password-change-form"), 200
         window.location.hash = "/operatorChat"
         waitsFor exists(".chat-display-box"), 200

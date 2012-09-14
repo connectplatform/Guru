@@ -5,7 +5,7 @@ all = [
   '/login'
   '/logout'
   '/dashboard'
-  '/userAdmin'
+  '/userProfile'
   '/operatorChat'
   '/users'
   '/websites'
@@ -38,7 +38,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/'
         '/login'
         '/dashboard'
-        '/userAdmin'
+        '/userProfile'
         '/operatorChat'
         '/users'
         '/websites'
@@ -47,7 +47,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
 
       dermis.before [
         '/dashboard'
-        '/userAdmin'
+        '/userProfile'
         '/operatorChat'
         '/users'
         '/websites'

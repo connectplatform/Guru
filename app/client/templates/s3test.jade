@@ -1,0 +1,12 @@
+form#file-upload(action="https://#{s3.bucket}.s3.amazonaws.com/", method="post", enctype="multipart/form-data")
+  input(type="hidden", name="key", value="#{s3.uploadDir}")
+  input(type="hidden", name="AWSAccessKeyId", value="#{s3.key}")
+  input(type="hidden", name="acl", value="#{s3.acl}")
+  input(type="hidden", name="success_action_redirect", value="#{s3.redirect}")
+  input(type="hidden", name="policy", value="#{s3.policy}")
+  input(type="hidden", name="signature", value="#{s3.signature}")
+  input(type="hidden", name="Content-Type", value="#{s3.contentType}")
+
+  .control-group: input.label(type="file", name='file', value="")
+
+  button#s3submit Submit

@@ -22,7 +22,7 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     dermis.route '/specialties'
 
     # Test route
-    dermis.route '/s3test' # TODO: remove when file uploads are working
+    dermis.route '/uploadTest' # TODO: remove when file uploads are working
 
     # chat actions
 

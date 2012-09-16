@@ -1,18 +1,39 @@
 define ["load/server"], (server) ->
   (_, templ) ->
     server.ready ->
-      console.log 'calling awsUpload'
       server.awsUpload (err, fields) ->
-        console.log "error: ", err if err?
-        console.log 'got fields: ', fields
+        console.log 'server provided fields: ', fields
 
         $('#content').html templ s3: fields
-        console.log 'done rendering template'
 
-        $("submit").click (evt) ->
+        $("#submit").click (evt) ->
           evt.preventDefault()
 
-          filePath = 'testFile'
+          data = new FormData()
+          data.append 'key', fields.key
+          #data.append 'acl', fields.acl
+          #data.append 'Content-Type', fields.contentType
+          data.append 'AWSAccessKeyId', fields.awsAccessKey
+          data.append 'policy', fields.policy
+          data.append 'signature', fields.signature
+          data.append 'file', $('#uploadFile')[0].files[0]
 
-          $('#file-upload [name=key]').val filePath
-          $('#file-upload').submit()
+          notice = ->
+            alert 'file upload succeeded'
+
+          complete = (obj) ->
+            console.log 'request complete'
+            console.log 'status: ', obj.statusText
+            console.log 'aws response: ', obj.responseText
+
+          $.ajax {
+            url: "https://#{fields.bucket}.s3.amazonaws.com/"
+            data: data
+            processData: false
+            contentType: "multipart/form-data"
+            type: 'POST'
+            success: notice
+            complete: complete
+          }
+
+          false

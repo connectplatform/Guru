@@ -4,22 +4,38 @@
   define(["load/server"], function(server) {
     return function(_, templ) {
       return server.ready(function() {
-        console.log('calling awsUpload');
         return server.awsUpload(function(err, fields) {
-          if (err != null) {
-            console.log("error: ", err);
-          }
-          console.log('got fields: ', fields);
+          console.log('server provided fields: ', fields);
           $('#content').html(templ({
             s3: fields
           }));
-          console.log('done rendering template');
-          return $("submit").click(function(evt) {
-            var filePath;
+          return $("#submit").click(function(evt) {
+            var complete, data, notice;
             evt.preventDefault();
-            filePath = 'testFile';
-            $('#file-upload [name=key]').val(filePath);
-            return $('#file-upload').submit();
+            data = new FormData();
+            data.append('key', fields.key);
+            data.append('AWSAccessKeyId', fields.awsAccessKey);
+            data.append('policy', fields.policy);
+            data.append('signature', fields.signature);
+            data.append('file', $('#uploadFile')[0].files[0]);
+            notice = function() {
+              return alert('file upload succeeded');
+            };
+            complete = function(obj) {
+              console.log('request complete');
+              console.log('status: ', obj.statusText);
+              return console.log('aws response: ', obj.responseText);
+            };
+            $.ajax({
+              url: "https://" + fields.bucket + ".s3.amazonaws.com/",
+              data: data,
+              processData: false,
+              contentType: "multipart/form-data",
+              type: 'POST',
+              success: notice,
+              complete: complete
+            });
+            return false;
           });
         });
       });

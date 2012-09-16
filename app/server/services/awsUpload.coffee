@@ -5,8 +5,8 @@ rsaSha1Encrypt = (secret, text) -> crypto.createHmac('sha1', secret).update(text
 devBucket =
   bucket: 'guru-dev'
   awsAccessKey: 'AKIAILLS5MBMHVD62AEA'
-  key: 'aFile'
-  acl: 'private'
+  key: 'someFile'
+  acl: 'public-read'
   secret: '4IdLGyU52rbz3pFrTLJjgZIJnyT7FkrxRQTSrJDr'
   redirect: ''
   maxSize: '10485760'
@@ -27,11 +27,11 @@ module.exports = (res) ->
     expiration: new Date(Date.now() + (4 * 60 * 60 * 1000)) # 4 hours from now
     conditions: [
       {key: devBucket.key}
-      {bucket: devBucket.bucket}
-      {acl: devBucket.acl}
-      {success_action_redirect: devBucket.redirect}
+      #{bucket: devBucket.bucket}
+      #{acl: devBucket.acl}
+      #{success_action_redirect: devBucket.redirect}
       ['content-length-range', 0, devBucket.maxSize]
-      {'Content-Type': fields.contentType}
+      #{'Content-Type': fields.contentType}
     ]
 
   fields.policy = objectToBase64 policy

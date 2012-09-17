@@ -5,6 +5,7 @@ db = config.require 'load/mongo'
 {User} = db.models
 
 module.exports = (res, fields) ->
+  return res.reply 'Invalid user or password.' unless fields.email and fields.password
   search = {email: fields.email, password: digest_s fields.password}
   User.findOne search, (err, user) ->
     return res.reply err.message if err?

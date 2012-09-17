@@ -16,8 +16,11 @@ getUserFromSessionId = (sessionId, cb) ->
 
 module.exports = (res, oldPassword, newPassword) ->
   getUserFromSessionId res.cookie("session"), (err, user) ->
-    return res.reply "user not found" unless user
-    return res.reply "invalid password" unless user.password is digest_s oldPassword
+    return res.reply "User not found." unless user
+    return res.reply "Incorrect current password." unless user.password is digest_s oldPassword
+    return res.reply 'Invalid password.' unless newPassword
+    return res.reply 'New password must be at least 6 characters.' if newPassword.length < 6
+
     user.password = digest_s newPassword
     user.save (err) ->
       console.log "error saving new password in changePassword: ", err if err

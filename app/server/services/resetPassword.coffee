@@ -5,14 +5,9 @@ db = config.require 'load/mongo'
 {ObjectId} = db.Schema.Types
 
 module.exports = (res, userId, registrationKey, newPassword) ->
-  if not (userId? and registrationKey?) or registrationKey is ''
-    return res.reply 'Invalid user or registration key.'
-
-  if not newPassword? or newPassword is ''
-    return res.reply 'Invalid password.'
-
-  if newPassword.length < 6
-    return res.reply 'Password must be at least 6 characters.'
+  return res.reply 'Invalid user or registration key.' unless userId and registrationKey
+  return res.reply 'Invalid password.' unless newPassword
+  return res.reply 'Password must be at least 6 characters.' if newPassword.length < 6
 
   User.findOne {_id: userId, registrationKey: registrationKey}, (err, user) ->
     if err? or not user?

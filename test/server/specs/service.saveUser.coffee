@@ -5,7 +5,7 @@ userFields =
   firstName: "Gnu"
   lastName: "Yewser"
   role: "Operator"
-  email: "brandonjmason@gmail.com"
+  email: "test@torchlightsoftware.com"
 
 boiler 'Service - Save User', ->
   before ->

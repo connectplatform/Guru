@@ -2,8 +2,8 @@ require '../app/config'
 sendEmail = config.require 'services/email/sendEmail'
 
 options =
-  to: 'brandon@torchlightsoftware.com'
-  name: 'Brandon'
+  to: 'test@torchlightsoftware.com'
+  name: 'test'
   subject: "Welcome to #{config.app.name}"
   service: config.app.name
   activationLink: 'http://localhost:4000/#/resetPassword?uid=50538cceed60269170000001&regkey=abcd'

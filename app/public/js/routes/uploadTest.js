@@ -14,6 +14,7 @@
             evt.preventDefault();
             data = new FormData();
             data.append('key', fields.key);
+            data.append('Content-Type', $('#uploadFile')[0].files[0].type);
             data.append('AWSAccessKeyId', fields.awsAccessKey);
             data.append('policy', fields.policy);
             data.append('signature', fields.signature);
@@ -30,7 +31,7 @@
               url: "https://" + fields.bucket + ".s3.amazonaws.com/",
               data: data,
               processData: false,
-              contentType: "multipart/form-data",
+              contentType: false,
               type: 'POST',
               success: notice,
               complete: complete

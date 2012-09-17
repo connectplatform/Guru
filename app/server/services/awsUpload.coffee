@@ -27,11 +27,11 @@ module.exports = (res) ->
     expiration: new Date(Date.now() + (4 * 60 * 60 * 1000)) # 4 hours from now
     conditions: [
       {key: devBucket.key}
-      #{bucket: devBucket.bucket}
+      {bucket: devBucket.bucket}
       #{acl: devBucket.acl}
       #{success_action_redirect: devBucket.redirect}
       ['content-length-range', 0, devBucket.maxSize]
-      #{'Content-Type': fields.contentType}
+      ['starts-with', '$Content-Type', 'image/']
     ]
 
   fields.policy = objectToBase64 policy

@@ -24,9 +24,12 @@
         });
         return false;
       });
-      return $('#login-cancel-button').click(function() {
+      $('#login-cancel-button').click(function() {
         $('#login-modal').modal('hide');
         return window.location.hash = '/';
+      });
+      return $('#forgot-password-link').click(function() {
+        return $('#login-modal').modal('hide');
       });
     };
   });

@@ -26,3 +26,6 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
       $('#login-cancel-button').click ->
         $('#login-modal').modal 'hide'
         window.location.hash = '/'
+
+      $('#forgot-password-link').click ->
+        $('#login-modal').modal 'hide'

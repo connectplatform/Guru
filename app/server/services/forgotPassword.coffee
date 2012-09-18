@@ -3,7 +3,8 @@ db = config.require 'load/mongo'
 
 module.exports = (res, email) ->
   User.findOne {email: email}, (err, user) ->
-    if err? or not email?
+
+    if err? or not user?
       return res.reply "Could not find user."
 
     else

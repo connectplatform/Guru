@@ -10,6 +10,7 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     dermis.route '/login'
     dermis.route '/logout', 'routes/logout', 'routes/logout'
     dermis.route '/resetPassword'
+    dermis.route '/forgotPassword'
 
     # main screens for backend users
     dermis.route '/dashboard'

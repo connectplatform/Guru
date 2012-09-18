@@ -7,7 +7,7 @@
       uid = queryString.uid, regkey = queryString.regkey;
       $('#content').html(templ());
       return server.ready(function() {
-        return $(".password-change-form").submit(function(evt) {
+        return $(".reset-password-form").submit(function(evt) {
           var newPassword, passwordConfirm;
           evt.preventDefault();
           $(".submit-button").attr("disabled", "disabled");

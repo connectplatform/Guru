@@ -70,7 +70,7 @@ blockquote {
   width: 300px;
 }
 
-form input {
+form input, form .controls button {
   margin-right: 6px;
 }
 
@@ -138,4 +138,9 @@ form input {
 
 #sidebar .badge {
   margin-right: 2px;
+}
+
+.leftCenter {
+  float: left;
+  margin-top: 5px;
 }

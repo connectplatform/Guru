@@ -5,7 +5,7 @@ define ["load/server", "load/notify"], (server, notify) ->
     $('#content').html templ()
 
     server.ready ->
-      $(".password-change-form").submit (evt) ->
+      $(".reset-password-form").submit (evt) ->
         evt.preventDefault()
 
         #scrape and clear form, disable button

@@ -26,7 +26,7 @@ coffee -o $public/js/ -c $client/js/
 
 # Vein
 # readd when contra updates vein to newly built version
-#cp $root/node_modules/vein/vein.js $client/js/vendor/vein.js
+cp $root/node_modules/vein/vein.js $client/js/vendor/vein.js
 
 # Pulsar
 cp $root/node_modules/pulsar/pulsar.js $client/js/vendor/pulsar.js

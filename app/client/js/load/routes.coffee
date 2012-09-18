@@ -29,5 +29,6 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     addMiddleware dermis
 
     dermis.init()
+    console.log 'initialized dermis'
 
     $ onPageLoad

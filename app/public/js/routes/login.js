@@ -3,6 +3,7 @@
 
   define(["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"], function(server, notify, sidebar, sbTemp, util, registerSessionUpdates) {
     return function(args, templ) {
+      console.log("routed to login");
       $('#content').html(templ());
       $('#login-modal').modal();
       $('#login-modal #email').focus();

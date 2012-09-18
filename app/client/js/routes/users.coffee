@@ -43,9 +43,9 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
               server.findModel {}, "User", (err, users) ->
                 console.log "err retrieving users: #{err}" if err
 
+                $('#content').html templ users: users
                 formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"
                 #Done with edit/delete handlers, now render page
-                $('#content').html templ users: users
 
                 $('#addUser').click formBuild.elementForm editUser, getNewUser(), (err, savedUser) ->
                   return notify.error "Error saving user: #{err}" if err?

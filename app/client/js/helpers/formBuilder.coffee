@@ -1,5 +1,7 @@
 define ["load/server"], (server) ->
-  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName)->
+  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, before)->
+    unless before
+      before = (cb) -> cb()
 
     uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1)
 

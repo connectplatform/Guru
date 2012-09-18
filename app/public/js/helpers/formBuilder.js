@@ -2,9 +2,14 @@
 (function() {
 
   define(["load/server"], function(server) {
-    return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName) {
+    return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, before) {
       var elements, formBuilder, getElementById, uppercaseName,
         _this = this;
+      if (!before) {
+        before = function(cb) {
+          return cb();
+        };
+      }
       uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1);
       elements = initialElements;
       getElementById = function(id) {

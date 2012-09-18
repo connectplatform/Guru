@@ -17,6 +17,7 @@
     dermis.route('/uploadTest');
     addMiddleware(dermis);
     dermis.init();
+    console.log('initialized dermis');
     return $(onPageLoad);
   });
 

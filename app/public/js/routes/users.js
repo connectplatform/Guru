@@ -68,10 +68,10 @@
                 if (err) {
                   console.log("err retrieving users: " + err);
                 }
-                formBuild = formBuilder(getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user");
                 $('#content').html(templ({
                   users: users
                 }));
+                formBuild = formBuilder(getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user");
                 $('#addUser').click(formBuild.elementForm(editUser, getNewUser(), function(err, savedUser) {
                   if (err != null) {
                     return notify.error("Error saving user: " + err);

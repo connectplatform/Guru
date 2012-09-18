@@ -1,7 +1,7 @@
 define ["load/server"], (server) ->
   (_, templ) ->
     server.ready ->
-      server.awsUpload (err, fields) ->
+      server.awsUpload 'aSite', 'aFile', (err, fields) ->
         console.log 'server provided fields: ', fields
 
         $('#content').html templ s3: fields
@@ -11,7 +11,7 @@ define ["load/server"], (server) ->
 
           data = new FormData()
           data.append 'key', fields.key
-          #data.append 'acl', fields.acl
+          data.append 'acl', fields.acl
           data.append 'Content-Type', $('#uploadFile')[0].files[0].type
           data.append 'AWSAccessKeyId', fields.awsAccessKey
           data.append 'policy', fields.policy

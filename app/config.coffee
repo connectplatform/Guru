@@ -20,6 +20,13 @@ config =
         transport: 'sendmail'
         options:
           args: ["-f info@livechathost.com"]
+      aws:
+        s3:
+          bucket: 'guru-dev'
+          acl: 'public-read'
+          maxSize: '102400'
+        accessKey: 'AKIAILLS5MBMHVD62AEA'
+        secretKey: '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'
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
 
@@ -41,6 +48,12 @@ config =
           AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
           AWSSecretKey: '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'
           from: 'brandon@torchlightsoftware.com'
+      # TODO: duplication!
+      aws:
+        s3:
+          bucket: 'guru-prod'
+          acl: 'public-read'
+          maxSize: '102400'
 
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'

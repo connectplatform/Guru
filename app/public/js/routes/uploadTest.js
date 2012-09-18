@@ -4,7 +4,7 @@
   define(["load/server"], function(server) {
     return function(_, templ) {
       return server.ready(function() {
-        return server.awsUpload(function(err, fields) {
+        return server.awsUpload('aSite', 'aFile', function(err, fields) {
           console.log('server provided fields: ', fields);
           $('#content').html(templ({
             s3: fields
@@ -14,6 +14,7 @@
             evt.preventDefault();
             data = new FormData();
             data.append('key', fields.key);
+            data.append('acl', fields.acl);
             data.append('Content-Type', $('#uploadFile')[0].files[0].type);
             data.append('AWSAccessKeyId', fields.awsAccessKey);
             data.append('policy', fields.policy);

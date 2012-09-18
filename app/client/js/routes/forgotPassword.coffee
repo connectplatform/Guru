@@ -22,4 +22,5 @@ define ["load/server", "load/notify"], (server, notify) ->
           notify.error 'Please enter an email.'
 
       $('#forgot-password-form .cancel-button').click (evt) ->
+        evt.preventDefault()
         window.location.hash = '/'

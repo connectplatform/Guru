@@ -22,6 +22,7 @@
           }
         });
         return $('#forgot-password-form .cancel-button').click(function(evt) {
+          evt.preventDefault();
           return window.location.hash = '/';
         });
       });

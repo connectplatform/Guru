@@ -1,7 +1,10 @@
 define ["load/server"], (server) ->
-  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, before)->
-    unless before
-      before = (cb) -> cb()
+  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit)->
+    unless beforeRender?
+      beforeRender = (_, cb) -> cb {}
+
+    unless beforeSubmit?
+      beforeSubmit = (_, __, cb) -> cb()
 
     uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1)
 
@@ -16,31 +19,34 @@ define ["load/server"], (server) ->
       elementForm: (template, element, onComplete) ->
         (evt) ->
           evt.preventDefault()
+          beforeRender element, (beforeData) ->
 
-          templateObject = {}
-          templateObject[elementName] = element
+            templateObject = {}
+            templateObject[elementName] = element
 
-          $("##{elementName}ModalBox").html template templateObject
-          $("#edit#{uppercaseName}").modal()
+            $("##{elementName}ModalBox").html template templateObject
+            $("#edit#{uppercaseName}").modal()
 
-          $("#edit#{uppercaseName} .saveButton").click (evt) ->
-            evt.preventDefault()
+            $("#edit#{uppercaseName} .saveButton").click (evt) ->
+              evt.preventDefault()
 
-            fields = getFormFields()
-            fields.id = element.id if element.id?
+              beforeSubmit element, beforeData, ->
 
-            server.saveModel fields, uppercaseName, (err, savedElement) ->
-              formBuilder.setElement savedElement
+                fields = getFormFields()
+                fields.id = element.id if element.id?
 
-              onComplete err, savedElement
-              return if err?
+                server.saveModel fields, uppercaseName, (err, savedElement) ->
+                  formBuilder.setElement savedElement
 
-              formBuilder.wireUpRow(savedElement.id)
+                  onComplete err, savedElement
+                  return if err?
+
+                  formBuilder.wireUpRow(savedElement.id)
+                  $("#edit#{uppercaseName}").modal 'hide'
+
+            $("#edit#{uppercaseName} .cancelButton").click (evt) ->
+              evt.preventDefault()
               $("#edit#{uppercaseName}").modal 'hide'
-
-          $("#edit#{uppercaseName} .cancelButton").click (evt) ->
-            evt.preventDefault()
-            $("#edit#{uppercaseName}").modal 'hide'
 
       wireUpRow: (id) =>
         currentElement = getElementById id

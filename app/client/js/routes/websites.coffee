@@ -1,5 +1,5 @@
-define ["load/server", "load/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "helpers/formBuilder"],
-  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder) ->
+define ["load/server", "load/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "helpers/formBuilder", "helpers/submitToAws"],
+  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 
@@ -36,9 +36,37 @@ define ["load/server", "load/notify", "templates/editWebsite", "templates/delete
           server.findModel {}, "Website", (err, websites) ->
             console.log "err retrieving websites: #{err}" if err
 
-            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, extraDataPacker, websiteRow, websites, "website"
+            beforeRender = (element, cb) ->
+              server.awsUpload element.name, 'logo', (err, logoFields) ->
+                server.awsUpload element.name, 'online', (err, onlineFields) ->
+                  server.awsUpload element.name, 'offline', (err, offlineFields) ->
+                    cb {logo: logoFields, online: onlineFields, offline: offlineFields}
+
+            beforeSubmit = (element, beforeData, cb) ->
+              uploadFunc = (imageName, next) ->
+                if $(".#{imageName}Upload")[0].files[0]?
+                  submissionData =
+                    formFields: beforeData[imageName]
+                    file: $(".#{imageName}Upload")[0].files[0]
+                    error: (arg) ->
+                      notify.error "error submitting #{imageName} image"
+                      next()
+                    success: next
+                  submitToAws submissionData
+                else
+                  next()
+
+              # Do in parallel:
+              async.parallel [
+                (next) -> uploadFunc 'logo', next
+                (next) -> uploadFunc 'online', next
+                (next) -> uploadFunc 'offline', next
+              ], cb
+
             #Done with edit/delete handlers, now render page
             $('#content').html templ websites: websites
+
+            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, extraDataPacker, websiteRow, websites, "website", beforeRender, beforeSubmit
 
             $('#addWebsite').click formBuild.elementForm editWebsite, getNewWebsite(), (err, savedWebsite) ->
               return notify.error "Error saving website: #{err}" if err?

@@ -2,11 +2,16 @@
 (function() {
 
   define(["load/server"], function(server) {
-    return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, before) {
+    return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) {
       var elements, formBuilder, getElementById, uppercaseName,
         _this = this;
-      if (!before) {
-        before = function(cb) {
+      if (beforeRender == null) {
+        beforeRender = function(_, cb) {
+          return cb({});
+        };
+      }
+      if (beforeSubmit == null) {
+        beforeSubmit = function(_, __, cb) {
           return cb();
         };
       }
@@ -24,32 +29,36 @@
       formBuilder = {
         elementForm: function(template, element, onComplete) {
           return function(evt) {
-            var templateObject;
             evt.preventDefault();
-            templateObject = {};
-            templateObject[elementName] = element;
-            $("#" + elementName + "ModalBox").html(template(templateObject));
-            $("#edit" + uppercaseName).modal();
-            $("#edit" + uppercaseName + " .saveButton").click(function(evt) {
-              var fields;
-              evt.preventDefault();
-              fields = getFormFields();
-              if (element.id != null) {
-                fields.id = element.id;
-              }
-              return server.saveModel(fields, uppercaseName, function(err, savedElement) {
-                formBuilder.setElement(savedElement);
-                onComplete(err, savedElement);
-                if (err != null) {
-                  return;
-                }
-                formBuilder.wireUpRow(savedElement.id);
+            return beforeRender(element, function(beforeData) {
+              var templateObject;
+              templateObject = {};
+              templateObject[elementName] = element;
+              $("#" + elementName + "ModalBox").html(template(templateObject));
+              $("#edit" + uppercaseName).modal();
+              $("#edit" + uppercaseName + " .saveButton").click(function(evt) {
+                evt.preventDefault();
+                return beforeSubmit(element, beforeData, function() {
+                  var fields;
+                  fields = getFormFields();
+                  if (element.id != null) {
+                    fields.id = element.id;
+                  }
+                  return server.saveModel(fields, uppercaseName, function(err, savedElement) {
+                    formBuilder.setElement(savedElement);
+                    onComplete(err, savedElement);
+                    if (err != null) {
+                      return;
+                    }
+                    formBuilder.wireUpRow(savedElement.id);
+                    return $("#edit" + uppercaseName).modal('hide');
+                  });
+                });
+              });
+              return $("#edit" + uppercaseName + " .cancelButton").click(function(evt) {
+                evt.preventDefault();
                 return $("#edit" + uppercaseName).modal('hide');
               });
-            });
-            return $("#edit" + uppercaseName + " .cancelButton").click(function(evt) {
-              evt.preventDefault();
-              return $("#edit" + uppercaseName).modal('hide');
             });
           };
         },

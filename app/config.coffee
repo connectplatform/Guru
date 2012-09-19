@@ -75,6 +75,7 @@ paths =
   models:     rel './app/server/models'
   policy:     rel './app/server/policy'
   services:   rel './app/server/services'
+  rest:       rel './app/server/services/rest'
   views:      rel './app/server/views'
 
 path = (spec) ->

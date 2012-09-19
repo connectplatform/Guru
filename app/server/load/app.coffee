@@ -8,6 +8,7 @@ mongo = require "./mongo"
 pulsar = require "./pulsar"
 stoic = require './initStoic'
 createServer = require './createServer'
+loadRest = require './loadRest'
 
 flushCache = config.require 'services/flushCache'
 
@@ -21,6 +22,7 @@ module.exports = (cb) ->
   app.use connect.favicon()
   app.use connect.staticCache()
   app.use connect.static config.paths.public
+  app.use loadRest config.paths.rest
 
   server = createServer port, app
 

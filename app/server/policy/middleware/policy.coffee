@@ -3,7 +3,7 @@ argumentValidations = require './argumentValidations'
 
 module.exports = ->
   argumentValidations()
-  beforeFilter ['isAdministrator'], only: ['deleteModel', 'findModel', 'saveModel']
+  beforeFilter ['isAdministrator'], only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
 
   beforeFilter ['isStaff'],
     except: [

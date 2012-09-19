@@ -22,10 +22,14 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     dermis.route '/websites'
     dermis.route '/specialties'
 
+    # Test route
+    dermis.route '/uploadTest' # TODO: remove when file uploads are working
+
     # chat actions
 
     addMiddleware dermis
 
     dermis.init()
+    console.log 'initialized dermis'
 
     $ onPageLoad

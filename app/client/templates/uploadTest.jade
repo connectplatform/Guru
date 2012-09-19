@@ -1,0 +1,6 @@
+form
+  input(type="file", id="uploadFile", name="uploadFile")
+  input#submit(type="submit")
+
+| Image:
+img(src="https://#{s3.bucket}.s3.amazonaws.com/#{s3.key}")

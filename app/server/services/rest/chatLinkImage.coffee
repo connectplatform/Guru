@@ -1,11 +1,14 @@
 async = require 'async'
 db = config.require 'load/mongo'
-stoic = require 'stoic'
 
 queryOperatorsOnline = (siteName, cb) ->
-  # TODO
-  console.log 'pretend this does something'
-  cb null, true
+  # TODO make this respond to routing rather than just count operators
+  if Math.random() > 0.5
+    console.log 'setting to online'
+    cb null, true
+  else
+    console.log 'setting to offline'
+    cb null, false
 
 updateStatus = (storageLocation, siteName) ->
   queryOperatorsOnline siteName, (err, isOnline) ->
@@ -16,7 +19,7 @@ startUpdates = (storageLocation, siteName) ->
   console.log 'wooooo'
   schedule =  ->
     updateStatus storageLocation, siteName
-  setInterval schedule, 10000
+  setInterval schedule, 3000
 
 module.exports = ({website, args, response}) ->
 
@@ -29,6 +32,7 @@ module.exports = ({website, args, response}) ->
 
     response.writeHead 307, {
       "Location": redirectTarget
+      "Cache-Control": 'no-cache, no-store, max-age=0, must-revalidate'
     }
     console.log 'about to send'
     response.end()

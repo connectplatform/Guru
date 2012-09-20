@@ -3,7 +3,8 @@ rand = config.require 'services/rand'
 pulsar = config.require 'server/load/pulsar'
 
 face = (decorators) ->
-  {session: {role, chatName, unreadMessages, operatorId, allSessions, sessionIdsByOperator}} = decorators
+  {session: {role, chatName, unreadMessages, operatorId, online,
+    allSessions, onlineSessions, sessionIdsByOperator}} = decorators
 
   faceValue =
     create:  (fields, cb) ->
@@ -20,7 +21,9 @@ face = (decorators) ->
       async.parallel [
         session.role.set fields.role
         session.chatName.set fields.chatName
+        session.online.set 'true'
         @allSessions.add id
+        @onlineSessions.add id
         addOperatorId
 
       ], (err, data) ->
@@ -35,6 +38,14 @@ face = (decorators) ->
       role session
       chatName session
       operatorId session
+
+      online session, ({before}) ->
+        before ['set'], (context, [isOnline], next) ->
+
+          # add/remove from onlineSessions
+          op = if isOnline == 'true' then 'add' else 'srem'
+          faceValue.onlineSessions[op] session.id, (err) ->
+            next err, [isOnline]
 
       unreadMessages session, ({after}) ->
 
@@ -59,6 +70,7 @@ face = (decorators) ->
             session.chatName.del
             session.unreadMessages.del
             @allSessions.srem session.id
+            @onlineSessions.srem session.id
           ], cb
 
       notifySession.on 'viewedMessages', (chatId) ->
@@ -70,6 +82,7 @@ face = (decorators) ->
       return session
 
   allSessions faceValue
+  onlineSessions faceValue
   sessionIdsByOperator faceValue
 
   return faceValue
@@ -77,11 +90,13 @@ face = (decorators) ->
 schema =
   'session:!{id}':
     role: 'String'
+    online: 'String'
     chatName: 'String'
     unreadMessages: 'Hash' # k: chatId, v: unreadCount
     operatorId: 'String' #optional
   session:
     allSessions: 'Set'
+    onlineSessions: 'Set'
     sessionIdsByOperator: 'Hash' #k: operatorId, v: sessionId
 
 module.exports = ['Session', face, schema]

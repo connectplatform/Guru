@@ -1,7 +1,7 @@
 async = require 'async'
 stoic = require 'stoic'
 
-createChannel = config.require 'services/createChannel'
+createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 
 module.exports = (res, userData) ->

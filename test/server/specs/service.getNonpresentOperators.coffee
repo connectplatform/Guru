@@ -14,13 +14,13 @@ boiler 'Service - Get Nonpresent Opertors', ->
 
             # Validate returned data
             operatorSessions.length.should.eql 1
-            operatorSessions[0].chatName.should.eql "Admin"
+            operatorSessions[0].chatName.should.eql "Admin Guy"
             operatorSessions[0].role.should.eql "Administrator"
 
             # Make sure we have the right id
             {Session} = stoic.models
             Session.get(operatorSessions[0].id).chatName.get (err, chatName) =>
-              chatName.should.eql "Admin"
+              chatName.should.eql "Admin Guy"
               done()
 
   it "should not return operators who are visible in the chat", (done) ->

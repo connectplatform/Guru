@@ -17,6 +17,6 @@ boiler 'Service - Login', ->
         {Session} = stoic.models
         Session.get(id).chatName.get (err, chatName) =>
           should.not.exist err
-          chatName.should.eql "Admin"
+          chatName.should.eql "Admin Guy"
           @client.disconnect()
           done()

@@ -122,6 +122,7 @@ face = (decorators) ->
     after ['add'], (context, args, next) ->
       sendNotification true
       next null, args
+
   return faceValue
 
 schema =

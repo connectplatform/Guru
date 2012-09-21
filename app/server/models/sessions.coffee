@@ -4,7 +4,7 @@ pulsar = config.require 'server/load/pulsar'
 
 face = (decorators) ->
   {session: {role, chatName, unreadMessages, operatorId, online,
-    allSessions, onlineSessions, sessionIdsByOperator}} = decorators
+    allSessions, onlineSessions, sessionsByOperator}} = decorators
 
   faceValue =
     create:  (fields, cb) ->
@@ -15,7 +15,7 @@ face = (decorators) ->
         return cb() unless fields.operatorId?
         async.parallel [
           session.operatorId.set fields.operatorId
-          @sessionIdsByOperator.set fields.operatorId, id
+          @sessionsByOperator.set fields.operatorId, id
         ], cb
 
       async.parallel [
@@ -81,9 +81,13 @@ face = (decorators) ->
 
       return session
 
-  allSessions faceValue
-  onlineSessions faceValue
-  sessionIdsByOperator faceValue
+  wrapModel = ({after}) ->
+    after ['members', 'all'], (context, sessionIds, next) ->
+      next null, (faceValue.get sessionId for sessionId in sessionIds)
+
+  allSessions faceValue, wrapModel
+  onlineSessions faceValue, wrapModel
+  sessionsByOperator faceValue, wrapModel
 
   return faceValue
 
@@ -97,6 +101,6 @@ schema =
   session:
     allSessions: 'Set'
     onlineSessions: 'Set'
-    sessionIdsByOperator: 'Hash' #k: operatorId, v: sessionId
+    sessionsByOperator: 'Hash' #k: operatorId, v: sessionId
 
 module.exports = ['Session', face, schema]

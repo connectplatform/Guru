@@ -4,24 +4,26 @@ stoic = require 'stoic'
 
 {getType} = config.require 'load/util'
 
-removeVisitors = (sessionId, cb) ->
-  Session.get(sessionId).role.get (err, role) ->
+removeVisitors = (session, cb) ->
+  session.role.get (err, role) ->
     cb role isnt 'Visitor'
 
-filterSessions = (sessionIds, chatId, cb) ->
+filterSessions = (sessions, chatId, done) ->
 
-  async.filter sessionIds, removeVisitors, (operatorList) ->
+  async.filter sessions, removeVisitors, (operatorSessionList) ->
 
     ChatSession.getByChat chatId, (err, presentChatSessions) ->
 
-      removePresentOperators = (sessionId, cb) ->
+      removePresentOperators = (session, cb) ->
         sessionIds = presentChatSessions.map (chatSession) -> chatSession.sessionId
 
-        currentIndex = sessionIds.indexOf sessionId
+        currentIndex = sessionIds.indexOf session.id
         result = null
+
+        #This operator is not in this chat
         if currentIndex < 0
-          #This operator is not in this chat
-          cb null, sessionId
+          cb null, session
+
         else
           currentChatSession = presentChatSessions[currentIndex]
           #This operator is in this chat, but we only weed them out if they're a visible member
@@ -30,20 +32,19 @@ filterSessions = (sessionIds, chatId, cb) ->
               if type is 'member' and isWatching is 'false'
                 result = null
               else
-                result = sessionId
+                result = session
               cb err, result
 
-      async.map operatorList, removePresentOperators, (err, nonpresentList) ->
-        cb err, nonpresentList.filter (element) -> element isnt null
+      async.map operatorSessionList, removePresentOperators, (err, nonpresentList) ->
+        done err, nonpresentList.compact()
 
-packSessionData = (sessionId, cb) ->
-  session = Session.get(sessionId)
+packSessionData = (session, cb) ->
   async.parallel {
     chatName: session.chatName.get
     role: session.role.get
   }, (err, sessionData) ->
     console.log "Error getting session data in getNonpresentOperators: #{err}" if err
-    sessionData.id = sessionId
+    sessionData.id = session.id
     cb sessionData
 
 module.exports = (res, chatId) ->
@@ -51,11 +52,11 @@ module.exports = (res, chatId) ->
     if err
       console.log "Error retrieving sessions in getNonpresentOperators: #{err}"
       return res.reply err, null
-    filterSessions sessionIds, chatId, (err, operatorIds) ->
 
-      #We have the ids of everyone we want to display, now pack their session data
-      async.map operatorIds, packSessionData, (operatorSessions) ->
-        #async.map handles edge cases poorlyhandles edge cases poorly
-        operatorSessions = [] if operatorSessions is undefined
-        operatorSessions = [operatorSessions] unless getType(operatorSessions) is '[object Array]'
-        res.reply err, operatorSessions
+    filterSessions sessionIds, chatId, (err, operatorSessions) ->
+
+      # We have the sessions for everyone we want to display, now get their data
+      async.map operatorSessions, packSessionData, (sessionData=[]) ->
+
+        sessionData = [sessionData] unless getType(sessionData) is '[object Array]'
+        res.reply err, sessionData

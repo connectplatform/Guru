@@ -15,7 +15,7 @@ module.exports = (res, fields) ->
     return res.reply err.message if err?
     return res.reply 'Invalid user or password.' unless user?
 
-    Session.sessionIdsByOperator.get user.id, (err, sessionId) ->
+    Session.sessionsByOperator.get user.id, (err, sessionId) ->
       if sessionId?
         res.cookie 'session', sessionId
         res.reply null, user

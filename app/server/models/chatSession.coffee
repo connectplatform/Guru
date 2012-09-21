@@ -17,11 +17,11 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
 
     # accessors
     chatIndex chatSession, ({after}) ->
-      after ['members'], (context, sessionIds, next) ->
+      after ['members', 'all'], (context, sessionIds, next) ->
         next null, (get sessionId, chatId for sessionId in sessionIds)
 
     sessionIndex chatSession, ({after}) ->
-      after ['members'], (context, chatIds, next) ->
+      after ['members', 'all'], (context, chatIds, next) ->
         next null, (get sessionId, chatId for chatId in chatIds)
 
     relationMeta chatSession, ({before}) ->
@@ -69,10 +69,10 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
 
     # just sugar
     getBySession: tandoor (sessionId, cb) ->
-      get(sessionId).sessionIndex.members cb
+      get(sessionId).sessionIndex.all cb
 
     getByChat: tandoor (chatId, cb) ->
-      get(null, chatId).chatIndex.members cb
+      get(null, chatId).chatIndex.all cb
 
   return chatSession
 

@@ -19,13 +19,13 @@ boiler 'Model - Session', ->
     @getAuthed =>
       sess = Session.get @client.cookie 'session'
       Session.onlineSessions.all (err, sessions) ->
-        sessions.should.include sess.id
+        sessions.map((s) -> s.id).should.include sess.id
 
         sess.online.set 'false', (err, status) ->
           Session.onlineSessions.all (err, sessions) ->
-            sessions.should.not.include sess.id
+            sessions.map((s) -> s.id).should.not.include sess.id
 
             sess.online.set 'true', (err, status) ->
               Session.onlineSessions.all (err, sessions) ->
-                sessions.should.include sess.id
+                sessions.map((s) -> s.id).should.include sess.id
                 done()

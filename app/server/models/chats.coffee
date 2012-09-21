@@ -18,15 +18,15 @@ face = (decorators) ->
   faceValue =
     create: (cb) ->
       id = "chat_#{rand()}"
-      chat = @get id
+      chat = faceValue.get id
 
       # initialization
       async.parallel [
         chat.creationDate.set Date.create()
         chat.status.set 'waiting'
-        @allChats.add id
-      ], (err) ->
+        faceValue.allChats.add id
 
+      ], (err) ->
         console.log "Error adding chat: #{err}" if err?
         cb err, chat
 

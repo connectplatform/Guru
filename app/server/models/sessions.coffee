@@ -1,29 +1,30 @@
 async = require 'async'
 rand = config.require 'services/rand'
 pulsar = config.require 'server/load/pulsar'
+{tandoor} = config.require 'load/util'
 
 face = (decorators) ->
   {session: {role, chatName, unreadMessages, operatorId, online,
     allSessions, onlineOperators, sessionsByOperator}} = decorators
 
   faceValue =
-    create:  (fields, cb) ->
+    create: tandoor (fields, cb) ->
       id = rand()
-      session = @get id
+      session = faceValue.get id
 
       addOperatorId = (cb) =>
         return cb() unless fields.operatorId?
         async.parallel [
           session.operatorId.set fields.operatorId
-          @sessionsByOperator.set fields.operatorId, id
-          @onlineOperators.add id
+          faceValue.sessionsByOperator.set fields.operatorId, id
+          faceValue.onlineOperators.add id
         ], cb
 
       async.parallel [
         session.role.set fields.role
         session.chatName.set fields.chatName
         session.online.set 'true'
-        @allSessions.add id
+        faceValue.allSessions.add id
         addOperatorId
 
       ], (err, data) ->
@@ -69,8 +70,8 @@ face = (decorators) ->
             session.role.del
             session.chatName.del
             session.unreadMessages.del
-            @allSessions.srem session.id
-            @onlineOperators.srem session.id
+            faceValue.allSessions.srem session.id
+            faceValue.onlineOperators.srem session.id
           ], cb
 
       notifySession.on 'viewedMessages', (chatId) ->

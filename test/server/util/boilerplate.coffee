@@ -29,12 +29,15 @@ module.exports = global.boiler = (testName, tests) ->
       @db = db
 
       @getAuthed = (cb) =>
-        @client = @getClient()
         loginData =
           email: 'admin@foo.com'
           password: 'foobar'
+        @getAuthedWith loginData, cb
+
+      @getAuthedWith = (data, cb) =>
+        @client = @getClient()
         @client.ready =>
-          @client.login loginData, cb
+          @client.login data, cb
 
       @newChat = (cb) =>
         @visitor = @getClient()
@@ -101,6 +104,7 @@ module.exports = global.boiler = (testName, tests) ->
         sampleData (err, data) =>
           @adminUser = data[0][0]
           console.log 'error:', err if err?
+          #console.log 'sampleData:', data
           done()
 
     after (done) ->

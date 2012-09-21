@@ -13,3 +13,12 @@ boiler 'Service - Get Available Operators', ->
         should.exist ops
         ops.length.should.eql 0
         done()
+
+  describe 'with one operator', ->
+    it 'should return one result', (done) ->
+      @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
+        @getAvailableOperators 'foo.com', 'Sales', (err, ops) ->
+          should.not.exist err
+          should.exist ops
+          ops.length.should.eql 1, 'Expected one operator.'
+          done()

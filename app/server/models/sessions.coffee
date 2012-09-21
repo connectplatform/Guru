@@ -4,7 +4,7 @@ pulsar = config.require 'server/load/pulsar'
 
 face = (decorators) ->
   {session: {role, chatName, unreadMessages, operatorId, online,
-    allSessions, onlineSessions, sessionsByOperator}} = decorators
+    allSessions, onlineOperators, sessionsByOperator}} = decorators
 
   faceValue =
     create:  (fields, cb) ->
@@ -16,6 +16,7 @@ face = (decorators) ->
         async.parallel [
           session.operatorId.set fields.operatorId
           @sessionsByOperator.set fields.operatorId, id
+          @onlineOperators.add id
         ], cb
 
       async.parallel [
@@ -23,7 +24,6 @@ face = (decorators) ->
         session.chatName.set fields.chatName
         session.online.set 'true'
         @allSessions.add id
-        @onlineSessions.add id
         addOperatorId
 
       ], (err, data) ->
@@ -42,9 +42,9 @@ face = (decorators) ->
       online session, ({before}) ->
         before ['set'], (context, [isOnline], next) ->
 
-          # add/remove from onlineSessions
+          # add/remove from onlineOperators
           op = if isOnline == 'true' then 'add' else 'srem'
-          faceValue.onlineSessions[op] session.id, (err) ->
+          faceValue.onlineOperators[op] session.id, (err) ->
             next err, [isOnline]
 
       unreadMessages session, ({after}) ->
@@ -70,7 +70,7 @@ face = (decorators) ->
             session.chatName.del
             session.unreadMessages.del
             @allSessions.srem session.id
-            @onlineSessions.srem session.id
+            @onlineOperators.srem session.id
           ], cb
 
       notifySession.on 'viewedMessages', (chatId) ->
@@ -86,7 +86,7 @@ face = (decorators) ->
       next null, (faceValue.get sessionId for sessionId in sessionIds)
 
   allSessions faceValue, wrapModel
-  onlineSessions faceValue, wrapModel
+  onlineOperators faceValue, wrapModel
   sessionsByOperator faceValue, wrapModel
 
   return faceValue
@@ -100,7 +100,7 @@ schema =
     operatorId: 'String' #optional
   session:
     allSessions: 'Set'
-    onlineSessions: 'Set'
+    onlineOperators: 'Set'
     sessionsByOperator: 'Hash' #k: operatorId, v: sessionId
 
 module.exports = ['Session', face, schema]

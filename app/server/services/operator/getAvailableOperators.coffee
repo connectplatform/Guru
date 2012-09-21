@@ -5,12 +5,14 @@ db = config.require 'load/mongo'
 {User} = db.models
 
 module.exports = (website, specialty, next) ->
-  Session.onlineSessions.all (err, ops) ->
+  Session.onlineOperators.all (err, ops) ->
 
     query =
-      _id: $in: ops
+      _id: $in: ops.map (o) -> o.id
     query.website = website if website?
     query.specialty = specialty if specialty?
 
     User.find query, (err, users) ->
-      ops.withUserIds users.map (u) -> u._id
+      uids = users.map (u) -> u._id
+      available = ops.filter (o) -> o.id in uids
+      next null, available

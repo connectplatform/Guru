@@ -11,4 +11,5 @@ boiler 'Service - Get Available Operators', ->
       @getAvailableOperators 'foo.com', 'sales', (err, ops) ->
         should.not.exist err
         should.exist ops
-        console.log ops
+        ops.length.should.eql 0
+        done()

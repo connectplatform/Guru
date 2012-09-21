@@ -21,11 +21,11 @@ boiler 'Model - Session', ->
       Session.onlineOperators.all (err, sessions) ->
         sessions.map((s) -> s.id).should.include sess.id
 
-        sess.online.set 'false', (err, status) ->
+        sess.online.set false, (err, status) ->
           Session.onlineOperators.all (err, sessions) ->
             sessions.map((s) -> s.id).should.not.include sess.id
 
-            sess.online.set 'true', (err, status) ->
+            sess.online.set true, (err, status) ->
               Session.onlineOperators.all (err, sessions) ->
                 sessions.map((s) -> s.id).should.include sess.id
                 done()

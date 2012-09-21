@@ -22,7 +22,7 @@ face = (decorators) ->
       async.parallel [
         session.role.set fields.role
         session.chatName.set fields.chatName
-        session.online.set 'true'
+        session.online.set true
         @allSessions.add id
         addOperatorId
 
@@ -39,13 +39,18 @@ face = (decorators) ->
       chatName session
       operatorId session
 
-      online session, ({before}) ->
+      online session, ({before, after}) ->
         before ['set'], (context, [isOnline], next) ->
-
           # add/remove from onlineOperators
-          op = if isOnline == 'true' then 'add' else 'srem'
+          op = if (isOnline is true) then 'add' else 'srem'
           faceValue.onlineOperators[op] session.id, (err) ->
             next err, [isOnline]
+
+        after ['get'], (context, isOnline, next) ->
+          if isOnline is 'true'
+            next null, true
+          else
+            next null, false
 
       unreadMessages session, ({after}) ->
 

@@ -43,9 +43,14 @@ face = (decorators) ->
       online session, ({before, after}) ->
         before ['set'], (context, [isOnline], next) ->
           # add/remove from onlineOperators
-          op = if ((isOnline is true) or (isOnline is 'true')) then 'add' else 'srem'
-          faceValue.onlineOperators[op] session.id, (err) ->
-            next err, [isOnline]
+          session.role.get (err, role) ->
+            console.log 'Error getting role: ', err if err?
+            unless ((role is 'Visitor') or (role is 'None'))
+              op = if ((isOnline is true) or (isOnline is 'true')) then 'add' else 'srem'
+              faceValue.onlineOperators[op] session.id, (err) ->
+                next err, [isOnline]
+            else
+              next null, [isOnline]
 
         after ['get'], (context, isOnline, next) ->
           if isOnline is 'true'

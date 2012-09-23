@@ -5,42 +5,43 @@ createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 
 module.exports = (res, userData) ->
+  {Chat, Session, ChatSession} = stoic.models
   username = userData.username or 'anonymous'
 
-  {Chat, Session, ChatSession} = stoic.models
-  Chat.create (err, chat) ->
-    console.log "error creating chat: #{err}" if err
-    chatId = chat.id
+  # pump chat data into redis
+  createChatData = (next, {chat}) ->
+    visitorMeta =
+      username: username
+      department: null
+      referrerData: userData.referrerData || null
 
-    #TODO: move this up to middleware
-    Session.create {role: 'Visitor', chatName: username}, (err, session) ->
-      console.log "error creating session: #{err}" if err
-      sessionId = session.id
-      res.cookie 'session', sessionId
+    chat.visitor.mset visitorMeta, next
 
-      relationMeta = {
-        isWatching: false,
-        type: 'member'
-      }
+  createChatSession = (next, {chat, session}) ->
+    ChatSession.add session.id, chat.id, { isWatching: false, type: 'member' }, next
 
-      ChatSession.add sessionId, chatId, relationMeta, (err) ->
-        console.log "error creating sessionChat: #{err}" if err
+  #TODO: why doesn't tandoor work?
+  createSession = (next) ->
+    Session.create { role: 'Visitor', chatName: username }, next
 
-        visitorMeta =
-          username: username
-          department: null
-          referrerData: userData.referrerData || null
+  # create all necessary artifacts
+  async.auto {
+    session: createSession
+    chat: Chat.create
+    chatData: ['chat', createChatData]
+    chatSession: ['chat', 'session', createChatSession]
 
-        async.series [
-          chat.visitor.mset visitorMeta
+  }, (err, {chat, session}) ->
 
-        ], (err) ->
-          console.log "redis error in newChat: #{err}" if err
+    # set cookie and create pulsar channel
+    res.cookie 'session', session.id
+    createChannel chat.id
 
-          createChannel chatId
+    # respond to visitor browser
+    res.reply err, channel: chat.id
 
-          res.reply null, channel: chatId
+    # query for ACP data and store it in redis whenever it's available
+    if userData.referrerData
+      populateVisitorAcpData userData.referrerData, chat.id
 
-          #We don't want the visitor to have to wait on this
-          if userData.referrerData
-            populateVisitorAcpData userData.referrerData, chatId
+    #displayToOperators chat, ->

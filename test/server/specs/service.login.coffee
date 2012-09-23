@@ -31,20 +31,16 @@ boiler 'Service - Login', ->
       @client.login loginData, (err) =>
         sessionId = @client.cookie 'session'
 
-        @client.logout (err) =>
+        @client.setSessionOffline @client.cookie('session'), (err) =>
           should.not.exist err
 
-          console.log 'about to relogin'
           @client.login loginData, (err) =>
-            console.log 'logged in'
             should.not.exist err
 
             sessionId.should.eql @client.cookie 'session'
 
             {Session} = stoic.models
-            console.log 'about to get online status'
             Session.get(sessionId).online.get (err, online) =>
-              console.log 'got online status'
               should.not.exist err
               online.should.eql true
               @client.disconnect()

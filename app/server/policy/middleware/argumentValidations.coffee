@@ -32,7 +32,7 @@ module.exports = ->
       'watchChat'
     ]
 
-  beforeFilter ['targetSessionIdIsValid'], only: [ 'inviteOperator', 'transferChat' ]
+  beforeFilter ['targetSessionIdIsValid'], only: [ 'inviteOperator', 'transferChat', 'setSessionOffline' ]
 
   beforeFilter ['modelNameIsValid'], only: [ 'deleteModel', 'findModel', 'saveModel' ]
 

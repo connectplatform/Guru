@@ -5,7 +5,7 @@ loginData =
   email: 'admin@foo.com'
   password: 'foobar'
 
-boiler 'Service - Logout', ->
+boiler 'Service - Set Session Offline', ->
 
   it 'should log you out', (done) ->
 
@@ -18,11 +18,11 @@ boiler 'Service - Logout', ->
         {Session} = stoic.models
         Session.get(id).online.get (err, online) =>
           should.not.exist err
-          online.should.eql true
+          online.should.eql true, "wasn't set online at login"
 
-          @client.logout =>
+          @client.setSessionOffline @client.cookie('session'), =>
             Session.get(id).online.get (err, online) =>
               should.not.exist err
-              online.should.eql false
+              online.should.eql false, "wasn't set offline at logout"
               @client.disconnect()
               done()

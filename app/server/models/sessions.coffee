@@ -1,29 +1,30 @@
 async = require 'async'
 rand = config.require 'services/rand'
 pulsar = config.require 'server/load/pulsar'
+{tandoor} = config.require 'load/util'
 
 face = (decorators) ->
   {session: {role, chatName, unreadMessages, operatorId, online,
     allSessions, onlineOperators, sessionsByOperator}} = decorators
 
   faceValue =
-    create:  (fields, cb) ->
+    create: tandoor (fields, cb) ->
       id = rand()
-      session = @get id
+      session = faceValue.get id
 
       addOperatorId = (cb) =>
         return cb() unless fields.operatorId?
         async.parallel [
           session.operatorId.set fields.operatorId
-          @sessionsByOperator.set fields.operatorId, id
-          @onlineOperators.add id
+          faceValue.sessionsByOperator.set fields.operatorId, id
+          faceValue.onlineOperators.add id
         ], cb
 
       async.parallel [
         session.role.set fields.role
         session.chatName.set fields.chatName
-        session.online.set true
-        @allSessions.add id
+        session.online.set 'true'
+        faceValue.allSessions.add id
         addOperatorId
 
       ], (err, data) ->
@@ -42,7 +43,7 @@ face = (decorators) ->
       online session, ({before, after}) ->
         before ['set'], (context, [isOnline], next) ->
           # add/remove from onlineOperators
-          op = if (isOnline is true) then 'add' else 'srem'
+          op = if ((isOnline is true) or (isOnline is 'true')) then 'add' else 'srem'
           faceValue.onlineOperators[op] session.id, (err) ->
             next err, [isOnline]
 
@@ -74,8 +75,8 @@ face = (decorators) ->
             session.role.del
             session.chatName.del
             session.unreadMessages.del
-            @allSessions.srem session.id
-            @onlineOperators.srem session.id
+            faceValue.allSessions.srem session.id
+            faceValue.onlineOperators.srem session.id
           ], cb
 
       notifySession.on 'viewedMessages', (chatId) ->

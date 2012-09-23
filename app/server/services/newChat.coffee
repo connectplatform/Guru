@@ -44,4 +44,4 @@ module.exports = (res, userData) ->
     if userData.referrerData
       populateVisitorAcpData userData.referrerData, chat.id
 
-    #displayToOperators chat, ->
+    #showToValidOperators chat, ->

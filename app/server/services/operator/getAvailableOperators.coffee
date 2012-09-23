@@ -4,12 +4,14 @@ stoic = require 'stoic'
 
 db = config.require 'load/mongo'
 {User} = db.models
-{ObjectId} = db.Schema.Types
 
-module.exports = (website, specialty, next) ->
+module.exports = (website, specialty, done) ->
 
   # get a list of operator sessions
   Session.onlineOperators.all (err, sessions) ->
+
+    # go no further if we can't find any sessions
+    return done err, sessions if err or sessions.length > 0
 
     # get required data from each session
     getSessionData = (sess, next) ->
@@ -25,8 +27,9 @@ module.exports = (website, specialty, next) ->
       query.websites = website if website
       query.specialties = specialty if specialty
 
+      # filter based on operator website/specialty
       User.find query, (err, users) ->
-        return next err if err?
+        return done err if err?
         uids = users.map (u) -> u._id.toString()
         available = opSessions.filter (o) -> o.operatorId in uids
-        next null, available
+        done null, available # [{sessionId, operatorId}]

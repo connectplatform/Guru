@@ -2,6 +2,7 @@ async = require 'async'
 {tandoor} = config.require 'load/util'
 pulsar = config.require 'load/pulsar'
 getInvites = config.require 'services/getInvites'
+notifySession = config.require 'services/session/notifySession'
 
 stoic = require 'stoic'
 {Chat, Session} = stoic.models
@@ -53,6 +54,10 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
 
       ], (err) ->
         console.log "Error adding chatSession: #{err}" if err?
+        return cb err if err
+
+        # send pulsar notifications
+        notifySession sessionId, metaInfo, true
         cb err, cs
 
     remove: tandoor (sessionId, chatId, cb) ->
@@ -84,7 +89,7 @@ schema =
     'chatIndex:!{chatId}': 'Set'
     'relationMeta:!{sessionId}:!{chatId}': 'Hash'
     # meta keys: isWatching: true|false
-    #            type: member|invite|transfer
+    #            type: member|invite|transfer|list|new
     #            requestor: sessionID (optional)
 
 module.exports = ['ChatSession', face, schema]

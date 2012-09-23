@@ -3,8 +3,12 @@
 
   define(["load/server"], function(server) {
     return function() {
-      server.cookie('session', null);
-      return window.location = '/';
+      return server.ready(function() {
+        return server.setSessionOffline(server.cookie('session'), function(err) {
+          server.cookie('session', null);
+          return window.location = '/';
+        });
+      });
     };
   });
 

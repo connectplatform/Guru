@@ -1,3 +1,11 @@
+setLogoffOnPageExit = (server) ->
+  console.log "logoff set"
+  $(window).unload ->
+    sessionId = server.cookie('session')
+    server.cookie 'session', null
+    console.log "cookie after unload: ", server.cookie 'session'
+    server.setSessionOffline sessionId, ->
+
 define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"],
   (server, notify, sidebar, sbTemp, util, registerSessionUpdates) ->
     (args, templ) ->
@@ -10,7 +18,8 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
       $('#login-modal').on 'hide', ->
         window.location.hash = '/'
 
-      $('#login-form').submit ->
+      $('#login-form').submit (evt) ->
+        evt.preventDefault()
         fields =
           email: $('#login-form #email').val()
           password: $('#login-form #password').val()
@@ -20,9 +29,8 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
             return notify.error "Error logging in: #{err}" if err?
             $('#login-modal').modal 'hide'
             registerSessionUpdates()
+            setLogoffOnPageExit server
             window.location.hash = '/dashboard'
-
-        return false
 
       $('#login-cancel-button').click ->
         $('#login-modal').modal 'hide'

@@ -29,7 +29,7 @@ boiler 'Service - showToValidOperators', ->
       session = @client.cookie 'session'
 
       myAlerts = @getPulsar().channel "notify:session:#{session}"
-      myAlerts.on 'unansweredCount', ({count}) ->
+      myAlerts.on 'unansweredChats', ({count}) ->
         count.should.eql 1
         done()
 

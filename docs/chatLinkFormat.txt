@@ -1,0 +1,5 @@
+The link to the chat image should be of the form:
+
+domain/siteName/chatLinkImage
+
+where "domain" is the domain that guru is being hosted on, and "siteName" is the name given to the target website on the website admin page

@@ -3,6 +3,7 @@ stoic = require 'stoic'
 
 createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
+showToValidOperators = config.require 'services/operator/showToValidOperators'
 
 module.exports = (res, userData) ->
   {Chat, Session, ChatSession} = stoic.models
@@ -44,4 +45,9 @@ module.exports = (res, userData) ->
     if userData.referrerData
       populateVisitorAcpData userData.referrerData, chat.id
 
-    #showToValidOperators chat, ->
+    chatData =
+      chatId: chat.id
+      website: userData.website
+      specialty: userData.department
+
+    showToValidOperators chatData, ->

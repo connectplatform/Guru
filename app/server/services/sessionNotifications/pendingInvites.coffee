@@ -1,7 +1,7 @@
 filterChats = config.require 'services/operator/filterChats'
 
 module.exports = (sessionId, done) ->
-  filterChats sessionId, 'new', (err, chats) ->
-    message = {count: chats.length}
-    event = 'unansweredChats'
+  filterChats sessionId, ['invite', 'transfer'], (err, chats) ->
+    message = chats
+    event = 'pendingInvites'
     done err, event, message

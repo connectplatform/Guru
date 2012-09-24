@@ -30,6 +30,7 @@ boiler 'Service - showToValidOperators', ->
 
       myAlerts = @getPulsar().channel "notify:session:#{session}"
       myAlerts.on 'unansweredChats', ({count}) ->
+        should.exist count, 'expected chat count'
         count.should.eql 1
         done()
 

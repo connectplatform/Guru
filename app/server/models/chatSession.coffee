@@ -2,7 +2,6 @@ async = require 'async'
 {tandoor} = config.require 'load/util'
 pulsar = config.require 'load/pulsar'
 getInvites = config.require 'services/getInvites'
-notifySession = config.require 'services/session/notifySession'
 
 stoic = require 'stoic'
 {Chat, Session} = stoic.models
@@ -25,13 +24,7 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
       after ['members', 'all'], (context, chatIds, next) ->
         next null, (get sessionId, chatId for chatId in chatIds)
 
-    relationMeta chatSession, ({before}) ->
-      before ['mset', 'set'], (context, args, next) ->
-        getInvites chatSession, (err, chats) ->
-          notify = pulsar.channel "notify:session:#{sessionId}"
-          notify.emit 'newInvites', chats
-
-        next null, args
+    relationMeta chatSession
 
     # relations
     chatSession.session = Session.get sessionId
@@ -57,6 +50,7 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
         return cb err if err
 
         # send pulsar notifications
+        notifySession = config.require 'services/session/notifySession'
         notifySession sessionId, metaInfo, true
         cb err, cs
 

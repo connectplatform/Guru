@@ -106,22 +106,7 @@ face = (decorators) ->
 
   allChats faceValue
 
-  unansweredChats faceValue, ({before, after}) ->
-
-    sendNotification = (didIncrease) ->
-      faceValue.unansweredChats.count (err, chatCount) ->
-        notify = pulsar.channel 'notify:operators'
-        notification = {isNew: didIncrease, count: chatCount}
-        notify.emit 'unansweredCount', notification
-
-    # whenever an unansweredChat is added/removed, notify the operators
-    after ['srem'], (context, args, next) ->
-      sendNotification false
-      next null, args
-
-    after ['add'], (context, args, next) ->
-      sendNotification true
-      next null, args
+  unansweredChats faceValue
 
   return faceValue
 

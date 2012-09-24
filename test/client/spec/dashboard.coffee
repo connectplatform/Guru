@@ -1,10 +1,10 @@
 require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'], (mock, {hasText, exists}, pulsar) ->
 
   sendInvite = ->
-    pulsar.channel('notify:session:session_foo').emit 'newInvites', {chatId: 'chat_3', type: 'invite'}
+    pulsar.channel('notify:session:session_foo').emit 'pendingInvites', {chatId: 'chat_3', type: 'invite'}
 
   sendWaitingChats = ->
-    pulsar.channel('notify:operators').emit 'unansweredCount', {isNew: true, count: 3}
+    pulsar.channel('notify:session:session_foo').emit 'unansweredChats', {count: 3}, true
 
   describe 'Dashboard', ->
     beforeEach ->

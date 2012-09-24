@@ -25,17 +25,16 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
         updateBadge "#sidebar .notifyUnread", countUnreadMessages stats.unreadMessages
 
         sessionID = server.cookie 'session'
-        operatorUpdates = pulsar.channel 'notify:operators'
         sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
 
-        operatorUpdates.on 'unansweredCount', ({isNew, count}) ->
+        sessionUpdates.on 'unansweredChats', ({count}, chime) ->
           updateBadge "#sidebar .notifyUnanswered", count
-          playSound "newChat" if isNew
+          playSound "newChat" if chime
 
-        sessionUpdates.on 'newInvites', (invites) ->
-          newInvites = invites.keys().length
-          updateBadge "#sidebar .notifyInvites", newInvites, 'warning'
-          playSound "newInvite" if newInvites > 0
+        sessionUpdates.on 'pendingInvites', (invites) ->
+          pendingInvites = invites.keys().length
+          updateBadge "#sidebar .notifyInvites", pendingInvites, 'warning'
+          playSound "newInvite" if pendingInvites > 0
 
         sessionUpdates.on 'unreadMessages', (unread) ->
           newMessages = countUnreadMessages unread

@@ -6,7 +6,7 @@ boiler 'Service - Get Logo For Chat', ->
     chatData =
       username: 'aVisitor'
       referrerData:
-        websiteUrl: 'http://www.example.com'
+        websiteUrl: 'www.example.com'
 
     @client = @getClient()
     @client.ready =>
@@ -15,6 +15,6 @@ boiler 'Service - Get Logo For Chat', ->
 
         @client.getLogoForChat channel, (err, url) =>
           should.not.exist err
-          url.should.eql "http://#{config.app.aws.s3.bucket}.s3.amazonaws.com/#{encodeURIComponent chatData.referrerData.websiteUrl}/logo"
+          url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{encodeURIComponent chatData.referrerData.websiteUrl}/logo"
           @client.disconnect()
           done()

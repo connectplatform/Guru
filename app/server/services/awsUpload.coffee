@@ -13,6 +13,9 @@ module.exports = (res, siteUrl, imageName) ->
   fields.bucket = config.app.aws.s3.bucket
   fields.maxSize = config.app.aws.s3.maxSize
 
+  console.log "siteUrl: ", siteUrl
+  console.log "key: ", fields.key
+
   policy =
     expiration: new Date(Date.now() + (4 * 60 * 60 * 1000)) # 4 hours from now
     conditions: [

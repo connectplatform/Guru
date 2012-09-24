@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender"],
-  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender) ->
+define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/websiteLogo"],
+  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, logoTemplate) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
@@ -42,6 +42,7 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
 
           # display chat logo
           server.getLogoForChat chatId, (err, logoUrl) ->
+            console.log "logoUrl: ", logoUrl
             notify.error "Error getting logo url: #{err}" if err
             $(".websiteLogo").html logoTemplate logo: logoUrl
 

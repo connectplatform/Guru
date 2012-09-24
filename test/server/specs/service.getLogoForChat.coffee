@@ -1,5 +1,4 @@
 should = require 'should'
-querystring = require 'querystring'
 
 boiler 'Service - Get Logo For Chat', ->
 
@@ -11,11 +10,11 @@ boiler 'Service - Get Logo For Chat', ->
 
     @client = @getClient()
     @client.ready =>
-      @client.newChat chatData, (err, chatId) =>
+      @client.newChat chatData, (err, {channel}) =>
         should.not.exist err
 
-        @client.getLogoForChat chatId, (err, url) =>
+        @client.getLogoForChat channel, (err, url) =>
           should.not.exist err
-          url.should.eql "http://#{config.app.aws.s3.bucket}.s3.amazonaws.com/#{querystring.stringify chatData.referrerData.websiteUrl}/logo"
+          url.should.eql "http://#{config.app.aws.s3.bucket}.s3.amazonaws.com/#{encodeURIComponent chatData.referrerData.websiteUrl}/logo"
           @client.disconnect()
           done()

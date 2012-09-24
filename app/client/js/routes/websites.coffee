@@ -29,7 +29,6 @@ define ["load/server", "load/notify", "templates/editWebsite", "templates/delete
               acpEndpoint: ""
               acpApiKey: ""
             }
-            console.log site
             site
 
           # find all websites and populate listing
@@ -37,7 +36,6 @@ define ["load/server", "load/notify", "templates/editWebsite", "templates/delete
             console.log "err retrieving websites: #{err}" if err
 
             beforeRender = (element, cb) ->
-              console.log "element: ", element
               server.awsUpload element.url, 'logo', (err, logoFields) ->
                 server.awsUpload element.url, 'online', (err, onlineFields) ->
                   server.awsUpload element.url, 'offline', (err, offlineFields) ->

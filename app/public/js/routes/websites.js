@@ -53,6 +53,7 @@
               console.log("err retrieving websites: " + err);
             }
             beforeRender = function(element, cb) {
+              console.log("element: ", element);
               return server.awsUpload(element.name, 'logo', function(err, logoFields) {
                 return server.awsUpload(element.name, 'online', function(err, onlineFields) {
                   return server.awsUpload(element.name, 'offline', function(err, offlineFields) {

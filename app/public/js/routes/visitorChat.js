@@ -34,7 +34,7 @@
             appendChatMessage = function(message) {
               return $(".chat-display-box").append(chatMessage(message));
             };
-            return server.getChatHistory(chatId, function(err, history) {
+            server.getChatHistory(chatId, function(err, history) {
               var msg, _i, _len;
               if (err) {
                 notify.error("Error loading chat history: " + err);
@@ -51,6 +51,14 @@
                 self.channel.removeAllListeners('serverMessage');
                 return $(".message-form").hide();
               });
+            });
+            return server.getLogoForChat(chatId, function(err, logoUrl) {
+              if (err) {
+                notify.error("Error getting logo url: " + err);
+              }
+              return $(".websiteLogo").html(logoTemplate({
+                logo: logoUrl
+              }));
             });
           });
         });

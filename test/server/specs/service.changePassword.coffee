@@ -4,10 +4,7 @@ boiler 'Service - Change Password', ->
 
   before ->
     @changePassword = (client, cb) =>
-      loginData =
-        email: 'admin@foo.com'
-        password: 'foobar'
-      client.login loginData, (err, user) =>
+      client.login @adminLogin, (err, user) =>
         should.not.exist err
         @emailLoggedInAs = user.email
         client.changePassword "foobar", "newPassword", (err) =>
@@ -37,10 +34,7 @@ boiler 'Service - Change Password', ->
     client.ready =>
       @changePassword client, =>
         #try to log in with old password
-        loginData =
-          email: 'admin@foo.com'
-          password: "foobar"
-        client.login loginData, (err, user) =>
+        client.login @adminLogin, (err, user) =>
 
           #verify that login failed
           err.should.eql "Invalid user or password."

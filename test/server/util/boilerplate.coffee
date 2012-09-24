@@ -27,12 +27,16 @@ module.exports = global.boiler = (testName, tests) ->
       @getClient = -> Vein.createClient port: testPort
       @getPulsar = -> Pulsar.createClient port: pulsarPort
       @db = db
+      @testPort = testPort
 
+      @adminLogin =
+        email: 'admin@foo.com'
+        password: 'foobar'
+      @guru1Login =
+        email: 'guru1@foo.com'
+        password: 'foobar'
       @getAuthed = (cb) =>
-        loginData =
-          email: 'admin@foo.com'
-          password: 'foobar'
-        @getAuthedWith loginData, cb
+        @getAuthedWith @adminLogin, cb
 
       @getAuthedWith = (data, cb) =>
         @client = @getClient()

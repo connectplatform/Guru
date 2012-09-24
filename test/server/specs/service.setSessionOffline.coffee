@@ -1,17 +1,13 @@
 should = require 'should'
 stoic = require 'stoic'
 
-loginData =
-  email: 'admin@foo.com'
-  password: 'foobar'
-
 boiler 'Service - Set Session Offline', ->
 
   it 'should log you out', (done) ->
 
     @client = @getClient()
     @client.ready =>
-      @client.login loginData, (err, userInfo) =>
+      @client.login @adminLogin, (err, userInfo) =>
         should.not.exist err
         id = @client.cookie 'session'
 

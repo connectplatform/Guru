@@ -36,6 +36,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, 'true'
         server.getChatHistory = (args..., cb) ->
           cb null, []
+        server.getLogoForChat = (args..., cb) ->
+          cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'www.example.com'}/logo"
 
       activeChats: ->
         server.getActiveChats = (args..., cb) ->

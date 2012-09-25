@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender"],
-  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender) ->
+define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "templates/imageTemplate"],
+  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, imageTemplate) ->
     channels: []
     setup:
       (args, templ) ->
@@ -28,7 +28,15 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
             $('#content').html templ chats: chats
 
+            renderLogo = (chat) ->
+              console.log "renderLogo called"
+              server.getLogoForChat chat.id, (err, logoUrl) ->
+                notify.error "Error getting logo for chat ", err if err?
+                console.log "logoUrl: ", logoUrl
+                $("##{chat.renderedId} .websiteLogo").html imageTemplate source: logoUrl
+
             for chat in chats
+              renderLogo chat
               $("#referrerTree#{chat.renderedId}").treeview {
                 collapsed: true,
                 persist: "location"

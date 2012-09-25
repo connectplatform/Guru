@@ -4,7 +4,6 @@ compact = (arr) ->
   return (item for item in arr when not (getType(item) is '[object Undefined]'))
 
 curry = (fn, args...) ->
-  args = compact args
   fn.bind fn.prototype, args...
 
 module.exports =
@@ -16,9 +15,9 @@ module.exports =
   # In English: Enables autocurrying, so if you haven't provided the callback
   # yet you'll get a curried function instead of premature execution.
   tandoor: (meat) ->
-    naan = (args..., next) ->
-      unless getType(next) == '[object Function]'
-        return curry naan, args..., next
-      meat args..., next
+    naan = (args...) ->
+      unless args.last().isFunction()
+        return curry naan, args...
+      meat args...
 
     return naan

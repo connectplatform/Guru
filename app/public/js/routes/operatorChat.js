@@ -26,12 +26,6 @@
               if (chat.visitor.acpData != null) {
                 chat.visitor.acpData = util.jsonToUl(chat.visitor.acpData);
               }
-              if (chat.visitor.referrerData != null) {
-                chat.visitor.referrerData = JSON.parse(chat.visitor.referrerData);
-              }
-              if (chat.visitor.referrerData != null) {
-                chat.visitor.referrerData = util.jsonToUl(chat.visitor.referrerData);
-              }
             }
             $('#content').html(templ({
               chats: chats
@@ -51,10 +45,6 @@
             for (_j = 0, _len1 = chats.length; _j < _len1; _j++) {
               chat = chats[_j];
               renderLogo(chat);
-              $("#referrerTree" + chat.renderedId).treeview({
-                collapsed: true,
-                persist: "location"
-              });
               $("#acpTree" + chat.renderedId).treeview({
                 collapsed: true,
                 persist: "location"

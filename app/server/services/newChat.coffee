@@ -17,6 +17,11 @@ module.exports = (res, userData) ->
 
     chat.visitor.mset visitorMeta, next
 
+  setChatWebsite = (next, {chat}) ->
+    website = userData.referrerData?.websiteUrl
+    return next() unless website
+    chat.website.set website, next
+
   createChatSession = (next, {chat, session}) ->
     ChatSession.add session.id, chat.id, { isWatching: false, type: 'member' }, next
 
@@ -29,6 +34,7 @@ module.exports = (res, userData) ->
     session: createSession
     chat: Chat.create
     chatData: ['chat', createChatData]
+    website: ['chat', setChatWebsite]
     chatSession: ['chat', 'session', createChatSession]
 
   }, (err, {chat, session}) ->

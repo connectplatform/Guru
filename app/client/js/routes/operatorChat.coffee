@@ -23,9 +23,6 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               chat.visitor.acpData = JSON.parse chat.visitor.acpData if chat.visitor.acpData?
               chat.visitor.acpData = util.jsonToUl chat.visitor.acpData if chat.visitor.acpData?
 
-              chat.visitor.referrerData = JSON.parse chat.visitor.referrerData if chat.visitor.referrerData?
-              chat.visitor.referrerData = util.jsonToUl chat.visitor.referrerData if chat.visitor.referrerData?
-
             $('#content').html templ chats: chats
 
             renderLogo = (chat) ->
@@ -37,11 +34,6 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
             for chat in chats
               renderLogo chat
-              $("#referrerTree#{chat.renderedId}").treeview {
-                collapsed: true,
-                persist: "location"
-              }
-
               $("#acpTree#{chat.renderedId}").treeview {
                 collapsed: true,
                 persist: "location"

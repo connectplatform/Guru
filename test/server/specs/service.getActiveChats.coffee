@@ -4,20 +4,21 @@ stoic = require 'stoic'
 boiler 'Service - Get Active Chats', ->
 
   it 'should return data on all existing chats', (done) ->
-    @newChat =>
-      @getAuthed =>
+    @getAuthed =>
+      @newChat =>
 
         # get active chats
         @client.getActiveChats (err, [chatData]) ->
           should.not.exist err
+          should.exist chatData, 'expected a chat record'
           chatData.visitor.username.should.eql 'visitor'
           chatData.status.should.eql 'waiting'
           should.exist new Date chatData.creationDate
           done()
 
   it 'should return operators for chats', (done) ->
-    @newChat =>
-      @getAuthed =>
+    @getAuthed =>
+      @newChat =>
 
         # have our operator join the chat
         @client.joinChat @chatChannelName, =>
@@ -31,13 +32,14 @@ boiler 'Service - Get Active Chats', ->
             done()
 
   it 'should sort the chats', (done) ->
-    @createChats (err, chats) =>
-      @getAuthed =>
+    @getAuthed =>
+      session = @client.cookie 'session'
+      @createChats (err, chats) =>
 
         # add an invite for the present operator
         inviteChat = chats[2]
         {ChatSession} = stoic.models
-        ChatSession.add @client.cookie('session'), inviteChat.id, {type: 'invite'}, =>
+        ChatSession.add session, inviteChat.id, {type: 'invite'}, =>
 
           # get active chats
           @client.getActiveChats (err, chats) ->

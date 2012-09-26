@@ -4,8 +4,8 @@ boiler 'Service - Leave Chat', ->
 
   it 'should remove current operator from chat', (done) ->
     # Setup
-    @newChat =>
-      @getAuthed =>
+    @getAuthed =>
+      @newChat =>
         @client.acceptChat @chatChannelName, (err) =>
           should.not.exist err
 
@@ -21,24 +21,25 @@ boiler 'Service - Leave Chat', ->
 
               # Check whether the chat has the right status
               @client.getActiveChats (err, [chat]) =>
+                should.exist chat, 'expected one chat record'
                 chat.status.should.eql 'waiting'
 
                 done()
 
   it 'should not change status if there is another operator', (done) ->
     # Setup
-    @newChat =>
-      firstClient = @getClient()
-      firstClient.ready =>
-        loginData =
-          email: 'guru1@foo.com'
-          password: 'foobar'
-        firstClient.login loginData, =>
-          firstClient.acceptChat @chatChannelName, (err) =>
-            should.not.exist err
-            firstClient.disconnect()
+    @getAuthed =>
+      @newChat =>
+        firstClient = @getClient()
+        firstClient.ready =>
+          loginData =
+            email: 'guru1@foo.com'
+            password: 'foobar'
+          firstClient.login loginData, =>
+            firstClient.acceptChat @chatChannelName, (err) =>
+              should.not.exist err
+              firstClient.disconnect()
 
-            @getAuthed =>
               @client.joinChat @chatChannelName, (err) =>
                 should.not.exist err
 
@@ -54,6 +55,7 @@ boiler 'Service - Leave Chat', ->
 
                     # Check whether the chat has the right status
                     @client.getActiveChats (err, [chat]) =>
+                      should.exist chat, 'expected one chat record'
                       chat.status.should.eql 'active'
 
                       done()

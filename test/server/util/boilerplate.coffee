@@ -104,7 +104,6 @@ module.exports = global.boiler = (testName, tests) ->
         sampleData (err, data) =>
           @adminUser = data[0][0]
           console.log 'error:', err if err?
-          #console.log 'sampleData:', data
           done()
 
     after (done) ->

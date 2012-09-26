@@ -8,10 +8,12 @@ getChatRelations = config.require 'services/chats/getChatRelations'
 module.exports = (res) ->
   {Chat, ChatSession} = stoic.models
 
-  getChatRelations res.cookie('session'), (err, relations) ->
+  Chat.allChats.all (err, chatIds) ->
 
-    Chat.allChats.all (err, chatIds) ->
+    getChatRelations res.cookie('session'), (err, relations) ->
+
       async.map chatIds, getFullChatData, (err1, chats) ->
+
         chat.relation = relations[chat.id] for chat in chats
         chats = chats.sortBy chatPriority
         res.reply err, chats

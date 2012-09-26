@@ -4,7 +4,7 @@ async = require 'async'
 stoic = require 'stoic'
 {ChatSession} = stoic.models
 
-module.exports = tandoor (sessionId, relationTypes, done) ->
+module.exports = tandoor (chatSessions, relationTypes, done) ->
   if getType(relationTypes) != '[object Array]'
     relationTypes = [relationTypes]
 
@@ -17,7 +17,6 @@ module.exports = tandoor (sessionId, relationTypes, done) ->
       else
         next()
 
-  ChatSession.get(sessionId).sessionIndex.members (err, chats) ->
-    async.map chats, filter, (err, chats) ->
-      chats = compact chats if chats?
-      done err, chats
+  async.map chatSessions, filter, (err, chats) ->
+    chats = compact chats if chats?
+    done err, chats

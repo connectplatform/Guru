@@ -31,6 +31,8 @@ config =
         secretKey: '4IdLGyU52rbz3pFrTLJjgZIJnyT7FkrxRQTSrJDr'
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
+    redis:
+      database: 1
 
   production:
     app:
@@ -61,6 +63,8 @@ config =
 
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
+    redis:
+      database: 0
 
 paths =
   root:       rel '.'

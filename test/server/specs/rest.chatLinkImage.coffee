@@ -16,17 +16,14 @@ boiler 'REST - Chat Link Image', ->
     it 'should redirect you based on whether operators are online', (done) ->
       @expectOffline =>
 
-        @client = @getClient()
-        @client.ready =>
+        @getAuthed =>
+          sessionId = @client.cookie 'session'
 
-          @client.login @adminLogin, (err) =>
-            sessionId = @client.cookie 'session'
+          @expectOnline =>
 
-            @expectOnline =>
-          
-              @client.setSessionOffline @client.cookie('session'), (err) =>
-                should.not.exist err
-                @expectOffline =>
+            @client.setSessionOffline @client.cookie('session'), (err) =>
+              should.not.exist err
+              @expectOffline =>
 
-                  @client.disconnect()
-                  done()
+                @client.disconnect()
+                done()

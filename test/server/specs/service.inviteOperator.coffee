@@ -8,22 +8,20 @@ boiler 'Service - Invite Operator', ->
     @newChat =>
 
       # create invitee
-      client = @getClient()
-      client.ready =>
-        client.login @guru1Login, (err) =>
-          throw new Error err if err
+      @guru1Login (err, @client) =>
+        throw new Error err if err
 
-          # get the invitee's session
-          @targetSession = client.cookie 'session'
-          client.disconnect()
+        # get the invitee's session
+        @targetSession = client.cookie 'session'
+        client.disconnect()
 
-          # create inviter
-          @getAuthed =>
+        # create inviter
+        @getAuthed =>
 
-            # accept the chat
-            @client.acceptChat @chatChannelName, (err) =>
-              should.not.exist err
-              done()
+          # accept the chat
+          @client.acceptChat @chatChannelName, (err) =>
+            should.not.exist err
+            done()
 
   it "should let you invite an operator to the chat", (done) ->
 

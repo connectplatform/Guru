@@ -1,20 +1,30 @@
 async = require 'async'
-stoic = require 'stoic'
+stoic = config.require 'load/initStoic'
 
 getFullChatData = config.require 'services/chats/getFullChatData'
 chatPriority = config.require 'services/chats/chatPriority'
 getChatRelations = config.require 'services/chats/getChatRelations'
+getOperatorData = config.require 'services/operator/getOperatorData'
 
 module.exports = (res) ->
   session = res.cookie 'session'
   {Chat, ChatSession} = stoic.models
+  getOperatorData session, (err, my) ->
 
-  Chat.allChats.all (err, chatIds) ->
+    isRelevant = (chat) ->
+      return true if my.role in ['Administrator', 'Supervisor']
+      return false if chat.website not in my.websites
+      return false if chat.department and chat.department not in my.specialties
+      return true
 
-    getChatRelations session, (err, relations) ->
+    Chat.allChats.all (err, chatIds) ->
 
-      async.map chatIds, getFullChatData, (err1, chats) ->
+      getChatRelations session, (err, relations) ->
 
-        chat.relation = relations[chat.id] for chat in chats
-        chats = chats.sortBy chatPriority
-        res.reply err, chats
+        async.map chatIds, getFullChatData, (err1, chats) ->
+
+          chats.filter isRelevant
+
+          chat.relation = relations[chat.id] for chat in chats
+          chats = chats.sortBy chatPriority
+          res.reply err, chats

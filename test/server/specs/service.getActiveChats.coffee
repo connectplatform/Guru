@@ -8,12 +8,14 @@ boiler 'Service - Get Active Chats', ->
       @newChat =>
 
         # get active chats
-        @client.getActiveChats (err, [chatData]) ->
+        @client.getActiveChats (err, [chatData]) =>
           should.not.exist err
           should.exist chatData, 'expected a chat record'
           chatData.visitor.username.should.eql 'visitor'
           chatData.status.should.eql 'waiting'
           should.exist new Date chatData.creationDate
+
+          @client.disconnect()
           done()
 
   it 'should return operators for chats', (done) ->
@@ -24,12 +26,30 @@ boiler 'Service - Get Active Chats', ->
         @client.joinChat @chatChannelName, =>
 
           # get active chats
-          @client.getActiveChats (err, [chatData]) ->
+          @client.getActiveChats (err, [chatData]) =>
             should.not.exist err
             should.exist chatData.operators
             chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
 
+            @client.disconnect()
             done()
+
+  it 'should return operators for chats', (done) ->
+    chatData =
+      username: 'visitor'
+      department: 'foo'
+      referrerData: JSON.stringify {websiteUrl: 'foo.com'}
+
+    @guru3Login (err, @client) =>
+      @newChatWith chatData, =>
+
+        # get active chats
+        @client.getActiveChats (err, [chatData]) =>
+          should.exist chatData.operators
+          chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
+
+          @client.disconnect()
+          done()
 
   it 'should sort the chats', (done) ->
     @getAuthed =>
@@ -42,12 +62,13 @@ boiler 'Service - Get Active Chats', ->
         ChatSession.add session, inviteChat.id, {type: 'invite'}, =>
 
           # get active chats
-          @client.getActiveChats (err, chats) ->
+          @client.getActiveChats (err, chats) =>
             should.not.exist err
             should.exist chats
             chats.length.should.eql 4
 
-            visitorNames = chats.map (chat) -> chat.visitor.username
+            visitorNames = chats.map (chat) => chat.visitor.username
             visitorNames.should.eql ['Ralph', 'Bob', 'Suzie', 'Frank']
 
+            @client.disconnect()
             done()

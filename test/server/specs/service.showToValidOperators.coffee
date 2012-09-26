@@ -23,7 +23,8 @@ boiler 'Service - showToValidOperators', ->
 
   describe 'with a valid operator', ->
     beforeEach (done) ->
-      @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, done
+      @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, (err, @client) =>
+        done()
 
     it 'should notify that operator', (done) ->
       session = @client.cookie 'session'

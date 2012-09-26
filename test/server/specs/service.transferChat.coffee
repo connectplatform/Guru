@@ -1,17 +1,6 @@
 should = require 'should'
 stoic = require 'stoic'
 
-beforeEach (done) ->
-  @loginOperator = (cb) =>
-    client = @getClient()
-    client.ready =>
-      client.login @guru1Login, (err) =>
-        throw new Error err if err
-        @targetSession = client.cookie 'session'
-        client.disconnect()
-        cb()
-  done()
-
 boiler 'Service - Transfer Chat', ->
   it "should let you transfer a chat to another operator", (done) ->
     # Setup
@@ -37,4 +26,5 @@ boiler 'Service - Transfer Chat', ->
                     type.should.eql 'transfer'
                     chatSession.relationMeta.get 'requestor', (err, requestor) =>
                       requestor.should.eql @client.cookie 'session'
+                      @client.disconnect()
                       done()

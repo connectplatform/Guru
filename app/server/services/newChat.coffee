@@ -13,7 +13,6 @@ module.exports = (res, userData) ->
   createChatData = (next, {chat}) ->
     visitorMeta =
       username: username
-      department: null
       referrerData: userData.referrerData || null
 
     chat.visitor.mset visitorMeta, next
@@ -26,7 +25,6 @@ module.exports = (res, userData) ->
   createChatSession = (next, {chat, session}) ->
     ChatSession.add session.id, chat.id, { isWatching: false, type: 'member' }, next
 
-  #TODO: why doesn't tandoor work?
   createSession = (next) ->
     Session.create { role: 'Visitor', chatName: username }, next
 

@@ -1,19 +1,7 @@
 should = require 'should'
 stoic = require 'stoic'
 
-beforeEach (done) ->
-  @loginOperator = (cb) =>
-    client = @getClient()
-    client.ready =>
-      client.login @guru1Login, (err) =>
-        throw new Error err if err
-        @targetSession = client.cookie 'session'
-        client.disconnect()
-        cb()
-  done()
-
 boiler 'Service - Accept Transfer', ->
-
   it "should let an operator accept a transfer and kick the requesting operator", (done) ->
     acceptTransfer = config.require 'services/acceptTransfer'
     getMyChats = config.require 'services/getMyChats'

@@ -2,19 +2,6 @@ should = require 'should'
 stoic = require 'stoic'
 
 boiler 'Service - Accept Invite', ->
-
-  beforeEach (done) ->
-    @loginOperator = (cb) =>
-
-      client = @getClient()
-      client.ready =>
-        client.login @guru1Login, (err) =>
-          throw new Error err if err
-          @targetSession = client.cookie 'session'
-          client.disconnect()
-          cb()
-    done()
-
   it "should let an operator accept an invite", (done) ->
     acceptInvite = config.require 'services/acceptInvite'
     getMyChats = config.require 'services/getMyChats'

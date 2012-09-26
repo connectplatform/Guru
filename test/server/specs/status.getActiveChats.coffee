@@ -3,17 +3,6 @@ stoic = require 'stoic'
 
 getActiveChats = config.require 'services/getActiveChats'
 
-beforeEach (done) ->
-  @loginOperator = (cb) =>
-    client = @getClient()
-    client.ready =>
-      client.login @guru1Login, (err) =>
-        throw new Error err if err
-        @targetSession = client.cookie 'session'
-        client.disconnect()
-        cb()
-  done()
-
 boiler 'Service - Get Active Chats', ->
   it "should have a chat relation based on whether an operator is invited", (done) ->
     # Setup

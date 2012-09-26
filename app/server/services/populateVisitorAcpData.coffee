@@ -23,5 +23,5 @@ module.exports = (referrerData, chatId) ->
     }
     headers['Authorization'] = "Basic #{site.acpApiKey}" if site.acpApiKey
     requestOptions = {headers: headers}
-    restler.get(targetUrl, requestOptions).on 'complete', (acpData) ->
+    restler.get(targetUrl, requestOptions).on 'success', (acpData) ->
       Chat.get(chatId).visitor.set 'acpData', acpData, (err) ->

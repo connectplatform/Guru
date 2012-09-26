@@ -1,16 +1,11 @@
 div.well.chatControls.span4(chatId="#{chat.id}")
 
+  .websiteLogo
 
   .visitor-info
     | Visitor: #{chat.visitor.username}
-
-    .referrer-data
-      | ReferrerData:
-      if chat.visitor.referrerData
-        ul(id="referrerTree#{chat.renderedId}", class="treeview")!= chat.visitor.referrerData
-      else
-        .clear
-        | No data availible
+    br
+    | Website: #{chat.website}
 
     .acp-data
       | ACP Data:

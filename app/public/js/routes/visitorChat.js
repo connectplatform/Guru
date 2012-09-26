@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender"], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender) {
+  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate"], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate) {
     return {
       channel: {},
       setup: function(_arg, templ) {
@@ -31,7 +31,7 @@
             appendChatMessage = function(message) {
               return $(".chat-display-box").append(chatMessage(message));
             };
-            return server.getChatHistory(chatId, function(err, history) {
+            server.getChatHistory(chatId, function(err, history) {
               var msg, _i, _len;
               if (err) notify.error("Error loading chat history: " + err);
               for (_i = 0, _len = history.length; _i < _len; _i++) {
@@ -46,6 +46,13 @@
                 self.channel.removeAllListeners('serverMessage');
                 return $(".message-form").hide();
               });
+            });
+            return server.getLogoForChat(chatId, function(err, logoUrl) {
+              console.log("logoUrl: ", logoUrl);
+              if (err) notify.error("Error getting logo url: " + err);
+              return $(".websiteLogo").html(imageTemplate({
+                source: logoUrl
+              }));
             });
           });
         });

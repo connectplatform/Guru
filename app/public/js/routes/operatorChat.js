@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender) {
+  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "templates/imageTemplate"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, imageTemplate) {
     return {
       channels: [],
       setup: function(args, templ) {
@@ -15,7 +15,7 @@
         };
         return server.ready(function(services) {
           return server.getMyChats(function(err, chats) {
-            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, updateChatBadge, _i, _j, _k, _len, _len2, _len3;
+            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, renderLogo, updateChatBadge, _i, _j, _k, _len, _len2, _len3;
             for (_i = 0, _len = chats.length; _i < _len; _i++) {
               chat = chats[_i];
               chat.renderedId = renderId(chat.id);
@@ -25,22 +25,23 @@
               if (chat.visitor.acpData != null) {
                 chat.visitor.acpData = util.jsonToUl(chat.visitor.acpData);
               }
-              if (chat.visitor.referrerData != null) {
-                chat.visitor.referrerData = JSON.parse(chat.visitor.referrerData);
-              }
-              if (chat.visitor.referrerData != null) {
-                chat.visitor.referrerData = util.jsonToUl(chat.visitor.referrerData);
-              }
             }
             $('#content').html(templ({
               chats: chats
             }));
+            renderLogo = function(chat) {
+              console.log("renderLogo called");
+              return server.getLogoForChat(chat.id, function(err, logoUrl) {
+                if (err != null) notify.error("Error getting logo for chat ", err);
+                console.log("logoUrl: ", logoUrl);
+                return $("#" + chat.renderedId + " .websiteLogo").html(imageTemplate({
+                  source: logoUrl
+                }));
+              });
+            };
             for (_j = 0, _len2 = chats.length; _j < _len2; _j++) {
               chat = chats[_j];
-              $("#referrerTree" + chat.renderedId).treeview({
-                collapsed: true,
-                persist: "location"
-              });
+              renderLogo(chat);
               $("#acpTree" + chat.renderedId).treeview({
                 collapsed: true,
                 persist: "location"

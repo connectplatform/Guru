@@ -28,13 +28,9 @@ boiler 'Service - Accept Chat', ->
   it 'should only let one operator join the chat', (done) ->
     @newChat =>
 
-      loginData =
-        email: 'guru1@foo.com'
-        password: 'foobar'
-
       client = @getClient()
       client.ready =>
-        client.login loginData, (err, data) =>
+        client.login @guru1Login, (err, data) =>
           client.acceptChat @chatChannelName, (err, result) =>
             false.should.eql err?
             result.status.should.eql "OK"

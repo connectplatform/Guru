@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender"],
-  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender) ->
+define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate"],
+  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
@@ -32,7 +32,6 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
             appendChatMessage msg for msg in history
 
             # display messages when received
-            #self.channel.on 'serverMessage', appendChatMessage
             wireUpChatAppender appendChatMessage, self.channel
 
             # when you get to the end, stop
@@ -40,6 +39,12 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
               $(".chat-display-box").append serverMessage message: "The operator has ended the chat"
               self.channel.removeAllListeners 'serverMessage'
               $(".message-form").hide()
+
+          # display chat logo
+          server.getLogoForChat chatId, (err, logoUrl) ->
+            console.log "logoUrl: ", logoUrl
+            notify.error "Error getting logo url: #{err}" if err
+            $(".websiteLogo").html imageTemplate source: logoUrl
 
     teardown: (cb) ->
       ran = true

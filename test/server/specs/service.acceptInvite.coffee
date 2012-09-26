@@ -5,13 +5,10 @@ boiler 'Service - Accept Invite', ->
 
   beforeEach (done) ->
     @loginOperator = (cb) =>
-      loginData =
-        email: 'guru1@foo.com'
-        password: 'foobar'
 
       client = @getClient()
       client.ready =>
-        client.login loginData, (err) =>
+        client.login @guru1Login, (err) =>
           throw new Error err if err
           @targetSession = client.cookie 'session'
           client.disconnect()

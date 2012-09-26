@@ -4,7 +4,8 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
     'spec/login',
     'spec/operatorChat',
     'spec/newChat',
-    'spec/dashboard'
+    'spec/dashboard',
+    'spec/logout'
   ], (jasmineHtml, jjq, {delay}, mock, login, operatorChat, newChat, dashboard) ->
 
     $('head').append '<link rel="stylesheet" type="text/css" href="/js/vendor/jasmine-1.2.0/jasmine.css">'

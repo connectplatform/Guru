@@ -8,13 +8,9 @@ boiler 'Service - Invite Operator', ->
     @newChat =>
 
       # create invitee
-      loginData =
-        email: 'guru1@foo.com'
-        password: 'foobar'
-
       client = @getClient()
       client.ready =>
-        client.login loginData, (err) =>
+        client.login @guru1Login, (err) =>
           throw new Error err if err
 
           # get the invitee's session

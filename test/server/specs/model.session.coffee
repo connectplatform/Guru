@@ -19,13 +19,13 @@ boiler 'Model - Session', ->
     @getAuthed =>
       sess = Session.get @client.cookie 'session'
       Session.onlineOperators.all (err, sessions) ->
-        sessions.map((s) -> s.id).should.include sess.id
+        sessions.map((s) -> s.id).should.include sess.id, "Operator wasn't set as online at initial login"
 
-        sess.online.set 'false', (err, status) ->
+        sess.online.set false, (err, status) ->
           Session.onlineOperators.all (err, sessions) ->
-            sessions.map((s) -> s.id).should.not.include sess.id
+            sessions.map((s) -> s.id).should.not.include sess.id, "Operator wasn't set as offline"
 
-            sess.online.set 'true', (err, status) ->
+            sess.online.set true, (err, status) ->
               Session.onlineOperators.all (err, sessions) ->
-                sessions.map((s) -> s.id).should.include sess.id
+                sessions.map((s) -> s.id).should.include sess.id, "Operator wasn't re-set as online"
                 done()

@@ -55,7 +55,7 @@ module.exports = (done) ->
 
     websites = [
         name: "example.com"
-        url: "http://www.example.com"
+        url: "www.example.com"
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
     ]

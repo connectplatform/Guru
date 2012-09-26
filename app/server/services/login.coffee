@@ -17,8 +17,10 @@ module.exports = (res, fields) ->
 
     Session.sessionsByOperator.get user.id, (err, sessionId) ->
       if sessionId?
-        res.cookie 'session', sessionId
-        res.reply null, user
+        Session.get(sessionId).online.set true, (err) ->
+          console.log 'Error setting operator online status when reconnecting to session' if err?
+          res.cookie 'session', sessionId
+          res.reply null, user
       else
         createUserSession user, (err, session) ->
           res.cookie 'session', session.id

@@ -32,10 +32,7 @@ boiler 'Service - Leave Chat', ->
       @newChat =>
         firstClient = @getClient()
         firstClient.ready =>
-          loginData =
-            email: 'guru1@foo.com'
-            password: 'foobar'
-          firstClient.login loginData, =>
+          firstClient.login @guru1Login, =>
             firstClient.acceptChat @chatChannelName, (err) =>
               should.not.exist err
               firstClient.disconnect()

@@ -41,16 +41,15 @@
               acpEndpoint: "",
               acpApiKey: ""
             });
-            console.log(site);
             return site;
           };
           return server.findModel({}, "Website", function(err, websites) {
             var beforeRender, beforeSubmit, formBuild, website, _i, _len, _results;
             if (err) console.log("err retrieving websites: " + err);
             beforeRender = function(element, cb) {
-              return server.awsUpload(element.name, 'logo', function(err, logoFields) {
-                return server.awsUpload(element.name, 'online', function(err, onlineFields) {
-                  return server.awsUpload(element.name, 'offline', function(err, offlineFields) {
+              return server.awsUpload(element.url, 'logo', function(err, logoFields) {
+                return server.awsUpload(element.url, 'online', function(err, onlineFields) {
+                  return server.awsUpload(element.url, 'offline', function(err, offlineFields) {
                     return cb({
                       logo: logoFields,
                       online: onlineFields,

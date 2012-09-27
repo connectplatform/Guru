@@ -3,7 +3,7 @@ pulsar = config.require 'load/pulsar'
 stoic = require 'stoic'
 {Session, Chat, ChatSession} = stoic.models
 
-module.exports = (chatId, sessionId, message) ->
+module.exports = (chatId, sessionId, message, cb) ->
 
   sess = Session.get sessionId
   chat = Chat.get chatId
@@ -24,7 +24,9 @@ module.exports = (chatId, sessionId, message) ->
       username: username
       timestamp: Date.now()
     chat.history.rpush said, ->
-      # notify operators
+      cb()
+
+      # asynchronous notifications
       async.forEach operators, (op, cb) ->
         Session.get(op).unreadMessages.incrby chatId, 1, cb
 

@@ -36,8 +36,10 @@ module.exports = ->
 
   beforeFilter ['modelNameIsValid'], only: [ 'deleteModel', 'findModel', 'saveModel' ]
 
-  beforeFilter ['firstArgumentIsObject'], only: [ 'findModel', 'saveModel', 'newChat', 'login' ]
+  beforeFilter ['firstArgumentIsObject'], only: [ 'findModel', 'saveModel', 'newChat', 'login', 'say' ]
 
   beforeFilter ['loginObjectIsValid'], only: ['login']
 
   beforeFilter ['bothArgsAreStrings'], only: ['changePassword']
+
+  beforeFilter ['objectChatIdIsValid', 'objectSessionIdIsValid', 'objectMessageExists' ], only: ['say']

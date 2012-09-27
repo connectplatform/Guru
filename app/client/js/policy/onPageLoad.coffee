@@ -1,3 +1,4 @@
-define ["policy/registerSessionUpdates"],
- (registerSessionUpdates) ->
+define ["policy/registerSessionUpdates", "policy/setOfflineOnUnload" ],
+ (registerSessionUpdates, setOfflineOnUnload) ->
    registerSessionUpdates()
+   setOfflineOnUnload()

@@ -7,11 +7,11 @@ boiler 'Service - Get Chat History', ->
     @client.ready =>
       username = 'historyVisitor'
       data = {username: username}
-      @client.newChat data, (err, {channel}) =>
+      @client.newChat data, (err, {chatId}) =>
         sessionId = @client.cookie 'session'
         pulsar = @getPulsar()
 
-        pulsarChannel = pulsar.channel channel
+        pulsarChannel = pulsar.channel chatId
         message0 = "first message"
         message1 = "second message"
         outgoing0 = {session: sessionId, message: message0}
@@ -22,7 +22,7 @@ boiler 'Service - Get Chat History', ->
 
         pulsarChannel.on 'serverMessage', (data) =>
           if data.message is 'done'
-            @client.getChatHistory channel, (err, data) =>
+            @client.getChatHistory chatId, (err, data) =>
               @client.disconnect()
               false.should.eql err?
               data[0].username.should.eql username

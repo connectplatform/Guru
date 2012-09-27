@@ -39,10 +39,8 @@ boiler 'Service - Populate Visitor ACP Data', ->
     @client.ready =>
 
       # Set up chat info
-      @client.newChat clientData, (err, response) ->
+      @client.newChat clientData, (err, {chatId}) ->
         should.not.exist err
-
-        chatId = response.channel
 
         # check that data is in stoic
         {Chat} = stoic.models

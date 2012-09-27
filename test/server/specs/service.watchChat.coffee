@@ -9,20 +9,20 @@ boiler 'Service - Watch Chat', ->
     #given
     visitorClient = @getClient()
     visitorClient.ready =>
-      visitorClient.newChat {username: 'foo'}, (err, {channel}) =>
+      visitorClient.newChat {username: 'foo'}, (err, {chatId}) =>
         sessionId = visitorClient.cookie 'session'
         visitorClient.ready =>
           visitorClient.disconnect()
           message = "hello, world!"
 
-          pulsarChannel = @getPulsar().channel channel
+          pulsarChannel = @getPulsar().channel chatId
           pulsarChannel.emit 'clientMessage', {message: message, session: sessionId}
 
           #when
           @getAuthed =>
-            @client.watchChat channel, (err, data) =>
+            @client.watchChat chatId, (err, data) =>
               false.should.eql err?
-              @client.getChatHistory channel, (err, data)=>
+              @client.getChatHistory chatId, (err, data)=>
                 false.should.eql err?
 
                 #expect

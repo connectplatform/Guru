@@ -6,11 +6,11 @@ boiler 'Service - Join Chat', ->
   it 'should associate an operator with a chat', (done) ->
     visitorClient = @getClient()
     visitorClient.ready =>
-      visitorClient.newChat {username: 'foo'}, (err, {channel}) =>
+      visitorClient.newChat {username: 'foo'}, (err, {chatId}) =>
         visitorClient.disconnect()
 
         @getAuthed =>
-          @client.joinChat channel, (err) =>
+          @client.joinChat chatId, (err) =>
             false.should.eql err?
             id = @client.cookie('session')
 
@@ -18,5 +18,5 @@ boiler 'Service - Join Chat', ->
             {ChatSession} = stoic.models
             ChatSession.getBySession id, (err, [chat]) =>
               false.should.eql err?
-              chat.chatId.should.eql channel
+              chat.chatId.should.eql chatId
               done()

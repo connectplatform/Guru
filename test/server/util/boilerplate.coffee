@@ -46,11 +46,11 @@ module.exports = global.boiler = (testName, tests) ->
       @newChat = (cb) =>
         @visitor = @getClient()
         @visitor.ready =>
-          data = {username: 'visitor'}
-          @visitor.newChat data, (err, data) =>
+          newChatArgs = {username: 'visitor'}
+          @visitor.newChat newChatArgs, (err, data) =>
             @visitorSession = @visitor.cookie 'session'
             throw new Error err if err
-            @chatChannelName = data.channel
+            @chatChannelName = data.chatId
             @visitor.disconnect()
             cb()
 

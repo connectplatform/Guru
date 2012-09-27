@@ -10,10 +10,10 @@ boiler 'Service - Get Logo For Chat', ->
 
     @client = @getClient()
     @client.ready =>
-      @client.newChat chatData, (err, {channel}) =>
+      @client.newChat chatData, (err, {chatId}) =>
         should.not.exist err
 
-        @client.getLogoForChat channel, (err, url) =>
+        @client.getLogoForChat chatId, (err, url) =>
           should.not.exist err
           url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{encodeURIComponent chatData.referrerData.websiteUrl}/logo"
           @client.disconnect()

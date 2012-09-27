@@ -82,7 +82,7 @@ boiler 'Service - Clear Old Chats', ->
       newChatData = {username: 'visitor'}
       visitor.newChat newChatData, (err, createdChat) =>
         visitorSession = visitor.cookie 'session'
-        chatChannelName = createdChat.channel
+        chatChannelName = createdChat.chatId
 
         # modify the chat's creation date
         chat = Chat.get chatChannelName
@@ -102,7 +102,7 @@ boiler 'Service - Clear Old Chats', ->
               visitor.newChat newChatData, (err, createdChat) ->
                 should.not.exist err
                 visitorSession.should.not.eql visitor.cookie 'session'
-                chatChannelName.should.not.eql createdChat.channel
+                chatChannelName.should.not.eql createdChat.chatId
                 done()
 
   describe 'with operator sessions', ->

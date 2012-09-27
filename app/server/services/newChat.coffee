@@ -44,7 +44,7 @@ module.exports = (res, userData) ->
     createChannel chat.id
 
     # respond to visitor browser
-    res.reply err, channel: chat.id
+    res.reply err, chatId: chat.id
 
     # query for ACP data and store it in redis whenever it's available
     if userData.referrerData

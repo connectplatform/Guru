@@ -6,13 +6,13 @@ boiler 'Service - Leave Chat', ->
     # Setup
     @newChat =>
       @getAuthed =>
-        @client.acceptChat @chatChannelName, (err) =>
+        @client.acceptChat @chatId, (err) =>
           should.not.exist err
 
           # Try to leave
-          @client.leaveChat @chatChannelName, (err, channelName) =>
+          @client.leaveChat @chatId, (err, channelName) =>
             should.not.exist err
-            channelName.should.eql @chatChannelName
+            channelName.should.eql @chatId
 
             # Check whether we're still in channel
             @client.getMyChats (err, chats) =>
@@ -31,18 +31,18 @@ boiler 'Service - Leave Chat', ->
       firstClient = @getClient()
       firstClient.ready =>
         firstClient.login @guru1Login, =>
-          firstClient.acceptChat @chatChannelName, (err) =>
+          firstClient.acceptChat @chatId, (err) =>
             should.not.exist err
             firstClient.disconnect()
 
             @getAuthed =>
-              @client.joinChat @chatChannelName, (err) =>
+              @client.joinChat @chatId, (err) =>
                 should.not.exist err
 
                 # Try to leave
-                @client.leaveChat @chatChannelName, (err, channelName) =>
+                @client.leaveChat @chatId, (err, channelName) =>
                   should.not.exist err
-                  channelName.should.eql @chatChannelName
+                  channelName.should.eql @chatId
 
                   # Check whether we're still in channel
                   @client.getMyChats (err, chats) =>

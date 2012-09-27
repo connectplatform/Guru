@@ -21,20 +21,20 @@ boiler 'Service - Invite Operator', ->
           @getAuthed =>
 
             # accept the chat
-            @client.acceptChat @chatChannelName, (err) =>
+            @client.acceptChat @chatId, (err) =>
               should.not.exist err
               done()
 
   it "should let you invite an operator to the chat", (done) ->
 
     # Try to invite other operator
-    @client.inviteOperator @chatChannelName, @targetSession, (err) =>
+    @client.inviteOperator @chatId, @targetSession, (err) =>
       should.not.exist err
 
       # Check whether operator was invited
       # TODO: once they're updated, use accept invite or getActiveChats to test this instead
       {ChatSession} = stoic.models
-      ChatSession.getByChat @chatChannelName, (err, chatSessions) =>
+      ChatSession.getByChat @chatId, (err, chatSessions) =>
         should.not.exist err
         for cs in chatSessions when cs.sessionId is @targetSession
           chatSession = cs
@@ -58,5 +58,5 @@ boiler 'Service - Invite Operator', ->
     recipient.ready =>
 
       # Try to invite other operator
-      @client.inviteOperator @chatChannelName, @targetSession, (err) =>
+      @client.inviteOperator @chatId, @targetSession, (err) =>
         should.not.exist err

@@ -43,16 +43,20 @@ module.exports = global.boiler = (testName, tests) ->
         @client.ready =>
           @client.login data, cb
 
-      @newChat = (cb) =>
+      @newVisitor = (cb) =>
         @visitor = @getClient()
         @visitor.ready =>
           newChatArgs = {username: 'visitor'}
           @visitor.newChat newChatArgs, (err, data) =>
-            @visitorSession = @visitor.cookie 'session'
             throw new Error err if err
-            @chatChannelName = data.chatId
-            @visitor.disconnect()
+            @visitorSession = @visitor.cookie 'session'
+            @chatId = data.chatId
             cb()
+
+      @newChat = (cb) =>
+        @newVisitor =>
+          @visitor.disconnect()
+          cb()
 
       @createChats = (cb) ->
         {Chat} = stoic.models

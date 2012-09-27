@@ -20,9 +20,9 @@ boiler 'Service - Get Active Chats', ->
     @newChat =>
       @loginOperator =>
         @getAuthed =>
-          @client.acceptChat @chatChannelName, (err) =>
+          @client.acceptChat @chatId, (err) =>
             should.not.exist err
-            @client.inviteOperator @chatChannelName, @targetSession, (err) =>
+            @client.inviteOperator @chatId, @targetSession, (err) =>
               should.not.exist err
 
               # Do test
@@ -31,7 +31,7 @@ boiler 'Service - Get Active Chats', ->
                 reply: (err, chats) =>
                   should.not.exist err
                   chats.length.should.eql 1
-                  chats[0].id.should.eql @chatChannelName
+                  chats[0].id.should.eql @chatId
                   chats[0].relation.should.eql 'invite'
                   done()
 

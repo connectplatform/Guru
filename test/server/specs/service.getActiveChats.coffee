@@ -20,7 +20,7 @@ boiler 'Service - Get Active Chats', ->
       @getAuthed =>
 
         # have our operator join the chat
-        @client.joinChat @chatChannelName, =>
+        @client.joinChat @chatId, =>
 
           # get active chats
           @client.getActiveChats (err, [chatData]) ->

@@ -22,9 +22,9 @@ boiler 'Service - Accept Transfer', ->
     @newChat =>
       @loginOperator =>
         @getAuthed =>
-          @client.acceptChat @chatChannelName, (err) =>
+          @client.acceptChat @chatId, (err) =>
             should.not.exist err
-            @client.transferChat @chatChannelName, @targetSession, (err) =>
+            @client.transferChat @chatId, @targetSession, (err) =>
               should.not.exist err
 
               # Do test
@@ -33,7 +33,7 @@ boiler 'Service - Accept Transfer', ->
                 reply: (err, chatId) =>
                   #body of test here
                   should.not.exist err
-                  chatId.should.eql @chatChannelName
+                  chatId.should.eql @chatId
 
                   # after the tranfer, target operator should be in the chat
                   getAcceptorsChatsRes =
@@ -42,7 +42,7 @@ boiler 'Service - Accept Transfer', ->
                     reply: (err, chats) =>
                       should.not.exist err
                       chats.length.should.eql 1
-                      chats[0].id.should.eql @chatChannelName
+                      chats[0].id.should.eql @chatId
 
                       # after the transfer, transferring operator should not be in the chat
                       @client.getMyChats (err, chats) =>
@@ -52,4 +52,4 @@ boiler 'Service - Accept Transfer', ->
 
                   getMyChats getAcceptorsChatsRes
 
-              acceptTransfer mockRes, @chatChannelName
+              acceptTransfer mockRes, @chatId

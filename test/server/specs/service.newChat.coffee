@@ -4,7 +4,7 @@ boiler 'Service - New Chat', ->
 
   it 'should let you interact with the server', (done) ->
     @newChat =>
-      @channel = @getPulsar().channel @chatChannelName
+      @channel = @getPulsar().channel @chatId
       # establish listener
       @channel.on 'serverMessage', (data)->
         data.message.should.eql 'hello from the test'

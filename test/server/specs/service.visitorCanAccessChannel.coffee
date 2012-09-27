@@ -13,7 +13,7 @@ boiler 'Service - Visitor Can Access Channel', ->
     @client.disconnect()
 
   it 'should say a visitor can connect to a chat that they created', (done) ->
-    @client.visitorCanAccessChannel @chatChannelName, (err, accessAllowed) =>
+    @client.visitorCanAccessChannel @chatId, (err, accessAllowed) =>
       should.not.exist err
       accessAllowed.should.eql true
       done()
@@ -22,9 +22,9 @@ boiler 'Service - Visitor Can Access Channel', ->
     kickUser = config.require 'services/kickUser'
     mockRes = reply: =>
       #This will be executed after the kick
-      @client.visitorCanAccessChannel @chatChannelName, (err, accessAllowed) =>
+      @client.visitorCanAccessChannel @chatId, (err, accessAllowed) =>
         should.not.exist err
         accessAllowed.should.eql false
         done()
 
-    kickUser mockRes, @chatChannelName
+    kickUser mockRes, @chatId

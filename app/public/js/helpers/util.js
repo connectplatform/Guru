@@ -1,7 +1,8 @@
 (function() {
 
   define(["templates/treeviewParentNode", "templates/li", "templates/treeview"], function(treeviewParentNode, li, treeview) {
-    return {
+    var getDomain;
+    ({
       readableSize: function(size) {
         var i, units;
         units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
@@ -112,6 +113,12 @@
         result = walkJSON(json);
         return result;
       }
+    });
+    return getDomain = function(url) {
+      var domain, proto, _, _ref;
+      if (!url) return '';
+      _ref = url.split("/"), proto = _ref[0], _ = _ref[1], domain = _ref[2];
+      return domain || '';
     };
   });
 

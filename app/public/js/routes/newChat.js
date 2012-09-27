@@ -1,30 +1,26 @@
 (function() {
 
-  define(["load/server", "load/notify"], function(server, notify) {
+  define(["load/server", "load/notify", 'helpers/util'], function(server, notify, _arg) {
+    var getDomain;
+    getDomain = _arg.getDomain;
     return function(_, templ, queryString) {
       if (queryString == null) queryString = {};
       $("#content").html("Loading...");
+      delete queryString["undefined"];
       return server.ready(function() {
-        delete queryString["undefined"];
         return server.getExistingChatChannel(function(err, data) {
-          if ((data != null) && !!data) {
-            window.location.hash = "/visitorChat/" + data.channel;
-          }
+          if (data) window.location.hash = "/visitorChat/" + data.channel;
           $("#content").html(templ());
           $("#newChat-form #username").focus();
           return $("#newChat-form").submit(function() {
-            var referrer, referrerArray, username;
+            var username;
             username = $("#newChat-form #username").val();
             if (!queryString.websiteUrl) {
-              referrer = document.referrer || "";
-              referrerArray = referrer.split("/");
-              if (referrerArray.length >= 2) {
-                queryString.websiteUrl = referrerArray[0] + referrerArray[1] + referrerArray[2];
-              }
+              queryString.websiteUrl = getDomain(document.referrer);
             }
             server.newChat({
               username: username,
-              referrerData: queryString
+              params: queryString
             }, function(err, data) {
               if (err != null) {
                 $("#content").html(templ());

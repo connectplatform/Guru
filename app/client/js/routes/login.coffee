@@ -1,11 +1,3 @@
-setLogoffOnPageExit = (server) ->
-  console.log "logoff set"
-  $(window).unload ->
-    sessionId = server.cookie('session')
-    server.cookie 'session', null
-    console.log "cookie after unload: ", server.cookie 'session'
-    server.setSessionOffline sessionId, ->
-
 define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"],
   (server, notify, sidebar, sbTemp, util, registerSessionUpdates) ->
     (args, templ) ->
@@ -29,7 +21,6 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
             return notify.error "Error logging in: #{err}" if err?
             $('#login-modal').modal 'hide'
             registerSessionUpdates()
-            setLogoffOnPageExit server
             window.location.hash = '/dashboard'
 
       $('#login-cancel-button').click ->

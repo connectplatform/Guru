@@ -2,7 +2,7 @@ stoic = require 'stoic'
 {Chat} = stoic.models
 
 module.exports = (args, cookies, cb) ->
-  [chatId] = args
+  chatId = args?[0]
   return cb 'expects chatId argument' unless chatId?
 
   Chat.allChats.ismember chatId, (err, chatExists) ->

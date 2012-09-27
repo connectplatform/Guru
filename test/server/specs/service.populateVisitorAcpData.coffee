@@ -5,14 +5,14 @@ querystring = require 'querystring'
 stoic = require 'stoic'
 
 # data we got from referrer
-referrerData = {
+params = {
   customerId: '1'
   websiteUrl: 'www.example.com'
 }
 
 clientData = {
   username: 'aVisitor'
-  referrerData: referrerData
+  params: params
 }
 
 # data server should respond with
@@ -26,7 +26,7 @@ expectedAcpData = {
 # set up rest endpoint for our mock ACP server
 response = (req, res) ->
   query = querystring.parse req._parsedUrl.query
-  if (query.customerId == referrerData.customerId) && (query.referrer == referrerData.referrer)
+  if (query.customerId == params.customerId) && (query.referrer == params.referrer)
     res.end JSON.stringify expectedAcpData
 
 boiler 'Service - Populate Visitor ACP Data', ->
@@ -39,10 +39,8 @@ boiler 'Service - Populate Visitor ACP Data', ->
     @client.ready =>
 
       # Set up chat info
-      @client.newChat clientData, (err, response) ->
+      @client.newChat clientData, (err, {chatId}) ->
         should.not.exist err
-
-        chatId = response.channel
 
         # check that data is in stoic
         {Chat} = stoic.models
@@ -51,7 +49,7 @@ boiler 'Service - Populate Visitor ACP Data', ->
           visitor= Chat.get(chatId).visitor
           visitor.get 'referrerData', (err, refData) ->
             should.not.exist err
-            refData.should.eql referrerData
+            refData.should.eql params
 
             visitor.get 'acpData', (err, acpData) ->
               should.not.exist err

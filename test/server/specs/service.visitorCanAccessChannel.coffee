@@ -2,18 +2,14 @@ should = require 'should'
 
 boiler 'Service - Visitor Can Access Channel', ->
   beforeEach (done) ->
-    @newChat =>
-      # hijack the visitor's session
-      @client = @getClient()
-      session = @visitor.cookie('session')
-      @client.cookie 'session', session
-      @client.ready -> done()
+    @newVisitor {username: 'visitor'}, (err, @client) =>
+      done()
 
   afterEach ->
     @client.disconnect()
 
   it 'should say a visitor can connect to a chat that they created', (done) ->
-    @client.visitorCanAccessChannel @chatChannelName, (err, accessAllowed) =>
+    @client.visitorCanAccessChannel @chatId, (err, accessAllowed) =>
       should.not.exist err
       accessAllowed.should.eql true
       done()
@@ -22,9 +18,9 @@ boiler 'Service - Visitor Can Access Channel', ->
     kickUser = config.require 'services/kickUser'
     mockRes = reply: =>
       #This will be executed after the kick
-      @client.visitorCanAccessChannel @chatChannelName, (err, accessAllowed) =>
+      @client.visitorCanAccessChannel @chatId, (err, accessAllowed) =>
         should.not.exist err
         accessAllowed.should.eql false
         done()
 
-    kickUser mockRes, @chatChannelName
+    kickUser mockRes, @chatId

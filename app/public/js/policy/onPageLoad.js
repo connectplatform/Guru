@@ -1,7 +1,8 @@
 (function() {
 
-  define(["policy/registerSessionUpdates"], function(registerSessionUpdates) {
-    return registerSessionUpdates();
+  define(["policy/registerSessionUpdates", "policy/setOfflineOnUnload"], function(registerSessionUpdates, setOfflineOnUnload) {
+    registerSessionUpdates();
+    return setOfflineOnUnload();
   });
 
 }).call(this);

@@ -16,6 +16,11 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
         server.getMyRole = (args..., cb) ->
           cb null, 'None'
 
+      visitor: ->
+        server.cookie 'session', 'session_foo'
+        server.getMyRole = (args..., cb) ->
+          cb null, 'Visitor'
+
       services: ->
         server.login = (args..., cb) ->
           mock.loggedIn()
@@ -38,6 +43,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, []
         server.getLogoForChat = (args..., cb) ->
           cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'www.example.com'}/logo"
+        server.setSessionOffline = (args..., cb) ->
+          cb null, null
 
       activeChats: ->
         server.getActiveChats = (args..., cb) ->

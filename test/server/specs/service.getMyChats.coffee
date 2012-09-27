@@ -5,7 +5,7 @@ boiler 'Service - Get My Chats', ->
     client = @getClient()
     client.ready =>
       data = {username: 'joinMe'}
-      client.newChat data, (err, {channel}) =>
+      client.newChat data, (err, {chatId}) =>
         client.cookie 'session', null
         client.disconnect()
 
@@ -16,7 +16,7 @@ boiler 'Service - Get My Chats', ->
             client2.disconnect()
 
             @getAuthed =>
-              @client.joinChat channel, (err, data) =>
+              @client.joinChat chatId, (err, data) =>
 
                 @client.getMyChats (err, data) =>
                   should.not.exist err

@@ -11,20 +11,21 @@ define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
 
         $("#content").html templ()
         $("#newChat-form #username").focus()
-        $("#newChat-form").submit ->
+        $("#newChat-form").submit (evt) ->
+          evt.preventDefault()
 
           username = $("#newChat-form #username").val()
 
           #fall back to referrer if queryString doesn't give us the website we came from
           unless queryString.websiteUrl
             queryString.websiteUrl = getDomain document.referrer
+
           server.newChat {username: username, params: queryString}, (err, data) ->
             if err?
               $("#content").html templ()
               notify.error "Error connecting to chat: #{err}"
 
             else
-              window.location.hash = "/visitorChat/#{data.channel}"
+              window.location.hash = "/visitorChat/#{chat.chatId}"
 
           $("#content").html "Connecting to chat..."
-          false

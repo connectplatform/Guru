@@ -33,6 +33,6 @@
   "scripts": {
     "start": "coffee scripts/server.coffee",
     "test": "mocha test/server/specs/",
-    "prestart": "scripts/build/build"
+    "stop": "echo 'TODO: add stop script'"
   }
 }

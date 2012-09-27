@@ -5,10 +5,10 @@ boiler 'Service - Accept Chat', ->
   it 'should join the operator into the chat', (done) ->
     @newChat =>
       @getAuthed =>
-        @client.acceptChat @chatChannelName, (err, result) =>
+        @client.acceptChat @chatId, (err, result) =>
           false.should.eql err?
           result.status.should.eql "OK"
-          result.chatId.should.eql @chatChannelName
+          result.chatId.should.eql @chatId
 
           #Try to post in channel
           outgoing =
@@ -16,7 +16,7 @@ boiler 'Service - Accept Chat', ->
             message: 'accept chat worked'
 
           client = @getPulsar()
-          chan = client.channel @chatChannelName
+          chan = client.channel @chatId
 
           chan.on 'serverMessage', (data) ->
             data.message.should.eql outgoing.message
@@ -29,13 +29,13 @@ boiler 'Service - Accept Chat', ->
     @newChat =>
 
         @guru1Login (err, client) =>
-          client.acceptChat @chatChannelName, (err, result) =>
+          client.acceptChat @chatId, (err, result) =>
             false.should.eql err?
             result.status.should.eql "OK"
             client.disconnect()
 
             @getAuthed =>
-              @client.acceptChat @chatChannelName, (err, result) =>
+              @client.acceptChat @chatId, (err, result) =>
                 false.should.eql err?
                 result.status.should.eql "ALREADY ACCEPTED"
                 done()

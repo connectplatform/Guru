@@ -1,16 +1,4 @@
 (function() {
-  var setLogoffOnPageExit;
-
-  setLogoffOnPageExit = function(server) {
-    console.log("logoff set");
-    return $(window).unload(function() {
-      var sessionId;
-      sessionId = server.cookie('session');
-      server.cookie('session', null);
-      console.log("cookie after unload: ", server.cookie('session'));
-      return server.setSessionOffline(sessionId, function() {});
-    });
-  };
 
   define(["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"], function(server, notify, sidebar, sbTemp, util, registerSessionUpdates) {
     return function(args, templ) {
@@ -33,7 +21,6 @@
             if (err != null) return notify.error("Error logging in: " + err);
             $('#login-modal').modal('hide');
             registerSessionUpdates();
-            setLogoffOnPageExit(server);
             return window.location.hash = '/dashboard';
           });
         });

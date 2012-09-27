@@ -55,18 +55,24 @@ module.exports = global.boiler = (testName, tests) ->
 
       @getAuthedWith = getAuthedWith
 
+      # create a chat but disconnect the visitor when done
       @newChat = (cb) =>
         @newChatWith {username: 'visitor'}, cb
 
       @newChatWith = (data, cb) =>
-        @visitor = @getClient()
-        @visitor.ready =>
-          @visitor.newChat data, (err, data) =>
-            @visitorSession = @visitor.cookie 'session'
+        @newVisitor data, (err, visitor) =>
+          visitor.disconnect()
+          cb()
+
+      # create a chat and hang onto visitor client
+      @newVisitor = (data, cb) =>
+        visitor = @getClient()
+        visitor.ready =>
+          visitor.newChat data, (err, data) =>
             throw new Error err if err
-            @chatChannelName = data.channel
-            @visitor.disconnect()
-            cb()
+            @visitorSession = visitor.cookie 'session'
+            @chatId = data.chatId
+            cb null, visitor
 
       @loginOperator = (cb) =>
         @guru1Login (err, client) =>

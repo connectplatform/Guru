@@ -8,10 +8,20 @@
         chatId = _arg.chatId;
         self = this;
         return server.ready(function() {
+          console.log("wooooooooooooooooooooooooooooooooooo");
           return server.visitorCanAccessChannel(chatId, function(err, canAccess) {
+<<<<<<< HEAD
             var appendChatMessage;
             if (!canAccess) return window.location.hash = '/newChat';
+=======
+            var appendChatMessage, appendServerMessage, displayGreeting;
+            console.log("canAccess: ", canAccess);
+            if (!canAccess) {
+              return window.location.hash = '/newChat';
+            }
+>>>>>>> fc7470a9a918d3b1d2cd74d173df53537ee75485
             $("#content").html(templ());
+            console.log("rendered");
             $("#message-form #message").focus();
             self.channel = pulsar.channel(chatId);
             $(".message-form").submit(function(evt) {
@@ -31,6 +41,14 @@
             appendChatMessage = function(message) {
               return $(".chat-display-box").append(chatMessage(message));
             };
+            appendServerMessage = function(message) {
+              return $(".chat-display-box").append(serverMessage({
+                message: message
+              }));
+            };
+            displayGreeting = function() {
+              return appendServerMessage("Welcome to live chat!  An operator will be with you shortly.");
+            };
             server.getChatHistory(chatId, function(err, history) {
               var msg, _i, _len;
               if (err) notify.error("Error loading chat history: " + err);
@@ -38,12 +56,13 @@
                 msg = history[_i];
                 appendChatMessage(msg);
               }
+              if (history.length === 0) {
+                displayGreeting();
+              }
               wireUpChatAppender(appendChatMessage, self.channel);
               return self.channel.on('chatEnded', function() {
-                $(".chat-display-box").append(serverMessage({
-                  message: "The operator has ended the chat"
-                }));
                 self.channel.removeAllListeners('serverMessage');
+                appendServerMessage("The operator has ended the chat");
                 return $(".message-form").hide();
               });
             });

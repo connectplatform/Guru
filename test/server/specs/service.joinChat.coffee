@@ -7,7 +7,7 @@ boiler 'Service - Join Chat', ->
     beforeEach (done) ->
       @newChat =>
         @getAuthed =>
-          @client.joinChat @chatChannelName, done
+          @client.joinChat @chatId, done
 
     it 'should associate an operator with a chat', (done) ->
 
@@ -17,7 +17,7 @@ boiler 'Service - Join Chat', ->
       {ChatSession} = stoic.models
       ChatSession.getBySession session, (err, [chatSesson]) =>
         should.not.exist err
-        chatSesson.chatId.should.eql @chatChannelName
+        chatSesson.chatId.should.eql @chatId
         done()
 
     it 'should notify operator of an unread message', (done) ->
@@ -28,7 +28,7 @@ boiler 'Service - Join Chat', ->
       # set up session listener
       sessionNotifications = pulsar.channel "notify:session:#{session}"
       sessionNotifications.on 'unreadMessages', (counts) =>
-        count = counts[@chatChannelName]
+        count = counts[@chatId]
         should.exist count
         count.should.eql 1
         done()
@@ -36,5 +36,5 @@ boiler 'Service - Join Chat', ->
       sessionNotifications.ready =>
 
         # send a new chat
-        chatChannel = pulsar.channel @chatChannelName
+        chatChannel = pulsar.channel @chatId
         chatChannel.emit 'clientMessage', {message: 'hi', session: @visitorSession}

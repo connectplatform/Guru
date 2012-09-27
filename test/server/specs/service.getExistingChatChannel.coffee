@@ -15,7 +15,7 @@ boiler 'Service - Get Existing Chat Channel', ->
     client = @getClient()
     client.ready =>
       data = {username: 'clientTest1'}
-      client.newChat data, (err, {channel}) =>
+      client.newChat data, (err, {chatId}) =>
         session = client.cookie 'session'
         client.disconnect()
 
@@ -25,6 +25,6 @@ boiler 'Service - Get Existing Chat Channel', ->
           client2.getExistingChatChannel (err, existingChannel) ->
             should.not.exist err
             should.exist existingChannel, 'expected to find an existing channel'
-            existingChannel.channel.should.eql channel
+            existingChannel.channel.should.eql chatId
             client2.disconnect()
             done()

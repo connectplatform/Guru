@@ -17,7 +17,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {hasTe
       window.location.hash = '/logout'
       waitsFor isOffline, "didn't set session to offline", 200
 
-    it 'should log me out when the window unloads', ->
+    it 'should set me offline when the window unloads', ->
       offlineSet = false
       server.setSessionOffline = (args..., cb) ->
         offlineSet = true

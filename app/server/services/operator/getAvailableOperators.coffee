@@ -11,7 +11,7 @@ module.exports = (website, specialty, done) ->
   Session.onlineOperators.all (err, sessions) ->
 
     # go no further if we can't find any sessions
-    return done err, sessions if err or sessions.length > 0
+    return done err, sessions if err or sessions.length is 0
 
     # get required data from each session
     getSessionData = (sess, next) ->

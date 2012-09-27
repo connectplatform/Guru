@@ -3,12 +3,12 @@ getAvailableOperators = config.require 'services/operator/getAvailableOperators'
 notifySession = config.require 'services/session/notifySession'
 
 stoic = require 'stoic'
-{ChatSession} = stoic.models
+{Session} = stoic.models
 
 module.exports = ({chatId, website, specialty}, done) ->
 
-  notify = (operator, next) ->
-    notifySession operator.id, 'new', true
+  notify = (op, next) ->
+    Session.get(op.sessionId).unansweredChats.add chatId, next
 
   getAvailableOperators website, specialty, (err, operators) ->
     return done err, operators if err or operators.length is 0

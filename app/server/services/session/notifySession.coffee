@@ -3,6 +3,7 @@ pulsar = config.require 'load/pulsar'
 # require data getters
 unansweredChats = config.require 'services/sessionNotifications/unansweredChats'
 pendingInvites = config.require 'services/sessionNotifications/pendingInvites'
+unreadMessages = config.require 'services/sessionNotifications/unreadMessages'
 
 module.exports = (sessionId, {type}, chime) ->
 
@@ -11,6 +12,7 @@ module.exports = (sessionId, {type}, chime) ->
     when 'new' then unansweredChats
     when 'invite' then pendingInvites
     when 'transfer' then pendingInvites
+    when 'unread' then unreadMessages
 
   # call the getter and trigger the notification
   if getMessage?

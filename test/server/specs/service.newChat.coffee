@@ -7,7 +7,7 @@ boiler 'Service - New Chat', ->
       @channel = @getPulsar().channel @chatChannelName
 
       # establish listener
-      @channel.on 'serverMessage', (data)->
+      @channel.on 'serverMessage', (data) ->
         data.message.should.eql 'hello from the test'
         done()
 
@@ -23,9 +23,10 @@ boiler 'Service - New Chat', ->
     @getAuthed =>
       session = @client.cookie 'session'
       notify = @getPulsar().channel "notify:session:#{session}"
-      notify.on 'unansweredChats', ({count}) ->
+      notify.on 'unansweredChats', ({count}) =>
         count.should.eql 1
         notify.removeAllListeners 'unansweredChats'
+        @client.disconnect()
         done()
 
       @newChat ->

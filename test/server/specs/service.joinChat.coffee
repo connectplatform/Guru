@@ -3,20 +3,38 @@ stoic = require 'stoic'
 
 boiler 'Service - Join Chat', ->
 
-  it 'should associate an operator with a chat', (done) ->
-    visitorClient = @getClient()
-    visitorClient.ready =>
-      visitorClient.newChat {username: 'foo'}, (err, {channel}) =>
-        visitorClient.disconnect()
-
+  describe 'after joining', ->
+    beforeEach (done) ->
+      @newChat =>
         @getAuthed =>
-          @client.joinChat channel, (err) =>
-            false.should.eql err?
-            id = @client.cookie('session')
+          @client.joinChat @chatChannelName, done
 
-            #TODO refactor this to check at a higher level than cache contents
-            {ChatSession} = stoic.models
-            ChatSession.getBySession id, (err, [chat]) =>
-              false.should.eql err?
-              chat.chatId.should.eql channel
-              done()
+    it 'should associate an operator with a chat', (done) ->
+
+      session = @client.cookie('session')
+
+      #TODO refactor this to check at a higher level than cache contents
+      {ChatSession} = stoic.models
+      ChatSession.getBySession session, (err, [chatSesson]) =>
+        should.not.exist err
+        chatSesson.chatId.should.eql @chatChannelName
+        done()
+
+    it 'should notify operator of an unread message', (done) ->
+
+      pulsar = @getPulsar()
+      session = @client.cookie('session')
+
+      # set up session listener
+      sessionNotifications = pulsar.channel "notify:session:#{session}"
+      sessionNotifications.on 'unreadMessages', (counts) =>
+        count = counts[@chatChannelName]
+        should.exist count
+        count.should.eql 1
+        done()
+
+      sessionNotifications.ready =>
+
+        # send a new chat
+        chatChannel = pulsar.channel @chatChannelName
+        chatChannel.emit 'clientMessage', {message: 'hi', session: @visitorSession}

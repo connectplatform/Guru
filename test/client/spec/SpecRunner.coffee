@@ -3,6 +3,7 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
     # spec files
     'spec/login',
     'spec/operatorChat',
+    'spec/visitorChat',
     'spec/newChat',
     'spec/dashboard',
     'spec/logout'

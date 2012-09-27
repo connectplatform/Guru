@@ -9,7 +9,8 @@ define ["load/server", "load/notify"], (server, notify) ->
 
         $("#content").html templ()
         $("#newChat-form #username").focus()
-        $("#newChat-form").submit ->
+        $("#newChat-form").submit (evt) ->
+          evt.preventDefault()
 
           username = $("#newChat-form #username").val()
 
@@ -18,13 +19,12 @@ define ["load/server", "load/notify"], (server, notify) ->
             referrer = document.referrer or ""
             referrerArray = referrer.split "/"
             queryString.websiteUrl = referrerArray[0] + referrerArray[1] + referrerArray[2] if referrerArray.length >= 2
-          server.newChat {username: username, referrerData: queryString}, (err, data) ->
+          server.newChat {username: username, referrerData: queryString}, (err, chat) ->
             if err?
               $("#content").html templ()
               notify.error "Error connecting to chat: #{err}"
 
             else
-              window.location.hash = "/visitorChat/#{data.channel}"
+              window.location.hash = "/visitorChat/#{chat.chatId}"
 
           $("#content").html "Connecting to chat..."
-          false

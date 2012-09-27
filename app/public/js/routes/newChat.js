@@ -15,8 +15,9 @@
           }
           $("#content").html(templ());
           $("#newChat-form #username").focus();
-          return $("#newChat-form").submit(function() {
+          return $("#newChat-form").submit(function(evt) {
             var referrer, referrerArray, username;
+            evt.preventDefault();
             username = $("#newChat-form #username").val();
             if (!queryString.websiteUrl) {
               referrer = document.referrer || "";
@@ -28,16 +29,15 @@
             server.newChat({
               username: username,
               referrerData: queryString
-            }, function(err, data) {
+            }, function(err, chat) {
               if (err != null) {
                 $("#content").html(templ());
                 return notify.error("Error connecting to chat: " + err);
               } else {
-                return window.location.hash = "/visitorChat/" + data.channel;
+                return window.location.hash = "/visitorChat/" + chat.chatId;
               }
             });
-            $("#content").html("Connecting to chat...");
-            return false;
+            return $("#content").html("Connecting to chat...");
           });
         });
       });

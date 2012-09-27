@@ -16,6 +16,11 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
         server.getMyRole = (args..., cb) ->
           cb null, 'None'
 
+      visitor: ->
+        server.cookie 'session', 'session_foo'
+        server.getMyRole = (args..., cb) ->
+          cb null, 'Visitor'
+
       services: ->
         server.login = (args..., cb) ->
           mock.loggedIn()

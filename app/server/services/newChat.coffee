@@ -8,6 +8,8 @@ showToValidOperators = config.require 'services/operator/showToValidOperators'
 module.exports = (res, userData) ->
   {Chat, Session, ChatSession} = stoic.models
   username = userData.username or 'anonymous'
+  website = userData.referrerData?.websiteUrl
+  department = userData.department
 
   # pump chat data into redis
   createChatData = (next, {chat}) ->
@@ -18,9 +20,12 @@ module.exports = (res, userData) ->
     chat.visitor.mset visitorMeta, next
 
   setChatWebsite = (next, {chat}) ->
-    website = userData.referrerData?.websiteUrl
     return next() unless website
     chat.website.set website, next
+
+  setChatDepartment = (next, {chat}) ->
+    return next() unless department
+    chat.department.set department, next
 
   createChatSession = (next, {chat, session}) ->
     ChatSession.add session.id, chat.id, { isWatching: false, type: 'member' }, next
@@ -34,6 +39,7 @@ module.exports = (res, userData) ->
     chat: Chat.create
     chatData: ['chat', createChatData]
     website: ['chat', setChatWebsite]
+    department: ['chat', setChatDepartment]
     chatSession: ['chat', 'session', createChatSession]
 
   }, (err, {chat, session}) ->

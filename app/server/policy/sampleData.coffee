@@ -37,12 +37,16 @@ module.exports = (done) ->
         sentEmail: true
         password: 'foobar'
         role: 'Operator'
+        firstName: 'Second'
+        lastName: 'Guru'
         websites: ['foo.com']
       ,
         email: 'guru3@foo.com'
         sentEmail: true
         password: 'foobar'
         role: 'Operator'
+        firstName: 'Third'
+        lastName: 'Guru'
         websites: ['foo.com']
         specialties: ['Sales']
     ]

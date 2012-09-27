@@ -1,11 +1,10 @@
 stoic = require 'stoic'
-{ChatSession} = stoic.models
+{Session} = stoic.models
 
 filterChats = config.require 'services/operator/filterChats'
 
 module.exports = (sessionId, done) ->
-  ChatSession.getBySession sessionId, (err, chats) ->
-    filterChats chats, 'new', (err, chats) ->
-      message = {count: chats.length}
-      event = 'unansweredChats'
-      done err, event, message
+  Session.unansweredChats.count (chatCount) ->
+    message = {count: chatCount}
+    event = 'unansweredChats'
+    done err, event, message

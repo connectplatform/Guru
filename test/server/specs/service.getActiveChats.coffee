@@ -34,19 +34,72 @@ boiler 'Service - Get Active Chats', ->
             @client.disconnect()
             done()
 
-  it 'should return operators for chats', (done) ->
+  it 'should not show me chats for another website', (done) ->
     chatData =
       username: 'visitor'
-      department: 'foo'
-      referrerData: JSON.stringify {websiteUrl: 'foo.com'}
+      referrerData: {websiteUrl: 'baz.com'}
 
     @guru3Login (err, @client) =>
       @newChatWith chatData, =>
 
         # get active chats
-        @client.getActiveChats (err, [chatData]) =>
-          should.exist chatData.operators
-          chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
+        @client.getActiveChats (err, chats) =>
+          should.not.exist err
+          should.exist chats
+          chats.length.should.eql 0, 'Expected no chats'
+
+          @client.disconnect()
+          done()
+
+  it 'should show me chats for my website', (done) ->
+    chatData =
+      username: 'visitor'
+      referrerData: {websiteUrl: 'foo.com'}
+
+    @guru3Login (err, @client) =>
+      @newChatWith chatData, =>
+
+        # get active chats
+        @client.getActiveChats (err, chats) =>
+          should.not.exist err
+          should.exist chats
+          chats.length.should.eql 1, 'Expected a chat'
+
+          @client.disconnect()
+          done()
+
+  it 'should not show me chats for another specialty', (done) ->
+    chatData =
+      username: 'visitor'
+      referrerData: {websiteUrl: 'foo.com'}
+      department: 'Billing'
+
+    @guru3Login (err, @client) =>
+      @newChatWith chatData, =>
+
+        # get active chats
+        @client.getActiveChats (err, chats) =>
+          should.not.exist err
+          should.exist chats
+          chats.length.should.eql 0, 'Expected a chat'
+
+          @client.disconnect()
+          done()
+
+  it 'should show me chats for my specialty', (done) ->
+    chatData =
+      username: 'visitor'
+      referrerData: {websiteUrl: 'foo.com'}
+      department: 'Sales'
+
+    @guru3Login (err, @client) =>
+      @newChatWith chatData, =>
+
+        # get active chats
+        @client.getActiveChats (err, chats) =>
+          should.not.exist err
+          should.exist chats
+          chats.length.should.eql 1, 'Expected a chat'
 
           @client.disconnect()
           done()
@@ -73,7 +126,7 @@ boiler 'Service - Get Active Chats', ->
             @client.disconnect()
             done()
 
-  it "should have a chat relation based on whether an operator is invited", (done) ->
+  it "should have a chat relation if an operator is invited", (done) ->
     getActiveChats = config.require 'services/getActiveChats'
 
     # Setup

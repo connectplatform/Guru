@@ -12,6 +12,7 @@ face = (decorators) ->
     history,
     creationDate,
     website,
+    department,
 
     allChats,
     unansweredChats}} = decorators
@@ -35,6 +36,7 @@ face = (decorators) ->
       chat = id: id
 
       website chat
+      department chat
       visitor chat, ({before, after}) ->
         # JSON serialize/deserialize
         # TODO: code review
@@ -90,6 +92,7 @@ face = (decorators) ->
           visitor: chat.visitor.getall
           status: chat.status.get
           website: chat.website.get
+          department: chat.department.get
           history: chat.history.all
           creationDate: chat.creationDate.get
 
@@ -102,6 +105,7 @@ face = (decorators) ->
           chat.visitor.del
           chat.status.del
           chat.website.del
+          chat.department.del
           chat.creationDate.del
           chat.history.del
         ], cb
@@ -119,6 +123,7 @@ schema =
     visitor: 'Hash'
     status: 'String' # transfer, invite, waiting, active, vacant
     website: 'String'
+    department: 'String'
     creationDate: 'String'
     history: 'List' # message, username, timestamp
   chat:

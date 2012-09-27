@@ -107,6 +107,7 @@ schema =
     role: 'String'
     online: 'String'
     chatName: 'String'
+    unansweredChats: 'Set'
     unreadMessages: 'Hash' # k: chatId, v: unreadCount
     operatorId: 'String' #optional
   session:

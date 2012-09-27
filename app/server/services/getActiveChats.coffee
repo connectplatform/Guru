@@ -12,6 +12,7 @@ module.exports = (res) ->
   getOperatorData session, (err, my) ->
 
     isRelevant = (chat) ->
+      return true if chat.relation?
       return true if my.role in ['Administrator', 'Supervisor']
       return false if chat.website not in my.websites
       return false if chat.department and chat.department not in my.specialties
@@ -23,8 +24,6 @@ module.exports = (res) ->
 
         async.map chatIds, getFullChatData, (err1, chats) ->
 
-          chats.filter isRelevant
-
           chat.relation = relations[chat.id] for chat in chats
-          chats = chats.sortBy chatPriority
+          chats = chats.filter(isRelevant).sortBy(chatPriority)
           res.reply err, chats

@@ -41,7 +41,7 @@ face = (decorators) ->
         session.unreadMessages.hdel chatId, ->
           #TODO: this is a hack to avoid a client side race condition: replace with client side unread chat model
           session.unreadMessages.getall (err, chats={}) ->
-            notifySession.emit 'echoViewed', chats
+            chnl.emit 'echoViewed', chats
 
       role session
       chatName session

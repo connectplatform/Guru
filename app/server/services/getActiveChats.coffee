@@ -15,7 +15,7 @@ module.exports = (res) ->
       return true if chat.relation?
       return true if my.role in ['Administrator', 'Supervisor']
       return false if chat.website not in my.websites
-      return false if chat.department and chat.department not in my.specialties
+      return false if chat.department and chat.department.toLowerCase() not in my.specialties.map((s)-> s.toLowerCase())
       return true
 
     Chat.allChats.all (err, chatIds) ->

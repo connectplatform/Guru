@@ -34,75 +34,67 @@ boiler 'Service - Get Active Chats', ->
             @client.disconnect()
             done()
 
-  it 'should not show me chats for another website', (done) ->
-    chatData =
-      username: 'visitor'
-      referrerData: {websiteUrl: 'baz.com'}
+  describe 'filter:', ->
+    before ->
+      @generate = (chatData, done) =>
+        @guru3Login (err, @client) =>
+          @newChatWith chatData, =>
 
-    @guru3Login (err, @client) =>
-      @newChatWith chatData, =>
+            # get active chats
+            @client.getActiveChats (err, chats) =>
+              should.not.exist err
+              should.exist chats
 
-        # get active chats
-        @client.getActiveChats (err, chats) =>
-          should.not.exist err
-          should.exist chats
-          chats.length.should.eql 0, 'Expected no chats'
+              @client.disconnect()
+              done err, chats
 
-          @client.disconnect()
-          done()
+    it 'should not show me chats for another website', (done) ->
+      chatData =
+        username: 'visitor'
+        params: {websiteUrl: 'baz.com'}
 
-  it 'should show me chats for my website', (done) ->
-    chatData =
-      username: 'visitor'
-      referrerData: {websiteUrl: 'foo.com'}
+      @generate chatData, (err, chats) ->
+        chats.length.should.eql 0, 'Expected no chats'
+        done()
 
-    @guru3Login (err, @client) =>
-      @newChatWith chatData, =>
+    it 'should show me chats for my website', (done) ->
+      chatData =
+        username: 'visitor'
+        params: {websiteUrl: 'foo.com'}
 
-        # get active chats
-        @client.getActiveChats (err, chats) =>
-          should.not.exist err
-          should.exist chats
-          chats.length.should.eql 1, 'Expected a chat'
+      @generate chatData, (err, chats) ->
+        chats.length.should.eql 1, 'Expected a chat'
+        done()
 
-          @client.disconnect()
-          done()
+    it 'should not show me chats for another specialty', (done) ->
+      chatData =
+        username: 'visitor'
+        params: {websiteUrl: 'foo.com'}
+        department: 'Billing'
 
-  it 'should not show me chats for another specialty', (done) ->
-    chatData =
-      username: 'visitor'
-      referrerData: {websiteUrl: 'foo.com'}
-      department: 'Billing'
+      @generate chatData, (err, chats) ->
+        chats.length.should.eql 0, 'Expected a chat'
+        done()
 
-    @guru3Login (err, @client) =>
-      @newChatWith chatData, =>
+    it 'should show me chats for my specialty', (done) ->
+      chatData =
+        username: 'visitor'
+        params: {websiteUrl: 'foo.com'}
+        department: 'Sales'
 
-        # get active chats
-        @client.getActiveChats (err, chats) =>
-          should.not.exist err
-          should.exist chats
-          chats.length.should.eql 0, 'Expected a chat'
+      @generate chatData, (err, chats) ->
+        chats.length.should.eql 1, 'Expected a chat'
+        done()
 
-          @client.disconnect()
-          done()
+    it 'department should not be case sensitive', (done) ->
+      chatData =
+        username: 'visitor'
+        params: {websiteUrl: 'foo.com'}
+        department: 'sales'
 
-  it 'should show me chats for my specialty', (done) ->
-    chatData =
-      username: 'visitor'
-      referrerData: {websiteUrl: 'foo.com'}
-      department: 'Sales'
-
-    @guru3Login (err, @client) =>
-      @newChatWith chatData, =>
-
-        # get active chats
-        @client.getActiveChats (err, chats) =>
-          should.not.exist err
-          should.exist chats
-          chats.length.should.eql 1, 'Expected a chat'
-
-          @client.disconnect()
-          done()
+      @generate chatData, (err, chats) ->
+        chats.length.should.eql 1, 'Expected a chat'
+        done()
 
   it 'should sort the chats', (done) ->
     @getAuthed =>

@@ -1,4 +1,5 @@
-define ["load/server", "load/notify", 'helpers/util'], (server, notify, {getDomain}) ->
+define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
+  {getDomain} = util
   (_, templ, queryString={}) ->
     $("#content").html "Loading..."
     delete queryString["undefined"]

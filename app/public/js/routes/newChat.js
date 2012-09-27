@@ -1,8 +1,8 @@
 (function() {
 
-  define(["load/server", "load/notify", 'helpers/util'], function(server, notify, _arg) {
+  define(["load/server", "load/notify", 'helpers/util'], function(server, notify, util) {
     var getDomain;
-    getDomain = _arg.getDomain;
+    getDomain = util.getDomain;
     return function(_, templ, queryString) {
       if (queryString == null) queryString = {};
       $("#content").html("Loading...");

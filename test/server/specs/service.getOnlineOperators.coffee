@@ -5,23 +5,12 @@ boiler 'Service - Get Online Operators', ->
     @client = @getClient()
     @client.ready =>
 
-      @client.getOnlineOperators (err, operators) =>
-        should.not.exist err
-        operators.length.should.eql 0
+      @getAuthed (err) =>
+        sessionId = @client.cookie 'session'
 
-        @client.login @adminLogin, (err) =>
-          sessionId = @client.cookie 'session'
+        @client.getOnlineOperators (err, operators) =>
+          should.not.exist err
+          operators.should.includeEql "Admin Guy"
 
-          @client.getOnlineOperators (err, operators) =>
-            should.not.exist err
-            operators.should.includeEql "Admin Guy"
-          
-            @client.setSessionOffline @client.cookie('session'), (err) =>
-              should.not.exist err
-
-              @client.getOnlineOperators (err, operators) =>
-                should.not.exist err
-                operators.length.should.eql 0
-
-                @client.disconnect()
-                done()
+          @client.disconnect()
+          done()

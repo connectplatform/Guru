@@ -3,7 +3,7 @@ stoic = require 'stoic'
 
 boiler 'Service - Set Session Offline', ->
 
-  it 'should log you out', (done) ->
+  it 'should set you as offline', (done) ->
 
     @client = @getClient()
     @client.ready =>

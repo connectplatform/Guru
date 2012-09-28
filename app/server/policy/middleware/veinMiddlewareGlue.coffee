@@ -23,7 +23,7 @@ module.exports = (vein) ->
     args = req.args.map mapArgs
     cookies = req.cookies
 
-    packagedValidators = (validator args, cookies for validator in validators)
+    packagedValidators = (validator(args, cookies) for validator in validators)
 
     async.series packagedValidators, (err) ->
       next err

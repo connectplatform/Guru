@@ -10,13 +10,12 @@ module.exports = ->
       'getRoles',
       'resetPassword',
       'forgotPassword',
-      'login',
       'newChat',
       'getMyRole',
       'visitorCanAccessChannel'
     ]
 
-  beforeFilter ['chatIdIsValid'],
+  beforeFilter ['argChatIdIsValid'],
     only: [
       'acceptChat',
       'acceptInvite',
@@ -32,7 +31,8 @@ module.exports = ->
       'watchChat'
     ]
 
-  beforeFilter ['targetSessionIdIsValid'], only: [ 'inviteOperator', 'transferChat', 'setSessionOffline' ]
+  beforeFilter ['targetSessionIdIsValid'], only: [ 'inviteOperator', 'transferChat']
+  beforeFilter ['argSessionIdIsValid'], only: [ 'setSessionOffline']
 
   beforeFilter ['modelNameIsValid'], only: [ 'deleteModel', 'findModel', 'saveModel' ]
 

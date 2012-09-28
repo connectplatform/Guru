@@ -1,3 +1,4 @@
+async = require 'async'
 should = require 'should'
 stoic = require 'stoic'
 
@@ -21,3 +22,35 @@ boiler 'Service - Get Chat Stats', ->
             chatId.should.eql targetChat
             type.should.eql 'invite'
             done()
+
+  describe 'with various chats', ->
+    beforeEach ->
+
+      @generate = (done) ->
+        chats = [
+            username: 'should show'
+            params: {websiteUrl: 'foo.com'}
+            department: 'Sales'
+          ,
+            username: 'should not show'
+            params: {websiteUrl: 'baz.com'}
+          ,
+            username: 'should not show'
+            params: {websiteUrl: 'foo.com'}
+            department: 'Billing'
+        ]
+        async.forEach chats, @newChatWith, done
+
+    it 'should only return relevant chats', (done) ->
+      @guru3Login (err, @client) =>
+        @generate =>
+          @client.getChatStats (err, stats) =>
+            should.not.exist err
+            should.exist stats
+
+            stats.unanswered.length.should.eql 1, 'expected 1 chat'
+            done()
+
+    #it 'should return all chats for admin', (done) ->
+
+    #it 'should display unanswered chats when I log in', (done) ->

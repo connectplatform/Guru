@@ -60,9 +60,9 @@ module.exports = global.boiler = (testName, tests) ->
         @newChatWith {username: 'visitor'}, cb
 
       @newChatWith = (data, cb) =>
-        @newVisitor data, (err, visitor) =>
+        @newVisitor data, (err, visitor, chatId) =>
           visitor.disconnect()
-          cb()
+          cb err, Object.merge data, {id: chatId}
 
       # create a chat and hang onto visitor client
       @newVisitor = (data, cb) =>
@@ -72,7 +72,7 @@ module.exports = global.boiler = (testName, tests) ->
             throw new Error err if err
             @visitorSession = visitor.cookie 'session'
             @chatId = data.chatId
-            cb null, visitor
+            cb null, visitor, data.chatId
 
       @loginOperator = (cb) =>
         @guru1Login (err, client) =>

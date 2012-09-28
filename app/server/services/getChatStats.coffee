@@ -1,17 +1,16 @@
 async = require 'async'
-getInvites = config.require 'services/getInvites'
+getInvites = config.require 'services/operator/getInvites'
 
 stoic = require 'stoic'
-{ChatSession, Chat, Session} = stoic.models
+{Session} = stoic.models
 
 module.exports = (res) ->
-  chatSession = ChatSession.get res.cookie 'session'
-  session = Session.get res.cookie 'session'
+  sessionId = res.cookie 'session'
+  session = Session.get sessionId
 
   async.parallel {
-    all: Chat.allChats.all
     unreadMessages: session.unreadMessages.getall
-    unanswered: Chat.unansweredChats.all
-    invites: getInvites chatSession
+    unanswered: session.unansweredChats.all
+    invites: getInvites sessionId
 
   }, res.reply

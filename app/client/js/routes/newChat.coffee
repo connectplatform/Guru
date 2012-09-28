@@ -1,11 +1,13 @@
-define ["load/server", "load/notify"], (server, notify) ->
+define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
+  {getDomain} = util
   (_, templ, queryString={}) ->
     $("#content").html "Loading..."
+    delete queryString["undefined"]
+
     server.ready ->
-      delete queryString["undefined"]
 
       server.getExistingChatChannel (err, data) ->
-        window.location.hash = "/visitorChat/#{data.channel}" if data? and !!data
+        window.location.hash = "/visitorChat/#{data.channel}" if data
 
         $("#content").html templ()
         $("#newChat-form #username").focus()
@@ -16,10 +18,9 @@ define ["load/server", "load/notify"], (server, notify) ->
 
           #fall back to referrer if queryString doesn't give us the website we came from
           unless queryString.websiteUrl
-            referrer = document.referrer or ""
-            referrerArray = referrer.split "/"
-            queryString.websiteUrl = referrerArray[0] + referrerArray[1] + referrerArray[2] if referrerArray.length >= 2
-          server.newChat {username: username, referrerData: queryString}, (err, chat) ->
+            queryString.websiteUrl = getDomain document.referrer
+
+          server.newChat {username: username, params: queryString}, (err, data) ->
             if err?
               $("#content").html templ()
               notify.error "Error connecting to chat: #{err}"

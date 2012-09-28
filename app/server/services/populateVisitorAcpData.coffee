@@ -19,7 +19,7 @@ module.exports = (referrerData, chatId) ->
     targetUrl = "#{acpEndpoint}?#{querystring.stringify referrerData}"
     headers = {
       'Accept': '*/*',
-      'User-Agent': 'Restler for node.js'
+      'User-Agent': config.app.name
     }
     headers['Authorization'] = "Basic #{site.acpApiKey}" if site.acpApiKey
     requestOptions = {headers: headers}

@@ -3,7 +3,7 @@ should = require 'should'
 boiler 'Service - Say', ->
 
   it 'should let you say a message in a chat', (done) ->
-    @newVisitor =>
+    @newVisitor {username: 'visitor'}, (err, @visitor) =>
       @visitor.say {chatId: @chatId, sessionId: @visitorSession, message: 'Hello, world!'}, (err, success) =>
         should.not.exist err
         success.should.eql 'OK'

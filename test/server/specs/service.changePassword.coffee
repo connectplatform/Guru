@@ -1,43 +1,44 @@
 should = require 'should'
 
 boiler 'Service - Change Password', ->
-
   before ->
-    @changePassword = (client, cb) =>
-      client.login @adminLogin, (err, user) =>
+    @changePassword = (cb) =>
+      @adminLogin (err, client) =>
         should.not.exist err
-        @emailLoggedInAs = user.email
+
+        # change password
         client.changePassword "foobar", "newPassword", (err) =>
           should.not.exist err
-          #log out
-          client.cookie "session", null
+
+          # log out
+          client.disconnect()
           cb()
 
   it 'should let a user log in with a changed password', (done) ->
-    client = @getClient()
-    client.ready =>
-      @changePassword client, =>
-        #try to log in with new password
-        loginData =
-          email: 'admin@foo.com'
-          password: "newPassword"
-        client.login loginData, (err, user) =>
-          should.not.exist err
+    @changePassword =>
 
-          #verify that login worked
-          user.email.should.eql @emailLoggedInAs
-          client.disconnect()
-          done()
+      # try to log in with new password
+      newLogin =
+        email: 'admin@foo.com'
+        password: "newPassword"
+
+      @getAuthedWith newLogin, (err, client) =>
+        should.not.exist err
+
+        # verify that login worked
+        should.exist client.cookie 'session'
+
+        client.disconnect()
+        done()
 
   it 'should not let you log in with an old password once its been changed', (done) ->
-    client = @getClient()
-    client.ready =>
-      @changePassword client, =>
-        #try to log in with old password
-        client.login @adminLogin, (err, user) =>
+    @changePassword =>
 
-          #verify that login failed
-          err.should.eql "Invalid user or password."
-          should.not.exist user
-          client.disconnect()
-          done()
+      # try to log in with old password
+      @adminLogin (err, client) =>
+
+        # verify that login failed
+        err.should.eql "Invalid user or password."
+        should.not.exist client.cookie 'session'
+        client.disconnect()
+        done()

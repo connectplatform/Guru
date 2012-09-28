@@ -76,3 +76,8 @@ define ["templates/treeviewParentNode", "templates/li", "templates/treeview"], (
 
     result = walkJSON json
     return result
+
+  getDomain: (url) ->
+    return '' unless url
+    [proto, _, domain] = url.split("/")
+    domain or ''

@@ -2,9 +2,9 @@ stoic = require 'stoic'
 {Chat, ChatSession} = stoic.models
 
 module.exports = (res, chatId) ->
-  operatorId = unescape(res.cookie('session'))
+  sessionId = res.cookie 'session'
 
-  ChatSession.remove operatorId, chatId, (err) ->
+  ChatSession.remove sessionId, chatId, (err) ->
     Chat.get(chatId).status.get (err, status) ->
 
       ChatSession.getByChat chatId, (err, chatSessions) ->

@@ -4,7 +4,7 @@ pulsar = config.require 'server/load/pulsar'
 {tandoor} = config.require 'load/util'
 
 face = (decorators) ->
-  {session: {role, chatName, unreadMessages, operatorId, online,
+  {session: {role, chatName, unreadMessages, unansweredChats, operatorId, online,
     allSessions, onlineOperators, sessionsByOperator}} = decorators
 
   faceValue =
@@ -34,7 +34,14 @@ face = (decorators) ->
     get: (id) ->
       session = id: id
 
-      notifySession = pulsar.channel "notify:session:#{id}"
+      notifySession = config.require 'services/session/notifySession'
+
+      chnl = pulsar.channel "notify:session:#{id}"
+      chnl.on 'viewedMessages', (chatId) ->
+        session.unreadMessages.hdel chatId, ->
+          #TODO: this is a hack to avoid a client side race condition: replace with client side unread chat model
+          session.unreadMessages.getall (err, chats={}) ->
+            chnl.emit 'echoViewed', chats
 
       role session
       chatName session
@@ -58,15 +65,15 @@ face = (decorators) ->
           else
             next null, false
 
+      unansweredChats session, ({after}) ->
+        after ['add'], (context, args, next) ->
+          notifySession session.id, {type: 'new'}, true
+          next null, args
+
       unreadMessages session, ({after}) ->
 
-        notifyUnread = ->
-          session.unreadMessages.getall (err, chats) ->
-            chats ?= {}
-            notifySession.emit 'unreadMessages', chats
-
         after ['incrby'], (context, args, next) ->
-          notifyUnread()
+          notifySession session.id, {type: 'unread'}, true
           next null, args
 
         # filter retreived values with a parseInt
@@ -80,15 +87,11 @@ face = (decorators) ->
             session.role.del
             session.chatName.del
             session.unreadMessages.del
+            session.unansweredChats.del
             faceValue.allSessions.srem session.id
             faceValue.onlineOperators.srem session.id
           ], cb
 
-      notifySession.on 'viewedMessages', (chatId) ->
-        session.unreadMessages.hdel chatId, ->
-          #TODO: this is a hack to avoid a client side race condition: replace with client side unread chat model
-          session.unreadMessages.getall (err, chats={}) ->
-            notifySession.emit 'echoViewed', chats
 
       return session
 
@@ -107,6 +110,7 @@ schema =
     role: 'String'
     online: 'String'
     chatName: 'String'
+    unansweredChats: 'Set'
     unreadMessages: 'Hash' # k: chatId, v: unreadCount
     operatorId: 'String' #optional
   session:

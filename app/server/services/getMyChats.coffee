@@ -5,15 +5,15 @@ stoic = require 'stoic'
 module.exports = (res) ->
   # get all my chats
   operatorId = unescape(res.cookie 'session')
-  ChatSession.getBySession operatorId, (err, sessionChats) ->
+  ChatSession.getBySession operatorId, (err, chatSessions) ->
     res.reply err, null if err
 
-    # get the isWatching field from sessionChat
-    getIsWatching = (sessionChat, cb) ->
-      sessionChat.relationMeta.get 'isWatching', (err, isWatching) ->
-        cb err, [sessionChat.chatId, isWatching]
+    # get the isWatching field from chatSession
+    getIsWatching = (chatSession, cb) ->
+      chatSession.relationMeta.get 'isWatching', (err, isWatching) ->
+        cb err, [chatSession.chatId, isWatching]
 
-    async.map sessionChats, getIsWatching, (err, arr) ->
+    async.map chatSessions, getIsWatching, (err, arr) ->
 
       # get info for a specific chat
       doLookup = ([chat, isWatching], cb) ->

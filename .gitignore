@@ -3,3 +3,4 @@
 node_modules
 dump.rdb
 test/client/public
+issue-dump

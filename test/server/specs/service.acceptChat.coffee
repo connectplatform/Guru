@@ -28,9 +28,7 @@ boiler 'Service - Accept Chat', ->
   it 'should only let one operator join the chat', (done) ->
     @newChat =>
 
-      client = @getClient()
-      client.ready =>
-        client.login @guru1Login, (err, data) =>
+        @guru1Login (err, client) =>
           client.acceptChat @chatId, (err, result) =>
             false.should.eql err?
             result.status.should.eql "OK"

@@ -9,6 +9,7 @@ module.exports = (res, chatId) ->
       chatSession.session.role.get (err, role) ->
         chatSession.role = role
         cb err, chatSession
+
     async.map chatSessions, getRole, (err, chatSessions) ->
       [visitorChatSession] = chatSessions.filter (s) -> s.role is 'Visitor'
 

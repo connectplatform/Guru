@@ -2,12 +2,8 @@ should = require 'should'
 
 boiler 'Service - Visitor Can Access Channel', ->
   beforeEach (done) ->
-    @newChat =>
-      # hijack the visitor's session
-      @client = @getClient()
-      session = @visitor.cookie('session')
-      @client.cookie 'session', session
-      @client.ready -> done()
+    @newVisitor {username: 'visitor'}, (err, @client) =>
+      done()
 
   afterEach ->
     @client.disconnect()

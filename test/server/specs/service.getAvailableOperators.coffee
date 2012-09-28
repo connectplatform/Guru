@@ -2,6 +2,7 @@ should = require 'should'
 stoic = require 'stoic'
 
 boiler 'Service - Get Available Operators', ->
+
   beforeEach (done) ->
     @getAvailableOperators = config.require 'services/operator/getAvailableOperators'
     done()

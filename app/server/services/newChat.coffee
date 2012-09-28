@@ -3,29 +3,33 @@ stoic = require 'stoic'
 
 createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
+showToValidOperators = config.require 'services/operator/showToValidOperators'
 
 module.exports = (res, userData) ->
   {Chat, Session, ChatSession} = stoic.models
   username = userData.username or 'anonymous'
+  website = userData.params?.websiteUrl
+  department = userData.department
 
   # pump chat data into redis
   createChatData = (next, {chat}) ->
     visitorMeta =
       username: username
-      department: null
-      referrerData: userData.referrerData || null
+      referrerData: userData.params || null
 
     chat.visitor.mset visitorMeta, next
 
   setChatWebsite = (next, {chat}) ->
-    website = userData.referrerData?.websiteUrl
     return next() unless website
     chat.website.set website, next
+
+  setChatDepartment = (next, {chat}) ->
+    return next() unless department
+    chat.department.set department, next
 
   createChatSession = (next, {chat, session}) ->
     ChatSession.add session.id, chat.id, { isWatching: false, type: 'member' }, next
 
-  #TODO: why doesn't tandoor work?
   createSession = (next) ->
     Session.create { role: 'Visitor', chatName: username }, next
 
@@ -35,6 +39,7 @@ module.exports = (res, userData) ->
     chat: Chat.create
     chatData: ['chat', createChatData]
     website: ['chat', setChatWebsite]
+    department: ['chat', setChatDepartment]
     chatSession: ['chat', 'session', createChatSession]
 
   }, (err, {chat, session}) ->
@@ -47,7 +52,12 @@ module.exports = (res, userData) ->
     res.reply err, chatId: chat.id
 
     # query for ACP data and store it in redis whenever it's available
-    if userData.referrerData
-      populateVisitorAcpData userData.referrerData, chat.id
+    if userData.params
+      populateVisitorAcpData userData.params, chat.id
 
-    #displayToOperators chat, ->
+    chatData =
+      chatId: chat.id
+      website: userData.website
+      specialty: userData.department
+
+    showToValidOperators chatData, ->

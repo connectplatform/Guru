@@ -1,9 +1,10 @@
 async = require 'async'
 pulsar = config.require 'load/pulsar'
+
 stoic = require 'stoic'
 {Session, Chat, ChatSession} = stoic.models
 
-module.exports = (chatId, sessionId, message, cb) ->
+module.exports = (chatId, sessionId, message, done) ->
 
   sess = Session.get sessionId
   chat = Chat.get chatId
@@ -14,21 +15,24 @@ module.exports = (chatId, sessionId, message, cb) ->
   async.parallel [
     sess.chatName.get
     ChatSession.getByChat chatId
-  ], (err, [username, sessions]) ->
+
+  ], (err, [username, chatSessions]) ->
+    chatSessions ?= []
     console.log "Error getting chat name from cache: #{err}" if err
-    operators = (op.sessionId for op in sessions)
+    operators = (op.sessionId for op in chatSessions)
 
     # push history data
     said =
       message: message
       username: username
       timestamp: Date.now()
+
     chat.history.rpush said, ->
-      cb()
+      done()
 
       # asynchronous notifications
-      async.forEach operators, (op, cb) ->
-        Session.get(op).unreadMessages.incrby chatId, 1, cb
+      async.forEach operators, (op, next) ->
+        Session.get(op).unreadMessages.incrby chatId, 1, next
 
       channel = pulsar.channel chatId
       channel.emit 'serverMessage', said

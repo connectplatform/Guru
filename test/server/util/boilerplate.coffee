@@ -20,39 +20,60 @@ initApp = (cb) ->
   @app = config.require 'load/app'
   @app cb
 
+getClient = -> Vein.createClient port: testPort
+
+getAuthedWith = (data, cb) =>
+  client = getClient()
+  client.ready =>
+    client.login data, (err) =>
+      console.log 'error on test login:', err if err
+      cb err, client
+
+loginBuilder = (name) ->
+  (cb) =>
+    data =
+      email: "#{name}@foo.com"
+      password: 'foobar'
+    getAuthedWith data, cb
+
 module.exports = global.boiler = (testName, tests) ->
 
   describe testName, (done)->
 
     before (done) ->
-      @getClient = -> Vein.createClient port: testPort
+      @getClient = getClient
       @getPulsar = -> Pulsar.createClient port: pulsarPort
       @db = db
       @testPort = testPort
 
-      @adminLogin =
-        email: 'admin@foo.com'
-        password: 'foobar'
-      @guru1Login =
-        email: 'guru1@foo.com'
-        password: 'foobar'
+      for name in ['admin', 'guru1', 'guru2', 'guru3']
+        this["#{name}Login"] = loginBuilder name
+
+      # to be backwards compatible.  maybe refactor old tests?
       @getAuthed = (cb) =>
-        @getAuthedWith @adminLogin, cb
+        @adminLogin (err, @client) =>
+          cb()
 
-      @getAuthedWith = (data, cb) =>
-        @client = @getClient()
-        @client.ready =>
-          @client.login data, cb
+      @getAuthedWith = getAuthedWith
 
-      @newVisitor = (cb) =>
-        @visitor = @getClient()
-        @visitor.ready =>
-          newChatArgs = {username: 'visitor'}
-          @visitor.newChat newChatArgs, (err, data) =>
+      # create a chat but disconnect the visitor when done
+      @newChat = (cb) =>
+        @newChatWith {username: 'visitor'}, cb
+
+      @newChatWith = (data, cb) =>
+        @newVisitor data, (err, visitor) =>
+          visitor.disconnect()
+          cb()
+
+      # create a chat and hang onto visitor client
+      @newVisitor = (data, cb) =>
+        visitor = @getClient()
+        visitor.ready =>
+          visitor.newChat data, (err, data) =>
             throw new Error err if err
-            @visitorSession = @visitor.cookie 'session'
+            @visitorSession = visitor.cookie 'session'
             @chatId = data.chatId
-            cb()
+            cb null, visitor
 
       @expectIdIsOnline = (id, expectation, cb) ->
         {Session} = stoic.models
@@ -61,9 +82,11 @@ module.exports = global.boiler = (testName, tests) ->
           online.should.eql expectation
           cb()
 
-      @newChat = (cb) =>
-        @newVisitor =>
-          @visitor.disconnect()
+      @loginOperator = (cb) =>
+        @guru1Login (err, client) =>
+          throw new Error err if err
+          @targetSession = client.cookie 'session'
+          client.disconnect()
           cb()
 
       @createChats = (cb) ->
@@ -120,11 +143,13 @@ module.exports = global.boiler = (testName, tests) ->
         sampleData (err, data) =>
           @adminUser = data[0][0]
           console.log 'error:', err if err?
-          #console.log 'sampleData:', data
           done()
 
     after (done) ->
       flushCache ->
         db.wipe done
+
+    afterEach ->
+      @client.disconnect() if @client?.connected
 
     tests()

@@ -26,6 +26,6 @@ define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
               notify.error "Error connecting to chat: #{err}"
 
             else
-              window.location.hash = "/visitorChat/#{chat.chatId}"
+              window.location.hash = "/visitorChat/#{data.chatId}"
 
           $("#content").html "Connecting to chat..."

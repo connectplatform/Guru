@@ -1,3 +1,4 @@
+async = require 'async'
 should = require 'should'
 
 boiler 'Service - showToValidOperators', ->
@@ -7,14 +8,25 @@ boiler 'Service - showToValidOperators', ->
 
     @showToValidOperators = config.require 'services/operator/showToValidOperators'
 
-    @createChats (err, [chat]) ->
-      chat.visitor.getall (err, visitorData) ->
-        self.chatData =
-          chatId: chat.id
-          website: visitorData.referrerData
-          specialty: visitorData.specialty
+    @chats = [
+        username: 'should show'
+        params: {websiteUrl: 'foo.com'}
+        department: 'Sales'
+      ,
+        username: 'should not show'
+        params: {websiteUrl: 'baz.com'}
+      ,
+        username: 'should not show'
+        params: {websiteUrl: 'foo.com'}
+        department: 'Billing'
+    ]
 
-        done()
+    async.map @chats, @newChatWith, (err, [chat]) =>
+      @chatData =
+        chatId: chat.id
+        website: chat.params.websiteUrl
+        specialty: chat.department
+      done()
 
   describe 'with no operators', ->
 

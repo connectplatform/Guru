@@ -89,6 +89,8 @@ module.exports = global.boiler = (testName, tests) ->
           {
             visitor:
               username: 'Bob'
+            website: 'foo.com'
+            department: 'Sales'
             status: 'waiting'
             creationDate: now
             history: []
@@ -118,12 +120,16 @@ module.exports = global.boiler = (testName, tests) ->
 
         createChat = (chat, cb) ->
           Chat.create (err, c) ->
-            async.parallel [
+            chatData = [
               c.visitor.mset chat.visitor
               c.status.set chat.status
               c.creationDate.set chat.creationDate
               #c.history.rpush chat.history... #this needs to be a loop
-            ], (err) -> cb err, c
+            ]
+            chatData.push c.website.set chat.website if chat.website?
+            chatData.push c.department.set chat.department if chat.department?
+
+            async.parallel chatData, (err) -> cb err, c
 
         async.map chats, createChat, cb
 

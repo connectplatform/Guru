@@ -61,4 +61,12 @@ boiler 'Service - Get Chat Stats', ->
             stats.unanswered.length.should.eql 3, 'expected 3 chats'
             done()
 
-    #it 'should display unanswered chats when I log in', (done) ->
+    it 'should display unanswered chats when I log in', (done) ->
+      @generate =>
+        @guru3Login (err, @client) =>
+          @client.getChatStats (err, stats) =>
+            should.not.exist err
+            should.exist stats
+
+            stats.unanswered.length.should.eql 1, 'expected 1 chat'
+            done()

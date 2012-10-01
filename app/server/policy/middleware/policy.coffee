@@ -19,6 +19,7 @@ module.exports = ->
       'setSessionOffline',
       'say',
       'kickUser',
+      'printChat',
 
       # these three are covered by isAdministrator
       'deleteModel',
@@ -31,7 +32,8 @@ module.exports = ->
       'getChatHistory',
       'inviteOperator',
       'getNonpresentOperators',
-      'leaveChat'
+      'leaveChat',
+      'printChat'
     ]
 
   beforeFilter ['objIsChatMember'], only: [ 'say' ]

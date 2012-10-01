@@ -26,6 +26,7 @@ module.exports = ->
       'joinChat',
       'kickUser',
       'leaveChat',
+      'printChat',
       'transferChat',
       'visitorCanAccessChannel',
       'watchChat'

@@ -3,9 +3,9 @@ argumentValidations = require './argumentValidations'
 
 module.exports = ->
   argumentValidations()
-  beforeFilter ['isAdministrator'], only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
+  beforeFilter ['isAdministrator', 'setIsOnline' ], only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
 
-  beforeFilter ['isStaff'],
+  beforeFilter ['isStaff', 'setIsOnline' ],
     except: [
       'getMyRole',
       'login',
@@ -15,20 +15,26 @@ module.exports = ->
       'getExistingChatChannel',
       'visitorCanAccessChannel',
       'getChatHistory',
+      'getLogoForChat',
+      'setSessionOffline',
+      'say',
+      'kickUser',
 
       # these three are covered by isAdministrator
       'deleteModel',
       'findModel',
-      'saveModel'
+      'saveModel',
     ]
 
-  beforeFilter ['isChatMember'],
+  beforeFilter ['argIsChatMember'],
     only: [
       'getChatHistory',
       'inviteOperator',
       'getNonpresentOperators',
       'leaveChat'
     ]
+
+  beforeFilter ['objIsChatMember'], only: [ 'say' ]
 
   beforeFilter ['isVisibleInChat'], only: [ 'transferChat', 'kickUser']
   beforeFilter ['isNotVisibleChatMember'], only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']

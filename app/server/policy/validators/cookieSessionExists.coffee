@@ -1,5 +1,6 @@
-sessionIdIsValid = require './sessionIdIsValid'
+sessionIdIsValid = require './helpers/sessionIdIsValid'
 
 module.exports = (args, cookies, cb) ->
   sessionId = cookies?.session
-  sessionIdIsValid sessionId, cookies, cb
+  return cb 'expects cookie: {session: sessionId}' unless sessionId?
+  sessionIdIsValid sessionId, cb

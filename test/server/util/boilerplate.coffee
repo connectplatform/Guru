@@ -3,6 +3,7 @@ flushCache = config.require 'services/flushCache'
 sampleData = config.require 'policy/sampleData'
 stoic = require 'stoic'
 async = require 'async'
+should = require 'should'
 
 # pick a port that server and client will run on
 testPort = process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
@@ -73,6 +74,13 @@ module.exports = global.boiler = (testName, tests) ->
             @visitorSession = visitor.cookie 'session'
             @chatId = data.chatId
             cb null, visitor, data.chatId
+
+      @expectIdIsOnline = (id, expectation, cb) ->
+        {Session} = stoic.models
+        Session.get(id).online.get (err, online) =>
+          should.not.exist err
+          online.should.eql expectation
+          cb()
 
       @loginOperator = (cb) =>
         @guru1Login (err, client) =>

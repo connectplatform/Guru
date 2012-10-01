@@ -1,7 +1,6 @@
 sessionIdIsValid = require './helpers/sessionIdIsValid'
 
 module.exports = (args, cookies, cb) ->
-  sessionId = args?[1]
-  return cb 'expects valid session id as second argument' unless sessionId?
-
+  sessionId = args?[0]
+  return cb 'expects sessionId as first argument' unless sessionId?
   sessionIdIsValid sessionId, cb

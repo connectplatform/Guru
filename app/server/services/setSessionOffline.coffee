@@ -1,7 +1,5 @@
-stoic = require 'stoic'
-{Session} = stoic.models
+setSessionOnlineStatus = config.require 'services/session/setSessionOnlineStatus'
 
 module.exports = (res, sessionId) ->
-  Session.get(sessionId).online.set false, (err) ->
-    console.log 'Error setting session status to offline: ', err if err?
+  setSessionOnlineStatus sessionId, false, (err) ->
     res.reply err

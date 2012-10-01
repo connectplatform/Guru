@@ -4,7 +4,6 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
     setup: ({chatId}, templ) ->
       self = this
       server.ready ->
-        console.log "wooooooooooooooooooooooooooooooooooo"
         server.visitorCanAccessChannel chatId, (err, canAccess) ->
           console.log "canAccess: ", canAccess
           return window.location.hash = '/newChat' unless canAccess
@@ -55,6 +54,13 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
             console.log "logoUrl: ", logoUrl
             notify.error "Error getting logo url: #{err}" if err
             $(".websiteLogo").html imageTemplate source: logoUrl
+
+          # wire up leave button
+          $('.leaveButton').click (evt) ->
+            evt.preventDefault()
+            server.kickUser chatId, (err) ->
+              notify.error "Error leaving chat: #{err}" if err
+            appendServerMessage 'You have left the chat.'
 
     teardown: (cb) ->
       ran = true

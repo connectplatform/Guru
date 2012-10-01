@@ -18,6 +18,7 @@ module.exports = ->
       'getLogoForChat',
       'setSessionOffline',
       'say',
+      'kickUser',
 
       # these three are covered by isAdministrator
       'deleteModel',

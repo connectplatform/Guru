@@ -43,3 +43,19 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
             waitsFor messageDisplayed, 200, 'Exit message did not display'
             runs ->
+
+      it 'should give the user a button to print in a new window', ->
+        runs ->
+          waitsFor exists('.printButton'), 'Visitor chat did not load', 200
+          runs ->
+
+          opened = false
+          windowOpened = -> opened
+          window.open = (location) ->
+            expect location, "https://localhost:4000/#/foo"
+            opened = true
+
+          $('.printButton').click()
+          waitsFor windowOpened
+          runs ->
+

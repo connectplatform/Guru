@@ -43,6 +43,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, []
         server.getLogoForChat = (args..., cb) ->
           cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'www.example.com'}/logo"
+        server.printChat = (args..., cb) ->
+          cb null, null
         server.setSessionOffline = (args..., cb) ->
           cb null, null
 

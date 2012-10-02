@@ -12,10 +12,14 @@ face = (decorators) ->
       id = rand()
       session = faceValue.get id
 
-      addOperatorId = (cb) =>
+      addOperatorData = (cb) =>
         return cb() unless fields.operatorId?
+
+        setUnansweredChats = config.require 'services/session/setUnansweredChats'
+
         async.parallel [
           session.operatorId.set fields.operatorId
+          setUnansweredChats id
           faceValue.sessionsByOperator.set fields.operatorId, id
           faceValue.onlineOperators.add id
         ], cb
@@ -25,7 +29,7 @@ face = (decorators) ->
         session.chatName.set fields.chatName
         session.online.set 'true'
         faceValue.allSessions.add id
-        addOperatorId
+        addOperatorData
 
       ], (err, data) ->
         console.log "Error adding session: #{err}" if err?

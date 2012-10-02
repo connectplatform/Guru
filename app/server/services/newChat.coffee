@@ -33,6 +33,15 @@ module.exports = (res, userData) ->
   createSession = (next) ->
     Session.create { role: 'Visitor', chatName: username }, next
 
+  show = (next, res) ->
+    {chat} = res
+    chatData =
+      chatId: chat.id
+      website: website
+      specialty: department
+
+    showToValidOperators chatData, next
+
   # create all necessary artifacts
   async.auto {
     session: createSession
@@ -41,6 +50,7 @@ module.exports = (res, userData) ->
     website: ['chat', setChatWebsite]
     department: ['chat', setChatDepartment]
     chatSession: ['chat', 'session', createChatSession]
+    show: ['chat', show]
 
   }, (err, {chat, session}) ->
 
@@ -54,10 +64,3 @@ module.exports = (res, userData) ->
     # query for ACP data and store it in redis whenever it's available
     if userData.params
       populateVisitorAcpData userData.params, chat.id
-
-    chatData =
-      chatId: chat.id
-      website: userData.website
-      specialty: userData.department
-
-    showToValidOperators chatData, ->

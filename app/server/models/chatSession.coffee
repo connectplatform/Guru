@@ -1,7 +1,6 @@
 async = require 'async'
 {tandoor} = config.require 'load/util'
 pulsar = config.require 'load/pulsar'
-getInvites = config.require 'services/getInvites'
 
 stoic = require 'stoic'
 {Chat, Session} = stoic.models

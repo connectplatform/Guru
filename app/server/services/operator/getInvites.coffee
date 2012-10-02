@@ -1,6 +1,9 @@
 async = require 'async'
 {tandoor, compact} = config.require 'load/util'
 
+stoic = require 'stoic'
+{ChatSession} = stoic.models
+
 getInvites = (rel, next) ->
   rel.relationMeta.get 'type', (err, type) ->
     if type in ['invite', 'transfer']
@@ -8,9 +11,8 @@ getInvites = (rel, next) ->
     else
       next()
 
-# This takes a stoic model.  Not sure if I like that.
-module.exports = tandoor (chatSession, done) ->
-  chatSession.sessionIndex.members (err, chats) ->
-    async.map chats, getInvites, (err, chats) ->
+module.exports = tandoor (sessionId, done) ->
+  ChatSession.getBySession sessionId, (err, chatSessions) ->
+    async.map chatSessions, getInvites, (err, chats) ->
       chats = compact chats if chats?
       done err, chats

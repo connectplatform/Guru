@@ -20,12 +20,17 @@ module.exports = (website, specialty, done) ->
 
     async.map sessions, getSessionData, (err, opSessions) ->
 
-      # look for matching operators
+      # build query to look for matching operators
       opIds = opSessions.map (o) -> o.operatorId
       query =
         _id: $in: opIds
-      query.websites = website if website
-      query.specialties = specialty if specialty
+        $or: [role: 'Administrator']
+
+      route =
+        websites: website
+      route.specialties = specialty if specialty
+
+      query['$or'].push route
 
       # filter based on operator website/specialty
       User.find query, (err, users) ->

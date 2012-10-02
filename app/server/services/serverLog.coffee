@@ -20,8 +20,8 @@ module.exports = (res, obj) ->
   console.log '\nReceived logging request from client: ', obj
 
   async.parallel [
-    getData obj.chatId, 'Chat'
-    getData obj.sessionId, 'Session'
+    getData obj.ids.chatId, 'Chat'
+    getData obj.ids.sessionId, 'Session'
 
   ], (err, results) ->
 

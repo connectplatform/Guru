@@ -7,8 +7,9 @@ boiler 'Service - Server Log', ->
         message: 'Something Happened'
         service: 'Some service'
         error: 'An error'
-        sessionId: @client.cookie 'session'
-        chatId: 'Invalid LOL'
+        ids:
+          sessionId: @client.cookie 'session'
+          chatId: 'Invalid LOL'
       }, (err, ack) =>
         @client.disconnect()
         should.not.exist err

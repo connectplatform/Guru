@@ -87,18 +87,22 @@ face = (decorators) ->
           next null, data.map JSON.parse
 
       chat.dump = (cb) ->
+        return cb 'Chat does not exist' unless id
+        faceValue.exists id, (err, exists) ->
+          return cb err if err
+          return cb 'Chat does not exist' unless exists
 
-        async.parallel {
-          visitor: chat.visitor.getall
-          status: chat.status.get
-          website: chat.website.get
-          department: chat.department.get
-          history: chat.history.all
-          creationDate: chat.creationDate.get
+          async.parallel {
+            visitor: chat.visitor.getall
+            status: chat.status.get
+            website: chat.website.get
+            department: chat.department.get
+            history: chat.history.all
+            creationDate: chat.creationDate.get
 
-        }, (err, chat) ->
-          chat.id = id
-          cb err, chat
+          }, (err, chat) ->
+            chat.id = id
+            cb err, chat
 
       chat.delete = (cb) ->
         async.parallel [
@@ -111,6 +115,9 @@ face = (decorators) ->
         ], cb
 
       return chat
+
+    exists: (id, cb) ->
+      faceValue.allChats.ismember id, cb
 
   allChats faceValue
 

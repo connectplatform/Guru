@@ -17,11 +17,20 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
         server.ready (services) ->
 
           server.getMyChats (err, chats) ->
+            if err
+              server.serverLog {
+                error: err
+                message: 'Error in operatorChat'
+                function: 'getMyChats'
+                results: chats
+                ids:
+                  sessionId: server.cookie 'session'
+              }, ->
 
             for chat in chats
               chat.renderedId = renderId chat.id
-              chat.visitor.acpData = JSON.parse chat.visitor.acpData if chat.visitor.acpData?
-              chat.visitor.acpData = util.jsonToUl chat.visitor.acpData if chat.visitor.acpData?
+              chat.visitor.acpData = JSON.parse chat.visitor.acpData if chat?.visitor?.acpData?
+              chat.visitor.acpData = util.jsonToUl chat.visitor.acpData if chat?.visitor?.acpData?
 
             $('#content').html templ chats: chats
 

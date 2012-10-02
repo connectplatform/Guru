@@ -14,6 +14,9 @@ module.exports = (res) ->
         cb err, [chatSession.chatId, isWatching]
 
     async.map chatSessions, getIsWatching, (err, arr) ->
+      if err
+        console.log "Error mapping chat sessions: ", err
+        return res.reply err, null
 
       # get info for a specific chat
       doLookup = ([chat, isWatching], cb) ->

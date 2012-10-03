@@ -117,6 +117,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               $("##{chat.renderedId} .leaveButton").click controls.createLeaveHandler chat.id
 
               $("##{chat.renderedId} .printButton").click chatActions.print chat.id
+              $("##{chat.renderedId} .emailButton").click chatActions.email chat.id
 
     teardown:
       (cb) ->

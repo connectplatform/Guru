@@ -81,7 +81,8 @@
               });
               return appendServerMessage('You have left the chat.');
             });
-            return $('.printButton').click(chatActions.print(chatId));
+            $('.printButton').click(chatActions.print(chatId));
+            return $('.emailButton').click(chatActions.email(chatId));
           });
         });
       },

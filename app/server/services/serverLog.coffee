@@ -3,6 +3,7 @@ stoic = require 'stoic'
 {Chat, Session} = stoic.models
 
 {inspect} = require 'util'
+{getType} = config.require 'load/util'
 
 getData = (item, modelName) ->
   (cb) ->
@@ -18,6 +19,7 @@ getData = (item, modelName) ->
 
 module.exports = (res, obj) ->
   console.log '\nReceived logging request from client: ', obj
+  return res.reply null, 'Success' unless (getType obj?.ids) is '[object Object]'
 
   async.parallel [
     getData obj.ids.chatId, 'Chat'

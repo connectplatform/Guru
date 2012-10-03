@@ -15,3 +15,11 @@ boiler 'Service - Server Log', ->
         should.not.exist err
         ack.should.eql 'Success'
         done()
+
+  it 'should work when no arguments are specified', (done) ->
+    @getAuthed =>
+      @client.serverLog {}, (err, ack) =>
+        @client.disconnect()
+        should.not.exist err
+        ack.should.eql 'Success'
+        done()

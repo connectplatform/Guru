@@ -16,14 +16,25 @@
         };
         return server.ready(function(services) {
           return server.getMyChats(function(err, chats) {
-            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, renderLogo, updateChatBadge, _i, _j, _k, _len, _len1, _len2, _results;
+            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, renderLogo, updateChatBadge, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _results;
+            if (err) {
+              server.serverLog({
+                error: err,
+                message: 'Error in operatorChat',
+                "function": 'getMyChats',
+                results: chats,
+                ids: {
+                  sessionId: server.cookie('session')
+                }
+              }, function() {});
+            }
             for (_i = 0, _len = chats.length; _i < _len; _i++) {
               chat = chats[_i];
               chat.renderedId = renderId(chat.id);
-              if (chat.visitor.acpData != null) {
+              if ((chat != null ? (_ref = chat.visitor) != null ? _ref.acpData : void 0 : void 0) != null) {
                 chat.visitor.acpData = JSON.parse(chat.visitor.acpData);
               }
-              if (chat.visitor.acpData != null) {
+              if ((chat != null ? (_ref1 = chat.visitor) != null ? _ref1.acpData : void 0 : void 0) != null) {
                 chat.visitor.acpData = util.jsonToUl(chat.visitor.acpData);
               }
             }
@@ -125,7 +136,8 @@
               $("#" + chat.renderedId + " .transferButton").click(controls.createHandler('transferChat', chat.id));
               $("#" + chat.renderedId + " .kickButton").click(controls.createKickHandler(chat.id, chat.renderedId));
               $("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id));
-              _results.push($("#" + chat.renderedId + " .printButton").click(chatActions.print(chat.id)));
+              $("#" + chat.renderedId + " .printButton").click(chatActions.print(chat.id));
+              _results.push($("#" + chat.renderedId + " .emailButton").click(chatActions.email(chat.id)));
             }
             return _results;
           });

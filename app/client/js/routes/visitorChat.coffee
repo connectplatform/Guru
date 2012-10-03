@@ -64,6 +64,8 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
 
           $('.printButton').click chatActions.print chatId
 
+          $('.emailButton').click chatActions.email chatId
+
     teardown: (cb) ->
       ran = true
       @channel.removeAllListeners 'serverMessage'

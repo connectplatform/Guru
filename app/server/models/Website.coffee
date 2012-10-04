@@ -1,7 +1,25 @@
 db = require 'mongoose'
 {Schema} = db
+{Field} = db.models
 
 website = new Schema
+
+  requiredFields:
+    type: [
+
+      name:
+        type: String
+        required: true
+
+      inputType:
+        type: String
+        enum: ['text', 'selection']
+        required: true
+
+      selections: [String]
+
+      default: String
+    ]
 
   name:
     type: String

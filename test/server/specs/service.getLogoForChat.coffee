@@ -6,7 +6,7 @@ boiler 'Service - Get Logo For Chat', ->
     chatData =
       username: 'aVisitor'
       params:
-        websiteUrl: 'www.example.com'
+        websiteUrl: 'www.foo.com'
 
     @client = @getClient()
     @client.ready =>

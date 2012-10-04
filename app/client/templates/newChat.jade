@@ -3,5 +3,17 @@
 
   br
   form.form-inline#newChat-form
-    input(type="text", value="", placeholder="Username (optional)")#username
+    for field in fields
+
+      if field.inputType = 'text'
+        input(type="text", placeholder="#{field.default}", name="#{field.name}")
+
+      if field.inputType = 'dropdown'
+        select.small-modal-box(name="#{field.name}")
+          each selection in field.selections
+            if selection == field.default
+              option(value="#{selection}", selected="selected") #{selection}
+            else
+              option(value="#{selection}") #{selection}
+
     button.btn.btn-primary.newChatButton(type="submit") Enter Chat

@@ -5,9 +5,9 @@ boiler 'REST - Chat Link Image', ->
   describe 'Chat link image', ->
     before ->
       statusShouldBe = (status,  cb) =>
-        rest.get("http://localhost:#{@testPort}/example.com/chatLinkImage").on '3XX', (data, response) =>
+        rest.get("http://localhost:#{@testPort}/foo.com/chatLinkImage").on '3XX', (data, response) =>
           response.statusCode.should.eql 307
-          new RegExp("example.com\/#{status}$").test(response.headers.location).should.eql true
+          new RegExp("foo.com\/#{status}$").test(response.headers.location).should.eql true
           cb()
 
       @expectOnline = (cb) -> statusShouldBe 'online', cb

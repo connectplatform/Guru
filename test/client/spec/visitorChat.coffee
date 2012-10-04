@@ -3,43 +3,41 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
     describe 'Visitor Chat', ->
       beforeEach ->
-        mock.services()
-        mock.visitor()
-        window.location.hash = '/newChat'
+        runs ->
+          mock.services()
+          mock.visitor()
+          window.location.hash = '/newChat'
+
         waitsFor exists('#newChat-form'), 'New Chat did not load', 200
 
         runs ->
           $('#username').val 'aVisitor'
           $('.newChatButton').click()
 
-          waitsFor exists('.chat-display-box'), 'Visitor chat did not load', 200
-          runs ->
+        waitsFor exists('.chat-display-box'), 'Visitor chat did not load', 200
 
       afterEach ->
-        window.location.hash = '/test'
-        mock.loggedOut()
+        runs ->
+          window.location.hash = '/test'
+          mock.loggedOut()
 
       it 'should display a welcome message', ->
-        runs ->
-
-          waitsFor hasText('.chat-display-box p', "Welcome to live chat!  An operator will be with you shortly."), 200, 'Welcome message did not display'
-          runs ->
+        waitsFor hasText('.chat-display-box p', "Welcome to live chat!  An operator will be with you shortly."), 200, 'Welcome message did not display'
 
       it 'should give the visitor a button to leave the chat', ->
+        waitsFor exists('.leaveButton'), 'Visitor chat did not load', 200
+
         runs ->
-          waitsFor exists('.leaveButton'), 'Visitor chat did not load', 200
-          runs ->
 
-            userKicked = false
-            server.kickUser = (args..., cb) ->
-              userKicked = true
+          userKicked = false
+          server.kickUser = (args..., cb) ->
+            userKicked = true
 
-            $('.leaveButton').click()
-            wasKicked = -> userKicked
-            waitsFor wasKicked
+          $('.leaveButton').click()
+          wasKicked = -> userKicked
+          waitsFor wasKicked
 
-            messageDisplayed = ->
-              $('.chat-display-box').children().eq(1)?.text() is 'You have left the chat.'
+        messageDisplayed = ->
+          $('.chat-display-box').children().eq(1)?.text() is 'You have left the chat.'
 
-            waitsFor messageDisplayed, 200, 'Exit message did not display'
-            runs ->
+        waitsFor messageDisplayed, 200, 'Exit message did not display'

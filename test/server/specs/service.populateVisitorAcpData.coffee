@@ -7,7 +7,7 @@ stoic = require 'stoic'
 # data we got from referrer
 params = {
   customerId: '1'
-  websiteUrl: 'www.example.com'
+  websiteUrl: 'www.foo.com'
 }
 
 clientData = {

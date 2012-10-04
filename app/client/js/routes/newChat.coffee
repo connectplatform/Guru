@@ -1,31 +1,41 @@
 define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
   {getDomain} = util
-  (_, templ, queryString={}) ->
+  (_, templ, queryParams={}) ->
     $("#content").html "Loading..."
-    delete queryString["undefined"]
+    delete queryParams["undefined"]
+
+    #fall back to referrer if queryParams doesn't give us the website we came from
+    unless queryParams.websiteUrl
+      queryParams.websiteUrl = getDomain document.referrer
 
     server.ready ->
 
-      server.getExistingChatChannel (err, data) ->
-        window.location.hash = "/visitorChat/#{data.channel}" if data
+      # redirect if already a chat for this session
+      server.getExistingChat (err, data) ->
+        console.log "Error getting existing chat:", err if err?
+        return window.location.hash = "/visitorChat/#{data.chatId}" if data?.chatId
 
-        $("#content").html templ()
-        $("#newChat-form #username").focus()
-        $("#newChat-form").submit (evt) ->
-          evt.preventDefault()
+        # redirect if we have enough data from query params
+        server.createChatOrGetForm queryParams, (err, data) ->
+          console.log "Error getting chat data:", err if err?
+          return window.location.hash = "/visitorChat/#{data.chatId}" if data?.chatId
 
-          username = $("#newChat-form #username").val()
+          # otherwise render the user data form
+          $("#content").html templ data.fields
+          $("#newChat-form").find(':input').filter(':visible:first')
 
-          #fall back to referrer if queryString doesn't give us the website we came from
-          unless queryString.websiteUrl
-            queryString.websiteUrl = getDomain document.referrer
+          $("#newChat-form").submit (evt) ->
+            evt.preventDefault()
 
-          server.newChat {username: username, params: queryString}, (err, data) ->
-            if err?
-              $("#content").html templ()
-              notify.error "Error connecting to chat: #{err}"
+            username = $("#newChat-form #username").val()
 
-            else
-              window.location.hash = "/visitorChat/#{data.chatId}"
+            # TODO: refactor to move username into params
+            server.newChat {username: username, params: queryParams}, (err, data) ->
+              if err?
+                $("#content").html templ()
+                notify.error "Error connecting to chat: #{err}"
 
-          $("#content").html "Connecting to chat..."
+              else
+                window.location.hash = "/visitorChat/#{data.chatId}"
+
+            $("#content").html "Connecting to chat..."

@@ -29,7 +29,7 @@ acpData = {
 
 referrerData = {
   customerId: '1'
-  websiteUrl: 'http://www.example.com'
+  websiteUrl: 'http://www.foo.com'
 }
 
 response = (req, res) ->

@@ -7,6 +7,7 @@ db.connect config.mongo.host
 loadModel "Role"
 loadModel "User"
 loadModel "Specialty"
+loadModel "Field"
 loadModel "Website"
 loadModel "ChatHistory"
 

@@ -6,7 +6,7 @@ module.exports = ->
     except: [
       'login',
       'getChatStats',
-      'getExistingChatChannel',
+      'getExistingChat',
       'getRoles',
       'resetPassword',
       'forgotPassword',

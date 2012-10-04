@@ -20,8 +20,8 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
             for chat in chats
               chat.renderedId = renderId chat.id
-              chat.visitor.acpData = JSON.parse chat.visitor.acpData if chat.visitor.acpData?
-              chat.visitor.acpData = util.jsonToUl chat.visitor.acpData if chat.visitor.acpData?
+              chat.visitor.acpData = JSON.parse chat.visitor.acpData if chat?.visitor?.acpData
+              chat.visitor.acpData = util.jsonToUl chat.visitor.acpData if chat?.visitor?.acpData
 
             $('#content').html templ chats: chats
 

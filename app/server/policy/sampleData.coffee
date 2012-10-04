@@ -2,7 +2,7 @@ async = require 'async'
 {digest_s} = require 'md5'
 
 mongo = config.require 'server/load/mongo'
-{User, Role, Website} = mongo.models
+{User, Role, Website, Field} = mongo.models
 
 module.exports = (done) ->
   mongo.wipe ->
@@ -58,10 +58,20 @@ module.exports = (done) ->
     ]
 
     websites = [
-        name: "example.com"
-        url: "www.example.com"
+        name: "foo.com"
+        url: "www.foo.com"
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
+        requiredFields: [
+            name: 'username'
+            inputType: 'text'
+            default: 'Chat Name'
+          ,
+            name: 'department'
+            inputType: 'selection'
+            selections: ['Sales', 'Billing']
+        ]
+
     ]
 
     async.parallel [

@@ -1,5 +1,7 @@
 module.exports =
-  createFields: (inModel) -> inModel
+  createFields: (inModel) ->
+    inModel.fields = [{name: 'Name', type: 'text', default: 'Chat Name'}]
+    inModel
 
   filterOutput: (inModel) ->
     outModel = {id: inModel['_id']}

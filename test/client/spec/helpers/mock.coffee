@@ -33,7 +33,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
         server.getActiveChats = (args..., cb) ->
           cb null, []
-        server.getExistingChatChannel = (args..., cb) ->
+        server.getExistingChat = (args..., cb) ->
           cb null, null
         server.newChat = (args..., cb) ->
           cb null, {chatId: 'foo'}
@@ -42,7 +42,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
         server.getChatHistory = (args..., cb) ->
           cb null, []
         server.getLogoForChat = (args..., cb) ->
-          cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'www.example.com'}/logo"
+          cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'www.foo.com'}/logo"
         server.setSessionOffline = (args..., cb) ->
           cb null, null
 

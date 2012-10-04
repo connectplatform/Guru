@@ -1,6 +1,14 @@
 module.exports =
   createFields: (inModel) ->
-    inModel.fields = [{name: 'Name', type: 'text', default: 'Chat Name'}]
+    inModel.requiredFields = [
+        name: 'username'
+        inputType: 'text'
+        default: 'Chat Name'
+      ,
+        name: 'department'
+        inputType: 'selection'
+        selections: ['Sales', 'Billing']
+    ]
     inModel
 
   filterOutput: (inModel) ->

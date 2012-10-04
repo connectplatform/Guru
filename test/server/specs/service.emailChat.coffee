@@ -16,7 +16,7 @@ boiler 'Service - Email Chat', ->
 
           client.emailChat @chatId, 'test@torchlightsoftware.com', (err, exitStatus) =>
             should.not.exist err
-            should.exist status
-            status.message.should.eql 'Sendmail exited with 0'
+            should.exist exitStatus
+            exitStatus.message.should.match /MessageId/
             client.disconnect()
             done()

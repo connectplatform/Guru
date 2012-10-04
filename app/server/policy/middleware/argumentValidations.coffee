@@ -20,6 +20,7 @@ module.exports = ->
       'acceptChat',
       'acceptInvite',
       'acceptTransfer',
+      'emailChat',
       'getChatHistory',
       'getNonpresentOperators',
       'inviteOperator',

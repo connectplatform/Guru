@@ -20,6 +20,7 @@ module.exports = ->
       'say',
       'kickUser',
       'printChat',
+      'emailChat',
 
       # these three are covered by isAdministrator
       'deleteModel',
@@ -41,5 +42,6 @@ module.exports = ->
   beforeFilter ['isVisibleInChat'], only: [ 'transferChat', 'kickUser']
   beforeFilter ['isNotVisibleChatMember'], only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']
   beforeFilter ['isNotChatMember'], only: ['watchChat']
+  beforeFilter ['isChatMember'], only: ['emailChat']
   beforeFilter ['isInvitedToChat'], only: ['acceptInvite']
   beforeFilter ['isInvitedToTransfer'], only: ['acceptTransfer']

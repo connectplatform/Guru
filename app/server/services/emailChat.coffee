@@ -1,6 +1,7 @@
 stoic = require 'stoic'
 {Chat} = stoic.models
 
+sendEmail = config.require 'services/email/sendEmail'
 render = config.require 'services/templates/renderTemplate'
 
 module.exports = (res, chatId, email) ->
@@ -14,6 +15,4 @@ module.exports = (res, chatId, email) ->
       subject: "Transcript of your chat on #{config.app.name}"
 
     sendEmail body, sendingOptions, (err, sendmailStatus) ->
-      user.registrationKey = regkey
-      user.sentEmail = true
       res.reply err, sendmailStatus

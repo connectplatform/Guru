@@ -14,5 +14,5 @@ describe 'sendEmail', ->
     sendEmail body, options, (err, status) ->
       should.not.exist err
       should.exist status
-      status.message.should.eql 'Sendmail exited with 0'
+      status.message.should.match /MessageId/
       done()

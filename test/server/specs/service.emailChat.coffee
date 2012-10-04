@@ -14,7 +14,7 @@ boiler 'Service - Email Chat', ->
       client.say (pack 'Hello'), =>
         client.say (pack 'How are you?'), =>
 
-          client.emailChat @chatId, 'test@torchlightsoftware.com', (err, exitStatus) =>
+          client.emailChat @chatId, 'success@simulator.amazonses.com', (err, exitStatus) =>
             should.not.exist err
             should.exist exitStatus
             exitStatus.message.should.match /MessageId/

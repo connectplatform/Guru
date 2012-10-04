@@ -5,7 +5,7 @@ describe 'sendEmail', ->
 
   it 'should send an email', (done) ->
     options =
-      to: 'test@torchlightsoftware.com'
+      to: 'success@simulator.amazonses.com'
       name: 'test'
       subject: "Welcome to #{config.app.name}"
 

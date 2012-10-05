@@ -51,7 +51,7 @@ boiler 'Service - Get Active Chats', ->
     it 'should not show me chats for another website', (done) ->
       chatData =
         username: 'visitor'
-        params: {websiteUrl: 'baz.com'}
+        websiteUrl: 'baz.com'
 
       @generate chatData, (err, chats) ->
         chats.length.should.eql 0, 'Expected no chats'
@@ -60,7 +60,7 @@ boiler 'Service - Get Active Chats', ->
     it 'should show me chats for my website', (done) ->
       chatData =
         username: 'visitor'
-        params: {websiteUrl: 'foo.com'}
+        websiteUrl: 'foo.com'
 
       @generate chatData, (err, chats) ->
         chats.length.should.eql 1, 'Expected a chat'
@@ -69,7 +69,7 @@ boiler 'Service - Get Active Chats', ->
     it 'should not show me chats for another specialty', (done) ->
       chatData =
         username: 'visitor'
-        params: {websiteUrl: 'foo.com'}
+        websiteUrl: 'foo.com'
         department: 'Billing'
 
       @generate chatData, (err, chats) ->
@@ -79,7 +79,7 @@ boiler 'Service - Get Active Chats', ->
     it 'should show me chats for my specialty', (done) ->
       chatData =
         username: 'visitor'
-        params: {websiteUrl: 'foo.com'}
+        websiteUrl: 'foo.com'
         department: 'Sales'
 
       @generate chatData, (err, chats) ->
@@ -89,7 +89,7 @@ boiler 'Service - Get Active Chats', ->
     it 'department should not be case sensitive', (done) ->
       chatData =
         username: 'visitor'
-        params: {websiteUrl: 'foo.com'}
+        websiteUrl: 'foo.com'
         department: 'sales'
 
       @generate chatData, (err, chats) ->

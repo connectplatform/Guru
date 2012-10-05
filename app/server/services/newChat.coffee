@@ -7,15 +7,16 @@ showToValidOperators = config.require 'services/operator/showToValidOperators'
 
 module.exports = (res, userData) ->
   {Chat, Session, ChatSession} = stoic.models
-  username = userData.username or 'anonymous'
-  website = userData.params?.websiteUrl
+
+  website = userData.websiteUrl
   department = userData.department
+  username = userData.username or 'anonymous'
 
   # pump chat data into redis
   createChatData = (next, {chat}) ->
     visitorMeta =
       username: username
-      referrerData: userData.params || null
+      referrerData: userData || null
 
     chat.visitor.mset visitorMeta, next
 
@@ -62,5 +63,5 @@ module.exports = (res, userData) ->
     res.reply err, chatId: chat.id
 
     # query for ACP data and store it in redis whenever it's available
-    if userData.params
-      populateVisitorAcpData userData.params, chat.id
+    if userData
+      populateVisitorAcpData userData, chat.id

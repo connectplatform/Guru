@@ -29,14 +29,14 @@ boiler 'Service - Get Chat Stats', ->
       @generate = (done) ->
         chats = [
             username: 'should show'
-            params: {websiteUrl: 'foo.com'}
+            websiteUrl: 'foo.com'
             department: 'Sales'
           ,
             username: 'should not show'
-            params: {websiteUrl: 'baz.com'}
+            websiteUrl: 'baz.com'
           ,
             username: 'should not show'
-            params: {websiteUrl: 'foo.com'}
+            websiteUrl: 'foo.com'
             department: 'Billing'
         ]
         async.forEach chats, @newChatWith, done

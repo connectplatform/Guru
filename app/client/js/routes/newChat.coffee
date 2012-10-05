@@ -1,5 +1,6 @@
 define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
   {getDomain} = util
+
   (_, templ, queryParams={}) ->
     $("#content").html "Loading..."
     delete queryParams["undefined"]
@@ -16,23 +17,27 @@ define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
         return window.location.hash = "/visitorChat/#{data.chatId}" if data?.chatId
 
         # redirect if we have enough data from query params
-        server.createChatOrGetForm queryParams, (err, data) ->
-          console.log "Error getting chat data:", err if err?
-          return window.location.hash = "/visitorChat/#{data.chatId}" if data?.chatId
+        server.createChatOrGetForm queryParams, (err, result) ->
+          console.log "Error getting chat result:", err if err?
+          return window.location.hash = "/visitorChat/#{result.chatId}" if result?.chatId
+          #TODO: show website selector if no website present
 
           # otherwise render the user data form
-          $("#content").html templ data.fields
+          $("#content").html templ result
           $("#newChat-form").find(':input').filter(':visible:first')
 
           $("#newChat-form").submit (evt) ->
             evt.preventDefault()
 
-            username = $("#newChat-form #username").val()
+            toObj = (obj, item) ->
+              obj[item.name] = item.value
+              return obj
+            formParams = $(@).serializeArray().reduce toObj, {}
 
-            # TODO: refactor to move username into params
-            server.newChat {username: username, params: queryParams}, (err, data) ->
+            server.newChat queryParams.merge(formParams), (err, data) ->
+              console.log 'got new chat'
               if err?
-                $("#content").html templ()
+                $("#content").html templ result
                 notify.error "Error connecting to chat: #{err}"
 
               else

@@ -10,10 +10,8 @@
         return server.ready(function() {
           return server.visitorCanAccessChannel(chatId, function(err, canAccess) {
             var appendChatMessage, appendServerMessage, displayGreeting;
-            console.log("canAccess: ", canAccess);
             if (!canAccess) return window.location.hash = '/newChat';
             $("#content").html(templ());
-            console.log("rendered");
             $("#message-form #message").focus();
             self.channel = pulsar.channel(chatId);
             $(".message-form").submit(function(evt) {
@@ -57,7 +55,6 @@
               });
             });
             server.getLogoForChat(chatId, function(err, logoUrl) {
-              console.log("logoUrl: ", logoUrl);
               if (err) notify.error("Error getting logo url: " + err);
               return $(".websiteLogo").html(imageTemplate({
                 source: logoUrl

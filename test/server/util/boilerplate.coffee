@@ -58,7 +58,7 @@ module.exports = global.boiler = (testName, tests) ->
 
       # create a chat but disconnect the visitor when done
       @newChat = (cb) =>
-        @newChatWith {username: 'visitor'}, cb
+        @newChatWith {username: 'visitor', website: 'foo.com'}, cb
 
       @newChatWith = (data, cb) =>
         @newVisitor data, (err, visitor, chatId) =>

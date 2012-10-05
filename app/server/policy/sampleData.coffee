@@ -66,10 +66,12 @@ module.exports = (done) ->
             name: 'username'
             inputType: 'text'
             default: 'Chat Name'
+            label: 'Chat Name'
           ,
             name: 'department'
             inputType: 'selection'
             selections: ['Sales', 'Billing']
+            label: 'Department'
         ]
 
     ]

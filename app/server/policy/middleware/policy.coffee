@@ -13,6 +13,7 @@ module.exports = ->
       'forgotPassword',
       'newChat',
       'getExistingChat',
+      'createChatOrGetForm',
       'visitorCanAccessChannel',
       'getChatHistory',
       'getLogoForChat',

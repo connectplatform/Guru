@@ -3,7 +3,6 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
     channels: []
     setup:
       (args, templ) ->
-        console.log "called setup in operatorChat"
         self = this
         self.channels = []
 
@@ -26,10 +25,8 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
             $('#content').html templ chats: chats
 
             renderLogo = (chat) ->
-              console.log "renderLogo called"
               server.getLogoForChat chat.id, (err, logoUrl) ->
                 notify.error "Error getting logo for chat ", err if err?
-                console.log "logoUrl: ", logoUrl
                 $("##{chat.renderedId} .websiteLogo").html imageTemplate source: logoUrl
 
             for chat in chats
@@ -106,15 +103,12 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               $("##{chat.renderedId} .transferButton").click controls.createHandler 'transferChat', chat.id
               $("##{chat.renderedId} .kickButton").click controls.createKickHandler chat.id, chat.renderedId
               $("##{chat.renderedId} .leaveButton").click controls.createLeaveHandler chat.id
-            console.log "finished setup in operatorChat"
 
     teardown:
       (cb) ->
-        console.log "called teardown in operatorChat"
         self = this
         channel.removeAllListeners 'serverMessage' for channel in self.channels
         self.sessionUpdates.removeAllListeners 'kickedFromChat'
         self.sessionUpdates.removeAllListeners 'unreadMessages'
         self.channels = []
-        console.log "finished teardown in operatorChat"
         cb()

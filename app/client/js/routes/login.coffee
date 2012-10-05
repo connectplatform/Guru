@@ -1,7 +1,6 @@
 define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"],
   (server, notify, sidebar, sbTemp, util, registerSessionUpdates) ->
     (args, templ) ->
-      console.log "routed to login"
 
       $('#content').html templ()
       $('#login-modal').modal()

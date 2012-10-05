@@ -5,7 +5,6 @@
       channels: [],
       setup: function(args, templ) {
         var renderId, self, sessionId;
-        console.log("called setup in operatorChat");
         self = this;
         self.channels = [];
         sessionId = server.cookie("session");
@@ -15,7 +14,7 @@
         };
         return server.ready(function(services) {
           return server.getMyChats(function(err, chats) {
-            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, renderLogo, updateChatBadge, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
+            var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, renderLogo, updateChatBadge, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
             for (_i = 0, _len = chats.length; _i < _len; _i++) {
               chat = chats[_i];
               chat.renderedId = renderId(chat.id);
@@ -30,10 +29,8 @@
               chats: chats
             }));
             renderLogo = function(chat) {
-              console.log("renderLogo called");
               return server.getLogoForChat(chat.id, function(err, logoUrl) {
                 if (err != null) notify.error("Error getting logo for chat ", err);
-                console.log("logoUrl: ", logoUrl);
                 return $("#" + chat.renderedId + " .websiteLogo").html(imageTemplate({
                   source: logoUrl
                 }));
@@ -103,6 +100,7 @@
                 return $(".notifyUnread[chatid=" + chatId + "]").html(content);
               };
             };
+            _results = [];
             for (_k = 0, _len3 = chats.length; _k < _len3; _k++) {
               chat = chats[_k];
               channel = pulsar.channel(chat.id);
@@ -118,15 +116,14 @@
               $("#" + chat.renderedId + " .inviteButton").click(controls.createHandler('inviteOperator', chat.id));
               $("#" + chat.renderedId + " .transferButton").click(controls.createHandler('transferChat', chat.id));
               $("#" + chat.renderedId + " .kickButton").click(controls.createKickHandler(chat.id, chat.renderedId));
-              $("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id));
+              _results.push($("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id)));
             }
-            return console.log("finished setup in operatorChat");
+            return _results;
           });
         });
       },
       teardown: function(cb) {
         var channel, self, _i, _len, _ref;
-        console.log("called teardown in operatorChat");
         self = this;
         _ref = self.channels;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -136,7 +133,6 @@
         self.sessionUpdates.removeAllListeners('kickedFromChat');
         self.sessionUpdates.removeAllListeners('unreadMessages');
         self.channels = [];
-        console.log("finished teardown in operatorChat");
         return cb();
       }
     };

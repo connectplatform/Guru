@@ -4,18 +4,14 @@ querystring = require 'querystring'
 {setTimeout} = require 'timers'
 stoic = require 'stoic'
 
-# data we got from referrer
-params = {
+# query/form data
+clientData = {
+  username: 'Bob'
   customerId: '1'
   websiteUrl: 'www.foo.com'
 }
 
-clientData = {
-  username: 'aVisitor'
-  params: params
-}
-
-# data server should respond with
+# data ACP should respond with
 expectedAcpData = {
   someField:
     firstSubfield: 'first subvalue'
@@ -26,7 +22,7 @@ expectedAcpData = {
 # set up rest endpoint for our mock ACP server
 response = (req, res) ->
   query = querystring.parse req._parsedUrl.query
-  if (query.customerId == params.customerId) && (query.referrer == params.referrer)
+  if (query.customerId == clientData.customerId) && (query.websiteUrl == clientData.websiteUrl)
     res.end JSON.stringify expectedAcpData
 
 boiler 'Service - Populate Visitor ACP Data', ->
@@ -49,7 +45,7 @@ boiler 'Service - Populate Visitor ACP Data', ->
           visitor= Chat.get(chatId).visitor
           visitor.get 'referrerData', (err, refData) ->
             should.not.exist err
-            refData.should.eql params
+            refData.should.eql clientData
 
             visitor.get 'acpData', (err, acpData) ->
               should.not.exist err

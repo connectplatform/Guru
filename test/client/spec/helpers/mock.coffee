@@ -35,6 +35,18 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, []
         server.getExistingChat = (args..., cb) ->
           cb null, null
+        server.createChatOrGetForm = (args..., cb) ->
+          cb null, fields: [
+                name: 'username'
+                inputType: 'text'
+                default: 'Chat Name'
+                label: 'Chat Name'
+              ,
+                name: 'department'
+                inputType: 'selection'
+                selections: ['Sales', 'Billing']
+                label: 'Department'
+            ]
         server.newChat = (args..., cb) ->
           cb null, {chatId: 'foo'}
         server.visitorCanAccessChannel = (args..., cb) ->
@@ -45,6 +57,10 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'www.foo.com'}/logo"
         server.setSessionOffline = (args..., cb) ->
           cb null, null
+
+      returnChat: ->
+        server.createChatOrGetForm = (args..., cb) ->
+          cb null, chatId: 'foo'
 
       activeChats: ->
         server.getActiveChats = (args..., cb) ->

@@ -5,11 +5,9 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
       self = this
       server.ready ->
         server.visitorCanAccessChannel chatId, (err, canAccess) ->
-          console.log "canAccess: ", canAccess
           return window.location.hash = '/newChat' unless canAccess
 
           $("#content").html templ()
-          console.log "rendered"
           $("#message-form #message").focus()
           self.channel = pulsar.channel chatId
 
@@ -51,7 +49,6 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
 
           # display chat logo
           server.getLogoForChat chatId, (err, logoUrl) ->
-            console.log "logoUrl: ", logoUrl
             notify.error "Error getting logo url: #{err}" if err
             $(".websiteLogo").html imageTemplate source: logoUrl
 

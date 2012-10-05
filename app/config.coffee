@@ -17,9 +17,11 @@ config =
       chats:
         minutesToTimeout: 15
       mail:
-        transport: 'sendmail'
+        transport: 'SES'
         options:
-          args: ["-f info@livechathost.com"]
+          AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
+          AWSSecretKey: '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'
+          from: 'info@livechathost.com'
         getActivationLink: (uid, regkey) ->
           "http://localhost:4000/#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       aws:

@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "templates/imageTemplate"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, imageTemplate) {
+  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "templates/imageTemplate", "helpers/chatActions"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, imageTemplate, chatActions) {
     return {
       channels: [],
       setup: function(args, templ) {
@@ -15,6 +15,17 @@
         return server.ready(function(services) {
           return server.getMyChats(function(err, chats) {
             var channel, chat, createChatAppender, createChatRemover, createSubmitHandler, renderLogo, updateChatBadge, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _results;
+            if (err) {
+              server.serverLog({
+                error: err,
+                message: 'Error in operatorChat',
+                "function": 'getMyChats',
+                results: chats,
+                ids: {
+                  sessionId: server.cookie('session')
+                }
+              }, function() {});
+            }
             for (_i = 0, _len = chats.length; _i < _len; _i++) {
               chat = chats[_i];
               chat.renderedId = renderId(chat.id);
@@ -116,7 +127,9 @@
               $("#" + chat.renderedId + " .inviteButton").click(controls.createHandler('inviteOperator', chat.id));
               $("#" + chat.renderedId + " .transferButton").click(controls.createHandler('transferChat', chat.id));
               $("#" + chat.renderedId + " .kickButton").click(controls.createKickHandler(chat.id, chat.renderedId));
-              _results.push($("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id)));
+              $("#" + chat.renderedId + " .leaveButton").click(controls.createLeaveHandler(chat.id));
+              $("#" + chat.renderedId + " .printButton").click(chatActions.print(chat.id));
+              _results.push($("#" + chat.renderedId + " .emailButton").click(chatActions.email(chat.id)));
             }
             return _results;
           });

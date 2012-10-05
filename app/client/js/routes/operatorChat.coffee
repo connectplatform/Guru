@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "templates/imageTemplate"],
-  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, imageTemplate) ->
+define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "templates/imageTemplate", "helpers/chatActions"],
+  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, imageTemplate, chatActions) ->
     channels: []
     setup:
       (args, templ) ->
@@ -16,6 +16,15 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
         server.ready (services) ->
 
           server.getMyChats (err, chats) ->
+            if err
+              server.serverLog {
+                error: err
+                message: 'Error in operatorChat'
+                function: 'getMyChats'
+                results: chats
+                ids:
+                  sessionId: server.cookie 'session'
+              }, ->
 
             for chat in chats
               chat.renderedId = renderId chat.id
@@ -103,6 +112,8 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               $("##{chat.renderedId} .transferButton").click controls.createHandler 'transferChat', chat.id
               $("##{chat.renderedId} .kickButton").click controls.createKickHandler chat.id, chat.renderedId
               $("##{chat.renderedId} .leaveButton").click controls.createLeaveHandler chat.id
+              $("##{chat.renderedId} .printButton").click chatActions.print chat.id
+              $("##{chat.renderedId} .emailButton").click chatActions.email chat.id
 
     teardown:
       (cb) ->

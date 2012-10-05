@@ -1,8 +1,7 @@
 should = require 'should'
 
-boiler 'Service - Chat To HTML', ->
-  it 'should convert a chat to an html document', (done) ->
-    chatToHtml = config.require 'services/chats/chatToHtml'
+boiler 'Service - Print Chat', ->
+  it 'should convert a chat to a printable html document', (done) ->
     @newVisitor {username: 'visitor'}, (err, client) =>
 
       pack = (message) =>
@@ -15,7 +14,7 @@ boiler 'Service - Chat To HTML', ->
       client.say (pack 'Hello'), =>
         client.say (pack 'How are you?'), =>
 
-          chatToHtml @chatId, (err, html) =>
+          client.printChat @chatId, (err, html) =>
             should.not.exist err
             html.should.eql "<p>visitor: Hello</p><p>visitor: How are you?</p>"
             client.disconnect()

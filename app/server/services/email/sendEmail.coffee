@@ -1,19 +1,11 @@
 nodemailer = require 'nodemailer'
-getBody = config.require 'services/email/getBody'
-{transport, options} = config.app.mail
+{options, transport} = config.app.mail
 
-module.exports = (template, vars, done) ->
-  vars.merge
-    from: options.from
-    service: config.app.name
-
+module.exports = (body, vars, done) ->
   sender = nodemailer.createTransport transport, options
 
-  getBody template, vars, (err, body) ->
-    if err?
-      console.log "Error getting email template:", err
-      return done err
+  vars.from = config.app.mail.options.from
+  vars.html = body
 
-    vars.html = body
-    console.log "Sending '#{template}' email to #{vars.to}."
-    sender.sendMail vars, done
+  console.log "Sending email to #{vars.to}."
+  sender.sendMail vars, done

@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate"], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate) {
+  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate", "helpers/chatActions"], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate, chatActions) {
     return {
       channel: {},
       setup: function(_arg, templ) {
@@ -60,13 +60,15 @@
                 source: logoUrl
               }));
             });
-            return $('.leaveButton').click(function(evt) {
+            $('.leaveButton').click(function(evt) {
               evt.preventDefault();
               server.kickUser(chatId, function(err) {
                 if (err) return notify.error("Error leaving chat: " + err);
               });
               return appendServerMessage('You have left the chat.');
             });
+            $('.printButton').click(chatActions.print(chatId));
+            return $('.emailButton').click(chatActions.email(chatId));
           });
         });
       },

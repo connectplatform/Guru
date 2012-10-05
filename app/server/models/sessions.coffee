@@ -86,6 +86,24 @@ face = (decorators) ->
             unreadMessages[chat] = parseInt num
           next null, unreadMessages
 
+      session.dump = (cb) ->
+        return cb 'Session does not exist' unless id
+        faceValue.exists id, (err, exists) ->
+          return cb err if err
+          return cb 'Session does not exist' unless exists
+
+          async.parallel {
+            role: session.role.get
+            online: session.online.get
+            chatName: session.chatName.get
+            unansweredChats: session.unansweredChats.members
+            unreadMessages: session.unreadMessages.getall
+            operatorId: session.operatorId.get
+
+          }, (err, session) ->
+            session.id = id
+            cb err, session
+
       session.delete = (cb) =>
         async.parallel [
             session.role.del
@@ -98,6 +116,9 @@ face = (decorators) ->
 
 
       return session
+
+    exists: (id, cb) ->
+      faceValue.allSessions.ismember id, cb
 
   wrapModel = ({after}) ->
     after ['members', 'all'], (context, sessionIds, next) ->

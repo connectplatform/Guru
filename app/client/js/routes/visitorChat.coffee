@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate"],
-  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate) ->
+define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate", "helpers/chatActions" ],
+  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate, chatActions) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
@@ -58,6 +58,10 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
             server.kickUser chatId, (err) ->
               notify.error "Error leaving chat: #{err}" if err
             appendServerMessage 'You have left the chat.'
+
+          $('.printButton').click chatActions.print chatId
+
+          $('.emailButton').click chatActions.email chatId
 
     teardown: (cb) ->
       ran = true

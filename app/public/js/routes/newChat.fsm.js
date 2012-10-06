@@ -6,7 +6,9 @@
       renderForm = _arg.renderForm, params = _arg.params;
       fsm = {
         transition: function(err, data) {
-          if (!(data != null)) {
+          if (err && !(data != null)) {
+            return fsm.states.error(err);
+          } else if (!(data != null)) {
             return fsm.states.needChat();
           } else if (data.chatId) {
             return fsm.states.gotChat(data.chatId);
@@ -20,6 +22,12 @@
           }
         },
         states: {
+          error: function(err) {
+            $("#content").html("Oops, a problem occurred!  We've been notified, thank you for your patience.");
+            if (err != null) {
+              return notify.error("Problem connecting to chat: " + err);
+            }
+          },
           initial: function() {
             return server.getExistingChat(fsm.transition);
           },

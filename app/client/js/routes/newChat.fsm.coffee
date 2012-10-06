@@ -7,7 +7,10 @@ define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
 
     fsm =
       transition: (err, data) ->
-        if not data?
+        if err and not data?
+          fsm.states.error err
+
+        else if not data?
           fsm.states.needChat()
 
         else if data.chatId
@@ -24,6 +27,10 @@ define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
           fsm.states.needChat()
 
       states:
+        error: (err) ->
+          $("#content").html "Oops, a problem occurred!  We've been notified, thank you for your patience."
+          notify.error "Problem connecting to chat: #{err}" if err?
+
         initial: ->
           server.getExistingChat fsm.transition
 

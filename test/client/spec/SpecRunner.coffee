@@ -9,7 +9,7 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
     'spec/printChat',
     'spec/visitorChat'
 
-  ], (jasmineHtml, jjq, {delay}, mock, login, operatorChat, newChat, dashboard) ->
+  ], (jasmineHtml, jjq, {delay}, mock) ->
 
     $('head').append '<link rel="stylesheet" type="text/css" href="/js/vendor/jasmine-1.2.0/jasmine.css">'
 

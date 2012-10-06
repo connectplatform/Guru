@@ -21,6 +21,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
 
         it 'submitting form should create a new chat', (done) ->
           runs ->
+            mock.returnChat()
             $('#newChat-form input[name=username]').val 'Bob'
             $('#newChat-form button[type=submit]').click()
 
@@ -34,3 +35,12 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             window.location.hash = '/newChat?websiteUrl=foo.com'
 
           waitsFor exists('.chatPage input.message'), 'chat window did not load', 200
+
+      #describe 'when no operators exist', ->
+        #it 'should redirect to email', (done) ->
+          #runs ->
+            #mock.services()
+            #mock.noOperators()
+            #window.location.hash = '/newChat?websiteUrl=foo.com'
+
+          #waitsFor exists('.emailPage input.message'), 'email window did not load', 200

@@ -19,5 +19,5 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
           window.location.hash = '/printChat/some_chat_id'
 
-          waitsFor windowWasPrinted
+          waitsFor windowWasPrinted, 200
           runs ->

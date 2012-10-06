@@ -34,8 +34,7 @@ module.exports = (res, userData) ->
   createSession = (next) ->
     Session.create { role: 'Visitor', chatName: username }, next
 
-  show = (next, res) ->
-    {chat} = res
+  show = (next, {chat}) ->
     chatData =
       chatId: chat.id
       website: website

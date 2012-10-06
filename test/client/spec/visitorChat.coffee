@@ -11,6 +11,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
         waitsFor exists('#newChat-form'), 'New Chat did not load', 200
 
         runs ->
+          mock.returnChat()
           $('#username').val 'aVisitor'
           $('.newChatButton').click()
 

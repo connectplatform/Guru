@@ -43,3 +43,11 @@ boiler 'Service - Create Chat or Get Form', ->
         should.exist data?.fields
         data.fields[0].name.should.eql 'department'
         done()
+
+  describe 'with no website', ->
+    it 'should request form data', (done) ->
+      @client.createChatOrGetForm {}, (err, data) =>
+        should.not.exist err
+        should.exist data?.fields
+        data.fields[0].name.should.eql 'website'
+        done()

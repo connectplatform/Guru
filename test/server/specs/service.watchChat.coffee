@@ -7,19 +7,21 @@ boiler 'Service - Watch Chat', ->
   it 'should let an operator view a chat', (done) ->
 
     #given
-    visitorClient = @getClient()
-    visitorClient.ready =>
-      visitorClient.newChat {username: 'foo'}, (err, {chatId}) =>
-        sessionId = visitorClient.cookie 'session'
-        visitorClient.ready =>
-          visitorClient.disconnect()
-          message = "hello, world!"
+    @getAuthed =>
+      visitorClient = @getClient()
+      visitorClient.ready =>
+        visitorClient.newChat {username: 'foo', websiteUrl: 'foo.com'}, (err, data) =>
+          should.not.exist err
+          {chatId} = data
+          sessionId = visitorClient.cookie 'session'
+          visitorClient.ready =>
+            visitorClient.disconnect()
+            message = "hello, world!"
 
-          pulsarChannel = @getPulsar().channel chatId
-          pulsarChannel.emit 'clientMessage', {message: message, session: sessionId}
+            pulsarChannel = @getPulsar().channel chatId
+            pulsarChannel.emit 'clientMessage', {message: message, session: sessionId}
 
-          #when
-          @getAuthed =>
+            #when
             @client.watchChat chatId, (err, data) =>
               false.should.eql err?
               @client.getChatHistory chatId, (err, data)=>

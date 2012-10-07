@@ -4,9 +4,9 @@ stoic = require 'stoic'
 boiler 'Service - Transfer Chat', ->
   it "should let you transfer a chat to another operator", (done) ->
     # Setup
-    @newChat =>
-      @loginOperator =>
-        @getAuthed =>
+    @loginOperator =>
+      @getAuthed =>
+        @newChat =>
           @client.acceptChat @chatId, (err) =>
             should.not.exist err
 

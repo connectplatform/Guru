@@ -62,8 +62,8 @@ boiler 'Service - Get Chat Stats', ->
             done()
 
     it 'should display unanswered chats when I log in', (done) ->
-      @generate =>
-        @guru3Login (err, @client) =>
+      @guru3Login (err, @client) =>
+        @generate =>
           @client.getChatStats (err, stats) =>
             should.not.exist err
             should.exist stats

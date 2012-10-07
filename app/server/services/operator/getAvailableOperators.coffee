@@ -28,7 +28,7 @@ module.exports = (website, specialty, done) ->
 
       route =
         websites: website
-      route.specialties = specialty if specialty
+      route.specialties = new RegExp "^#{specialty}$", 'i' if specialty
 
       query['$or'].push route
 

@@ -4,8 +4,8 @@ stoic = require 'stoic'
 boiler 'Service - Get Nonpresent Opertors', ->
   it "should return a list of operators not currently visible in chat", (done) ->
     # Setup
-    @newChat =>
-      @getAuthed =>
+    @getAuthed =>
+      @newChat =>
         @client.watchChat @chatId, (err) =>
 
           # Get a list of operators who are online and not visible in chat
@@ -25,8 +25,8 @@ boiler 'Service - Get Nonpresent Opertors', ->
 
   it "should not return operators who are visible in the chat", (done) ->
     # Setup
-    @newChat =>
-      @getAuthed =>
+    @getAuthed =>
+      @newChat =>
         @client.acceptChat @chatId, (err) =>
 
           # Get a list of operators who are online and not visible in chat

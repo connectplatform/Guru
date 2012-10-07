@@ -4,24 +4,28 @@ Pulsar = require 'pulsar'
 
 boiler 'Service - Invite Operator', ->
   beforeEach (done) ->
-    # create a new chat
-    @newChat =>
 
-      # create invitee
-      @guru1Login (err, @client) =>
-        throw new Error err if err
+    # create invitee
+    @guru1Login (err, @guru1) =>
+      throw new Error err if err
 
-        # get the invitee's session
-        @targetSession = client.cookie 'session'
-        client.disconnect()
+      # get the invitee's session
+      @targetSession = @guru1.cookie 'session'
 
-        # create inviter
-        @getAuthed =>
+      # create inviter
+      @getAuthed =>
+
+        # create a new chat
+        @newChat (err, data) =>
+          should.not.exist err
 
           # accept the chat
           @client.acceptChat @chatId, (err) =>
             should.not.exist err
             done()
+
+  afterEach ->
+    @guru1.disconnect()
 
   it "should let you invite an operator to the chat", (done) ->
 

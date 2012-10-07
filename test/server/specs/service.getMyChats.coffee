@@ -2,20 +2,23 @@ should = require 'should'
 
 boiler 'Service - Get My Chats', ->
   it "should return data on all of a particular operator's chats", (done) ->
-    client = @getClient()
-    client.ready =>
-      data = {username: 'joinMe'}
-      client.newChat data, (err, {chatId}) =>
-        client.cookie 'session', null
-        client.disconnect()
+    @getAuthed =>
+      client = @getClient()
+      client.ready =>
+        data = {username: 'joinMe', websiteUrl: 'foo.com'}
+        client.newChat data, (err, data) =>
+          should.not.exist err
+          {chatId} = data
+          client.cookie 'session', null
+          client.disconnect()
 
-        client2 = @getClient()
-        client2.ready =>
-          data = {username: 'butNotMe'}
-          client2.newChat data, (err, data) =>
-            client2.disconnect()
+          client2 = @getClient()
+          client2.ready =>
+            data = {username: 'butNotMe', websiteUrl: 'foo.com'}
+            client2.newChat data, (err, data) =>
+              should.not.exist err
+              client2.disconnect()
 
-            @getAuthed =>
               @client.joinChat chatId, (err, data) =>
 
                 @client.getMyChats (err, data) =>

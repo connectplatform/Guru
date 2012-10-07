@@ -15,6 +15,7 @@ face = (decorators) ->
       addOperatorData = (cb) =>
         return cb() unless fields.operatorId?
 
+        # this determines what initial chats display on your dashboard when you log in
         setUnansweredChats = config.require 'services/session/setUnansweredChats'
 
         async.parallel [

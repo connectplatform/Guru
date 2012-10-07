@@ -122,9 +122,9 @@ boiler 'Service - Get Active Chats', ->
     getActiveChats = config.require 'services/getActiveChats'
 
     # Setup
-    @newChat =>
-      @loginOperator =>
-        @getAuthed =>
+    @loginOperator =>
+      @getAuthed =>
+        @newChat =>
           @client.acceptChat @chatId, (err) =>
             should.not.exist err
             @client.inviteOperator @chatId, @targetSession, (err) =>

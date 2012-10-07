@@ -8,7 +8,7 @@ stoic = require 'stoic'
 clientData = {
   username: 'Bob'
   customerId: '1'
-  websiteUrl: 'www.foo.com'
+  websiteUrl: 'foo.com'
 }
 
 # data ACP should respond with
@@ -26,6 +26,8 @@ response = (req, res) ->
     res.end JSON.stringify expectedAcpData
 
 boiler 'Service - Populate Visitor ACP Data', ->
+  beforeEach (done) ->
+    @adminLogin -> done()
 
   # note: this is not a service proper, but a subservice located in server/domain that is called by newChat
   it 'should hit the ACP server and dump data into redis', (done) ->

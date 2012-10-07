@@ -2,8 +2,9 @@ should = require 'should'
 
 boiler 'Service - Visitor Can Access Channel', ->
   beforeEach (done) ->
-    @newVisitor {username: 'visitor'}, (err, @client) =>
-      done()
+    @adminLogin =>
+      @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @client) =>
+        done()
 
   afterEach ->
     @client.disconnect()

@@ -58,12 +58,12 @@ module.exports = global.boiler = (testName, tests) ->
 
       # create a chat but disconnect the visitor when done
       @newChat = (cb) =>
-        @newChatWith {username: 'visitor', website: 'foo.com'}, cb
+        @newChatWith {username: 'visitor', websiteUrl: 'foo.com'}, cb
 
       @newChatWith = (data, cb) =>
-        @newVisitor data, (err, visitor, chatId) =>
+        @newVisitor data, (err, visitor, chatData) =>
           visitor.disconnect()
-          cb err, Object.merge data, {id: chatId}
+          cb err, Object.merge data, {data: chatData}
 
       # create a chat and hang onto visitor client
       @newVisitor = (data, cb) =>
@@ -73,7 +73,7 @@ module.exports = global.boiler = (testName, tests) ->
             throw new Error err if err
             @visitorSession = visitor.cookie 'session'
             @chatId = data.chatId
-            cb null, visitor, data.chatId
+            cb null, visitor, data
 
       @expectIdIsOnline = (id, expectation, cb) ->
         {Session} = stoic.models

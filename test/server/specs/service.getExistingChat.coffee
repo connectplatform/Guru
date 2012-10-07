@@ -1,6 +1,8 @@
 should = require 'should'
 
 boiler 'Service - Get Existing Chat', ->
+  beforeEach (done) ->
+    @getAuthed -> done()
 
   it 'should not say to reconnect you if you have no session', (done) ->
     client = @getClient()
@@ -14,8 +16,10 @@ boiler 'Service - Get Existing Chat', ->
   it 'should say to reconnect you if you already have a session', (done) ->
     client = @getClient()
     client.ready =>
-      data = {username: 'clientTest1'}
-      client.newChat data, (err, {chatId}) =>
+      data = {username: 'clientTest1', websiteUrl: 'foo.com'}
+      client.newChat data, (err, data) =>
+        should.not.exist err
+        {chatId} = data
         session = client.cookie 'session'
         client.disconnect()
 

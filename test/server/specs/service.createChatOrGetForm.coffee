@@ -3,7 +3,9 @@ should = require 'should'
 boiler 'Service - Create Chat or Get Form', ->
   beforeEach (done) ->
     @client = @getClient()
-    @client.ready -> done()
+    @client.ready =>
+      @adminLogin =>
+        done()
 
   describe 'with sufficient paramaters', ->
     before ->
@@ -49,5 +51,5 @@ boiler 'Service - Create Chat or Get Form', ->
       @client.createChatOrGetForm {}, (err, data) =>
         should.not.exist err
         should.exist data?.fields
-        data.fields[0].name.should.eql 'website'
+        data.fields[0].name.should.eql 'websiteUrl'
         done()

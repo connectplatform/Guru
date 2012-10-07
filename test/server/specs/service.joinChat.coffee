@@ -5,8 +5,8 @@ boiler 'Service - Join Chat', ->
 
   describe 'after joining', ->
     beforeEach (done) ->
-      @newChat =>
-        @getAuthed =>
+      @getAuthed =>
+        @newChat =>
           @client.joinChat @chatId, done
 
     it 'should associate an operator with a chat', (done) ->

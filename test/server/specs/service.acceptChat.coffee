@@ -3,10 +3,10 @@ should = require 'should'
 boiler 'Service - Accept Chat', ->
 
   it 'should join the operator into the chat', (done) ->
-    @newChat =>
-      @getAuthed =>
+    @getAuthed =>
+      @newChat =>
         @client.acceptChat @chatId, (err, result) =>
-          false.should.eql err?
+          should.not.exist err
           result.status.should.eql "OK"
           result.chatId.should.eql @chatId
 
@@ -25,17 +25,20 @@ boiler 'Service - Accept Chat', ->
           # send test data
           chan.emit 'clientMessage', outgoing
 
-  it 'should only let one operator join the chat', (done) ->
-    @newChat =>
+  it 'should only let one operator accept the chat', (done) ->
+    @guru1Login (err, client) =>
 
-        @guru1Login (err, client) =>
-          client.acceptChat @chatId, (err, result) =>
-            false.should.eql err?
-            result.status.should.eql "OK"
-            client.disconnect()
+      @newChat (err, data) =>
+        should.not.exist err
+        should.exist data
 
-            @getAuthed =>
-              @client.acceptChat @chatId, (err, result) =>
-                false.should.eql err?
-                result.status.should.eql "ALREADY ACCEPTED"
-                done()
+        client.acceptChat @chatId, (err, result) =>
+          should.not.exist err
+          result.status.should.eql "OK"
+          client.disconnect()
+
+          @getAuthed =>
+            @client.acceptChat @chatId, (err, result) =>
+              false.should.eql err?
+              result.status.should.eql "ALREADY ACCEPTED"
+              done()

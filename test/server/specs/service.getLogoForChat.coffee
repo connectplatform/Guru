@@ -7,13 +7,14 @@ boiler 'Service - Get Logo For Chat', ->
       username: 'aVisitor'
       websiteUrl: 'www.foo.com'
 
-    @client = @getClient()
-    @client.ready =>
-      @client.newChat chatData, (err, {chatId}) =>
-        should.not.exist err
-
-        @client.getLogoForChat chatId, (err, url) =>
+    @getAuthed =>
+      @client = @getClient()
+      @client.ready =>
+        @client.newChat chatData, (err, {chatId}) =>
           should.not.exist err
-          url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{encodeURIComponent chatData.websiteUrl}/logo"
-          @client.disconnect()
-          done()
+
+          @client.getLogoForChat chatId, (err, url) =>
+            should.not.exist err
+            url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{encodeURIComponent chatData.websiteUrl}/logo"
+            @client.disconnect()
+            done()

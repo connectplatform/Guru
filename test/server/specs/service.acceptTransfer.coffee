@@ -7,9 +7,9 @@ boiler 'Service - Accept Transfer', ->
     getMyChats = config.require 'services/getMyChats'
 
     # Setup
-    @newChat =>
-      @loginOperator =>
-        @getAuthed =>
+    @loginOperator =>
+      @getAuthed =>
+        @newChat =>
           @client.acceptChat @chatId, (err) =>
             should.not.exist err
             @client.transferChat @chatId, @targetSession, (err) =>

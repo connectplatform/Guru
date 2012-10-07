@@ -77,33 +77,35 @@ boiler 'Service - Clear Old Chats', ->
     {Chat} = stoic.models
 
     # create the chat
-    visitor = @getClient()
-    visitor.ready =>
-      newChatData = {username: 'visitor'}
-      visitor.newChat newChatData, (err, createdChat) =>
-        visitorSession = visitor.cookie 'session'
-        chatChannelName = createdChat.chatId
-
-        # modify the chat's creation date
-        chat = Chat.get chatChannelName
-        chat.creationDate.set halfHourAgo, (err) =>
+    @getAuthed =>
+      visitor = @getClient()
+      visitor.ready =>
+        newChatData = {username: 'visitor', websiteUrl: 'foo.com'}
+        visitor.newChat newChatData, (err, createdChat) =>
           should.not.exist err
+          visitorSession = visitor.cookie 'session'
+          chatChannelName = createdChat.chatId
 
-          # delete the chat
-          @clearOldChats (err) =>
+          # modify the chat's creation date
+          chat = Chat.get chatChannelName
+          chat.creationDate.set halfHourAgo, (err) =>
             should.not.exist err
 
-            # Chat should delete, even with user in it
-            Chat.allChats.members (err, allChats) =>
+            # delete the chat
+            @clearOldChats (err) =>
               should.not.exist err
-              allChats.length.should.eql 0
 
-              # Create a new chat and make sure it's different than the one we had
-              visitor.newChat newChatData, (err, createdChat) ->
+              # Chat should delete, even with user in it
+              Chat.allChats.members (err, allChats) =>
                 should.not.exist err
-                visitorSession.should.not.eql visitor.cookie 'session'
-                chatChannelName.should.not.eql createdChat.chatId
-                done()
+                allChats.length.should.eql 0
+
+                # Create a new chat and make sure it's different than the one we had
+                visitor.newChat newChatData, (err, createdChat) ->
+                  should.not.exist err
+                  visitorSession.should.not.eql visitor.cookie 'session'
+                  chatChannelName.should.not.eql createdChat.chatId
+                  done()
 
   describe 'with operator sessions', ->
     beforeEach (done) ->

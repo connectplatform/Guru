@@ -48,6 +48,6 @@ define ["load/server", "load/notify", 'helpers/util'], (server, notify, util) ->
           window.location.hash = "/visitorChat/#{chatId}"
 
         noOperators: ->
-          window.location.hash = "/submitQuestion/"
+          window.location.hash = "/submitQuestion"
 
     return fsm

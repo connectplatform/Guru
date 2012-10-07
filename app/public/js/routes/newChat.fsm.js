@@ -43,7 +43,7 @@
             return window.location.hash = "/visitorChat/" + chatId;
           },
           noOperators: function() {
-            return window.location.hash = "/submitQuestion/";
+            return window.location.hash = "/submitQuestion";
           }
         }
       };

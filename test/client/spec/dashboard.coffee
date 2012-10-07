@@ -1,53 +1,77 @@
-require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'], (mock, {hasText, exists}, pulsar) ->
+require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
+  (mock, {hasText, exists}, pulsar) ->
+    sendInvite = ->
+      pulsar.channel('notify:session:session_foo').emit 'pendingInvites', {chatId: 'chat_3', type: 'invite'}
 
-  sendInvite = ->
-    pulsar.channel('notify:session:session_foo').emit 'pendingInvites', {chatId: 'chat_3', type: 'invite'}
+    sendWaitingChats = ->
+      pulsar.channel('notify:session:session_foo').emit 'unansweredChats', {count: 3}, true
 
-  sendWaitingChats = ->
-    pulsar.channel('notify:session:session_foo').emit 'unansweredChats', {count: 3}, true
+    hasChats = ->
+      numChats = $('#dashboard table tr').length - 1
+      numChats > 1
 
-  describe 'Dashboard', ->
-    beforeEach ->
-      mock.services()
-      mock.loggedIn()
-      pulsar.channel('notify:session:session_foo')
+    describe 'Dashboard', ->
 
-      window.location.hash = '/dashboard'
-      mock.renderSidebar()
-      waitsFor hasText('#dashboard h1', 'Dashboard'), 'dashboard to load', 200
+      beforeEach ->
+        runs ->
+          mock.services()
+          mock.loggedIn()
+          pulsar.channel('notify:session:session_foo')
 
-    it 'should refresh when an invite is received', ->
+          window.location.hash = '/dashboard'
+          mock.renderSidebar()
 
-      hasChats = ->
-        numChats = $('#dashboard table tr').length - 1
-        return numChats > 1
+        waitsFor hasText('#dashboard h1', 'Dashboard'), 'dashboard to load', 200
 
-      expect(hasChats()).toBeFalsy()
+      afterEach ->
+        runs ->
+          window.location.hash = '/test'
+          mock.loggedOut()
 
-      # mock chats and send notification
-      mock.activeChats()
-      sendInvite()
+      it 'should refresh when an invite is received', ->
+        runs ->
+          expect(hasChats()).toBeFalsy()
 
-      # should see chats
-      waitsFor hasChats, 'dashboard to refresh', 200
+          # mock chats and send notification
+          mock.activeChats()
+          sendInvite()
 
-    it 'should show an invite badge on the sidebar', ->
+        # should see chats
+        waitsFor hasChats, 'dashboard to refresh', 200
 
-      expect($ '#sidebar .notifyInvites .badge').not.toExist()
+      it 'should show an invite badge on the sidebar', ->
+        runs ->
+          expect($ '#sidebar .notifyInvites .badge').not.toExist()
 
-      # mock chats and send notification
-      mock.activeChats()
-      sendInvite()
+          # mock chats and send notification
+          mock.activeChats()
+          sendInvite()
 
-      # should see invite badge in sidebar
-      waitsFor hasText('#sidebar .notifyInvites .badge', '2'), 'invite badge in sidebar', 200
+        # should see invite badge in sidebar
+        waitsFor hasText('#sidebar .notifyInvites .badge', '2'), 'invite badge in sidebar', 200
 
-    it 'should show an unread badge on the sidebar', ->
+      it 'should show an unread badge on the sidebar', ->
+        runs ->
+          expect($ '#sidebar .notifyUnanswered .badge').not.toExist()
+          # send pulsar event
+          sendWaitingChats()
 
-      expect($ '#sidebar .notifyUnanswered .badge').not.toExist()
+        # should see invite badge in sidebar
+        waitsFor hasText('#sidebar .notifyUnanswered .badge', '3'), 'unread badge in sidebar', 200
 
-      # send pulsar event
-      sendWaitingChats()
+      it 'should show department and website information', ->
+        runs ->
+          mock.activeChats()
 
-      # should see invite badge in sidebar
-      waitsFor hasText('#sidebar .notifyUnanswered .badge', '3'), 'unread badge in sidebar', 200
+        waitsFor hasChats, 'dashboard to refresh', 200
+
+        runs ->
+          numChats = $('tbody').children().length
+          numWebsites = $('tbody .websiteDomain').length
+          numDepartments = $('tbody .departmentName').length
+
+          expect(numWebsites).toBe numChats
+          expect(numDepartments).toBe numChats
+
+          expect($('tbody .websiteDomain').eq(1).text()).toBe 'foo.com'
+          expect($('tbody .departmentName').eq(1).text()).toBe 'Sales'

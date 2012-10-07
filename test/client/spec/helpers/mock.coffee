@@ -80,6 +80,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               relation: 'invite'
               creationDate: now
               history: []
+              website: 'foo.com'
+              department: 'Sales'
             }
             {
               id: 'chat_1'
@@ -88,6 +90,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               status: 'waiting'
               creationDate: now
               history: []
+              website: 'foo.com'
+              department: 'Sales'
             }
             {
               id: 'chat_2'
@@ -96,6 +100,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               status: 'active'
               creationDate: now
               history: []
+              website: 'foo.com'
+              department: 'Sales'
             }
             {
               id: 'chat_4'
@@ -104,6 +110,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               status: 'vacant'
               creationDate: now
               history: []
+              website: 'foo.com'
+              department: 'Sales'
             }
           ]
 

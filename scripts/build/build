@@ -32,7 +32,7 @@ cp $root/node_modules/vein/vein.js $client/js/vendor/vein.js
 cp $root/node_modules/pulsar/pulsar.js $client/js/vendor/pulsar.js
 
 # Jade
-cp $root/node_modules/jaded/node_modules/jade/runtime.min.js $client/js/vendor/jade-runtime.js
+cp $root/node_modules/jade/runtime.min.js $client/js/vendor/jade-runtime.js
 
 # Non-built files
 cp $client/*.html $public

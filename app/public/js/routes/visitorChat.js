@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate", "helpers/chatActions"], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate, chatActions) {
+  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) {
     return {
       channel: {},
       setup: function(_arg, templ) {
@@ -56,9 +56,7 @@
             });
             server.getLogoForChat(chatId, function(err, logoUrl) {
               if (err) notify.error("Error getting logo url: " + err);
-              return $(".websiteLogo").html(imageTemplate({
-                source: logoUrl
-              }));
+              return embedImage(logoUrl, '.websiteLogo');
             });
             $('.leaveButton').click(function(evt) {
               evt.preventDefault();

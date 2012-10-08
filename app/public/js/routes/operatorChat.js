@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "templates/imageTemplate", "helpers/chatActions"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, imageTemplate, chatActions) {
+  define(["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "helpers/embedImageIfExists", "helpers/chatActions"], function(server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions) {
     return {
       channels: [],
       setup: function(args, templ) {
@@ -42,9 +42,7 @@
             renderLogo = function(chat) {
               return server.getLogoForChat(chat.id, function(err, logoUrl) {
                 if (err != null) notify.error("Error getting logo for chat ", err);
-                return $("#" + chat.renderedId + " .websiteLogo").html(imageTemplate({
-                  source: logoUrl
-                }));
+                return embedImage(logoUrl, "#" + chat.renderedId + " .websiteLogo");
               });
             };
             for (_j = 0, _len2 = chats.length; _j < _len2; _j++) {

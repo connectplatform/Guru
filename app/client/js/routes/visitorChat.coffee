@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "templates/imageTemplate", "helpers/chatActions" ],
-  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, imageTemplate, chatActions) ->
+define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists' ],
+  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
@@ -50,7 +50,7 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
           # display chat logo
           server.getLogoForChat chatId, (err, logoUrl) ->
             notify.error "Error getting logo url: #{err}" if err
-            $(".websiteLogo").html imageTemplate source: logoUrl
+            embedImage logoUrl, '.websiteLogo'
 
           # wire up leave button
           $('.leaveButton').click (evt) ->

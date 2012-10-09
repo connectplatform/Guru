@@ -38,10 +38,8 @@ module.exports = (cb) ->
     veinMiddlewareGlue = config.require 'policy/middleware/veinMiddlewareGlue'
     veinMiddlewareGlue vein
 
-    #flush cache
-    flushCache ->
-      console.log "Server started on #{port}"
-      console.log "Pulsar started on #{config.app.pulsarPort}"
-      console.log "Using mongo database #{config.mongo.host}"
-      console.log "Using redis database #{config.redis.database}"
-      cb()
+    console.log "Server started on #{port}"
+    console.log "Pulsar started on #{config.app.pulsarPort}"
+    console.log "Using mongo database #{config.mongo.host}"
+    console.log "Using redis database #{config.redis.database}"
+    cb()

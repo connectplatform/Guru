@@ -7,7 +7,7 @@ Vein = require "vein"
 mongo = require "./mongo"
 pulsar = require "./pulsar"
 
-stoic = require './initStoic'
+initStoic = require './initStoic'
 
 createServer = require './createServer'
 loadRest = require './loadRest'
@@ -18,8 +18,7 @@ module.exports = (cb) ->
 
   port = (process.env.GURU_PORT or config.app.port)
 
-  # Redis
-  stoic.client.select config.redis.database, ->
+  initStoic ->
 
     # Web server
     app = connect()

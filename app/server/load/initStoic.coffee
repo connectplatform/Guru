@@ -7,4 +7,5 @@ stoic.load config.require "models/#{model}" for model in [
   'chatSession'
 ]
 
-module.exports = stoic
+module.exports = (cb) ->
+  stoic.client.select config.redis.database, cb

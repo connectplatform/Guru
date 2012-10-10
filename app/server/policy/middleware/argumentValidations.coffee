@@ -1,48 +1,73 @@
-{beforeFilter} = require './middlewareTools'
+module.exports =
+  [
+    {
+      filters: ['cookieSessionExists']
+      except: [
+        'login',
+        'getChatStats',
+        'getExistingChat',
+        'createChatOrGetForm',
+        'getRoles',
+        'resetPassword',
+        'forgotPassword',
+        'newChat',
+        'getMyRole',
+        'visitorCanAccessChannel'
+      ]
+    }
 
-module.exports = ->
+    {
+      filters: ['argChatIdIsValid']
+      only: [
+        'acceptChat',
+        'acceptInvite',
+        'acceptTransfer',
+        'emailChat',
+        'getChatHistory',
+        'getNonpresentOperators',
+        'inviteOperator',
+        'joinChat',
+        'kickUser',
+        'leaveChat',
+        'printChat',
+        'transferChat',
+        'visitorCanAccessChannel',
+        'watchChat'
+      ]
+    }
 
-  beforeFilter ['cookieSessionExists'],
-    except: [
-      'login',
-      'getChatStats',
-      'getExistingChat',
-      'createChatOrGetForm',
-      'getRoles',
-      'resetPassword',
-      'forgotPassword',
-      'newChat',
-      'getMyRole',
-      'visitorCanAccessChannel'
-    ]
+    {
+      filters: ['targetSessionIdIsValid']
+      only: [ 'inviteOperator', 'transferChat']
+    }
 
-  beforeFilter ['argChatIdIsValid'],
-    only: [
-      'acceptChat',
-      'acceptInvite',
-      'acceptTransfer',
-      'emailChat',
-      'getChatHistory',
-      'getNonpresentOperators',
-      'inviteOperator',
-      'joinChat',
-      'kickUser',
-      'leaveChat',
-      'printChat',
-      'transferChat',
-      'visitorCanAccessChannel',
-      'watchChat'
-    ]
+    {
+      filters: ['argSessionIdIsValid']
+      only: [ 'setSessionOffline']
+    }
 
-  beforeFilter ['targetSessionIdIsValid'], only: [ 'inviteOperator', 'transferChat']
-  beforeFilter ['argSessionIdIsValid'], only: [ 'setSessionOffline']
+    {
+      filters: ['modelNameIsValid']
+      only: [ 'deleteModel', 'findModel', 'saveModel' ]
+    }
 
-  beforeFilter ['modelNameIsValid'], only: [ 'deleteModel', 'findModel', 'saveModel' ]
+    {
+      filters: ['firstArgumentIsObject']
+      only: [ 'findModel', 'saveModel', 'newChat', 'login', 'say' ]
+    }
 
-  beforeFilter ['firstArgumentIsObject'], only: [ 'findModel', 'saveModel', 'newChat', 'login', 'say' ]
+    {
+      filters: ['loginObjectIsValid']
+      only: ['login']
+    }
 
-  beforeFilter ['loginObjectIsValid'], only: ['login']
+    {
+      filters: ['bothArgsAreStrings']
+      only: ['changePassword']
+    }
 
-  beforeFilter ['bothArgsAreStrings'], only: ['changePassword']
-
-  beforeFilter ['objectChatIdIsValid', 'objectSessionIdIsValid', 'objectMessageExists' ], only: ['say']
+    {
+      filters: ['objectChatIdIsValid', 'objectSessionIdIsValid', 'objectMessageExists' ]
+      only: ['say']
+    }
+  ]

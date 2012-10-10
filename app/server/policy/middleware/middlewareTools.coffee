@@ -2,7 +2,8 @@
 
 {tandoor} = config.require 'load/util'
 
-routeValidators = {}
+validatorsByRoute = {}
+exceptValidators = []
 
 loadValidators = (validatorNames) ->
   validators = []
@@ -12,24 +13,41 @@ loadValidators = (validatorNames) ->
     validators.push validator
   validators
 
+addRouteValidators = (route, validators) ->
+  validatorsByRoute[route].push tandoor validator for validator in validators
+
+initRoute = (route) ->
+  if validatorsByRoute[route] is undefined
+    console.log 'initing ', route
+    validatorsByRoute[route] = []
+    validatorsByRoute[route].push validator for validator in exceptValidators
+
+onlyFilter = (validators, routes) ->
+  for route in routes
+    initRoute route
+    addRouteValidators route, validators
+
+exceptFilter = (validators, routes) ->
+  initRoute route for route in routes
+  exceptValidators.push tandoor validator for validator in validators
+  for route of validatorsByRoute when route not in routes
+    addRouteValidators route, validators
+
 module.exports =
-  populateRoutes: (routeNames) ->
-    for routeName in routeNames
-      routeValidators[routeName] = []
+  getValidators: -> validatorsByRoute
 
-  beforeFilter: (validatorNames, targetObject) =>
-    validators = loadValidators validatorNames
+  getDefaultValidators: -> exceptValidators
 
-    if targetObject.only?
-      for route in targetObject.only
-        routeValidators[route].push tandoor validator for validator in validators
+  loadPolicies: (policies) ->
+    for policy in policies
+      for rule in policy
 
-    else if targetObject.except?
-      allOtherRoutes = (routeName for routeName of routeValidators when routeName not in targetObject.except)
-      for route in allOtherRoutes
-        routeValidators[route].push tandoor validator for validator in validators
+        if rule.filters?
+          validators = loadValidators rule.filters
+        else
+          throw new Error "Error loading policy: Validations must contain array of filters"
 
-    else
-      throw new Error "invalid validator target"
-
-  getValidators: -> routeValidators
+        if rule.only?
+          onlyFilter validators, rule.only
+        else if rule.except?
+          exceptFilter validators, rule.except

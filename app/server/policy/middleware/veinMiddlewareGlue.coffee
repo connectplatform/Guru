@@ -1,29 +1,23 @@
 async = require 'async'
+argumentValidations = require './argumentValidations'
 policy = require './policy'
-{populateRoutes, getValidators} = require './middlewareTools'
-
-{getType} = config.require 'load/util'
-
-mapArgs = (arg) ->
-  if getType(arg) is '[object Object]' and arg.socket? and arg.name? and arg.listeners?
-    return arg.name
-  else
-    return arg
+{getValidators, getDefaultValidators, loadPolicies} = require './middlewareTools'
 
 module.exports = (vein) ->
-  veinServices = Object.keys vein.services
-
-  populateRoutes veinServices
-  policy()
+  loadPolicies [argumentValidations, policy]
   routeValidators = getValidators()
+  defaultValidators = getDefaultValidators()
 
   vein.use (req, res, next) ->
-    validators = routeValidators[req.service]
-    return next 'Invalid service' unless validators?
-    args = req.args.map mapArgs
+    args = req.args
     cookies = req.cookies
 
-    packagedValidators = (validator(args, cookies) for validator in validators)
+    validators = routeValidators[req.service]
+
+    if validators?
+      packagedValidators = (validator(args, cookies) for validator in validators)
+    else
+      packagedValidators = (validator(args, cookies) for validator in defaultValidators)
 
     async.series packagedValidators, (err) ->
       next err

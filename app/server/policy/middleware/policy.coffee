@@ -1,48 +1,79 @@
-{beforeFilter} = require './middlewareTools'
-argumentValidations = require './argumentValidations'
+module.exports =
+  [
+    {
+      filters: ['isAdministrator', 'setIsOnline' ]
+      only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
+    }
 
-module.exports = ->
-  argumentValidations()
-  beforeFilter ['isAdministrator', 'setIsOnline' ], only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
+    {
+      filters: ['isStaff', 'setIsOnline' ]
+      except: [
+        'getMyRole',
+        'login',
+        'resetPassword',
+        'forgotPassword',
+        'newChat',
+        'getExistingChat',
+        'createChatOrGetForm',
+        'visitorCanAccessChannel',
+        'getChatHistory',
+        'getLogoForChat',
+        'setSessionOffline',
+        'say',
+        'kickUser',
+        'printChat',
+        'emailChat',
 
-  beforeFilter ['isStaff', 'setIsOnline' ],
-    except: [
-      'getMyRole',
-      'login',
-      'resetPassword',
-      'forgotPassword',
-      'newChat',
-      'getExistingChat',
-      'createChatOrGetForm',
-      'visitorCanAccessChannel',
-      'getChatHistory',
-      'getLogoForChat',
-      'setSessionOffline',
-      'say',
-      'kickUser',
-      'printChat',
-      'emailChat',
+        # these three are covered by isAdministrator
+        'deleteModel',
+        'findModel',
+        'saveModel',
+      ]
+    }
 
-      # these three are covered by isAdministrator
-      'deleteModel',
-      'findModel',
-      'saveModel',
-    ]
+    {
+      filters:['argIsChatMember']
+      only: [
+        'getChatHistory',
+        'inviteOperator',
+        'getNonpresentOperators',
+        'leaveChat',
+        'printChat'
+      ]
+    }
 
-  beforeFilter ['argIsChatMember'],
-    only: [
-      'getChatHistory',
-      'inviteOperator',
-      'getNonpresentOperators',
-      'leaveChat',
-      'printChat'
-    ]
+    {
+      filters: ['objIsChatMember']
+      only: [ 'say' ]
+    }
 
-  beforeFilter ['objIsChatMember'], only: [ 'say' ]
+    {
+      filters: ['isVisibleInChat']
+      only: [ 'transferChat', 'kickUser']
+    }
 
-  beforeFilter ['isVisibleInChat'], only: [ 'transferChat', 'kickUser']
-  beforeFilter ['isNotVisibleChatMember'], only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']
-  beforeFilter ['isNotChatMember'], only: ['watchChat']
-  beforeFilter ['isChatMember'], only: ['emailChat']
-  beforeFilter ['isInvitedToChat'], only: ['acceptInvite']
-  beforeFilter ['isInvitedToTransfer'], only: ['acceptTransfer']
+    {
+      filters: ['isNotVisibleChatMember']
+      only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']
+    }
+
+    {
+      filters: ['isNotChatMember']
+      only: ['watchChat']
+    }
+
+    {
+      filters: ['isChatMember']
+      only: ['emailChat']
+    }
+
+    {
+      filters: ['isInvitedToChat']
+      only: ['acceptInvite']
+    }
+
+    {
+      filters: ['isInvitedToTransfer']
+      only: ['acceptTransfer']
+    }
+  ]

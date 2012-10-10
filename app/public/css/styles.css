@@ -154,3 +154,8 @@ form input, form .controls button {
   height: 225px;
   resize: none;
 }
+
+.visitorSidebar button {
+  margin-right: 6px;
+  margin-top: 6px;
+}

@@ -68,7 +68,6 @@
                 evt.preventDefault();
                 message = $("#" + renderedId + " .message-form .message").val();
                 if (message !== "") {
-                  console.log('emiting:', message);
                   channel.emit('clientMessage', {
                     message: message,
                     session: server.cookie('session')

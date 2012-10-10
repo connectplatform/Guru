@@ -26,8 +26,8 @@
             else
               span(class="label label-#{chat.statusLevel}") #{chat.status}
           td.counter(started='#{chat.creationDate}')
-          td= chat.visitor.website
-          td= chat.visitor.department
+          td.websiteDomain= chat.website
+          td.departmentName= chat.department
           th
 
             // different options depending on chat status or pending invites

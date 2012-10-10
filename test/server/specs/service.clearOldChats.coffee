@@ -107,47 +107,51 @@ boiler 'Service - Clear Old Chats', ->
                   chatChannelName.should.not.eql createdChat.chatId
                   done()
 
-  describe 'with operator sessions', ->
-    beforeEach (done) ->
-      async.map getOldChats(halfHourAgo, halfHourAgo), createChat, (err, chats) =>
-        chatId = chats[0].id
+  testWithSessions = (method) ->
+    describe "with operator sessions (#{method})", ->
+      beforeEach (done) ->
+        async.map getOldChats(halfHourAgo, halfHourAgo), createChat, (err, chats) =>
+          chatId = chats[0].id
 
-        # make sure user has properly joined chat
-        @getAuthed =>
-          @client.joinChat chatId, (err) =>
-            should.not.exist err
-            done()
+          # make sure user has properly joined chat
+          @getAuthed =>
+            @client[method] chatId, (err) =>
+              should.not.exist err
+              done()
 
-    it 'should show me as joined', (done) ->
-      @client.getMyChats (err, chats) =>
-        should.not.exist err
-        chats.length.should.eql 1, 'chat should exist'
-        done()
-
-    it 'should remove operators from the deleted chats', (done) ->
-      {Chat} = stoic.models
-
-      # delete the chat
-      @clearOldChats (err) =>
-        should.not.exist err
-        Chat.allChats.members (err, allChats) =>
+      it 'should show me as joined', (done) ->
+        @client.getMyChats (err, chats) =>
           should.not.exist err
-          allChats.length.should.eql 0, 'all chats should be empty'
-
-          # check that operator was properly removed
-          @client.getMyChats (err, chats) =>
-            should.not.exist err
-            chats.length.should.eql 0, 'my chat sessions should be empty'
-            done()
-
-    it 'should save a history', (done) ->
-      {ChatHistory} = mongo.models
-
-      # delete the chat
-      @clearOldChats (err) =>
-        should.not.exist err
-        ChatHistory.find {}, (err, history) =>
-          should.not.exist err
-          should.exist history
-          history.length.should.eql 2, 'should have 2 history records'
+          chats.length.should.eql 1, 'chat should exist'
           done()
+
+      it 'should remove operators from the deleted chats', (done) ->
+        {Chat} = stoic.models
+
+        # delete the chat
+        @clearOldChats (err) =>
+          should.not.exist err
+          Chat.allChats.members (err, allChats) =>
+            should.not.exist err
+            allChats.length.should.eql 0, 'all chats should be empty'
+
+            # check that operator was properly removed
+            @client.getMyChats (err, chats) =>
+              should.not.exist err
+              chats.length.should.eql 0, 'my chat sessions should be empty'
+              done()
+
+      it 'should save a history', (done) ->
+        {ChatHistory} = mongo.models
+
+        # delete the chat
+        @clearOldChats (err) =>
+          should.not.exist err
+          ChatHistory.find {}, (err, history) =>
+            should.not.exist err
+            should.exist history
+            history.length.should.eql 2, 'should have 2 history records'
+            done()
+
+  testWithSessions 'joinChat'
+  testWithSessions 'watchChat'

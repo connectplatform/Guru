@@ -93,6 +93,7 @@ path = (spec) ->
   join paths[root], parts.join '/'
 
 global.config = config[environment].merge
+  env: environment
   paths: paths
   path: path
   require: (spec) ->

@@ -62,6 +62,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                 evt.preventDefault()
                 message = $("##{renderedId} .message-form .message").val()
                 unless message is ""
+                  console.log 'emiting:', message
                   channel.emit 'clientMessage', {message: message, session: server.cookie('session')}
 
                   $("##{renderedId} .message-form .message").val("")

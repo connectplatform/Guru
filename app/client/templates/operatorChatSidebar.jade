@@ -3,14 +3,14 @@ div.well.chatControls.span4(chatId="#{chat.id}")
   .visitor-info
     .websiteLogo
 
-    em Visitor:
-    | #{chat.visitor.username}
+    strong Visitor:
+    |  #{chat.visitor.username}
     br
-    em Website:
-    | #{chat.website}
+    strong Website:
+    |  #{chat.website}
 
     .acp-data
-      em ACP Data:
+      strong ACP Data:
       if chat.visitor.acpData
         ul(id="acpTree#{chat.renderedId}", class="treeview")!= chat.visitor.acpData
       else

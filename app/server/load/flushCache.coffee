@@ -2,7 +2,7 @@ async = require 'async'
 stoic = require 'stoic'
 
 module.exports = (flushDb, finalDb, cb) ->
-  return cb() unless process.env.NODE_ENV is 'development'
+  return cb() unless config.env is 'development'
   redis = stoic.client
 
   deleteKey = (key, cb) ->

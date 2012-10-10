@@ -12,7 +12,7 @@ initStoic = require './initStoic'
 createServer = require './createServer'
 loadRest = require './loadRest'
 
-flushCache = config.require 'services/flushCache'
+flushCache = config.require 'load/flushCache'
 
 module.exports = (cb) ->
 

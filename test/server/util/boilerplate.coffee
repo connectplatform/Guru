@@ -1,5 +1,5 @@
 db = config.require 'server/load/mongo'
-flushCache = config.require 'services/flushCache'
+flushCache = config.require 'load/flushCache'
 sampleData = config.require 'policy/sampleData'
 stoic = require 'stoic'
 async = require 'async'

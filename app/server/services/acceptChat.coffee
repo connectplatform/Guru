@@ -1,5 +1,7 @@
 stoic = require 'stoic'
 
+removeUnanswered = config.require 'services/operator/removeUnanswered'
+
 module.exports = (res, chatId) ->
   operatorId = unescape(res.cookie('session'))
   {Chat, ChatSession} = stoic.models
@@ -16,4 +18,8 @@ module.exports = (res, chatId) ->
 
       ChatSession.add operatorId, chatId, relationMeta, (err)->
         console.log "Error adding ChatSession in acceptChat: #{err}" if err
-        res.reply null, {status:"OK", chatId: chatId}
+
+        removeUnanswered chatId, (err, status) ->
+          console.log "Error removing unanswered chats: #{err}" if err
+
+          res.reply null, {status:"OK", chatId: chatId}

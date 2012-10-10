@@ -51,14 +51,6 @@ blockquote {
   overflow-y: scroll;
 }
 
-
-.visitor-info {
-  position: relative;
-  height: 75%;
-  width: 100%;
-  overflow-y: scroll;
-}
-
 .message-form {
   position: relative;
   width: 100%;
@@ -124,6 +116,18 @@ form input, form .controls button {
   bottom: 14px;
 }
 
+.visitor-info {
+  position: absolute;
+  overflow-y: auto;
+  top: 18px;
+  bottom: 90px;
+}
+
+.websiteLogo {
+  max-width: 275px;
+  position: relative;
+}
+
 .chatControls {
   height: 82%;
   position: relative;
@@ -143,4 +147,10 @@ form input, form .controls button {
 .leftCenter {
   float: left;
   margin-top: 5px;
+}
+
+#email-form textarea[name=body] {
+  width: 100%;
+  height: 225px;
+  resize: none;
 }

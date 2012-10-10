@@ -2,24 +2,4 @@
   .page-header: h1 Welcome to live chat!
 
   br
-  form.form-horizontal#newChat-form
-    for field in fields
-
-      .control-group
-        .control-label #{field.label}
-        .controls
-          case field.inputType
-
-            when 'text'
-              input(type="text", placeholder="#{field.default}", name="#{field.name}")
-
-            when 'selection'
-              select.small-modal-box(name="#{field.name}")
-                each selection in field.selections
-                  if selection == field.default
-                    option(value="#{selection}", selected="selected") #{selection}
-                  else
-                    option(value="#{selection}") #{selection}
-
-    .controls
-      button.btn.btn-primary.newChatButton(type="submit") Enter Chat
+  .form-area Loading...

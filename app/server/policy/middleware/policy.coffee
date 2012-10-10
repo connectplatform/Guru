@@ -12,6 +12,7 @@ module.exports = ->
       'resetPassword',
       'forgotPassword',
       'newChat',
+      'submitQuestion',
       'getExistingChat',
       'createChatOrGetForm',
       'visitorCanAccessChannel',

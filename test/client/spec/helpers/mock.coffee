@@ -54,7 +54,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
         server.getChatHistory = (args..., cb) ->
           cb null, []
         server.getLogoForChat = (args..., cb) ->
-          cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'www.foo.com'}/logo"
+          cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'foo.com'}/logo"
         server.printChat = (args..., cb) ->
           cb null, null
         server.serverLog = (args..., cb) ->
@@ -63,8 +63,15 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, null
 
       returnChat: ->
-        server.createChatOrGetForm = (args..., cb) ->
+        server.createChatOrGetForm = ({websiteUrl, department, username}, cb) ->
+          expect(websiteUrl).toBeDefined 'Missing websiteUrl.'
+          expect(department).toBeDefined 'Missing department.'
+          expect(username).toBeDefined 'Missing username.'
           cb null, chatId: 'foo'
+
+      noOperators: ->
+        server.createChatOrGetForm = (args..., cb) ->
+          cb null, noOperators: true
 
       activeChats: ->
         server.getActiveChats = (args..., cb) ->

@@ -1,0 +1,11 @@
+table
+  thead
+    tr
+      each h in headers
+        th #{h}
+
+  tbody
+    each row in rows
+      tr
+        each col in row
+          td #{col}

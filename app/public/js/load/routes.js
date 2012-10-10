@@ -3,6 +3,7 @@
   define(["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar", 'policy/onPageLoad'], function(dermis, addMiddleware, sidebar, sbTemp, onPageLoad) {
     dermis.route('/newChat');
     dermis.route('/visitorChat/:chatId');
+    dermis.route('/submitQuestion');
     dermis.route('/', 'routes/index');
     dermis.route('/login');
     dermis.route('/logout', 'routes/logout', 'routes/logout');

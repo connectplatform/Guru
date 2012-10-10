@@ -42,3 +42,22 @@ boiler 'Service - Accept Chat', ->
               false.should.eql err?
               result.status.should.eql "ALREADY ACCEPTED"
               done()
+
+  it 'should decrement my waiting chats count', (done) ->
+    @guru1Login (err, client) =>
+
+      @newChat (err, data) =>
+        should.not.exist err
+        should.exist data
+
+        client.acceptChat @chatId, (err, result) =>
+          should.not.exist err
+          result.status.should.eql "OK"
+
+          client.getChatStats (err, {unanswered}) ->
+            should.not.exist err
+            should.exist unanswered
+            unanswered.length.should.eql 0, 'expected no unanswered chats'
+
+            client.disconnect()
+            done()

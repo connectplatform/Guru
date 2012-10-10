@@ -10,4 +10,4 @@ require
     {name: "policy", location: "js/policy"}
     {name: "middleware", location: "js/policy/middleware"}
   ]
-, ['load/main']
+, ['load/shim', 'load/main']

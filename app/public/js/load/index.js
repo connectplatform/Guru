@@ -29,6 +29,6 @@
         location: "js/policy/middleware"
       }
     ]
-  }, ['load/main']);
+  }, ['load/shim', 'load/main']);
 
 }).call(this);

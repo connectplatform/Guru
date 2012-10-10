@@ -32,7 +32,7 @@
   "private": true,
   "scripts": {
     "start": "coffee scripts/server.coffee",
-    "test": "mocha --timeout 5000 test/server/specs/",
+    "test": "mocha test/server/specs/",
     "stop": "echo 'TODO: add stop script'"
   }
 }

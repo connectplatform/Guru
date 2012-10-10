@@ -11,6 +11,7 @@ module.exports =
         'getMyRole',
         'login',
         'resetPassword',
+        'submitQuestion',
         'forgotPassword',
         'newChat',
         'getExistingChat',

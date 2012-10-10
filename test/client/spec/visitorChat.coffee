@@ -13,7 +13,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
         runs ->
           mock.returnChat()
           $('#username').val 'aVisitor'
-          $('.newChatButton').click()
+          $('#newChat-form button.btn-primary').click()
 
         waitsFor exists('.chat-display-box'), 'Visitor chat did not load', 200
 

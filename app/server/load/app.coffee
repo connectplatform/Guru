@@ -7,19 +7,18 @@ Vein = require "vein"
 mongo = require "./mongo"
 pulsar = require "./pulsar"
 
-stoic = require './initStoic'
+initStoic = require './initStoic'
 
 createServer = require './createServer'
 loadRest = require './loadRest'
 
-flushCache = config.require 'services/flushCache'
+flushCache = config.require 'load/flushCache'
 
 module.exports = (cb) ->
 
   port = (process.env.GURU_PORT or config.app.port)
 
-  # Redis
-  stoic.client.select config.redis.database, ->
+  initStoic ->
 
     # Web server
     app = connect()
@@ -38,10 +37,8 @@ module.exports = (cb) ->
     veinMiddlewareGlue = config.require 'policy/middleware/veinMiddlewareGlue'
     veinMiddlewareGlue vein
 
-    #flush cache
-    flushCache ->
-      console.log "Server started on #{port}"
-      console.log "Pulsar started on #{config.app.pulsarPort}"
-      console.log "Using mongo database #{config.mongo.host}"
-      console.log "Using redis database #{config.redis.database}"
-      cb()
+    console.log "Server started on #{port}"
+    console.log "Pulsar started on #{config.app.pulsarPort}"
+    console.log "Using mongo database #{config.mongo.host}"
+    console.log "Using redis database #{config.redis.database}"
+    cb()

@@ -1,5 +1,5 @@
 async = require 'async'
-stoic = config.require 'load/initStoic'
+stoic = require 'stoic'
 
 getFullChatData = config.require 'services/chats/getFullChatData'
 chatPriority = config.require 'services/chats/chatPriority'

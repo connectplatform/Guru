@@ -117,6 +117,17 @@
         if (!url) return '';
         _ref = url.split("/"), proto = _ref[0], _ = _ref[1], domain = _ref[2];
         return domain || '';
+      },
+      random: function() {
+        var buffer, digit, n;
+        digit = function() {
+          return ((Math.random() * 16) | 0).toString(16);
+        };
+        buffer = [];
+        for (n = 1; n <= 16; n++) {
+          buffer.push(digit());
+        }
+        return buffer.join('');
       }
     };
   });

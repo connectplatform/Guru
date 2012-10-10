@@ -3,8 +3,8 @@ module.exports =
     inModel.requiredFields = [
         name: 'username'
         inputType: 'text'
-        default: 'Chat Name'
-        label: 'Chat Name'
+        default: ''
+        label: 'Your Name'
       ,
         name: 'department'
         inputType: 'selection'

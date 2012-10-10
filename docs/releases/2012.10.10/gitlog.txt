@@ -1,0 +1,111 @@
+UI formatting for Operator/Visitor chat controls
+Operators/Visitors can email/print a transcript
+Chatting tested in all browsers
+Visitor Name/Website displays separately in operator chat sidebar
+Chat Routing
+Gather Department, any other info from visitor
+Upload logo, online/offline
+Visitors see a greeting when they join the chat
+Operators see message when visitor leaves/is kicked
+
+
+fixed bug with flushCache (default env to development), added test and fixed getMyRole
+redirect in the case of no role data being returned
+added submitQuestion, ui fixes on operator chat, call removeUnanswered when accepting chat
+requiring stoic rather than initStoic wherever possible.  initStoic sets db number based on config
+flushCache now deletes keys manually, one by one, only runs in development, and doesn't run at startup
+fixed flushCache
+increased npm test timeout to assist with deploy
+changed flushCache to only flush current instance
+logos only display if they've been uploaded-- no more broken links
+added test for clearing watched chats
+refactored dashboard test to use runs, added test for website/department name display
+fixed department and website display on dashboard
+newChat requires valid operators to be online, otherwise returns {noOperators: true}
+added error state to new chat form
+fixed website comparison issue
+createChatOrGetForm asks for domain if not present
+refactored newChat to use finite state machine
+got tests working after newChat param refactor
+changed email tests to use amazon simulator address
+bugfixes for email functionality
+updated website default data
+added createChatOrGetForm, began chat routing rework
+added email chat to client side
+started refactoring email
+added more thorough logging to operatorChat
+set client to log unhandled exceptions on the server
+change to serverLog
+added validation to chat.dump, added serverLog
+added print chat buttons to operator and visitor chat pages
+added client page for printChat
+added printChat, removed chatToHtml
+added renderTemplate service
+added entry to middleware
+added chatToHtml helper
+fixed bug storing object instead of ID in redis
+added 'leave chat' button to visitor sidebar
+getChatStats return all chats for admin
+getChatStats works with unansweredChats
+sessions are set to online when they have activity
+fixed middleware
+changed 'referrerData' to 'params', made specialty matching case insensitive
+fixed logout on refresh bug
+added 'say' service
+built
+unreadMessage notifications work again
+refactored createChannel to break out messageReceived
+more changes to tests, changing chatChannel to chatId
+added greeting to visitor chat page
+made default redis db be development, not production
+refactored newChat to return 'chatId' rather than 'channel'
+filter on getActiveChats working, notifications broken
+fixed dependency loading and moved orphan test into Service - Get Active Chats
+script changes for deploy script
+Redis db now specified in config
+refactored tests to use login helper
+all tests pass, baseline for pivot in routing implementation
+refactored tandoor, added test
+added website to chat model and display it on operator chat sidebar
+logo is now showing in operator chat
+removed swap file
+removed 'http://' from head of website urls.  Logo now embeds in visitor chat
+website logo is embedded in visitor chat, but aws access controls are misbehaving
+added logo to visitor chat. needs to be tested on frontend
+added documentation snippet
+chat icon updates based on whether operators are online
+removed some duplication in tests
+refactored unansweredChats notification
+refactored session notifications to be general
+notify operators of unansweredChats when new chatSession created
+updated pulsar - fix hidden errors bug
+added getOnlineOperators
+don't add a user to 'online operators' unless they're staff
+users are being set as offline when they leave page
+login and logout services keep session online status updated
+refactored newChat to use async
+completed getAvailableOperators
+started work for getAvailableOperators
+deleted code that wasn't doing anything
+refactored session indexes to return session objects instead of ids
+added session.online flag, factored out createUserSession, fixed chatName expectations
+updated protosock dep to use fork
+messed with rest caching
+added REST endpoint for image redirects, checking of online operators not implemented
+image uploads are now working.  Need to make the CRUD page prettier.
+built vein
+added forgot password page
+moved aws submission into a helper
+added forgotPassword service
+made posting to aws admin only
+changed aws upload to run off of config file
+email confirmations tested and working
+uploads to amazon now working
+added validations to password change and login
+getting actual error messages doing s3 cors
+more s3 test stuff
+fixed tests
+added reset password
+added test files for amazon s3
+added scripts to package.json
+jade templates parse into emails

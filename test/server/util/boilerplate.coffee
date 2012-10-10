@@ -1,5 +1,5 @@
 db = config.require 'server/load/mongo'
-flushCache = config.require 'services/flushCache'
+flushCache = config.require 'load/flushCache'
 sampleData = config.require 'policy/sampleData'
 stoic = require 'stoic'
 async = require 'async'
@@ -145,14 +145,14 @@ module.exports = global.boiler = (testName, tests) ->
         done()
 
     beforeEach (done) ->
-      flushCache =>
+      flushCache config.redis.database, config.redis.database, =>
         sampleData (err, data) =>
           @adminUser = data[0][0]
           console.log 'error:', err if err?
           done()
 
     after (done) ->
-      flushCache ->
+      flushCache config.redis.database, config.redis.database, ->
         db.wipe done
 
     afterEach ->

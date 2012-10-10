@@ -22,6 +22,7 @@ config =
           AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
           AWSSecretKey: '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'
           from: 'info@livechathost.com'
+          support: 'success@simulator.amazonses.com'
         getActivationLink: (uid, regkey) ->
           "http://localhost:4000/#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       aws:
@@ -54,6 +55,7 @@ config =
           AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
           AWSSecretKey: '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'
           from: 'info@livechathost.com'
+          support: 'support@livechathost.com'
         getActivationLink: (uid, regkey) ->
           "https://livechathost.com/#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       # TODO: duplication!
@@ -91,6 +93,7 @@ path = (spec) ->
   join paths[root], parts.join '/'
 
 global.config = config[environment].merge
+  env: environment
   paths: paths
   path: path
   require: (spec) ->

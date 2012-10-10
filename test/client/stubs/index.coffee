@@ -12,4 +12,4 @@ require
     {name: "jasmine", location: "js/vendor/jasmine-1.2.0"}
     {name: "spec", location: "js/spec"}
   ]
-, ['load/main', 'load/pulsar', 'jasmine/jasmine', 'spec/SpecRunner']
+, ['load/shim', 'load/main', 'load/pulsar', 'jasmine/jasmine', 'spec/SpecRunner']

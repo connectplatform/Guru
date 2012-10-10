@@ -1,4 +1,4 @@
-stoic = config.require 'load/initStoic'
+stoic = require 'stoic'
 {Session} = stoic.models
 
 db = config.require 'load/mongo'

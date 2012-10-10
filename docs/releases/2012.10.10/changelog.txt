@@ -1,0 +1,24 @@
+# Tools / Process
+
+2 step deployment process, should make deployment more reliable
+logging all client side errors
+
+# Features
+
+UI formatting for Operator/Visitor chat controls
+Operators/Visitors can email/print a transcript
+Chatting tested in all browsers
+Visitor Name/Website displays separately in operator chat sidebar
+Chat Routing
+Gather Department, any other info from visitor
+New chat requires valid operators to be online, otherwise redirects to send an email
+Only valid operators receive notification for waiting chats
+Upload logo, online/offline
+Visitors see a greeting when they join the chat
+Operators see message when visitor leaves/is kicked
+Visitor can end chat
+Fixed bugs with dashboard display
+Operators are marked online/offline (no activity indicator yet)
+Forgot Password
+Email Confirmations on account creation
+Password validation

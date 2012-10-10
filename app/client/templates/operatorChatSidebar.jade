@@ -1,14 +1,16 @@
 div.well.chatControls.span4(chatId="#{chat.id}")
 
-  .websiteLogo
-
   .visitor-info
-    | Visitor: #{chat.visitor.username}
+    .websiteLogo
+
+    strong Visitor:
+    |  #{chat.visitor.username}
     br
-    | Website: #{chat.website}
+    strong Website:
+    |  #{chat.website}
 
     .acp-data
-      | ACP Data:
+      strong ACP Data:
       if chat.visitor.acpData
         ul(id="acpTree#{chat.renderedId}", class="treeview")!= chat.visitor.acpData
       else
@@ -16,8 +18,6 @@ div.well.chatControls.span4(chatId="#{chat.id}")
         | No data availible
 
   .actions
-    p
-      | Actions:
 
     table
       tr
@@ -25,13 +25,12 @@ div.well.chatControls.span4(chatId="#{chat.id}")
           button.btn.btn-primary.printButton Print
         td
           button.btn.btn-primary.emailButton Email
+        td
+          button.btn.btn-danger.kickButton Kick
       tr
         td
           button.btn.btn-primary.inviteButton Invite
         td
           button.btn.btn-primary.transferButton Transfer
-      tr
-        td
-          button.btn.btn-danger.kickButton Kick
         td
           button.btn.btn-warning.leaveButton Leave

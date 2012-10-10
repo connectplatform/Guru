@@ -4,6 +4,7 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     # routes for visitors to join chat
     dermis.route '/newChat'
     dermis.route '/visitorChat/:chatId'
+    dermis.route '/submitQuestion'
 
     # login for backend users
     dermis.route '/', 'routes/index'

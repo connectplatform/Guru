@@ -5,7 +5,7 @@ boiler 'Service - Get Logo For Chat', ->
   it "should give you the logo url for a given chat's website", (done) ->
     chatData =
       username: 'aVisitor'
-      websiteUrl: 'www.foo.com'
+      websiteUrl: 'foo.com'
 
     @getAuthed =>
       @client = @getClient()

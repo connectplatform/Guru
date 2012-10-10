@@ -4,4 +4,6 @@ stoic = require 'stoic'
 module.exports = (res) ->
   sessionId = res.cookie 'session'
   return res.reply null, 'None' unless sessionId?
-  Session.get(sessionId).role.get res.reply
+  Session.get(sessionId).role.get (err, role) ->
+    role ||= 'None'
+    res.reply err, role

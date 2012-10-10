@@ -2,7 +2,7 @@
 
   define(["load/server"], function(server) {
     return function(args, next) {
-      if (args.role === 'None') {
+      if (!args.role || args.role === 'None') {
         window.location.hash = "#/login";
         return next("redirecting guest to login");
       } else {

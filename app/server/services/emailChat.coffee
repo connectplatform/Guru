@@ -14,5 +14,4 @@ module.exports = (res, chatId, email) ->
       to: email
       subject: "Transcript of your chat on #{config.app.name}"
 
-    sendEmail body, sendingOptions, (err, sendmailStatus) ->
-      res.reply err, sendmailStatus
+    sendEmail body, sendingOptions, res.reply

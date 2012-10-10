@@ -1,6 +1,6 @@
 define ["load/server"], (server) ->
   (args, next) ->
-    if args.role is 'None'
+    if not args.role or args.role is 'None'
       window.location.hash = "#/login"
       next "redirecting guest to login"
 

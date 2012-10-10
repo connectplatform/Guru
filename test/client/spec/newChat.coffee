@@ -6,11 +6,6 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
         beforeEach ->
           runs ->
             mock.services()
-            server.newChat = ({websiteUrl, department, username}, cb) ->
-              expect(websiteUrl).toBeDefined 'Missing websiteUrl.'
-              expect(department).toBeDefined 'Missing department.'
-              expect(username).toBeDefined 'Missing username.'
-              cb null, {chatId: 'foo'}
             window.location.hash = '/newChat?websiteUrl=foo.com'
 
           waitsFor hasText('.page-header h1', 'Welcome to live chat!'), 'New Chat did not load', 200
@@ -36,11 +31,12 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
 
           waitsFor exists('.chatPage input.message'), 'chat window did not load', 200
 
-      #describe 'when no operators exist', ->
-        #it 'should redirect to email', (done) ->
-          #runs ->
-            #mock.services()
-            #mock.noOperators()
-            #window.location.hash = '/newChat?websiteUrl=foo.com'
+      describe 'when no operators exist', ->
+        it 'should redirect to email', (done) ->
+          runs ->
+            mock.services()
+            mock.noOperators()
+            window.location.hash = '/newChat?websiteUrl=bar.com'
 
-          #waitsFor exists('.emailPage input.message'), 'email window did not load', 200
+          console.log $('input')
+          waitsFor exists('input[name=subject]'), 'email window did not load', 200

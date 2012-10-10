@@ -3,6 +3,8 @@ sugar = require 'sugar'
 stoic = require 'stoic'
 mongo = config.require 'load/mongo'
 
+removeUnanswered = config.require 'services/operator/removeUnanswered'
+
 {Chat, ChatSession, Session} = stoic.models
 {ChatHistory} = mongo.models
 
@@ -69,6 +71,7 @@ deleteChats = (chats, next) ->
           chat.delete
           Chat.allChats.srem chat.id
           Chat.unansweredChats.srem chat.id
+          removeUnanswered chat.id
         ], next
 
   async.forEach chats, removeOldChats, next

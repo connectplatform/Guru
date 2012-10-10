@@ -1,9 +1,9 @@
 (function() {
 
-  define(["load/server", "load/notify", 'helpers/util'], function(server, notify, util) {
+  define(["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'], function(server, notify, util, renderForm) {
     return function(_arg) {
-      var fsm, params, renderForm;
-      renderForm = _arg.renderForm, params = _arg.params;
+      var fsm, params;
+      params = _arg.params;
       fsm = {
         transition: function(err, data) {
           if (err && !(data != null)) {
@@ -23,7 +23,7 @@
         },
         states: {
           error: function(err) {
-            $("#content").html("Oops, a problem occurred!  We've been notified, thank you for your patience.");
+            $("#content .form-area").html("Oops, a problem occurred!  We've been notified, thank you for your patience.");
             if (err != null) {
               return notify.error("Problem connecting to chat: " + err);
             }
@@ -32,22 +32,28 @@
             return server.getExistingChat(fsm.transition);
           },
           needChat: function() {
-            $("#content").html("Connecting to chat...");
+            $("#content .form-area").html("Connecting to chat...");
             return server.createChatOrGetForm(params, fsm.transition);
           },
           needParams: function(err, fields) {
+            var options;
             if (err != null) notify.error("Problem connecting to chat: " + err);
-            return renderForm(fields, fsm.transition);
+            options = {
+              name: 'newChat',
+              submitText: 'Enter Chat',
+              placement: '#content .form-area'
+            };
+            return renderForm(options, fields, fsm.transition);
           },
           gotChat: function(chatId) {
             return window.location.hash = "/visitorChat/" + chatId;
           },
           noOperators: function() {
-            return window.location.hash = "/submitQuestion";
+            return window.location.hash = "/submitQuestion?" + ($.param(params));
           }
         }
       };
-      return fsm;
+      return fsm.states.initial();
     };
   });
 

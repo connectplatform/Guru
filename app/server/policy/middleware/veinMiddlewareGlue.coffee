@@ -1,23 +1,22 @@
 async = require 'async'
 argumentValidations = require './argumentValidations'
 policy = require './policy'
-{getValidators, getDefaultValidators, loadPolicies} = require './middlewareTools'
+{policiesToFunctions} = require './middlewareTools'
 
 module.exports = (vein) ->
-  loadPolicies [argumentValidations, policy]
-  routeValidators = getValidators()
-  defaultValidators = getDefaultValidators()
+  {serviceFilters, defaultFilters} = policiesToFunctions [argumentValidations, policy]
 
   vein.use (req, res, next) ->
     args = req.args
     cookies = req.cookies
 
-    validators = routeValidators[req.service]
+    filters = serviceFilters[req.service]
+    packageFilters = (filters) -> (filter(args, cookies) for filter in filters)
 
-    if validators?
-      packagedValidators = (validator(args, cookies) for validator in validators)
+    if filters?
+      packagedFilters = packageFilters filters
     else
-      packagedValidators = (validator(args, cookies) for validator in defaultValidators)
+      packagedFilters = packageFilters defaultFilters
 
-    async.series packagedValidators, (err) ->
+    async.series packagedFilters, (err) ->
       next err

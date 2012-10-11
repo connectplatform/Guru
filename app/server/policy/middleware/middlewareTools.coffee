@@ -1,53 +1,57 @@
 # Purpose: this sets up the sugar we are using to define vein middleware
-
 {tandoor} = config.require 'load/util'
 
-validatorsByRoute = {}
-exceptValidators = []
-
-loadValidators = (validatorNames) ->
+loadValidatorFunctions = (validatorNames) ->
   validators = []
   for name in validatorNames
     validator = config.require "policy/validators/#{name}"
     throw new Error "validator #{name} not found" unless validator
-    validators.push validator
+    validators.push tandoor validator
   validators
 
-addRouteValidators = (route, validators) ->
-  validatorsByRoute[route].push tandoor validator for validator in validators
+addRouteValidators = (route, validators, loaded) ->
+  loaded.validatorsByRoute[route].push validator for validator in validators
 
-initRoute = (route) ->
-  if validatorsByRoute[route] is undefined
-    console.log 'initing ', route
-    validatorsByRoute[route] = []
-    validatorsByRoute[route].push validator for validator in exceptValidators
+initRoute = (route, loaded) ->
+  if loaded.validatorsByRoute[route] is undefined
+    loaded.validatorsByRoute[route] = []
+    loaded.validatorsByRoute[route].push validator for validator in loaded.exceptValidators
 
-onlyFilter = (validators, routes) ->
+onlyFilter = (validators, routes, loaded) ->
   for route in routes
-    initRoute route
-    addRouteValidators route, validators
+    initRoute route, loaded
+    addRouteValidators route, validators, loaded
 
-exceptFilter = (validators, routes) ->
-  initRoute route for route in routes
-  exceptValidators.push tandoor validator for validator in validators
-  for route of validatorsByRoute when route not in routes
-    addRouteValidators route, validators
+exceptFilter = (validators, routes, loaded) ->
+  initRoute route, loaded for route in routes
+  loaded.exceptValidators.push validator for validator in validators
+  for route of loaded.validatorsByRoute when route not in routes
+    addRouteValidators route, validators, loaded
+
+loadPolicies = (policies) ->
+  loaded =
+    validatorsByRoute: {}
+    exceptValidators: []
+  for policy in policies
+    for rule in policy
+      throw new Error "Error loading policy: Validations must contain array of filters" unless rule.filters?
+      if rule.only?
+        onlyFilter rule.filters, rule.only, loaded
+      else if rule.except?
+        exceptFilter rule.filters, rule.except, loaded
+  { serviceFilters: loaded.validatorsByRoute, defaultFilters: loaded.exceptValidators }
+
+loadFunctions = ({serviceFilters, defaultFilters}) ->
+  loadedServiceFilters = {}
+  loadedDefaultFilters = []
+  for route, validators of serviceFilters
+    loadedServiceFilters[route] = loadValidatorFunctions validators
+  loadedDefaultFilters = loadValidatorFunctions defaultFilters
+  return {serviceFilters: loadedServiceFilters, defaultFilters: loadedDefaultFilters}
+
+policiesToFunctions = (policies) ->
+  loadFunctions loadPolicies policies
 
 module.exports =
-  getValidators: -> validatorsByRoute
-
-  getDefaultValidators: -> exceptValidators
-
-  loadPolicies: (policies) ->
-    for policy in policies
-      for rule in policy
-
-        if rule.filters?
-          validators = loadValidators rule.filters
-        else
-          throw new Error "Error loading policy: Validations must contain array of filters"
-
-        if rule.only?
-          onlyFilter validators, rule.only
-        else if rule.except?
-          exceptFilter validators, rule.except
+  loadPolicies: loadPolicies
+  policiesToFunctions: policiesToFunctions

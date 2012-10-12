@@ -64,6 +64,8 @@ config =
           bucket: 'guru-prod'
           acl: 'public-read'
           maxSize: '102400'
+        accessKey: 'AKIAILLS5MBMHVD62AEA'
+        secretKey: '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'
 
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'

@@ -21,7 +21,7 @@ module.exports =
         'getLogoForChat',
         'setSessionOffline',
         'say',
-        'kickUser',
+        'leaveChat',
         'printChat',
         'emailChat',
 

@@ -12,7 +12,7 @@
             var appendChatMessage, appendServerMessage, displayGreeting;
             if (!canAccess) return window.location.hash = '/newChat';
             $("#content").html(templ());
-            $("#message-form #message").focus();
+            $(".message-form .message").focus();
             self.channel = pulsar.channel(chatId);
             $(".message-form").submit(function(evt) {
               var message;
@@ -60,10 +60,15 @@
             });
             $('.leaveButton').click(function(evt) {
               evt.preventDefault();
-              server.kickUser(chatId, function(err) {
-                if (err) return notify.error("Error leaving chat: " + err);
+              return server.leaveChat(chatId, function(err) {
+                if (err) notify.error("Error leaving chat: " + err);
+                server.cookie('session', null);
+                appendServerMessage('You have left the chat.');
+                $(".message-form").hide();
+                $('.leaveButton').hide();
+                self.channel.removeAllListeners('serverMessage');
+                return self.channel.removeAllListeners('chatEnded');
               });
-              return appendServerMessage('You have left the chat.');
             });
             $('.printButton').click(chatActions.print(chatId));
             return $('.emailButton').click(chatActions.email(chatId));

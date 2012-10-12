@@ -2,7 +2,7 @@ async = require 'async'
 {digest_s} = require 'md5'
 
 mongo = config.require 'server/load/mongo'
-{User, Role, Website, Field} = mongo.models
+{User, Role, Website, Specialty, Field} = mongo.models
 
 module.exports = (done) ->
   mongo.wipe ->
@@ -16,6 +16,9 @@ module.exports = (done) ->
 
     createWebsite = (website, cb) ->
       Website.create website, cb
+
+    createSpecialty = (specialty, cb) ->
+      Specialty.create specialty, cb
 
     operators = [
         email: 'admin@foo.com'
@@ -74,11 +77,13 @@ module.exports = (done) ->
             selections: ['Sales', 'Billing']
             label: 'Department'
         ]
-
     ]
+
+    specialties = [ {name: 'Sales'}, {name: 'Billing'}]
 
     async.parallel [
       (cb) -> async.map operators, createUser, cb
       (cb) -> async.map roles, createRole, cb
       (cb) -> async.map websites, createWebsite, cb
+      (cb) -> async.map specialties, createSpecialty, cb
     ], done

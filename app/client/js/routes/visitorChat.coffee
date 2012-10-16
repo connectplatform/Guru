@@ -8,7 +8,7 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
           return window.location.hash = '/newChat' unless canAccess
 
           $("#content").html templ()
-          $("#message-form #message").focus()
+          $(".message-form .message").focus()
           self.channel = pulsar.channel chatId
 
           $(".message-form").submit (evt) ->
@@ -55,9 +55,14 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
           # wire up leave button
           $('.leaveButton').click (evt) ->
             evt.preventDefault()
-            server.kickUser chatId, (err) ->
+            server.leaveChat chatId, (err) ->
               notify.error "Error leaving chat: #{err}" if err
-            appendServerMessage 'You have left the chat.'
+              server.cookie 'session', null
+              appendServerMessage 'You have left the chat.'
+              $(".message-form").hide()
+              $('.leaveButton').hide()
+              self.channel.removeAllListeners 'serverMessage'
+              self.channel.removeAllListeners 'chatEnded'
 
           $('.printButton').click chatActions.print chatId
 

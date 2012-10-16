@@ -29,19 +29,19 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
         waitsFor exists('.leaveButton'), 'Visitor chat did not load', 200
 
         runs ->
-
-          userKicked = false
-          server.kickUser = (args..., cb) ->
-            userKicked = true
+          userLeft = false
+          server.leaveChat = (args..., cb) ->
+            userLeft = true
+            cb null, null
 
           $('.leaveButton').click()
-          wasKicked = -> userKicked
-          waitsFor wasKicked
+          didLeave = -> userLeft
+          waitsFor didLeave, 200, 'leaveChat was not called'
 
         messageDisplayed = ->
           $('.chat-display-box').children().eq(1)?.text() is 'You have left the chat.'
 
-        waitsFor messageDisplayed, 200, 'Exit message did not display'
+        waitsFor messageDisplayed, 500, 'Exit message did not display'
 
       it 'should give the user a button to print in a new window', ->
         waitsFor exists('.printButton'), 'could not find print button', 200

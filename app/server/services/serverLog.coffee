@@ -19,7 +19,7 @@ getData = (item, modelName) ->
 
 module.exports = (res, obj) ->
   console.log '\nReceived logging request from client: ', obj
-  return res.reply null, 'Success' unless (getType obj?.ids) is '[object Object]'
+  return res.reply null, 'Success' unless (getType obj?.ids) is 'Object'
 
   async.parallel [
     getData obj.ids.chatId, 'Chat'

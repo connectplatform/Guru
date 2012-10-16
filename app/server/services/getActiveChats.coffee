@@ -13,6 +13,7 @@ module.exports = (res) ->
   Chat.allChats.all (err, chatIds) ->
 
     getChatRelations session, (err, relations) ->
+      console.log 'Error:', err if err
 
       async.map chatIds, getFullChatData, (err1, chats) ->
 

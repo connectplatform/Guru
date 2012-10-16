@@ -37,13 +37,14 @@ face = (decorators) ->
 
       website chat
       department chat
+
       visitor chat, ({before, after}) ->
         # JSON serialize/deserialize
         # TODO: code review
         dehydrateJSON = (obj) ->
           newObj = {}
           for key, value of obj
-            if getType(value) is '[object Object]'
+            if getType(value) is 'Object'
               newObj[key] = JSON.stringify value
             else
               newObj[key] = value

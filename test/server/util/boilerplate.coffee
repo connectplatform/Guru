@@ -70,7 +70,7 @@ module.exports = global.boiler = (testName, tests) ->
         visitor = @getClient()
         visitor.ready =>
           visitor.newChat data, (err, data) =>
-            throw new Error err if err
+            throw new Error err.toString() if err
             @visitorSession = visitor.cookie 'session'
             @chatId = data.chatId
             cb null, visitor, data

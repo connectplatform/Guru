@@ -34,6 +34,9 @@ config =
         secretKey: '4IdLGyU52rbz3pFrTLJjgZIJnyT7FkrxRQTSrJDr'
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
+      name: 'guru-dev'
+      domain: 'localhost'
+      port: 27017
     redis:
       database: 0
 
@@ -69,6 +72,11 @@ config =
 
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
+      name: 'guru-dev'
+      domain: 'ds035137.mongolab.com'
+      port: 35137
+      username: 'guru'
+      password: 'gk31Ql8151BTOS1'
     redis:
       database: 1
 

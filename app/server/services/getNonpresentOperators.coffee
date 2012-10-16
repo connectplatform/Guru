@@ -58,5 +58,5 @@ module.exports = (res, chatId) ->
       # We have the sessions for everyone we want to display, now get their data
       async.map operatorSessions, packSessionData, (sessionData=[]) ->
 
-        sessionData = [sessionData] unless getType(sessionData) is '[object Array]'
+        sessionData = [sessionData] unless getType(sessionData) is 'Array'
         res.reply err, sessionData

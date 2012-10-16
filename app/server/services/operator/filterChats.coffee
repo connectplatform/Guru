@@ -5,7 +5,7 @@ stoic = require 'stoic'
 {ChatSession} = stoic.models
 
 module.exports = tandoor (chatSessions, relationTypes, done) ->
-  if getType(relationTypes) != '[object Array]'
+  if getType(relationTypes) != 'Array'
     relationTypes = [relationTypes]
 
   filter = (rel, next) ->

@@ -1,30 +1,31 @@
 winston = require 'winston'
 require('winston-mongodb').MongoDB
 
-loggers = {}
+module.exports = (options) ->
+  loggers = {}
 
-makeLogger = (type) ->
-  loggers[type] = new winston.Logger()
-  options =
-    db: config.mongo.name
-    host: config.mongo.domain
-    port: config.mongo.port
-    username: config.mongo.username
-    password: config.mongo.password
-    collection: "#{type}Logs"
-    capped: true
-    cappedSize: 104857600 #100 MB
-  loggers[type].add winston.transports.MongoDB, options
+  makeLogger = (type) ->
+    loggers[type] = new winston.Logger()
+    options =
+      db: options.name
+      name: options.name
+      host: options.domain
+      port: options.port
+      username: options.username
+      password: options.password
+      collection: "#{type}Logs"
+      capped: true
+      cappedSize: 104857600 #100 MB
+      level: options.logLevel
 
-makeLogger 'client'
-makeLogger 'server'
+    loggers[type].add winston.transports.MongoDB, options
 
-module.exports =
-  info: loggers.server.info
-  warn: loggers.server.warn
-  error: loggers.server.error
+  makeLogger 'client'
+  makeLogger 'server'
 
-  client:
-    info: loggers.client.info
-    warn: loggers.client.warn
-    error: loggers.client.error
+  process.on 'uncaughtException', (err) ->
+    process.removeAllListeners 'uncaughtException'
+    loggers.server.error 'Uncaught Exception', {exception: err.toString()}, ->
+      throw err
+
+  return loggers

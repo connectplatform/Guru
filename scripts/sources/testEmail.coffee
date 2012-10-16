@@ -1,4 +1,4 @@
-require '../app/config'
+require '../../app/config'
 sendEmail = config.require 'services/email/sendEmail'
 
 options =

@@ -4,8 +4,6 @@ Object.extend()
 connect = require 'connect'
 Vein = require 'vein'
 mongo = require './mongo'
-logging = require './logging'
-config.log = logging
 pulsar = require './pulsar'
 initStoic = require './initStoic'
 createServer = require './createServer'

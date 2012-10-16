@@ -2,6 +2,8 @@
 require 'sugar'
 Object.extend()
 
+logging = require './server/load/logging'
+
 rel = (path) ->
   join __dirname, '../', path
 
@@ -102,11 +104,22 @@ path = (spec) ->
   throw new Error "'#{root}' is not a path in config.coffee" unless paths[root]?
   join paths[root], parts.join '/'
 
+# Logging
+loggingOptions = config[environment].mongo
+loggingOptions.logLevel = 'info'
+loggers = logging loggingOptions
+
 global.config = config[environment].merge
   env: environment
   paths: paths
   path: path
   require: (spec) ->
     require path spec
+  info: loggers.server.info
+  warn: loggers.server.warn
+  error: loggers.server.error
+  clientInfo: loggers.client.info
+  clientWarn: loggers.client.warn
+  clientError: loggers.client.error
 
 module.exports = global.config

@@ -2,7 +2,7 @@
 require 'sugar'
 Object.extend()
 
-logging = require './server/load/logging'
+initLogging = require './server/load/logging'
 
 rel = (path) ->
   join __dirname, '../', path
@@ -41,6 +41,13 @@ config =
       port: 27017
     redis:
       database: 0
+    logging:
+      client:
+        level: 'info'
+        transport: 'Console'
+      server:
+        level: 'info'
+        transport: 'Console'
 
   production:
     app:
@@ -81,6 +88,23 @@ config =
       password: 'gk31Ql8151BTOS1'
     redis:
       database: 1
+    logging:
+      client:
+        level: 'warn'
+        transport: 'MongoDB'
+        referenceOptions: 'mongo'
+        options:
+          collection: 'clientLogs'
+          capped: true
+          cappedSize: 104857600 #100 MB
+      server:
+        level: 'info'
+        transport: 'MongoDB'
+        referenceOptions: 'mongo'
+        options:
+          collection: 'serverLogs'
+          capped: true
+          cappedSize: 104857600 #100 MB
 
 paths =
   root:       rel '.'
@@ -104,22 +128,13 @@ path = (spec) ->
   throw new Error "'#{root}' is not a path in config.coffee" unless paths[root]?
   join paths[root], parts.join '/'
 
-# Logging
-loggingOptions = config[environment].mongo
-loggingOptions.logLevel = 'info'
-loggers = logging loggingOptions
-
 global.config = config[environment].merge
   env: environment
   paths: paths
   path: path
   require: (spec) ->
     require path spec
-  info: loggers.server.info
-  warn: loggers.server.warn
-  error: loggers.server.error
-  clientInfo: loggers.client.info
-  clientWarn: loggers.client.warn
-  clientError: loggers.client.error
+
+global.config.log = initLogging global.config.logging
 
 module.exports = global.config

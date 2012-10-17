@@ -147,8 +147,8 @@ module.exports = global.boiler = (testName, tests) ->
     beforeEach (done) ->
       flushCache config.redis.database, config.redis.database, =>
         sampleData (err, data) =>
+          throw new Error "when creating sample data: #{err}" if err?
           @adminUser = data[0][0]
-          console.log 'error:', err if err?
           done()
 
     after (done) ->

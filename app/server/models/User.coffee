@@ -1,5 +1,6 @@
 db = require 'mongoose'
 {Schema} = db
+{ObjectId} = Schema.Types
 
 sendRegistrationEmail = config.require 'services/operator/sendRegistrationEmail'
 
@@ -21,6 +22,10 @@ validateWebsite = (websiteName, cb) ->
     cb false
 
 user = new Schema
+
+  accountId:
+    type: ObjectId
+    required: true
 
   sentEmail:
     type: Boolean

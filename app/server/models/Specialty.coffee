@@ -1,7 +1,10 @@
 db = require 'mongoose'
 {Schema} = db
+{ObjectId} = Schema.Types
 
 specialty = new Schema
+
+  accountId: ObjectId
 
   name:
     type: String

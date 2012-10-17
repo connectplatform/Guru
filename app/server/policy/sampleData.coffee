@@ -2,23 +2,33 @@ async = require 'async'
 {digest_s} = require 'md5'
 
 mongo = config.require 'server/load/mongo'
-{User, Role, Website, Specialty, Field} = mongo.models
+{Account, User, Role, Website, Specialty, Field} = mongo.models
 
 module.exports = (done) ->
   mongo.wipe ->
 
-    createUser = (user, cb) ->
-      user.password = digest_s user.password
-      User.create user, cb
-
-    createRole = (role, cb) ->
-      Role.create role, cb
-
-    createWebsite = (website, cb) ->
-      Website.create website, cb
+    createAccount = (account, cb) ->
+      Account.create account, cb
 
     createSpecialty = (specialty, cb) ->
       Specialty.create specialty, cb
+
+    createUser = (account) ->
+      (user, cb) ->
+        user.password = digest_s user.password
+        User.create user.merge(accountId: account), cb
+
+    createRole = (account) ->
+      (role, cb) ->
+        Role.create role.merge(accountId: account), cb
+
+    createWebsite = (account) ->
+      (website, cb) ->
+        Website.create website.merge(accountId: account), cb
+
+    accounts = [
+      status: 'Trial'
+    ]
 
     operators = [
         email: 'admin@foo.com'
@@ -81,9 +91,13 @@ module.exports = (done) ->
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
 
-    async.parallel [
-      (cb) -> async.map operators, createUser, cb
-      (cb) -> async.map roles, createRole, cb
-      (cb) -> async.map websites, createWebsite, cb
-      (cb) -> async.map specialties, createSpecialty, cb
-    ], done
+    async.map accounts, createAccount, (err, accounts) ->
+      return done err if err
+      [account] = accounts
+
+      async.parallel [
+        (cb) -> async.map operators, createUser(account), cb
+        (cb) -> async.map roles, createRole(account), cb
+        (cb) -> async.map websites, createWebsite(account), cb
+        (cb) -> async.map specialties, createSpecialty, cb
+      ], done

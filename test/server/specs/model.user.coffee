@@ -1,12 +1,17 @@
 should = require 'should'
 db = config.require 'server/load/mongo'
-{User} = db.models
+{Account, User} = db.models
 {digest_s} = require 'md5'
 
-boiler 'Model - Operator Chat', ->
+boiler 'Model - User', ->
+  beforeEach (done) ->
+    Account.create {status: 'Trial'}, (err, account) =>
+      @accountId = account._id
+      done err
 
   it 'should not let you save an invalid role', (done)->
     user =
+      accountId: @accountId
       email: 'invalidrole@foo.com'
       password: digest_s 'foobar'
       role: 'Invalid'
@@ -19,6 +24,7 @@ boiler 'Model - Operator Chat', ->
 
   it 'should gracefully call back with an error if you leave a required field blank', (done)->
     user =
+      accountId: @accountId
       password: digest_s 'foobar'
       email: "jkl@foo.com"
       firstName: 'First'

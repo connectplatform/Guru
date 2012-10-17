@@ -7,17 +7,18 @@ getChatRelations = config.require 'services/chats/getChatRelations'
 filterRelevant = config.require 'services/chats/filterRelevant'
 
 module.exports = (res) ->
-  session = res.cookie 'session'
+  sessionId = res.cookie 'session'
   {Chat, ChatSession} = stoic.models
 
   Chat.allChats.all (err, chatIds) ->
 
-    getChatRelations session, (err, relations) ->
-      console.log 'Error:', err if err
+    getChatRelations sessionId, (err, relations) ->
+      config.log.error 'Error getting chat relations in getActiveChats', {error: err, sessionId: sessionId} if err
 
-      async.map chatIds, getFullChatData, (err1, chats) ->
+      async.map chatIds, getFullChatData, (err, chats) ->
+        config.log.error 'Error mapping chat data in getActiveChats', {error: err, sessionId: sessionId, chatIds: chatIds} if err
 
         chat.relation = relations[chat.id] for chat in chats
         chats = chats.sortBy(chatPriority)
 
-        filterRelevant session, chats, res.reply
+        filterRelevant sessionId, chats, res.reply

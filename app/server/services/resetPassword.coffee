@@ -16,5 +16,5 @@ module.exports = (res, userId, registrationKey, newPassword) ->
     user.password = digest_s newPassword
     user.registrationKey = null
     user.save (err) ->
-      console.log "error saving new password in changePassword: ", err if err?
+      config.log.error 'Error saving new password in resetPassword', {error: err, userId: userId, registrationKey: registrationKey} if err
       res.reply err

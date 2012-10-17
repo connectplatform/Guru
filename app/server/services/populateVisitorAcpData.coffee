@@ -12,7 +12,7 @@ module.exports = (referrerData, chatId) ->
   return unless websiteUrl
 
   Website.find {url: websiteUrl}, (err, [site]) ->
-    console.log 'error retrieving website in populateVisitorAcpData: ', err if err
+    config.log.error 'Error retrieving website in populateVisitorAcpData', {error: err, website: site, url: websiteUrl} if err
 
     acpEndpoint = site?.acpEndpoint
     return unless acpEndpoint
@@ -25,3 +25,4 @@ module.exports = (referrerData, chatId) ->
     requestOptions = {headers: headers}
     restler.get(targetUrl, requestOptions).on 'success', (acpData) ->
       Chat.get(chatId).visitor.set 'acpData', acpData, (err) ->
+        config.log.error 'Error setting visitor acp data in populateVisitorAcpData', {error: err, acpData: acpData, website: site} if err

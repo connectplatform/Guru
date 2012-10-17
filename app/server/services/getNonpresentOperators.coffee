@@ -4,8 +4,9 @@ stoic = require 'stoic'
 
 {getType} = config.require 'load/util'
 
-removeVisitors = (session, cb) ->
-  session.role.get (err, role) ->
+removeVisitors = (sessionId, cb) ->
+  sessionId.role.get (err, role) ->
+    config.log.warn 'Error getting role for session in getNonpresentOperators', {error: err, sessionId: sessionId} if err
     cb role isnt 'Visitor'
 
 filterSessions = (sessions, chatId, done) ->
@@ -13,6 +14,7 @@ filterSessions = (sessions, chatId, done) ->
   async.filter sessions, removeVisitors, (operatorSessionList) ->
 
     ChatSession.getByChat chatId, (err, presentChatSessions) ->
+      config.log.warn 'Error getting sessions for chat in getNonpresentOperators', {error: err, chatId: chatId} if err
 
       removePresentOperators = (session, cb) ->
         sessionIds = presentChatSessions.map (chatSession) -> chatSession.sessionId
@@ -27,13 +29,13 @@ filterSessions = (sessions, chatId, done) ->
         else
           currentChatSession = presentChatSessions[currentIndex]
           #This operator is in this chat, but we only weed them out if they're a visible member
-          currentChatSession.relationMeta.get 'type', (err, type) ->
-            currentChatSession.relationMeta.get 'isWatching', (err, isWatching) ->
-              if type is 'member' and isWatching is 'false'
-                result = null
-              else
-                result = session
-              cb err, result
+          currentChatSession.relationMeta.getall (err, relationMeta) ->
+            config.log.warn 'Error getting relationMeta for chatSession in getNonpresentOperators', {error: err, chatId: currentChatSession.chatId, sessionId: currentChatSession.sessionId} if err
+            if relationMeta.type is 'member' and relationMeta.isWatching is 'false'
+              result = null
+            else
+              result = session
+            cb err, result
 
       async.map operatorSessionList, removePresentOperators, (err, nonpresentList) ->
         done err, nonpresentList.compact()
@@ -43,14 +45,14 @@ packSessionData = (session, cb) ->
     chatName: session.chatName.get
     role: session.role.get
   }, (err, sessionData) ->
-    console.log "Error getting session data in getNonpresentOperators: #{err}" if err
+    config.log.error 'Error getting session data in getNonpresentOperators', {error: err, sessionId: session.id} if err
     sessionData.id = session.id
     cb sessionData
 
 module.exports = (res, chatId) ->
   Session.allSessions.members (err, sessionIds) ->
     if err
-      console.log "Error retrieving sessions in getNonpresentOperators: #{err}"
+      config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}
       return res.reply err, null
 
     filterSessions sessionIds, chatId, (err, operatorSessions) ->

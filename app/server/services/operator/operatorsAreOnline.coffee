@@ -4,5 +4,5 @@ async = require 'async'
 
 module.exports = (cb) ->
   Session.onlineOperators.card (err, card) ->
-    console.log 'Error getting online operators: ', err if err?
+    config.log.error 'Error getting online operator count', {error: err} if err
     cb card > 0

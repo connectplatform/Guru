@@ -18,15 +18,19 @@ getData = (item, modelName) ->
       cb null, result
 
 module.exports = (res, obj) ->
-  console.log '\nReceived logging request from client: ', obj
-  return res.reply null, 'Success' unless (getType obj?.ids) is 'Object'
+  severity = 'info'
+  severity = 'warn' if obj?.severity is 'warn'
+  severity = 'error' if obj?.severity is 'error'
 
-  async.parallel [
-    getData obj.ids.chatId, 'Chat'
-    getData obj.ids.sessionId, 'Session'
+  if (getType obj?.ids) is 'Object'
+    async.parallel [
+      getData obj.ids.chatId, 'Chat'
+      getData obj.ids.sessionId, 'Session'
 
-  ], (err, results) ->
+    ], (err, results) ->
 
-    console.log result for result in results
-    console.log '\n'
-    res.reply null, 'Success'
+      config.log.client[severity] 'Received logging request from client', {clientData: obj, retrievedData: results}
+      res.reply null, 'Success'
+  else
+    config.log.client[severity] 'Received logging request from client', {clientData: obj}
+    return res.reply null, 'Success'

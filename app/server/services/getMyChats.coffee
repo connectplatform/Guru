@@ -15,13 +15,13 @@ module.exports = (res) ->
 
     async.map chatSessions, getIsWatching, (err, arr) ->
       if err
-        console.log "Error mapping chat sessions: ", err
+        config.log.error 'Error mapping chat sessions in getMyChats', {error: err, chatSessions: chatSessions}
         return res.reply err, null
 
       # get info for a specific chat
       doLookup = ([chat, isWatching], cb) ->
         Chat.get(chat).dump (err, data) ->
-          console.log "Error getting chat from cache: data:#{data}, error:#{err}" if err
+          config.log.error 'Error getting chat in getMyChats', {error: err, chatId: chat} if err
           message.timestamp = new Date(parseInt(message.timestamp)) for message in data.history
           data.isWatching = isWatching == "true" ? true : false
           cb err, data

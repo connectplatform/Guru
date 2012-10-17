@@ -29,7 +29,7 @@ face = (decorators) ->
         faceValue.allChats.add id
 
       ], (err) ->
-        console.log "Error adding chat: #{err}" if err?
+        config.log.error "Error creating chat model", {error: err, chatId: id} if err
         cb err, chat
 
     get: (id) ->

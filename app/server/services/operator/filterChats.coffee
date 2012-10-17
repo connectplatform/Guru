@@ -8,12 +8,11 @@ module.exports = tandoor (chatSessions, relationTypes, done) ->
   if getType(relationTypes) != 'Array'
     relationTypes = [relationTypes]
 
-  filter = (rel, next) ->
-    rel.relationMeta.get 'type', (err, type) ->
-      #console.log 'found type:', type
-      #console.log 'looking for:', relationTypes
+  filter = (chatSession, next) ->
+    chatSession.relationMeta.get 'type', (err, type) ->
+      config.log.error 'Error getting chat relation type in filterChats', {error: err, chatId: chatSession?.chatId, sessionId: chatSession?.sessionId} if err
       if type in relationTypes
-        next null, {chatId: rel.chatId, type: type}
+        next null, {chatId: chatSession.chatId, type: type}
       else
         next()
 

@@ -7,8 +7,7 @@ module.exports = (body, vars, done) ->
   vars.from ||= config.app.mail.options.from
   vars.html ||= body
 
-  console.log "Sending email to #{vars.to}."
-  #console.log "Body:", vars.html
+  config.log.info "Sending email to #{vars.to}."
   sender.sendMail vars, (err, args...) ->
 
     # vein chokes on an Error object

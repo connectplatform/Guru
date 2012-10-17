@@ -10,7 +10,7 @@ module.exports = (res, params) ->
 
     # if there's no website, present a selection from available websites
     if err or not website
-      console.log "Error finding website:", err if err
+      config.warn.log 'Error finding website in createChatOrGetForm', {error: err, website: website} if err
       return Website.find {}, {url: true}, (err, allWebsites) ->
         domains = (w.url for w in allWebsites)
         res.reply err, fields: [

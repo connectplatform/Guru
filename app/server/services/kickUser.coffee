@@ -14,11 +14,11 @@ module.exports = (res, chatId) ->
       [visitorChatSession] = chatSessions.filter (s) -> s.role is 'Visitor'
 
       Chat.get(chatId).status.set 'vacant', (err) ->
-        console.log "Error setting chat status: #{err}" if err?
+        config.log.error 'Error setting chat status in kickUser', {error: err, chatId: chatId} if err
         visitorChatSession.session.delete (err) ->
-          console.log "Error deleting session: #{err}" if err?
+          config.log.error 'Error deleting session in kickUser', {error: err, chatId: chatId} if err
           ChatSession.remove visitorChatSession.sessionId, chatId, (err) ->
-            console.log "Error removing chat session: #{err}" if err?
+            config.log.error 'Error removing chat session in kickUser', {error: err, sessionId: visitorChatSession.sessionId, chatId: chatId} if err
 
             #Trigger callbacks on visitor's page
             notify = pulsar.channel chatId

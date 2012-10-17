@@ -3,5 +3,5 @@ stoic = require 'stoic'
 
 module.exports = (sessionId, isOnline, cb) ->
   Session.get(sessionId).online.set isOnline, (err) ->
-    console.log 'Error setting session status to offline: ', err if err?
+    config.log.error 'Error setting session status in setSessionOnlineStatus', {error: err, sessionId: sessionId} if err
     cb err

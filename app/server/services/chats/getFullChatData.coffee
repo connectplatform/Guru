@@ -10,11 +10,11 @@ module.exports = (chatId, next) ->
     ChatSession.getByChat chatId
 
   ], (err, [chat, chatSessions]) ->
-    console.log "Error getting chat from cache: chatId: #{chatId}, error:#{err}" if err?
+    config.log.error 'Error getting chat and chatSession in getFullChatData', {error: err, chatId: chatId, chat: chat, chatSessions: chatSessions} if err
 
     # get visible participants for this chat
     getVisibleOperators chatSessions, (err, visibleOperators) ->
+      config.log.error 'Error getting visible operators in getFullChatData', {error: err, chatId: chatId, chatSessions: chatSessions, visibleOperators: visibleOperators} if err
       message.timestamp = new Date(parseInt(message.timestamp)) for message in chat.history
       chat.operators = visibleOperators
       next err, chat
-

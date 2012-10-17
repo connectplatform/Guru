@@ -8,14 +8,15 @@ db = config.require 'load/mongo'
 
 getUserFromSessionId = (sessionId, cb) ->
   Session.get(sessionId).operatorId.get (err, operatorId) ->
-    console.log "error retrieving operatorId from redis in changePassword: ", err if err
+    config.log.error 'Error retrieving operatorId from redis in changePassword', {error: err, sessionId: sessionId} if err
     User.findOne {_id: operatorId}, (err, user) ->
-      console.log "error retrieving user from mongo in changePassword: ", err if err
+      config.log.error 'Error retrieving user from mongo in changePassword', {error: err, operatorId: operatorId} if err
       cb null, user
 
-
 module.exports = (res, oldPassword, newPassword) ->
-  getUserFromSessionId res.cookie("session"), (err, user) ->
+  sessionId = res.cookie 'session'
+  getUserFromSessionId sessionId, (err, user) ->
+    config.log.error 'Error getting user from sessionId in changePassword', {error: err, sessionId: sessionId} if err
     return res.reply "User not found." unless user
     return res.reply "Incorrect current password." unless user.password is digest_s oldPassword
     return res.reply 'Invalid password.' unless newPassword
@@ -23,5 +24,5 @@ module.exports = (res, oldPassword, newPassword) ->
 
     user.password = digest_s newPassword
     user.save (err) ->
-      console.log "error saving new password in changePassword: ", err if err
+      config.log.error "Error saving new password in changePassword: ", {error: err, user: user} if err
       res.reply err

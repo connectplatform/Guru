@@ -2,9 +2,9 @@ stoic = require 'stoic'
 {Chat} = stoic.models
 
 module.exports = (res, id) ->
-  Chat.get(id).history.all (err, data) ->
+  Chat.get(id).history.all (err, history) ->
     if err
-      console.log "error recovering history for chat #{id}: #{err}"
-      res.reply "could not find chat", null
+      config.log.error 'Error recovering history for chat', {error: err, chatId: id, history: history}
+      res.reply 'could not find chat'
     else
-      res.reply null, data
+      res.reply null, history

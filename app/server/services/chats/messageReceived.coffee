@@ -18,7 +18,7 @@ module.exports = (chatId, sessionId, message, done) ->
 
   ], (err, [username, chatSessions]) ->
     chatSessions ?= []
-    console.log "Error getting chat name from cache: #{err}" if err
+    config.log.error 'Error getting chat name and session in messageReceived', {error: err, chatId: chatId, username: username, chatSessions: chatSessions} if err
     operators = (op.sessionId for op in chatSessions)
 
     # push history data

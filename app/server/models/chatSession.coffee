@@ -45,8 +45,9 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
         cs.relationMeta.mset metaInfo
 
       ], (err) ->
-        console.log "Error adding chatSession: #{err}" if err?
-        return cb err if err
+        if err
+          config.err 'Error adding chatSession', {error: err, chatId: chatId, sessionId: sessionId, relationMeta: metaInfo}
+          return cb err
 
         # send pulsar notifications
         notifySession = config.require 'services/session/notifySession'
@@ -62,7 +63,7 @@ face = ({chatSession: {chatIndex, sessionIndex, relationMeta}}) ->
         cs.relationMeta.del
 
       ], (err) ->
-        console.log "Error removing chatSession: #{err}" if err?
+        config.log.error 'Error removing chatSession', {error: err} if err
         cb err, cs
 
     # just sugar

@@ -3,10 +3,10 @@ stoic = require 'stoic'
 {ChatSession} = stoic.models
 
 module.exports = (res, chatId) ->
-  operatorId = unescape(res.cookie('session'))
+  sessionId = res.cookie 'session'
   relationMeta =
     isWatching: 'true'
     type: 'member'
-  ChatSession.add operatorId, chatId, relationMeta, (err)->
-    console.log "Error adding ChatSession in joinChat: #{err}" if err
+  ChatSession.add sessionId, chatId, relationMeta, (err) ->
+    config.log.error 'Error adding ChatSession in watchChat', {error: err, sessionId: sessionId, chatId: chatId, relationMeta: relationMeta} if err
     res.reply null, true

@@ -18,7 +18,7 @@ module.exports = (res, userData) ->
     referrerData: userData || null
 
   getAvailableOperators website, department, (err, operators) ->
-    console.log 'Error getting operators:', err if err
+    config.log.error 'Error getting availible operators in newChat', {error: err, website: website, department: department, operators: operators} if err
     return res.reply err, {noOperators: true} if err or operators.length is 0
 
     # create all necessary artifacts
@@ -27,6 +27,7 @@ module.exports = (res, userData) ->
       chat: Chat.create
 
     }, (err, {chat, session}) ->
+      config.log.error 'Error creating session and chat in newChat', {error: err, chat: chat, session: session} if err
 
       showToOperators = (next) ->
         notify = (op, next) ->
@@ -43,7 +44,7 @@ module.exports = (res, userData) ->
       tasks.push chat.department.set department if department
 
       async.parallel tasks, (err) ->
-        console.log 'Error:', err if err
+        config.log.error 'Error in newChat', {error: err, chatId: chat.id, visitor: visitorMeta, sessionId: session.id, website: website, department: department} if err
 
         # set cookie and create pulsar channel
         res.cookie 'session', session.id

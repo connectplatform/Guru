@@ -12,13 +12,16 @@ module.exports = (res, fields) ->
   return res.reply 'Invalid user or password.' unless fields.email and fields.password
   search = {email: fields.email, password: digest_s fields.password}
   User.findOne search, (err, user) ->
-    return res.reply err.message if err?
+    if err
+      config.log.error 'Error searching for operator in login', {error: err, email: fields.email} if err
+      return res.reply err.message
     return res.reply 'Invalid user or password.' unless user?
 
     Session.sessionsByOperator.get user.id, (err, sessionId) ->
+      config.log.warn 'Error getting operator session in login', {error: err, userId: user.id} if err
       if sessionId?
         Session.get(sessionId).online.set true, (err) ->
-          console.log 'Error setting operator online status when reconnecting to session' if err?
+          config.log.error 'Error setting operator online status when reconnecting to session', {error: err, sessionId: sessionId} if err
           res.cookie 'session', sessionId
           res.reply null, user
       else

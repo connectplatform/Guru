@@ -33,7 +33,7 @@
   "subdomain": "guru",
   "private": true,
   "scripts": {
-    "start": "coffee scripts/server.coffee",
+    "start": "scripts/run start",
     "test": "mocha test/server/specs/",
     "stop": "echo 'TODO: add stop script'"
   }

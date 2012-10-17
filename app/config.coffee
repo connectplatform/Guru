@@ -108,19 +108,20 @@ config =
 
 paths =
   root:       rel '.'
-  npmBin:     rel './node_modules/.bin'
+  npmBin:     rel 'node_modules/.bin'
+  scripts:    rel 'scripts/sources'
 
-  app:        rel './app'
-  client:     rel './app/client'
-  public:     rel './app/public'
+  app:        rel 'app'
+  client:     rel 'app/client'
+  public:     rel 'app/public'
 
-  server:     rel './app/server'
-  load:       rel './app/server/load'
-  models:     rel './app/server/models'
-  policy:     rel './app/server/policy'
-  services:   rel './app/server/services'
-  rest:       rel './app/server/services/rest'
-  views:      rel './app/server/views'
+  server:     rel 'app/server'
+  load:       rel 'app/server/load'
+  models:     rel 'app/server/models'
+  policy:     rel 'app/server/policy'
+  services:   rel 'app/server/services'
+  rest:       rel 'app/server/services/rest'
+  views:      rel 'app/server/views'
 
 path = (spec) ->
   parts = spec.split '/'

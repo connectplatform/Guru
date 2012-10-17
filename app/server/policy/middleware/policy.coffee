@@ -8,37 +8,46 @@ module.exports =
     {
       filters: ['isStaff', 'setIsOnline' ]
       except: [
-        'getMyRole',
-        'login',
-        'resetPassword',
-        'submitQuestion',
-        'forgotPassword',
-        'newChat',
-        'getExistingChat',
-        'createChatOrGetForm',
-        'visitorCanAccessChannel',
-        'getChatHistory',
-        'getLogoForChat',
-        'setSessionOffline',
-        'say',
-        'leaveChat',
-        'printChat',
-        'emailChat',
+
+        # used by everyone
+        'getMyRole'
+        'getChatHistory'
+        'getLogoForChat'
+        'setSessionOffline'
+        'say'
+        'leaveChat'
+        'printChat'
+        'emailChat'
+
+        # visitor
+        'newChat'
+        'getExistingChat'
+        'createChatOrGetForm'
+        'visitorCanAccessChannel'
+
+        # operator
+        'login'
+        'resetPassword'
+        'submitQuestion'
+        'forgotPassword'
+
+        # account creation
+        'createAccount'
 
         # these three are covered by isAdministrator
-        'deleteModel',
-        'findModel',
-        'saveModel',
+        'deleteModel'
+        'findModel'
+        'saveModel'
       ]
     }
 
     {
       filters:['argIsChatMember']
       only: [
-        'getChatHistory',
-        'inviteOperator',
-        'getNonpresentOperators',
-        'leaveChat',
+        'getChatHistory'
+        'inviteOperator'
+        'getNonpresentOperators'
+        'leaveChat'
         'printChat'
       ]
     }

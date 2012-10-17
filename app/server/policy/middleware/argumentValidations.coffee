@@ -3,36 +3,47 @@ module.exports =
     {
       filters: ['cookieSessionExists']
       except: [
-        'login',
-        'getChatStats',
-        'getExistingChat',
-        'createChatOrGetForm',
-        'getRoles',
-        'resetPassword',
-        'forgotPassword',
-        'newChat',
-        'submitQuestion',
-        'getMyRole',
+
+        # should these be here?
+        'getRoles'
+        'getChatStats'
+
+        # everyone
+        'getMyRole'
+
+        # visitor
+        'newChat'
+        'submitQuestion'
+        'getExistingChat'
+        'createChatOrGetForm'
         'visitorCanAccessChannel'
+
+        # operator
+        'login'
+        'resetPassword'
+        'forgotPassword'
+
+        # account creation
+        'createAccount'
       ]
     }
 
     {
       filters: ['argChatIdIsValid']
       only: [
-        'acceptChat',
-        'acceptInvite',
-        'acceptTransfer',
-        'emailChat',
-        'getChatHistory',
-        'getNonpresentOperators',
-        'inviteOperator',
-        'joinChat',
-        'kickUser',
-        'leaveChat',
-        'printChat',
-        'transferChat',
-        'visitorCanAccessChannel',
+        'acceptChat'
+        'acceptInvite'
+        'acceptTransfer'
+        'emailChat'
+        'getChatHistory'
+        'getNonpresentOperators'
+        'inviteOperator'
+        'joinChat'
+        'kickUser'
+        'leaveChat'
+        'printChat'
+        'transferChat'
+        'visitorCanAccessChannel'
         'watchChat'
       ]
     }

@@ -5,7 +5,7 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
         updateDashboard = ->
           return unless window.location.hash is "#/dashboard"
           server.getActiveChats (err, chats) ->
-            console.log "err retrieving chats: #{err}" if err?
+            server.log 'Error retrieving chats on dashboard', {error: err, severity: 'error'} if err
 
             # calculate some status fields
             statusLevels =

@@ -13,7 +13,6 @@ define ["templates/renderForm", 'helpers/util'], (renderForm, {random}) ->
     options.submitText ||= 'Send'
     options.placement ||= '#content'
 
-    #console.log 'rendering data:', {options: options, fields: fields}
     $(options.placement).html renderForm {options: options, fields: fields}
     $("##{options.name}-form").find(':input').filter(':visible:first')
 

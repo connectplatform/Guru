@@ -3,4 +3,4 @@ define ["load/server", "load/routes", "load/notify"],
     Object.extend()
 
     server.ready (services) ->
-      console.log "Connected - Available services: #{services}"
+      server.log 'Vein is ready', {availibleServices: services}

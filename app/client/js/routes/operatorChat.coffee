@@ -17,14 +17,12 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
           server.getMyChats (err, chats) ->
             if err
-              server.serverLog {
+              server.log 'Error getting chats in operatorChat', {
                 error: err
-                message: 'Error in operatorChat'
-                function: 'getMyChats'
-                results: chats
+                severity: 'error'
                 ids:
                   sessionId: server.cookie 'session'
-              }, ->
+              }
 
             for chat in chats
               chat.renderedId = renderId chat.id

@@ -32,8 +32,8 @@ define ["load/server", "load/notify", "templates/editWebsite", "templates/delete
             site
 
           # find all websites and populate listing
-          server.findModel {}, "Website", (err, websites) ->
-            console.log "err retrieving websites: #{err}" if err
+          server.findModel {}, 'Website', (err, websites) ->
+            server.log 'Error retrieving websites on websites crud page', {error: err, severity: error} if err
 
             beforeRender = (element, cb) ->
               server.awsUpload element.url, 'logo', (err, logoFields) ->

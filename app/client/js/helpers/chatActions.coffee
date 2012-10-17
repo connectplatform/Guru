@@ -14,12 +14,12 @@ define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, serv
       $(".enterEmailForm").submit (evt) ->
         evt.preventDefault()
         email = $('#enterEmail .email').val()
-        console.log 'email: ', email
 
         $("#enterEmail").modal "hide"
         server.ready ->
           server.emailChat chatId, email, (err, response) ->
             if err
+              server.log 'Error sending email', {error: err, severity: 'warn', email: email}
               notify.error 'Error sending email: ', err
             else
               notify.success 'Email sent'

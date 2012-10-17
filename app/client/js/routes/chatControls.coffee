@@ -1,7 +1,7 @@
 define ["load/server", "templates/serverMessage", "templates/selectUser"], (server, serverMessage, selectUser) ->
   showUserSelectionBox = (chatId, cb) ->
     server.getNonpresentOperators chatId, (err, users) ->
-      console.log "Error getting nonpresent users: #{err}" if err
+      server.log 'Error getting nonpresent operators in chatControls', {error: err, severity: 'error', chatId: chatId} if err
       $("#selectModal").html selectUser users: users
       $("#selectUser").modal()
 
@@ -18,13 +18,13 @@ define ["load/server", "templates/serverMessage", "templates/selectUser"], (serv
         showUserSelectionBox chatId, (userId) ->
           return unless userId?
           server[inviteType] chatId, userId, (err) ->
-            console.log "error inviting operator: #{err}" if err
+            server.log 'Error inviting operator to chat', {error: err, severity: 'error', chatId: chatId, userId: userId, inviteType: inviteType} if err
 
     createKickHandler: (chatId, renderedId) ->
       (evt) ->
         evt.preventDefault()
         server.kickUser chatId, (err) ->
-          console.log "error kicking user: #{err}" if err?
+          server.log 'Error kicking user', {error: err, severity: 'error', chatId: chatId} if err
           $("##{renderedId} .chat-display-box").append serverMessage
             message: "The visitor has been kicked from the room"
 
@@ -32,7 +32,7 @@ define ["load/server", "templates/serverMessage", "templates/selectUser"], (serv
       (evt) ->
         evt.preventDefault()
         server.leaveChat chatId, (err) ->
-          console.log "error leaving chat: #{err}" if err?
+          server.log 'Error leaving chat', {error: err, severity: 'error', chatId: chatId} if err
           #TODO: find way to remove this tab and refresh tabs without redirecting to dashboard
           window.location.hash = '/dashboard'
   }

@@ -17,7 +17,7 @@ getData = (item, modelName) ->
         result = "Dump for #{modelName}: " + inspect data
       cb null, result
 
-module.exports = (res, obj) ->
+module.exports = (res, message, obj) ->
   severity = 'info'
   severity = 'warn' if obj?.severity is 'warn'
   severity = 'error' if obj?.severity is 'error'
@@ -29,8 +29,8 @@ module.exports = (res, obj) ->
 
     ], (err, results) ->
 
-      config.log.client[severity] 'Received logging request from client', {clientData: obj, retrievedData: results}
+      config.log.client[severity] message, {clientData: obj, retrievedData: results}
       res.reply null, 'Success'
   else
-    config.log.client[severity] 'Received logging request from client', {clientData: obj}
+    config.log.client[severity] message, {clientData: obj}
     return res.reply null, 'Success'

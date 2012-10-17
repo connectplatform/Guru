@@ -7,5 +7,5 @@ define ['load/server'], (server) ->
       evt.preventDefault()
       chatId = $(this).attr 'chatId'
       server[action] chatId, (err, data) ->
-        console.log "Error on '#{action}': #{err}" if err?
+        server.log 'Error performing dashboard action', {error: err, severity: 'warn', action: action} if err
         next err, data

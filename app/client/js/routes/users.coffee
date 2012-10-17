@@ -41,7 +41,7 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
 
               # find all users and populate listing
               server.findModel {}, "User", (err, users) ->
-                console.log "err retrieving users: #{err}" if err
+                server.log 'Error retrieving users on users crud page', {error: err, severity: 'error'} if err
 
                 $('#content').html templ users: users
                 formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"

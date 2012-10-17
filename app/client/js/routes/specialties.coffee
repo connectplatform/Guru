@@ -19,7 +19,7 @@ define ["load/server", "load/notify", "templates/editSpecialty", "templates/dele
 
         # find all specialties and populate listing
         server.findModel {}, "Specialty", (err, specialties) ->
-          console.log "err retrieving specialties: #{err}" if err
+          server.log 'Error retrieving specialties on specialties crud page', {error: err, severity: 'error'} if err
 
           formBuild = formBuilder getFormFields, editSpecialty, deleteSpecialty, extraDataPacker, specialtyRow, specialties, "specialty"
           #Done with edit/delete handlers, now render page

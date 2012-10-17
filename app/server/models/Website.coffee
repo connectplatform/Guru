@@ -5,7 +5,9 @@ db = require 'mongoose'
 
 website = new Schema
 
-  accountId: ObjectId
+  accountId:
+    type: ObjectId
+    required: true
 
   requiredFields:
     type: [

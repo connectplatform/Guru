@@ -10,17 +10,18 @@ module.exports = (done) ->
     createAccount = (account, cb) ->
       Account.create account, cb
 
-    createSpecialty = (specialty, cb) ->
-      Specialty.create specialty, cb
+    createRole = (role, cb) ->
+      Role.create role, cb
+
+    createSpecialty = (account) ->
+      (specialty, cb) ->
+        Specialty.create specialty.merge(accountId: account), cb
 
     createUser = (account) ->
       (user, cb) ->
         user.password = digest_s user.password
         User.create user.merge(accountId: account), cb
 
-    createRole = (account) ->
-      (role, cb) ->
-        Role.create role.merge(accountId: account), cb
 
     createWebsite = (account) ->
       (website, cb) ->
@@ -97,7 +98,7 @@ module.exports = (done) ->
 
       async.parallel [
         (cb) -> async.map operators, createUser(account), cb
-        (cb) -> async.map roles, createRole(account), cb
+        (cb) -> async.map roles, createRole, cb
         (cb) -> async.map websites, createWebsite(account), cb
-        (cb) -> async.map specialties, createSpecialty, cb
+        (cb) -> async.map specialties, createSpecialty(account), cb
       ], done

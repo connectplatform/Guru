@@ -14,11 +14,11 @@ boiler 'Service - Reset Password', ->
 
       # reset password
       client.resetPassword _id, registrationKey, loginData.password, (err) =>
-        should.not.exist err
+        should.not.exist err, "expected resetPassword to work: #{err}"
 
         # try to log in with new password
         client.login loginData, (err, user) =>
-          should.not.exist err
+          should.not.exist err, "expected login to work: #{err}"
 
           # verify that login worked
           user.email.should.eql loginData.email

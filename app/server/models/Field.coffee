@@ -4,7 +4,9 @@ db = require 'mongoose'
 
 module.exports = new Schema
 
-  accountId: ObjectId
+  accountId:
+    type: ObjectId
+    required: true
 
   name:
     type: String

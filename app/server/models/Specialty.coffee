@@ -4,7 +4,9 @@ db = require 'mongoose'
 
 specialty = new Schema
 
-  accountId: ObjectId
+  accountId:
+    type: ObjectId
+    required: true
 
   name:
     type: String

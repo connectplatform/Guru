@@ -4,7 +4,9 @@ db = require 'mongoose'
 
 history = new Schema
 
-  accountId: ObjectId
+  accountId:
+    type: ObjectId
+    #required: true
 
   visitor: Mixed
   operators: [ObjectId]

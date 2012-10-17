@@ -182,34 +182,6 @@
         "uglify-js": {
           "version": "1.3.3"
         },
-        "mocha": {
-          "version": "1.4.2",
-          "dependencies": {
-            "commander": {
-              "version": "0.6.1"
-            },
-            "growl": {
-              "version": "1.5.1"
-            },
-            "jade": {
-              "version": "0.26.3",
-              "dependencies": {
-                "mkdirp": {
-                  "version": "0.3.0"
-                }
-              }
-            },
-            "diff": {
-              "version": "1.0.2"
-            },
-            "debug": {
-              "version": "0.7.0"
-            },
-            "mkdirp": {
-              "version": "0.3.3"
-            }
-          }
-        },
         "connect": {
           "version": "2.4.6",
           "dependencies": {
@@ -247,6 +219,34 @@
             },
             "debug": {
               "version": "0.7.0"
+            }
+          }
+        },
+        "mocha": {
+          "version": "1.4.2",
+          "dependencies": {
+            "commander": {
+              "version": "0.6.1"
+            },
+            "growl": {
+              "version": "1.5.1"
+            },
+            "jade": {
+              "version": "0.26.3",
+              "dependencies": {
+                "mkdirp": {
+                  "version": "0.3.0"
+                }
+              }
+            },
+            "diff": {
+              "version": "1.0.2"
+            },
+            "debug": {
+              "version": "0.7.0"
+            },
+            "mkdirp": {
+              "version": "0.3.3"
             }
           }
         }
@@ -351,6 +351,42 @@
           "dependencies": {
             "abbrev": {
               "version": "1.0.3"
+            }
+          }
+        }
+      }
+    },
+    "winston": {
+      "version": "0.6.2",
+      "dependencies": {
+        "colors": {
+          "version": "0.6.0-1"
+        },
+        "cycle": {
+          "version": "1.0.0"
+        },
+        "eyes": {
+          "version": "0.1.8"
+        },
+        "pkginfo": {
+          "version": "0.2.3"
+        },
+        "request": {
+          "version": "2.9.203"
+        },
+        "stack-trace": {
+          "version": "0.0.6"
+        }
+      }
+    },
+    "winston-mongodb": {
+      "version": "0.4.0",
+      "dependencies": {
+        "mongodb": {
+          "version": "0.9.9-8",
+          "dependencies": {
+            "bson": {
+              "version": "0.0.4"
             }
           }
         }

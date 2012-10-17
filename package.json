@@ -19,6 +19,8 @@
     "restler": "*",
     "nodemailer": "*",
     "markdown": "*",
+    "winston": "*",
+    "winston-mongodb": "*",
     "jade": "*"
   },
   "devDependencies": {

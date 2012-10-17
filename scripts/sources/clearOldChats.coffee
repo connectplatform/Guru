@@ -1,4 +1,4 @@
-require '../app/config'
+require '../../app/config'
 
 process.env.GURU_PULSAR_PORT = 'DISABLED'
 initStoic = config.require 'load/initStoic'

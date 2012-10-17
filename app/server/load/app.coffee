@@ -1,17 +1,13 @@
 require 'sugar'
 Object.extend()
 
-connect = require "connect"
-Vein = require "vein"
-
-mongo = require "./mongo"
-pulsar = require "./pulsar"
-
+connect = require 'connect'
+Vein = require 'vein'
+mongo = require './mongo'
+pulsar = require './pulsar'
 initStoic = require './initStoic'
-
 createServer = require './createServer'
 loadRest = require './loadRest'
-
 flushCache = config.require 'load/flushCache'
 
 module.exports = (cb) ->

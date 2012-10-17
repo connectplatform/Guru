@@ -1,4 +1,4 @@
-require '../app/config'
+require '../../app/config'
 db = config.require 'load/mongo'
 {User} = db.models
 

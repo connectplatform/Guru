@@ -2,6 +2,8 @@
 require 'sugar'
 Object.extend()
 
+initLogging = require './server/load/logging'
+
 rel = (path) ->
   join __dirname, '../', path
 
@@ -34,8 +36,18 @@ config =
         secretKey: '4IdLGyU52rbz3pFrTLJjgZIJnyT7FkrxRQTSrJDr'
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
+      name: 'guru-dev'
+      domain: 'localhost'
+      port: 27017
     redis:
       database: 0
+    logging:
+      client:
+        level: 'info'
+        transport: 'Console'
+      server:
+        level: 'info'
+        transport: 'Console'
 
   production:
     app:
@@ -69,8 +81,30 @@ config =
 
     mongo:
       host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
+      name: 'guru-dev'
+      domain: 'ds035137.mongolab.com'
+      port: 35137
+      username: 'guru'
+      password: 'gk31Ql8151BTOS1'
     redis:
       database: 1
+    logging:
+      client:
+        level: 'warn'
+        transport: 'MongoDB'
+        referenceOptions: 'mongo'
+        options:
+          collection: 'clientLogs'
+          capped: true
+          cappedSize: 104857600 #100 MB
+      server:
+        level: 'info'
+        transport: 'MongoDB'
+        referenceOptions: 'mongo'
+        options:
+          collection: 'serverLogs'
+          capped: true
+          cappedSize: 104857600 #100 MB
 
 paths =
   root:       rel '.'
@@ -100,5 +134,7 @@ global.config = config[environment].merge
   path: path
   require: (spec) ->
     require path spec
+
+global.config.log = initLogging global.config.logging
 
 module.exports = global.config

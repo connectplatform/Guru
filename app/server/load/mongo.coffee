@@ -10,6 +10,7 @@ loadModel "Specialty"
 loadModel "Field"
 loadModel "Website"
 loadModel "ChatHistory"
+loadModel "Account"
 
 db.wipe = (cb) ->
   async.parallel (m.remove.bind m, null for _, m of db.models), cb

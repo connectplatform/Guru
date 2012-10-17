@@ -1,4 +1,4 @@
-require '../app/config'
+require '../../app/config'
 seed = config.require 'policy/sampleData'
 
 seed (err, data) ->

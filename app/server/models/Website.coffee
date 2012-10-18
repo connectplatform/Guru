@@ -1,6 +1,5 @@
 db = require 'mongoose'
 {Schema} = db
-{Field} = db.models
 {ObjectId} = Schema.Types
 
 website = new Schema

@@ -2,7 +2,7 @@ async = require 'async'
 {digest_s} = require 'md5'
 
 mongo = config.require 'server/load/mongo'
-{Account, User, Role, Website, Specialty, Field} = mongo.models
+{Account, User, Role, Website, Specialty} = mongo.models
 
 module.exports = (done) ->
   mongo.wipe ->

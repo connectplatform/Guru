@@ -29,7 +29,7 @@ module.exports = ({website, args, response}) ->
 
   unless @cache
     @cache = {}
-    Website = db.models['Website']
+    {Website} = db.models
     Website.find {}, (err, websites) ->
       initSite = (site, cb) ->
         @cache[site.name] =

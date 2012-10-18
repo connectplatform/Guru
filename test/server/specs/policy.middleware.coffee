@@ -5,5 +5,5 @@ boiler 'Policy - Middleware', ->
     @client = @getClient()
     @client.ready =>
       @client.deleteModel 'some_id', 'Website', (err) ->
-        err.should.eql 'expects cookie: {session: sessionId}'
+        err.error.should.eql 'expects cookie: {session: sessionId}'
         done()

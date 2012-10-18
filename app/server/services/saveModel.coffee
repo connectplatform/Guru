@@ -1,7 +1,6 @@
 db = config.require 'load/mongo'
 getAccountId = config.require 'services/account/getAccountId'
-
-globalModels = ['Role', 'Account']
+globalModels = config.require 'load/globalModels'
 
 parseMongooseError = (err) ->
   return null unless err?

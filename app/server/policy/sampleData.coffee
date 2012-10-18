@@ -88,6 +88,12 @@ module.exports = (done) ->
             selections: ['Sales', 'Billing']
             label: 'Department'
         ]
+      ,
+        name: "baz.com"
+        url: "baz.com"
+      ,
+        name: "bar.com"
+        url: "bar.com"
     ]
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]

@@ -10,15 +10,8 @@ module.exports = (res, params) ->
 
     # if there's no website, present a selection from available websites
     if err or not website
-      config.warn.log 'Error finding website in createChatOrGetForm', {error: err, website: website} if err
-      return Website.find {}, {url: true}, (err, allWebsites) ->
-        domains = (w.url for w in allWebsites)
-        res.reply err, fields: [
-          name: 'websiteUrl'
-          label: 'Website'
-          inputType: 'selection'
-          selections: domains
-        ]
+      config.log.error 'Could not route chat due to missing website.', {error: err, params: params}
+      return res.reply 'Could not route chat due to missing website.'
 
     # check supplied params vs. required
     remaining = website.requiredFields.exclude (f) ->

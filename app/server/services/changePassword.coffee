@@ -1,11 +1,5 @@
 {digest_s} = require 'md5'
 
-stoic = require 'stoic'
-{Session} = stoic.models
-
-db = config.require 'load/mongo'
-{User} = db.models
-
 getOperatorData = config.require 'services/operator/getOperatorData'
 
 module.exports = (res, oldPassword, newPassword) ->

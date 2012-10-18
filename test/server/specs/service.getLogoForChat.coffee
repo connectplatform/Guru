@@ -1,4 +1,5 @@
 should = require 'should'
+stoic = require 'stoic'
 
 boiler 'Service - Get Logo For Chat', ->
 
@@ -15,6 +16,10 @@ boiler 'Service - Get Logo For Chat', ->
 
           @client.getLogoForChat chatId, (err, url) =>
             should.not.exist err
-            url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{encodeURIComponent chatData.websiteUrl}/logo"
-            @client.disconnect()
-            done()
+
+            {Chat} = stoic.models
+            Chat.get(chatId).website.get (err, website) =>
+              should.not.exist err
+              url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{website}/logo"
+              @client.disconnect()
+              done()

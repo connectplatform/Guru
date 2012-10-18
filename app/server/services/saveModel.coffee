@@ -26,6 +26,7 @@ module.exports = (res, fields, modelName) ->
   # update field data
   getModel fields, (err, foundModel) ->
     return res.reply err, null if err?
+    config.log.warn 'Could not find model in saveModel', {fields: fields} unless foundModel
     foundModel[key] = value for key, value of fields when key isnt 'id'
     foundModel.save (err, savedModel) ->
       savedModel = filterOutput savedModel unless err?

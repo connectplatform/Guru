@@ -7,10 +7,6 @@ mongo = config.require 'server/load/mongo'
 module.exports = (done) ->
   mongo.wipe ->
 
-    createUser = (user, cb) ->
-      user.password = digest_s user.password
-      User.create user, cb
-
     createRole = (role, cb) ->
       Role.create role, cb
 
@@ -28,6 +24,7 @@ module.exports = (done) ->
         role: 'Administrator'
         firstName: 'Admin'
         lastName: 'Guy'
+        websites: []
       ,
         email: 'guru1@foo.com'
         sentEmail: true
@@ -82,8 +79,21 @@ module.exports = (done) ->
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
 
     async.parallel [
-      (cb) -> async.map operators, createUser, cb
       (cb) -> async.map roles, createRole, cb
       (cb) -> async.map websites, createWebsite, cb
       (cb) -> async.map specialties, createSpecialty, cb
-    ], done
+    ], (err) ->
+
+      console.log 'Error preparing seed data; ', err if err
+
+      siteIds = {}
+      Website.find {}, (err, websites) ->
+        siteIds[website.name] = website._id for website in websites
+
+        createUser = (user, cb) ->
+          user.password = digest_s user.password
+          sites = (siteIds[siteName] for siteName in user.websites)
+          user.websites = sites
+          User.create user, cb
+
+        async.map operators, createUser, done

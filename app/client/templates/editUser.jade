@@ -19,13 +19,13 @@
       .clear
       |Websites:
       .websites.small-modal-box.scrolling-checkboxes
-        for siteName in user.allowedWebsites
-          if user.websites.indexOf(siteName) == -1
-            input.checkbox(type="checkbox", name="#{siteName}", value="#{siteName}")
+        for site in user.allowedWebsites
+          if user.websites.indexOf(site.id) == -1
+            input.checkbox(type="checkbox", name="#{site.name}", value="#{site.name}", websiteId="#{site.id}")
           else
-            input.checkbox(type="checkbox", name="#{siteName}", value="#{siteName}", checked="yes")
+            input.checkbox(type="checkbox", name="#{site.name}", value="#{site.name}", checked="yes", websiteId="#{site.id}")
           &nbsp;
-          |#{siteName}
+          |#{site.name}
           br
 
       .clear

@@ -9,9 +9,12 @@
       return server.ready(function() {
         return server.findModel({}, "Website", function(err, websites) {
           return server.findModel({}, "Specialty", function(err, specialties) {
-            var validSpecialtyNames, validWebsiteNames;
-            validWebsiteNames = websites.map(function(site) {
-              return site.name;
+            var allowedWebsites, validSpecialtyNames;
+            allowedWebsites = websites.map(function(site) {
+              return {
+                name: site.name,
+                id: site.id
+              };
             });
             validSpecialtyNames = specialties.map(function(specialty) {
               return specialty.name;
@@ -31,7 +34,7 @@
                     _results = [];
                     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                       thing = _ref[_i];
-                      _results.push($(thing).val());
+                      _results.push($(thing).attr('websiteId'));
                     }
                     return _results;
                   })(),
@@ -49,7 +52,7 @@
               };
               extraDataPacker = function(user) {
                 user.allowedRoles = allowedRoles;
-                user.allowedWebsites = validWebsiteNames;
+                user.allowedWebsites = allowedWebsites;
                 user.allowedSpecialties = validSpecialtyNames;
                 return user;
               };
@@ -64,12 +67,32 @@
                 });
               };
               return server.findModel({}, "User", function(err, users) {
-                var formBuild, user, _i, _len, _results;
+                var formBuild, site, siteNames, user, _i, _j, _k, _len, _len1, _len2, _results;
                 if (err) {
                   server.log('Error retrieving users on users crud page', {
                     error: err,
                     severity: 'error'
                   });
+                }
+                siteNames = {};
+                for (_i = 0, _len = websites.length; _i < _len; _i++) {
+                  site = websites[_i];
+                  siteNames[site.id] = site.name;
+                }
+                console.log('siteNames: ', siteNames);
+                for (_j = 0, _len1 = users.length; _j < _len1; _j++) {
+                  user = users[_j];
+                  user.websiteNames = (function() {
+                    var _k, _len2, _ref, _results;
+                    _ref = user.websites;
+                    _results = [];
+                    for (_k = 0, _len2 = _ref.length; _k < _len2; _k++) {
+                      site = _ref[_k];
+                      _results.push(siteNames[site]);
+                    }
+                    return _results;
+                  })();
+                  console.log('user.websiteNames: ', user.websiteNames);
                 }
                 $('#content').html(templ({
                   users: users
@@ -85,8 +108,8 @@
                   }));
                 }));
                 _results = [];
-                for (_i = 0, _len = users.length; _i < _len; _i++) {
-                  user = users[_i];
+                for (_k = 0, _len2 = users.length; _k < _len2; _k++) {
+                  user = users[_k];
                   _results.push(formBuild.wireUpRow(user.id));
                 }
                 return _results;

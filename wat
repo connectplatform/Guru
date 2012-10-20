@@ -7,8 +7,7 @@ db = config.require 'load/mongo'
 
 module.exports = (websiteId, specialty, done) ->
 
-  #  Website.findOne {_id: websiteId, accountId: true}, (err, website) ->
-  Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
+  Website.findOne {_id: websiteId, accountId: true}, (err, website) ->
     config.log.warn 'website err:', {error: err} if err
     return done "Could not find website: #{websiteId}" unless website
     {accountId} = website

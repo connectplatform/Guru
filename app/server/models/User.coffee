@@ -1,5 +1,6 @@
 db = require 'mongoose'
 {Schema} = db
+{ObjectId} = Schema.Types
 
 sendRegistrationEmail = config.require 'services/operator/sendRegistrationEmail'
 
@@ -15,14 +16,17 @@ validateRole = (role, cb) ->
 validateWebsite = (websiteIds, cb) ->
   mongo = config.require 'load/mongo'
   {Website} = mongo.models
-  Website.find {}, (err, validWebsites) ->
-    validIds = validWebsites.map (site) -> site.id
+  Website.find {accountId: @accountId}, (err, validWebsites) ->
+    validIds = validWebsites.map (s) -> s.id
     for websiteId in websiteIds
-      if validIds.indexOf(websiteId) is -1
-        return cb false
+      return cb false unless websiteId in validIds
     cb true
 
 user = new Schema
+
+  accountId:
+    type: ObjectId
+    required: true
 
   sentEmail:
     type: Boolean

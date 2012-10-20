@@ -3,6 +3,11 @@ db = require 'mongoose'
 {Mixed, ObjectId} = Schema.Types
 
 history = new Schema
+
+  accountId:
+    type: ObjectId
+    #required: true
+
   visitor: Mixed
   operators: [ObjectId]
   website: String

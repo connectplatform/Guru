@@ -2,19 +2,39 @@ async = require 'async'
 {digest_s} = require 'md5'
 
 mongo = config.require 'server/load/mongo'
-{User, Role, Website, Specialty, Field} = mongo.models
+{Account, User, Role, Website, Specialty} = mongo.models
 
 module.exports = (done) ->
   mongo.wipe ->
 
+    createAccount = (account, cb) ->
+      Account.create account, cb
+
     createRole = (role, cb) ->
       Role.create role, cb
 
-    createWebsite = (website, cb) ->
-      Website.create website, cb
+    createSpecialty = (account) ->
+      (specialty, cb) ->
+        Specialty.create specialty.merge(accountId: account), cb
 
-    createSpecialty = (specialty, cb) ->
-      Specialty.create specialty, cb
+    createUser = (account) ->
+      (user, cb) ->
+        user.accountId = account
+        user.password = digest_s user.password
+        Website.find {accountId: account}, (err, websites) ->
+          siteIds = {}
+          siteIds[website.name] = website._id for website in websites
+          sites = (siteIds[siteName] for siteName in user.websites)
+          user.websites = sites
+          User.create user, cb
+
+    createWebsite = (account) ->
+      (website, cb) ->
+        Website.create website.merge(accountId: account), cb
+
+    accounts = [
+      status: 'Trial'
+    ]
 
     operators = [
         email: 'admin@foo.com'
@@ -74,26 +94,24 @@ module.exports = (done) ->
             selections: ['Sales', 'Billing']
             label: 'Department'
         ]
+      ,
+        name: "baz.com"
+        url: "baz.com"
+      ,
+        name: "bar.com"
+        url: "bar.com"
     ]
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
 
-    async.parallel [
-      (cb) -> async.map roles, createRole, cb
-      (cb) -> async.map websites, createWebsite, cb
-      (cb) -> async.map specialties, createSpecialty, cb
-    ], (err) ->
+    async.map accounts, createAccount, (err, accounts) ->
+      return done err if err
+      [account] = accounts
 
-      console.log 'Error preparing seed data; ', err if err
-
-      siteIds = {}
-      Website.find {}, (err, websites) ->
-        siteIds[website.name] = website._id for website in websites
-
-        createUser = (user, cb) ->
-          user.password = digest_s user.password
-          sites = (siteIds[siteName] for siteName in user.websites)
-          user.websites = sites
-          User.create user, cb
-
-        async.map operators, createUser, done
+      async.parallel [
+        (cb) -> async.map roles, createRole, cb
+        (cb) -> async.map websites, createWebsite(account), cb
+        (cb) -> async.map specialties, createSpecialty(account), cb
+      ], ->
+        async.map operators, createUser(account), (err, data) ->
+          done err, data

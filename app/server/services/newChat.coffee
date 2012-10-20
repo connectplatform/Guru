@@ -11,16 +11,16 @@ module.exports = (res, userData) ->
 
   return res.reply "Field required: websiteUrl" unless userData?.websiteUrl
 
-  getWebsiteIdForDomain userData.websiteUrl, (websiteId) ->
-    website = websiteId
+  getWebsiteIdForDomain userData.websiteUrl, (err, websiteId) ->
+    websiteId = websiteId
     department = userData.department
     username = userData.username or 'anonymous'
     visitorMeta =
       username: username
       referrerData: userData || null
 
-    getAvailableOperators website, department, (err, operators) ->
-      config.log.error 'Error getting availible operators in newChat', {error: err, website: website, department: department, operators: operators} if err
+    getAvailableOperators websiteId, department, (err, operators) ->
+      config.log.error 'Error getting availible operators in newChat', {error: err, websiteId: websiteId, department: department, operators: operators} if err
       return res.reply err, {noOperators: true} if err or operators.length is 0
 
       # create all necessary artifacts
@@ -42,11 +42,11 @@ module.exports = (res, userData) ->
           showToOperators
           ChatSession.add session.id, chat.id, { isWatching: 'false', type: 'member' }
         ]
-        tasks.push chat.website.set website if website
+        tasks.push chat.website.set websiteId if websiteId
         tasks.push chat.department.set department if department
 
         async.parallel tasks, (err) ->
-          config.log.error 'Error in newChat', {error: err, chatId: chat.id, visitor: visitorMeta, sessionId: session.id, website: website, department: department} if err
+          config.log.error 'Error in newChat', {error: err, chatId: chat.id, visitor: visitorMeta, sessionId: session.id, websiteId: websiteId, department: department} if err
 
           # set cookie and create pulsar channel
           res.cookie 'session', session.id

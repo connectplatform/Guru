@@ -1,6 +1,9 @@
+# This should really be called 'isValidCrudModel' or something like that.
+# ...or it should be based off existance of db.models[modelName]
+
 module.exports = (args, cookies, cb) ->
   [_, modelName] = args
   return cb "expected model name as second argument" unless modelName?
 
-  return cb "invalid model name" unless (modelName is "User") or (modelName is "Specialty") or (modelName is "Website")
+  return cb "invalid model name" unless modelName in ["User", "Specialty", "Website"]
   cb()

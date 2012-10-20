@@ -49,7 +49,8 @@ boiler 'Service - Create Chat or Get Form', ->
   describe 'with no website', ->
     it 'should request form data', (done) ->
       @client.createChatOrGetForm {}, (err, data) =>
-        should.not.exist err
-        should.exist data?.fields
-        data.fields[0].name.should.eql 'websiteUrl'
+        should.exist err
+        err.should.eql 'Could not route chat due to missing website.'
+        #should.exist data?.fields
+        #data.fields[0].name.should.eql 'websiteUrl'
         done()

@@ -6,4 +6,4 @@ module.exports = (websiteDomain, cb) ->
   siteIds = {}
   Website.find {}, (err, websites) ->
     siteIds[website.url] = website._id for website in websites
-    cb siteIds[websiteDomain]
+    cb err, siteIds[websiteDomain]

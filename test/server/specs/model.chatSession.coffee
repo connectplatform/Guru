@@ -2,7 +2,7 @@ async = require 'async'
 should = require 'should'
 stoic = require 'stoic'
 
-boiler 'Model - Session Chat', ->
+boiler 'Model - Chat Session', ->
 
   it 'should associate an operator and chat', (done)->
     {ChatSession} = stoic.models

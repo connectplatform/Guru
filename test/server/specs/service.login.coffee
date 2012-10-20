@@ -4,12 +4,12 @@ stoic = require 'stoic'
 boiler 'Service - Login', ->
 
   it 'should log you in', (done) ->
-    @adminLogin (err, client) =>
+    @adminLogin (err, client, accountId) =>
       should.not.exist err
       sessionId = client.cookie 'session'
 
       {Session} = stoic.models
-      Session.get(sessionId).chatName.get (err, chatName) =>
+      Session(accountId).get(sessionId).chatName.get (err, chatName) =>
         should.not.exist err
         chatName.should.eql "Admin Guy"
         client.disconnect()
@@ -23,13 +23,13 @@ boiler 'Service - Login', ->
         should.not.exist err
         client.disconnect()
 
-        @adminLogin (err, client) =>
+        @adminLogin (err, client, accountId) =>
           should.not.exist err
 
           sessionId.should.eql client.cookie 'session'
 
           {Session} = stoic.models
-          Session.get(sessionId).online.get (err, online) =>
+          Session(accountId).get(sessionId).online.get (err, online) =>
             should.not.exist err
             online.should.eql true
             client.disconnect()

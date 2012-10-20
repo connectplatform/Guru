@@ -23,11 +23,13 @@ initApp = (cb) ->
 getClient = -> Vein.createClient port: testPort
 
 getAuthedWith = (data, cb) =>
+  {Session} = stoic.models
   client = getClient()
   client.ready =>
     client.login data, (err) =>
       console.log 'error on test login:', err if err
-      cb err, client
+      Session.accountLookup.get client.cookie('session'), (err, accountId) ->
+        cb err, client, accountId
 
 loginBuilder = (name) ->
   (cb) =>

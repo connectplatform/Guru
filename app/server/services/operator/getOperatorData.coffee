@@ -4,6 +4,6 @@ stoic = require 'stoic'
 db = config.require 'load/mongo'
 {User} = db.models
 
-module.exports = (sessionId, done) ->
-  Session.get(sessionId).operatorId.get (err, opId) ->
+module.exports = (accountId, sessionId, done) ->
+  Session(accountId).get(sessionId).operatorId.get (err, opId) ->
     User.findById opId, done

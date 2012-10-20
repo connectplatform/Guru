@@ -1,7 +1,7 @@
 getOperatorData = config.require 'services/operator/getOperatorData'
 
-module.exports = (sessionId, chats, done) ->
-  getOperatorData sessionId, (err, my) ->
+module.exports = (accountId, sessionId, chats, done) ->
+  getOperatorData accountId, sessionId, (err, my) ->
     return done err if err
 
     isRelevant = (chat) ->

@@ -17,10 +17,10 @@ module.exports = (res, fields) ->
       return res.reply err.message
     return res.reply 'Invalid user or password.' unless user?
 
-    Session.sessionsByOperator.get user.id, (err, sessionId) ->
+    Session(user.accountId).sessionsByOperator.get user.id, (err, sessionId) ->
       config.log.warn 'Error getting operator session in login', {error: err, userId: user.id} if err
       if sessionId?
-        Session.get(sessionId).online.set true, (err) ->
+        Session(user.accountId).get(sessionId).online.set true, (err) ->
           config.log.error 'Error setting operator online status when reconnecting to session', {error: err, sessionId: sessionId} if err
           res.cookie 'session', sessionId
           res.reply null, user

@@ -4,9 +4,9 @@ stoic = require 'stoic'
 
 {getType} = config.require 'load/util'
 
-removeVisitors = (sessionId, cb) ->
-  sessionId.role.get (err, role) ->
-    config.log.warn 'Error getting role for session in getNonpresentOperators', {error: err, sessionId: sessionId} if err
+removeVisitors = (session, cb) ->
+  session.role.get (err, role) ->
+    config.log.warn 'Error getting role for session in getNonpresentOperators', {error: err, sessionId: session.id} if err
     cb role isnt 'Visitor'
 
 filterSessions = (sessions, chatId, done) ->
@@ -50,15 +50,17 @@ packSessionData = (session, cb) ->
     cb sessionData
 
 module.exports = (res, chatId) ->
-  Session.allSessions.members (err, sessionIds) ->
-    if err
-      config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}
-      return res.reply err, null
+  sessionId = res.cookie 'session'
+  Session.accountLookup.get sessionId, (err, accountId) ->
+    Session(accountId).allSessions.members (err, sessions) ->
+      if err
+        config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}
+        return res.reply err, null
 
-    filterSessions sessionIds, chatId, (err, operatorSessions) ->
+      filterSessions sessions, chatId, (err, operatorSessions) ->
 
-      # We have the sessions for everyone we want to display, now get their data
-      async.map operatorSessions, packSessionData, (sessionData=[]) ->
+        # We have the sessions for everyone we want to display, now get their data
+        async.map operatorSessions, packSessionData, (sessionData=[]) ->
 
-        sessionData = [sessionData] unless getType(sessionData) is 'Array'
-        res.reply err, sessionData
+          sessionData = [sessionData] unless getType(sessionData) is 'Array'
+          res.reply err, sessionData

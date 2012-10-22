@@ -6,33 +6,41 @@ stoic = require 'stoic'
 
 module.exports = (chatId, sessionId, message, done) ->
 
-  sess = Session.get sessionId
-  chat = Chat.get chatId
+  Session.accountLookup.get sessionId, (err, accountId) ->
+    sess = Session(accountId).get sessionId
+    chat = Chat(accountId).get chatId
 
-  return unless sess and chat
+    return unless sess and chat
 
-  # get user's identity and operators present
-  async.parallel [
-    sess.chatName.get
-    ChatSession.getByChat chatId
+    # get user's identity and operators present
+    async.parallel [
+      sess.chatName.get
+      ChatSession(accountId).getByChat chatId
 
-  ], (err, [username, chatSessions]) ->
-    chatSessions ?= []
-    config.log.error 'Error getting chat name and session in messageReceived', {error: err, chatId: chatId, username: username, chatSessions: chatSessions} if err
-    operators = (op.sessionId for op in chatSessions)
+    ], (err, [username, chatSessions]) ->
+      chatSessions ?= []
+      if err
+        meta =
+          error: err
+          chatId: chatId
+          username: username
+          chatSessions: chatSessions
+        config.log.error 'Error getting chat name and session in messageReceived', meta
 
-    # push history data
-    said =
-      message: message
-      username: username
-      timestamp: Date.now()
+      operators = (op.sessionId for op in chatSessions)
 
-    chat.history.rpush said, ->
-      done()
+      # push history data
+      said =
+        message: message
+        username: username
+        timestamp: Date.now()
 
-      # asynchronous notifications
-      async.forEach operators, (op, next) ->
-        Session.get(op).unreadMessages.incrby chatId, 1, next
+      chat.history.rpush said, ->
+        done()
 
-      channel = pulsar.channel chatId
-      channel.emit 'serverMessage', said
+        # asynchronous notifications
+        async.forEach operators, (op, next) ->
+          Session(accountId).get(op).unreadMessages.incrby chatId, 1, next
+
+        channel = pulsar.channel chatId
+        channel.emit 'serverMessage', said

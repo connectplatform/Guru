@@ -6,12 +6,12 @@ stoic = require 'stoic'
 
 filterRelevant = config.require 'services/chats/filterRelevant'
 
-getData = (chatId, next) ->
-  Chat.get(chatId).dump next
-
 module.exports = tandoor (accountId, sessionId, done) ->
 
-  Chat.unansweredChats.all (err, chatIds) ->
+  getData = (chatId, next) ->
+    Chat(accountId).get(chatId).dump next
+
+  Chat(accountId).unansweredChats.all (err, chatIds) ->
 
     # get full data
     async.map chatIds, getData, (err, chatData) ->

@@ -1,5 +1,5 @@
 stoic = require 'stoic'
-{ChatSession} = stoic.models
+{Session, ChatSession} = stoic.models
 
 module.exports = (args, cookies, cb) ->
   [chatId] = args
@@ -7,6 +7,7 @@ module.exports = (args, cookies, cb) ->
   sessionId = cookies.session
   return cb 'expects cookie: {session: sessionId}' unless sessionId?
 
-  ChatSession.get(sessionId, chatId).relationMeta.get 'type', (err, relationType) ->
-    return cb 'you are not invited to this transfer' unless relationType is 'transfer'
-    cb()
+  Session.accountLookup.get sessionId, (err, accountId) ->
+    ChatSession(accountId).get(sessionId, chatId).relationMeta.get 'type', (err, relationType) ->
+      return cb 'you are not invited to this transfer' unless relationType is 'transfer'
+      cb()

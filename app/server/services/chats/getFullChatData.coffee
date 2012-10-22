@@ -2,12 +2,12 @@ async = require 'async'
 stoic = require 'stoic'
 getVisibleOperators = config.require 'services/chats/getVisibleOperators'
 
-module.exports = (chatId, next) ->
+module.exports = (accountId, chatId, next) ->
   {Chat, ChatSession} = stoic.models
 
   async.parallel [
-    Chat.get(chatId).dump
-    ChatSession.getByChat chatId
+    Chat(accountId).get(chatId).dump
+    ChatSession(accountId).getByChat chatId
 
   ], (err, [chat, chatSessions]) ->
     config.log.error 'Error getting chat and chatSession in getFullChatData', {error: err, chatId: chatId, chat: chat, chatSessions: chatSessions} if err

@@ -16,16 +16,16 @@ boiler 'Model - Session', ->
   it 'should keep onlineSessions synced with online flag', (done) ->
     {Session} = stoic.models
 
-    @getAuthed =>
-      sess = Session.get @client.cookie 'session'
-      Session.onlineOperators.all (err, sessions) ->
+    @getAuthed (_..., accountId) =>
+      sess = Session(accountId).get @client.cookie 'session'
+      Session(accountId).onlineOperators.all (err, sessions) ->
         sessions.map((s) -> s.id).should.include sess.id, "Operator wasn't set as online at initial login"
 
         sess.online.set false, (err, status) ->
-          Session.onlineOperators.all (err, sessions) ->
+          Session(accountId).onlineOperators.all (err, sessions) ->
             sessions.map((s) -> s.id).should.not.include sess.id, "Operator wasn't set as offline"
 
             sess.online.set true, (err, status) ->
-              Session.onlineOperators.all (err, sessions) ->
+              Session(accountId).onlineOperators.all (err, sessions) ->
                 sessions.map((s) -> s.id).should.include sess.id, "Operator wasn't re-set as online"
                 done()

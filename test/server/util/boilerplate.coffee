@@ -53,8 +53,8 @@ module.exports = global.boiler = (testName, tests) ->
 
       # to be backwards compatible.  maybe refactor old tests?
       @getAuthed = (cb) =>
-        @adminLogin (err, @client) =>
-          cb()
+        @adminLogin (err, @client, accountId) =>
+          cb err, @client, accountId
 
       @getAuthedWith = getAuthedWith
 

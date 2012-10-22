@@ -6,11 +6,13 @@ stoic = require 'stoic'
 
 module.exports = (res) ->
   sessionId = res.cookie 'session'
-  session = Session.get sessionId
 
-  async.parallel {
-    unreadMessages: session.unreadMessages.getall
-    unanswered: session.unansweredChats.all
-    invites: getInvites sessionId
+  Session.accountLookup.get sessionId, (err, accountId) ->
+    session = Session(accountId).get sessionId
 
-  }, res.reply
+    async.parallel {
+      unreadMessages: session.unreadMessages.getall
+      unanswered: session.unansweredChats.all
+      invites: getInvites sessionId
+
+    }, res.reply

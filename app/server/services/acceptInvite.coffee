@@ -1,11 +1,14 @@
 stoic = require 'stoic'
 
 module.exports = (res, chatId) ->
+  {Session, ChatSession} = stoic.models
+
   newMeta =
     type: 'member'
     isWatching: 'false'
-  {ChatSession} = stoic.models
+
   sessionId = res.cookie 'session'
-  chatSession = ChatSession.get sessionId, chatId
-  chatSession.relationMeta.mset newMeta, (err) ->
-    res.reply err, chatId
+
+  Session.accountLookup.get sessionId, (err, accountId) ->
+    ChatSession(accountId).get(sessionId, chatId).relationMeta.mset newMeta, (err) ->
+      res.reply err, chatId

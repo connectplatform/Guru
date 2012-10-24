@@ -9,7 +9,7 @@ boiler 'Service - Get Available Operators', ->
 
   describe 'with no operators', ->
     it 'should return no results', (done) ->
-      @getAvailableOperators 'foo.com', 'sales', (err, ops) ->
+      @getAvailableOperators 'foo.com', 'sales', (err, accountId, ops) ->
         should.not.exist err
         should.exist ops
         ops.length.should.eql 0
@@ -18,8 +18,9 @@ boiler 'Service - Get Available Operators', ->
   describe 'with one operator', ->
     it 'should return one result', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators 'foo.com', 'Sales', (err, ops) ->
+        @getAvailableOperators 'foo.com', 'Sales', (err, accountId, ops) ->
           should.not.exist err
+          should.exist accountId
           should.exist ops
           ops.length.should.eql 1, 'Expected one operator.'
           done()
@@ -27,8 +28,9 @@ boiler 'Service - Get Available Operators', ->
   describe 'if website does not match', ->
     it 'should return no results', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators 'bar.com', 'Sales', (err, ops) ->
+        @getAvailableOperators 'bar.com', 'Sales', (err, accountId, ops) ->
           should.not.exist err
+          should.exist accountId
           should.exist ops
           ops.length.should.eql 0, 'Expected no operators.'
           done()

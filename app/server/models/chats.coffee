@@ -18,7 +18,11 @@ face = (decorators) ->
     unansweredChats}}} = decorators
 
   (accountId) ->
+    throw new Error "Chat called without accountId: #{accountId}" unless accountId and accountId isnt 'undefined'
+
     faceValue =
+      accountId: accountId
+
       create: (cb) ->
         id = "chat_#{rand()}"
         chat = faceValue.get id
@@ -34,7 +38,9 @@ face = (decorators) ->
           cb err, chat
 
       get: (id) ->
-        chat = id: id
+        chat =
+          id: id
+          accountId: accountId
 
         website chat
         department chat

@@ -27,7 +27,7 @@ module.exports = (res, chatId) ->
               relationMeta: relationMeta
             config.log.error 'Error adding ChatSession in acceptChat', meta
 
-          removeUnanswered chatId, (err, status) ->
+          removeUnanswered accountId, chatId, (err, status) ->
             config.log.error 'Error removing chat from unanswered chats in acceptChat', {error: err, chatId: chatId} if err
 
             res.reply null, {status:"OK", chatId: chatId}

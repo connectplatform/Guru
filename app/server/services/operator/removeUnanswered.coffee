@@ -4,10 +4,10 @@ async = require 'async'
 stoic = require 'stoic'
 {Session} = stoic.models
 
-module.exports = tandoor (chatId, done) ->
+module.exports = tandoor (accountId, chatId, done) ->
 
-  Session.allSessions.all (err, sessions) ->
+  Session(accountId).allSessions.all (err, sessions) ->
     remove = (session, next) ->
-      Session.get(session.id).unansweredChats.srem chatId, next
+      Session(accountId).get(session.id).unansweredChats.srem chatId, next
 
     async.forEach sessions, remove, done

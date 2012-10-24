@@ -1,9 +1,11 @@
 stoic = require 'stoic'
-{ChatSession} = stoic.models
+{Session, ChatSession} = stoic.models
 
 module.exports = (res, chatId) ->
   sessionId = res.cookie 'session'
-  ChatSession.getBySession sessionId, (err, chatSessions=[]) ->
-    if (chatSessions.any (sess) -> sess.chat.id is chatId)
-      return res.reply err, true
-    res.reply err, false
+
+  Session.accountLookup.get sessionId, (err, accountId) ->
+    ChatSession(accountId).getBySession sessionId, (err, chatSessions=[]) ->
+      if (chatSessions.any (sess) -> sess.chat.id is chatId)
+        return res.reply err, true
+      res.reply err, false

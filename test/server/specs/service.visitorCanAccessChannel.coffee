@@ -2,9 +2,9 @@ should = require 'should'
 
 boiler 'Service - Visitor Can Access Channel', ->
   beforeEach (done) ->
-    @adminLogin =>
+    @adminLogin (err, @admin) =>
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @client) =>
-        done()
+        @admin.joinChat @chatId, done
 
   afterEach ->
     @client.disconnect()
@@ -16,12 +16,9 @@ boiler 'Service - Visitor Can Access Channel', ->
       done()
 
   it 'should not let a visitor access a channel they were kicked from', (done) ->
-    kickUser = config.require 'services/kickUser'
-    mockRes = reply: =>
-      #This will be executed after the kick
+    @admin.kickUser @chatId, (err) =>
       @client.visitorCanAccessChannel @chatId, (err, accessAllowed) =>
         should.not.exist err
         accessAllowed.should.eql false
+        @admin.disconnect()
         done()
-
-    kickUser mockRes, @chatId

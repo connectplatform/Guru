@@ -17,7 +17,7 @@ module.exports = (options) ->
   makeLogger 'server'
 
   process.on 'uncaughtException', (err) ->
-    process.removeAllListeners 'uncaughtException'
+    #process.removeAllListeners 'uncaughtException'
     loggers.server.error 'Uncaught Exception', {exception: err.toString()}, ->
       throw err
 

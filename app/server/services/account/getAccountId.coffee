@@ -3,4 +3,4 @@ stoic = require 'stoic'
 
 module.exports = (sessionId, done) ->
   return done "SessionId required." unless sessionId
-  Session.accountLookup.get sessionId done
+  Session.accountLookup.get sessionId, done

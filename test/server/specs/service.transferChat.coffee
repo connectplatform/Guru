@@ -5,7 +5,7 @@ boiler 'Service - Transfer Chat', ->
   it "should let you transfer a chat to another operator", (done) ->
     # Setup
     @loginOperator =>
-      @getAuthed =>
+      @getAuthed (_..., accountId) =>
         @newChat =>
           @client.acceptChat @chatId, (err) =>
             should.not.exist err
@@ -17,7 +17,7 @@ boiler 'Service - Transfer Chat', ->
               # Check whether transfer worked
               # TODO: once it's updated, use getActiveChats to test this instead
               {ChatSession} = stoic.models
-              ChatSession.getByChat @chatId, (err, chatSessions) =>
+              ChatSession(accountId).getByChat @chatId, (err, chatSessions) =>
                 should.not.exist err
                 for cs in chatSessions when cs.sessionId is @targetSession
                   chatSession = cs

@@ -5,7 +5,7 @@ operatorsOnline = config.require 'services/operator/operatorsAreOnline'
 updateStatus = (cache, siteName, cb) ->
   #TODO: make this take a site name
   if Date.now() - cache[siteName].timestamp > 10000
-    operatorsOnline (isOnline) ->
+    operatorsOnline siteName, (err, isOnline) ->
       cache[siteName].online = isOnline
       cb()
   else

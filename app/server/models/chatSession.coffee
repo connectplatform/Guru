@@ -10,6 +10,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
   # construct model
   (accountId) ->
+    throw new Error "ChatSession called without accountId: #{accountId}" unless accountId and accountId isnt 'undefined'
     chatSession =
 
       accountId: accountId
@@ -18,27 +19,27 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
       get: (sessionId, chatId) ->
 
         # base object
-        chatSession =
+        base =
           accountId: accountId
           sessionId: sessionId
           chatId: chatId
 
         # accessors
-        chatIndex chatSession, ({after}) ->
+        chatIndex base, ({after}) ->
           after ['members', 'all'], (context, sessionIds, next) ->
-            next null, (get sessionId, chatId for sessionId in sessionIds)
+            next null, (chatSession.get sessionId, chatId for sessionId in sessionIds)
 
-        sessionIndex chatSession, ({after}) ->
+        sessionIndex base, ({after}) ->
           after ['members', 'all'], (context, chatIds, next) ->
-            next null, (get sessionId, chatId for chatId in chatIds)
+            next null, (chatSession.get sessionId, chatId for chatId in chatIds)
 
-        relationMeta chatSession
+        relationMeta base
 
         # relations
-        chatSession.session = Session(accountId).get sessionId
-        chatSession.chat = Chat(accountId).get chatId
+        base.session = Session(accountId).get sessionId
+        base.chat = Chat(accountId).get chatId
 
-        chatSession
+        return base
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
         cs = chatSession.get sessionId, chatId

@@ -1,11 +1,20 @@
 stoic = require 'stoic'
-{ChatSession} = stoic.models
+{Session, ChatSession} = stoic.models
 
-module.exports = (res, chatId) ->
+module.exports = (res, chatId, isWatching='false') ->
   sessionId = res.cookie 'session'
   relationMeta =
-    isWatching: 'false'
+    isWatching: isWatching
     type: 'member'
-  ChatSession.add sessionId, chatId, relationMeta, (err) ->
-    config.log.error 'Error adding ChatSession in joinChat', {error: err, sessionId: sessionId, chatId: chatId, relationMeta: relationMeta} if err
-    res.reply null, true
+
+  Session.accountLookup.get sessionId, (err, accountId) ->
+    ChatSession(accountId).add sessionId, chatId, relationMeta, (err) ->
+      if err
+        meta =
+          error: err
+          sessionId: sessionId
+          chatId: chatId
+          relationMeta: relationMeta
+        config.log.error 'Error adding ChatSession in joinChat', meta
+
+      res.reply null, true

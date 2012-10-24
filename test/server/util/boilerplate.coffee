@@ -28,7 +28,7 @@ getAuthedWith = (data, cb) =>
   client.ready =>
     client.login data, (err) =>
       console.log 'error on test login:', err if err
-      Session.accountLookup.get client.cookie('session'), (err, accountId) ->
+      Session.accountLookup.get client.cookie('session'), (_, accountId) ->
         cb err, client, accountId
 
 loginBuilder = (name) ->
@@ -77,12 +77,13 @@ module.exports = global.boiler = (testName, tests) ->
             @chatId = data.chatId
             cb null, visitor, data
 
-      @expectIdIsOnline = (id, expectation, cb) ->
+      @expectSessionIsOnline = (sessionId, expectation, cb) ->
         {Session} = stoic.models
-        Session.get(id).online.get (err, online) =>
-          should.not.exist err
-          online.should.eql expectation
-          cb()
+        Session.accountLookup.get sessionId, (err, accountId) ->
+          Session(accountId).get(sessionId).online.get (err, online) =>
+            should.not.exist err
+            online.should.eql expectation
+            cb()
 
       @loginOperator = (cb) =>
         @guru1Login (err, client) =>
@@ -128,20 +129,23 @@ module.exports = global.boiler = (testName, tests) ->
           }
         ]
 
-        createChat = (chat, cb) ->
-          Chat.create (err, c) ->
-            chatData = [
-              c.visitor.mset chat.visitor
-              c.status.set chat.status
-              c.creationDate.set chat.creationDate
-              #c.history.rpush chat.history... #this needs to be a loop
-            ]
-            chatData.push c.website.set chat.website if chat.website?
-            chatData.push c.department.set chat.department if chat.department?
+        {Account} = db.models
+        Account.findOne {}, {_id: true}, (err, account) ->
 
-            async.parallel chatData, (err) -> cb err, c
+          createChat = (chat, cb) ->
+            Chat(account._id).create (err, c) ->
+              chatData = [
+                c.visitor.mset chat.visitor
+                c.status.set chat.status
+                c.creationDate.set chat.creationDate
+                #c.history.rpush chat.history... #this needs to be a loop
+              ]
+              chatData.push c.website.set chat.website if chat.website?
+              chatData.push c.department.set chat.department if chat.department?
 
-        async.map chats, createChat, cb
+              async.parallel chatData, (err) -> cb err, c
+
+          async.map chats, createChat, cb
 
       initApp ->
         done()

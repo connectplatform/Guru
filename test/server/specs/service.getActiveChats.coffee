@@ -97,14 +97,14 @@ boiler 'Service - Get Active Chats', ->
         done()
 
   it 'should sort the chats', (done) ->
-    @getAuthed =>
+    @getAuthed (_..., accountId) =>
       session = @client.cookie 'session'
       @createChats (err, chats) =>
 
         # add an invite for the present operator
         inviteChat = chats[2]
         {ChatSession} = stoic.models
-        ChatSession.add session, inviteChat.id, {type: 'invite'}, =>
+        ChatSession(accountId).add session, inviteChat.id, {type: 'invite'}, =>
 
           # get active chats
           @client.getActiveChats (err, chats) =>

@@ -7,7 +7,8 @@ module.exports = (user, next) ->
   else
     "#{user.firstName}"
 
-  Session(user.accountId).create {
+  accountId = user.accountId.toString()
+  Session(accountId).create {
     role: user.role,
     chatName: username,
     operatorId: user.id

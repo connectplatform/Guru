@@ -2,22 +2,23 @@ should = require 'should'
 stoic = require 'stoic'
 async = require 'async'
 sugar = require 'sugar'
-mongo = config.require 'load/mongo'
+db = config.require 'load/mongo'
 
-createChat = (chat, cb) ->
-  {Chat} = stoic.models
-  Chat.create (err, c) ->
-    async.parallel [
-      c.visitor.mset chat.visitor
-      c.status.set chat.status
-      c.creationDate.set chat.creationDate
-    ], (err) ->
+createChat = (accountId) ->
+  (chat, cb) ->
+    {Chat} = stoic.models
+    Chat(accountId).create (err, c) ->
+      async.parallel [
+        c.visitor.mset chat.visitor
+        c.status.set chat.status
+        c.creationDate.set chat.creationDate
+      ], (err) ->
 
-      pushHistory = (historyItem, cb) ->
-        c.history.rpush historyItem, cb
+        pushHistory = (historyItem, cb) ->
+          c.history.rpush historyItem, cb
 
-      async.forEach chat.history, pushHistory, ->
-        cb err, c
+        async.forEach chat.history, pushHistory, ->
+          cb err, c
 
 getOldChats = (creation, firstChat) ->
   return [
@@ -51,26 +52,32 @@ boiler 'Service - Clear Old Chats', ->
   before ->
     @clearOldChats = config.require 'services/clearOldChats'
 
+  beforeEach (done) ->
+    {Account} = db.models
+    Account.findOne {}, {_id: true}, (err, account) =>
+      @accountId = account._id
+      done()
+
   it 'should delete old chats', (done) ->
     {Chat} = stoic.models
 
-    async.map getOldChats(halfHourAgo, almostHalfHourAgo), createChat, =>
-      @clearOldChats (err) ->
+    async.map getOldChats(halfHourAgo, almostHalfHourAgo), createChat(@accountId), =>
+      @clearOldChats (err) =>
         should.not.exist err, "clearOldChats threw an error:#{err}"
-        Chat.allChats.members (err, allChats) ->
+        Chat(@accountId).allChats.members (err, allChats) ->
           should.not.exist err, "allChats threw an error:#{err}"
-          allChats.length.should.eql 0
+          allChats.length.should.eql 0, 'expected old chats to be deleted'
           done()
 
   it 'should not delete new chats', (done) ->
     {Chat} = stoic.models
 
-    async.map getOldChats(now, now), createChat, =>
-      @clearOldChats (err) ->
+    async.map getOldChats(now, now), createChat(@accountId), =>
+      @clearOldChats (err) =>
         should.not.exist err
-        Chat.allChats.members (err, allChats) ->
+        Chat(@accountId).allChats.members (err, allChats) ->
           should.not.exist err
-          allChats.length.should.eql 2
+          allChats.length.should.eql 2, 'expected new chats to stay'
           done()
 
   it 'should let a visitor create a new chat if their old one was deleted', (done) ->
@@ -87,7 +94,7 @@ boiler 'Service - Clear Old Chats', ->
           chatChannelName = createdChat.chatId
 
           # modify the chat's creation date
-          chat = Chat.get chatChannelName
+          chat = Chat(@accountId).get chatChannelName
           chat.creationDate.set halfHourAgo, (err) =>
             should.not.exist err
 
@@ -96,7 +103,7 @@ boiler 'Service - Clear Old Chats', ->
               should.not.exist err
 
               # Chat should delete, even with user in it
-              Chat.allChats.members (err, allChats) =>
+              Chat(@accountId).allChats.members (err, allChats) =>
                 should.not.exist err
                 allChats.length.should.eql 0
 
@@ -110,7 +117,7 @@ boiler 'Service - Clear Old Chats', ->
   testWithSessions = (method) ->
     describe "with operator sessions (#{method})", ->
       beforeEach (done) ->
-        async.map getOldChats(halfHourAgo, halfHourAgo), createChat, (err, chats) =>
+        async.map getOldChats(halfHourAgo, halfHourAgo), createChat(@accountId), (err, chats) =>
           chatId = chats[0].id
 
           # make sure user has properly joined chat
@@ -131,7 +138,7 @@ boiler 'Service - Clear Old Chats', ->
         # delete the chat
         @clearOldChats (err) =>
           should.not.exist err
-          Chat.allChats.members (err, allChats) =>
+          Chat(@accountId).allChats.members (err, allChats) =>
             should.not.exist err
             allChats.length.should.eql 0, 'all chats should be empty'
 
@@ -142,12 +149,12 @@ boiler 'Service - Clear Old Chats', ->
               done()
 
       it 'should save a history', (done) ->
-        {ChatHistory} = mongo.models
+        {ChatHistory} = db.models
 
         # delete the chat
         @clearOldChats (err) =>
           should.not.exist err
-          ChatHistory.find {}, (err, history) =>
+          ChatHistory.find {accountId: @accountId}, (err, history) =>
             should.not.exist err
             should.exist history
             history.length.should.eql 2, 'should have 2 history records'

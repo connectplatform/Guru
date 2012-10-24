@@ -9,11 +9,11 @@ removeVisitors = (session, cb) ->
     config.log.warn 'Error getting role for session in getNonpresentOperators', {error: err, sessionId: session.id} if err
     cb role isnt 'Visitor'
 
-filterSessions = (sessions, chatId, done) ->
+filterSessions = (accountId, sessions, chatId, done) ->
 
   async.filter sessions, removeVisitors, (operatorSessionList) ->
 
-    ChatSession.getByChat chatId, (err, presentChatSessions) ->
+    ChatSession(accountId).getByChat chatId, (err, presentChatSessions) ->
       config.log.warn 'Error getting sessions for chat in getNonpresentOperators', {error: err, chatId: chatId} if err
 
       removePresentOperators = (session, cb) ->
@@ -57,7 +57,7 @@ module.exports = (res, chatId) ->
         config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}
         return res.reply err, null
 
-      filterSessions sessions, chatId, (err, operatorSessions) ->
+      filterSessions accountId, sessions, chatId, (err, operatorSessions) ->
 
         # We have the sessions for everyone we want to display, now get their data
         async.map operatorSessions, packSessionData, (sessionData=[]) ->

@@ -8,13 +8,13 @@ filterRelevant = config.require 'services/chats/filterRelevant'
 
 module.exports = (res) ->
   sessionId = res.cookie 'session'
-  {Session, Chat, ChatSession} = stoic.models
+  {Session, Chat} = stoic.models
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     chatDataForAccount = (chatId, next) ->
       getFullChatData accountId, chatId, next
 
-    Chat(sessionId).allChats.all (err, chatIds) ->
+    Chat(accountId).allChats.all (err, chatIds) ->
 
       getChatRelations accountId, sessionId, (err, relations) ->
         config.log.error 'Error getting chat relations in getActiveChats', {error: err, sessionId: sessionId} if err

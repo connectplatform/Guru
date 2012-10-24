@@ -2,7 +2,7 @@ stoic = require 'stoic'
 {Session, Chat} = stoic.models
 
 module.exports = (res, chatId) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+  Session.accountLookup.get res.cookie('session'), (err, accountId) ->
     Chat(accountId).get(chatId).website.get (err, website) ->
       if err or not website
         config.log.error 'Error getting website in getLogoForChat', {error: err, chatId: chatId} if err

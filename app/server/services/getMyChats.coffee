@@ -1,6 +1,6 @@
 async = require 'async'
 stoic = require 'stoic'
-{ChatSession, Chat} = stoic.models
+{Session, ChatSession, Chat} = stoic.models
 
 module.exports = (res) ->
   # get all my chats

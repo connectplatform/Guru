@@ -13,10 +13,10 @@ module.exports = (domain, specialty, done) ->
     {accountId} = website
 
     # get a list of operator sessions
-    Session.onlineOperators.all (err, sessions) ->
+    Session(accountId).onlineOperators.all (err, sessions) ->
 
       # go no further if we can't find any sessions
-      return done err, sessions if err or sessions.length is 0
+      return done err, accountId, sessions if err or sessions.length is 0
 
       # get required data from each session
       getSessionData = (sess, next) ->
@@ -43,4 +43,4 @@ module.exports = (domain, specialty, done) ->
           return done err if err?
           uids = users.map (u) -> u._id.toString()
           available = opSessions.filter (o) -> o.operatorId in uids
-          done null, available # [{sessionId, operatorId}]
+          done null, accountId, available # [{sessionId, operatorId}]

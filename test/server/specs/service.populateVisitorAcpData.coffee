@@ -37,22 +37,23 @@ boiler 'Service - Populate Visitor ACP Data', ->
     @client.ready =>
 
       # Set up chat info
-      @client.newChat clientData, (err, {chatId}) ->
+      @client.newChat clientData, (err, {chatId}) =>
         should.not.exist err
 
         # check that data is in stoic
-        {Chat} = stoic.models
+        {Session, Chat} = stoic.models
 
-        verifyResult = ->
-          visitor= Chat.get(chatId).visitor
-          visitor.get 'referrerData', (err, refData) ->
-            should.not.exist err
-            refData.should.eql clientData
-
-            visitor.get 'acpData', (err, acpData) ->
+        verifyResult = =>
+          Session.accountLookup.get @client.cookie('session'), (err, accountId) ->
+            visitor = Chat(accountId).get(chatId).visitor
+            visitor.get 'referrerData', (err, refData) ->
               should.not.exist err
-              acpData.should.eql expectedAcpData
-              done()
+              refData.should.eql clientData
+
+              visitor.get 'acpData', (err, acpData) ->
+                should.not.exist err
+                acpData.should.eql expectedAcpData
+                done()
 
         # The unfortunate part of making the acp lookup run async in the background...
         setTimeout verifyResult, 200

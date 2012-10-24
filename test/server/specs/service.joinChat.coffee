@@ -5,7 +5,7 @@ boiler 'Service - Join Chat', ->
 
   describe 'after joining', ->
     beforeEach (done) ->
-      @getAuthed =>
+      @getAuthed (_..., @accountId) =>
         @newChat =>
           @client.joinChat @chatId, done
 
@@ -15,7 +15,7 @@ boiler 'Service - Join Chat', ->
 
       #TODO refactor this to check at a higher level than cache contents
       {ChatSession} = stoic.models
-      ChatSession.getBySession session, (err, [chatSesson]) =>
+      ChatSession(@accountId).getBySession session, (err, [chatSesson]) =>
         should.not.exist err
         chatSesson.chatId.should.eql @chatId
         done()

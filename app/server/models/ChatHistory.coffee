@@ -6,7 +6,7 @@ history = new Schema
 
   accountId:
     type: ObjectId
-    #required: true
+    required: true
 
   visitor: Mixed
   operators: [ObjectId]

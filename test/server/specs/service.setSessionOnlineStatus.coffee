@@ -9,13 +9,13 @@ boiler 'Service - Set Session Online Status', ->
       id = @client.cookie 'session'
 
       setSessionOnlineStatus id, false, =>
-        @expectIdIsOnline id, false, =>
+        @expectSessionIsOnline id, false, =>
 
         setSessionOnlineStatus id, true, =>
-          @expectIdIsOnline id, true, =>
+          @expectSessionIsOnline id, true, =>
 
           setSessionOnlineStatus id, false, =>
-            @expectIdIsOnline id, false, =>
+            @expectSessionIsOnline id, false, =>
 
               @client.disconnect()
               done()

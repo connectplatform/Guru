@@ -4,7 +4,7 @@ stoic = require 'stoic'
 boiler 'Service - Get Nonpresent Opertors', ->
   it "should return a list of operators not currently visible in chat", (done) ->
     # Setup
-    @getAuthed =>
+    @getAuthed (_..., accountId) =>
       @newChat =>
         @client.watchChat @chatId, (err) =>
 
@@ -19,7 +19,7 @@ boiler 'Service - Get Nonpresent Opertors', ->
 
             # Make sure we have the right id
             {Session} = stoic.models
-            Session.get(operatorSessions[0].id).chatName.get (err, chatName) =>
+            Session(accountId).get(operatorSessions[0].id).chatName.get (err, chatName) =>
               chatName.should.eql "Admin Guy"
               done()
 

@@ -7,22 +7,30 @@ db = config.require 'load/mongo'
 stoic = require 'stoic'
 {Chat} = stoic.models
 
-module.exports = (referrerData, chatId) ->
+module.exports = (accountId, chatId, referrerData) ->
   websiteUrl = referrerData?.websiteUrl
   return unless websiteUrl
 
-  Website.find {url: websiteUrl}, (err, [site]) ->
-    config.log.error 'Error retrieving website in populateVisitorAcpData', {error: err, website: site, url: websiteUrl} if err
+  Website.findOne {accountId: accountId, url: websiteUrl}, {acpEndpoint: true, acpApiKey: true}, (err, site) ->
+    if err
+      meta = {error: err, website: site, url: websiteUrl}
+      config.log.error 'Error retrieving website in populateVisitorAcpData', meta
 
-    acpEndpoint = site?.acpEndpoint
+    {acpEndpoint, acpApiKey} = site
     return unless acpEndpoint
+
     targetUrl = "#{acpEndpoint}?#{querystring.stringify referrerData}"
     headers = {
       'Accept': '*/*',
       'User-Agent': config.app.name
     }
-    headers['Authorization'] = "Basic #{site.acpApiKey}" if site.acpApiKey
+    headers['Authorization'] = "Basic #{acpApiKey}" if acpApiKey
     requestOptions = {headers: headers}
+
     restler.get(targetUrl, requestOptions).on 'success', (acpData) ->
-      Chat.get(chatId).visitor.set 'acpData', acpData, (err) ->
-        config.log.error 'Error setting visitor acp data in populateVisitorAcpData', {error: err, acpData: acpData, website: site} if err
+      Chat(accountId).get(chatId).visitor.set 'acpData', acpData, (err) ->
+        if err
+          meta = {error: err, acpData: acpData, website: site}
+          config.log.error 'Error setting visitor acp data in populateVisitorAcpData', meta
+
+        # no callback, this is fire and forget

@@ -6,7 +6,7 @@ boiler 'Service - Invite Operator', ->
   beforeEach (done) ->
 
     # create invitee
-    @guru1Login (err, @guru1) =>
+    @guru1Login (err, @guru1, @accountId) =>
       throw new Error err if err
 
       # get the invitee's session
@@ -36,7 +36,7 @@ boiler 'Service - Invite Operator', ->
       # Check whether operator was invited
       # TODO: once they're updated, use accept invite or getActiveChats to test this instead
       {ChatSession} = stoic.models
-      ChatSession.getByChat @chatId, (err, chatSessions) =>
+      ChatSession(@accountId).getByChat @chatId, (err, chatSessions) =>
         should.not.exist err
         for cs in chatSessions when cs.sessionId is @targetSession
           chatSession = cs

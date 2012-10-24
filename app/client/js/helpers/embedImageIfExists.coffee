@@ -1,4 +1,4 @@
-define ['templates/imageTemplate'], (image) ->
+define ['templates/imageTemplate', 'load/server'], (image, server) ->
   (url, selector) ->
     embedImage = ->
       $(selector).html image source: url

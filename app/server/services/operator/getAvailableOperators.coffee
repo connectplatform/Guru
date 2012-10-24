@@ -10,7 +10,8 @@ module.exports = (websiteId, specialty, done) ->
   #  Website.findOne {_id: websiteId, accountId: true}, (err, website) ->
   Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
     config.log.warn 'website err:', {error: err} if err
-    return done "Could not find website: #{websiteId}" unless website
+    #return done "Could not find website: #{websiteId}" unless website
+    return done null, [] unless website # No relevant operators
     {accountId} = website
 
     # get a list of operator sessions

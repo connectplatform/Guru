@@ -61,6 +61,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, null
         server.serverLog = (args..., cb) ->
           cb null, 'Success'
+        server.log = (args..., cb) ->
+          cb null, 'Success'
         server.setSessionOffline = (args..., cb) ->
           cb null, null
 

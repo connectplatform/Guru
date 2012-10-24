@@ -12,7 +12,6 @@ module.exports = (res, userData) ->
   return res.reply "Field required: websiteUrl" unless userData?.websiteUrl
 
   getWebsiteIdForDomain userData.websiteUrl, (err, websiteId) ->
-    websiteId = websiteId
     department = userData.department
     username = userData.username or 'anonymous'
     visitorMeta =

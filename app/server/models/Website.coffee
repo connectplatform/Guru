@@ -25,12 +25,6 @@ website = new Schema
       default: String
     ]
 
-  name:
-    type: String
-    required: true
-    index:
-      unique: true
-
   url:
     type: String
     required: true

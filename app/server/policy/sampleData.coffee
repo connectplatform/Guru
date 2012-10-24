@@ -23,14 +23,16 @@ module.exports = (done) ->
         user.password = digest_s user.password
         Website.find {accountId: account}, (err, websites) ->
           siteIds = {}
-          siteIds[website.name] = website._id for website in websites
+          siteIds[website.url] = website._id for website in websites
           sites = (siteIds[siteName] for siteName in user.websites)
           user.websites = sites
           User.create user, cb
 
     createWebsite = (account) ->
       (website, cb) ->
-        Website.create website.merge(accountId: account), cb
+        Website.create website.merge(accountId: account), (err, data) ->
+          console.log 'error creating website: ', err if err
+          cb err, data
 
     accounts = [
       status: 'Trial'
@@ -79,7 +81,6 @@ module.exports = (done) ->
     ]
 
     websites = [
-        name: "foo.com"
         url: "foo.com"
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
@@ -95,10 +96,8 @@ module.exports = (done) ->
             label: 'Department'
         ]
       ,
-        name: "baz.com"
         url: "baz.com"
       ,
-        name: "bar.com"
         url: "bar.com"
     ]
 

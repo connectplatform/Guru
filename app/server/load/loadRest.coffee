@@ -14,10 +14,10 @@ module.exports = (restDir) ->
 
   #return a function that will use the resource map on incoming requests
   return (req, res) ->
-    [empty, websiteName, requestName, args...] = req.url.split '/'
+    [empty, websiteDomain, requestName, args...] = req.url.split '/'
 
     handler = resourceMap[requestName] or ->
     handler
-      website: websiteName
+      domain: websiteDomain
       args: args
       response: res

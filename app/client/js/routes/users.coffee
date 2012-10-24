@@ -8,7 +8,8 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
         server.findModel {}, "Website", (err, websites) ->
           server.findModel {}, "Specialty", (err, specialties) ->
 
-            allowedWebsites = websites.map (site) -> {name: site.name, id: site.id}
+            allowedWebsites = websites.map (site) -> {url: site.url, id: site.id}
+            console.log 'allowedWebsites: ', allowedWebsites
             validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
             server.getRoles (err, allowedRoles) ->
@@ -24,6 +25,10 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
                 }
 
               extraDataPacker = (user) ->
+                siteUrls = {}
+                for site in websites
+                  siteUrls[site.id] = site.url
+                user.websiteUrls = (siteUrls[siteId] for siteId in user.websites)
                 user.allowedRoles = allowedRoles
                 user.allowedWebsites = allowedWebsites
                 user.allowedSpecialties = validSpecialtyNames
@@ -43,15 +48,14 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
               server.findModel {}, "User", (err, users) ->
                 server.log 'Error retrieving users on users crud page', {error: err, severity: 'error'} if err
 
-                siteNames = {}
+                siteUrls = {}
                 for site in websites
-                  siteNames[site.id] = site.name
-
-                console.log 'siteNames: ', siteNames
+                  siteUrls[site.id] = site.url
 
                 for user in users
-                  user.websiteNames = (siteNames[site] for site in user.websites)
-                  console.log 'user.websiteNames: ', user.websiteNames
+                  user.websiteUrls = (siteUrls[siteId] for siteId in user.websites)
+                  user.allowedWebsites = allowedWebsites
+                  console.log 'user: ', user
 
                 $('#content').html templ users: users
                 formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"

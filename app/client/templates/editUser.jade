@@ -21,11 +21,11 @@
       .websites.small-modal-box.scrolling-checkboxes
         for site in user.allowedWebsites
           if user.websites.indexOf(site.id) == -1
-            input.checkbox(type="checkbox", name="#{site.name}", value="#{site.name}", websiteId="#{site.id}")
+            input.checkbox(type="checkbox", websiteId="#{site.id}")
           else
-            input.checkbox(type="checkbox", name="#{site.name}", value="#{site.name}", checked="yes", websiteId="#{site.id}")
+            input.checkbox(type="checkbox", checked="yes", websiteId="#{site.id}")
           &nbsp;
-          |#{site.name}
+          |#{site.url}
           br
 
       .clear

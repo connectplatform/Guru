@@ -12,10 +12,11 @@
             var allowedWebsites, validSpecialtyNames;
             allowedWebsites = websites.map(function(site) {
               return {
-                name: site.name,
+                url: site.url,
                 id: site.id
               };
             });
+            console.log('allowedWebsites: ', allowedWebsites);
             validSpecialtyNames = specialties.map(function(specialty) {
               return specialty.name;
             });
@@ -51,6 +52,22 @@
                 };
               };
               extraDataPacker = function(user) {
+                var site, siteId, siteUrls, _i, _len;
+                siteUrls = {};
+                for (_i = 0, _len = websites.length; _i < _len; _i++) {
+                  site = websites[_i];
+                  siteUrls[site.id] = site.url;
+                }
+                user.websiteUrls = (function() {
+                  var _j, _len1, _ref, _results;
+                  _ref = user.websites;
+                  _results = [];
+                  for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+                    siteId = _ref[_j];
+                    _results.push(siteUrls[siteId]);
+                  }
+                  return _results;
+                })();
                 user.allowedRoles = allowedRoles;
                 user.allowedWebsites = allowedWebsites;
                 user.allowedSpecialties = validSpecialtyNames;
@@ -67,32 +84,32 @@
                 });
               };
               return server.findModel({}, "User", function(err, users) {
-                var formBuild, site, siteNames, user, _i, _j, _k, _len, _len1, _len2, _results;
+                var formBuild, site, siteId, siteUrls, user, _i, _j, _k, _len, _len1, _len2, _results;
                 if (err) {
                   server.log('Error retrieving users on users crud page', {
                     error: err,
                     severity: 'error'
                   });
                 }
-                siteNames = {};
+                siteUrls = {};
                 for (_i = 0, _len = websites.length; _i < _len; _i++) {
                   site = websites[_i];
-                  siteNames[site.id] = site.name;
+                  siteUrls[site.id] = site.url;
                 }
-                console.log('siteNames: ', siteNames);
                 for (_j = 0, _len1 = users.length; _j < _len1; _j++) {
                   user = users[_j];
-                  user.websiteNames = (function() {
+                  user.websiteUrls = (function() {
                     var _k, _len2, _ref, _results;
                     _ref = user.websites;
                     _results = [];
                     for (_k = 0, _len2 = _ref.length; _k < _len2; _k++) {
-                      site = _ref[_k];
-                      _results.push(siteNames[site]);
+                      siteId = _ref[_k];
+                      _results.push(siteUrls[siteId]);
                     }
                     return _results;
                   })();
-                  console.log('user.websiteNames: ', user.websiteNames);
+                  user.allowedWebsites = allowedWebsites;
+                  console.log('user: ', user);
                 }
                 $('#content').html(templ({
                   users: users

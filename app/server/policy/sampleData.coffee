@@ -24,7 +24,7 @@ module.exports = (done) ->
         Website.find {accountId: account}, (err, websites) ->
           siteIds = {}
           siteIds[website.url] = website._id for website in websites
-          sites = (siteIds[siteName] for siteName in user.websites)
+          sites = (siteIds[siteUrl] for siteUrl in user.websites)
           user.websites = sites
           User.create user, cb
 

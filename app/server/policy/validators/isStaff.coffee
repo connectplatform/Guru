@@ -7,6 +7,6 @@ module.exports = (args, cookies, cb) ->
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     Session(accountId).get(sessionId).role.get (err, role) ->
-      unless (role is "Administrator") or (role is "Supervisor") or (role is "Operator")
+      unless role in ["Administrator", "Supervisor", "Operator"]
         return cb "You are not a registered user"
       cb()

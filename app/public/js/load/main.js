@@ -3,11 +3,7 @@
 
   define(["load/server", "load/routes", "load/notify"], function(server, routes, notify) {
     Object.extend();
-    return server.ready(function(services) {
-      return server.log('Vein is ready', {
-        availibleServices: services
-      });
-    });
+    return server.ready(function(services) {});
   });
 
 }).call(this);

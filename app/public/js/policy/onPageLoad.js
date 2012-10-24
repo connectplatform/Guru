@@ -6,7 +6,7 @@
     setOfflineOnUnload();
     return server.ready(function() {
       return window.onerror = function(message, url, linenumber) {
-        return server.serverLog('Uncaught error on client', {
+        return server.log('Uncaught error on client', {
           error: message,
           url: url,
           linenumber: linenumber

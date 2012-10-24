@@ -5,11 +5,14 @@ boiler 'Service - Get Available Operators', ->
 
   beforeEach (done) ->
     @getAvailableOperators = config.require 'services/operator/getAvailableOperators'
-    done()
+    websiteFromDomain = config.require 'services/websites/getWebsiteIdForDomain'
+    websiteFromDomain 'foo.com', (err, @fooSiteId) =>
+      websiteFromDomain 'bar.com', (err, @barSiteId) =>
+        done()
 
   describe 'with no operators', ->
     it 'should return no results', (done) ->
-      @getAvailableOperators 'foo.com', 'sales', (err, accountId, ops) ->
+      @getAvailableOperators @fooSiteId, 'sales', (err, accountId, ops) ->
         should.not.exist err
         should.exist ops
         ops.length.should.eql 0
@@ -18,7 +21,7 @@ boiler 'Service - Get Available Operators', ->
   describe 'with one operator', ->
     it 'should return one result', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators 'foo.com', 'Sales', (err, accountId, ops) ->
+        @getAvailableOperators @fooSiteId, 'Sales', (err, accountId, ops) ->
           should.not.exist err
           should.exist accountId
           should.exist ops
@@ -28,7 +31,7 @@ boiler 'Service - Get Available Operators', ->
   describe 'if website does not match', ->
     it 'should return no results', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators 'bar.com', 'Sales', (err, accountId, ops) ->
+        @getAvailableOperators @barSiteId, 'Sales', (err, accountId, ops) ->
           should.not.exist err
           should.exist accountId
           should.exist ops

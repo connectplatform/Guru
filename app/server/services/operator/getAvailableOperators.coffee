@@ -5,11 +5,13 @@ stoic = require 'stoic'
 db = config.require 'load/mongo'
 {User, Website} = db.models
 
-module.exports = (domain, specialty, done) ->
+module.exports = (websiteId, specialty, done) ->
 
-  Website.findOne {url: domain}, {_id: true, accountId: true}, (err, website) ->
-    config.warning 'website err:', err if err
-    return done "Could not find website: #{domain}" unless website
+  #  Website.findOne {_id: websiteId, accountId: true}, (err, website) ->
+  Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
+    config.log.warn 'website err:', {error: err} if err
+    #return done "Could not find website: #{websiteId}" unless website
+    return done null, [] unless website # No relevant operators
     {accountId} = website
 
     # get a list of operator sessions
@@ -33,7 +35,7 @@ module.exports = (domain, specialty, done) ->
           $or: [role: 'Administrator']
 
         route =
-          websites: domain
+          websites: websiteId
         route.specialties = new RegExp "^#{specialty}$", 'i' if specialty
 
         query['$or'].push route

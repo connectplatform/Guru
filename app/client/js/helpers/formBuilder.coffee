@@ -1,4 +1,4 @@
-define ["load/server"], (server) ->
+define ['load/server', 'load/notify'], (server, notify) ->
   (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit)->
     unless beforeRender?
       beforeRender = (_, cb) -> cb {}
@@ -29,13 +29,16 @@ define ["load/server"], (server) ->
 
             $("#edit#{uppercaseName} .saveButton").click (evt) ->
               evt.preventDefault()
+              console.log 'ping'
 
               beforeSubmit element, beforeData, ->
 
                 fields = getFormFields()
+                console.log 'fields: ', fields
                 fields.id = element.id if element.id?
 
                 server.saveModel fields, uppercaseName, (err, savedElement) ->
+                  return notify.error "Error saving element: #{err}" if err?
                   formBuilder.setElement savedElement
 
                   onComplete err, savedElement
@@ -52,8 +55,8 @@ define ["load/server"], (server) ->
         currentElement = getElementById id
 
         editElementClicked = formBuilder.elementForm editingTemplate, currentElement, (err, savedElement) ->
+          #return notify.error "Error saving element: #{err}" if err?
 
-          return notify.error "Error saving element: #{err}" if err?
           templateObject = {}
           templateObject[elementName] = savedElement
           $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{currentElement.id}]").replaceWith rowTemplate templateObject

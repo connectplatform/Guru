@@ -13,13 +13,13 @@ validateRole = (role, cb) ->
       return cb true if role is validRole.name
     cb false
 
-validateWebsite = (websiteNames, cb) ->
+validateWebsite = (websiteIds, cb) ->
   mongo = config.require 'load/mongo'
   {Website} = mongo.models
   Website.find {accountId: @accountId}, (err, validWebsites) ->
-    validWebsites = validWebsites.map (s) -> s.name
-    for websiteName in websiteNames
-      return cb false unless websiteName in validWebsites
+    validIds = validWebsites.map (s) -> s.id
+    for websiteId in websiteIds
+      return cb false unless websiteId in validIds
     cb true
 
 user = new Schema

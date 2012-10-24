@@ -19,13 +19,20 @@ module.exports = (done) ->
 
     createUser = (account) ->
       (user, cb) ->
+        user.accountId = account
         user.password = digest_s user.password
-        User.create user.merge(accountId: account), cb
-
+        Website.find {accountId: account}, (err, websites) ->
+          siteIds = {}
+          siteIds[website.url] = website._id for website in websites
+          sites = (siteIds[siteUrl] for siteUrl in user.websites)
+          user.websites = sites
+          User.create user, cb
 
     createWebsite = (account) ->
       (website, cb) ->
-        Website.create website.merge(accountId: account), cb
+        Website.create website.merge(accountId: account), (err, data) ->
+          console.log 'error creating website: ', err if err
+          cb err, data
 
     accounts = [
       status: 'Trial'
@@ -39,6 +46,7 @@ module.exports = (done) ->
         role: 'Administrator'
         firstName: 'Admin'
         lastName: 'Guy'
+        websites: []
       ,
         email: 'guru1@foo.com'
         sentEmail: true
@@ -73,7 +81,6 @@ module.exports = (done) ->
     ]
 
     websites = [
-        name: "foo.com"
         url: "foo.com"
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
@@ -89,10 +96,8 @@ module.exports = (done) ->
             label: 'Department'
         ]
       ,
-        name: "baz.com"
         url: "baz.com"
       ,
-        name: "bar.com"
         url: "bar.com"
     ]
 
@@ -103,8 +108,9 @@ module.exports = (done) ->
       [account] = accounts
 
       async.parallel [
-        (cb) -> async.map operators, createUser(account), cb
         (cb) -> async.map roles, createRole, cb
         (cb) -> async.map websites, createWebsite(account), cb
         (cb) -> async.map specialties, createSpecialty(account), cb
-      ], done
+      ], ->
+        async.map operators, createUser(account), (err, data) ->
+          done err, data

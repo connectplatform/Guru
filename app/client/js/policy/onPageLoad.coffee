@@ -4,7 +4,7 @@ define ['policy/registerSessionUpdates', 'policy/setOfflineOnUnload', 'load/serv
    setOfflineOnUnload()
    server.ready ->
      window.onerror = (message, url, linenumber) ->
-       server.serverLog 'Uncaught error on client', {
+       server.log 'Uncaught error on client', {
          error: message
          url: url
          linenumber: linenumber

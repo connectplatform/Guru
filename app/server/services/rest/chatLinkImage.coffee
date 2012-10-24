@@ -2,21 +2,22 @@ async = require 'async'
 db = config.require 'load/mongo'
 operatorsOnline = config.require 'services/operator/operatorsAreOnline'
 
-updateStatus = (cache, siteName, cb) ->
-  #TODO: make this take a site name
-  if Date.now() - cache[siteName].timestamp > 10000
-    operatorsOnline siteName, (err, isOnline) ->
-      cache[siteName].online = isOnline
+updateStatus = (cache, domain, cb) ->
+  if Date.now() - cache[domain].timestamp > 10000
+    operatorsOnline domain, (err, isOnline) ->
+      cache[domain].online = isOnline
       cb()
   else
     cb()
 
-module.exports = ({website, args, response}) ->
+module.exports = ({domain, args, response}) ->
 
   sendResponse = ->
-    updateStatus @cache, website, ->
-      redirectTarget = "https://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{website}/"
-      if @cache[website].online
+    redirectTarget = "https://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{domain}/"
+    unless @cache[domain]
+      return config.log.warn "Request for chat link image received for invalid website domain", {domain: domain}
+    updateStatus @cache, domain, ->
+      if @cache[domain].online
         redirectTarget += 'online'
       else
         redirectTarget += 'offline'
@@ -32,10 +33,10 @@ module.exports = ({website, args, response}) ->
     {Website} = db.models
     Website.find {}, (err, websites) ->
       initSite = (site, cb) ->
-        @cache[site.name] =
+        @cache[site.url] =
           timestamp: 0
           online: false
-        updateStatus @cache, site.name, cb
+        updateStatus @cache, site.url, cb
       async.forEach websites, initSite, sendResponse
 
   else

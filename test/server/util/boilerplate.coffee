@@ -72,7 +72,7 @@ module.exports = global.boiler = (testName, tests) ->
         visitor = @getClient()
         visitor.ready =>
           visitor.newChat data, (err, data) =>
-            throw new Error err.toString() if err
+            throw err if err
             @visitorSession = visitor.cookie 'session'
             @chatId = data.chatId
             cb null, visitor, data
@@ -154,7 +154,7 @@ module.exports = global.boiler = (testName, tests) ->
       flushCache config.redis.database, config.redis.database, =>
         sampleData (err, data) =>
           throw new Error "when creating sample data: #{err}" if err?
-          @adminUser = data[0][0]
+          @adminUser = data[0]
           done()
 
     after (done) ->

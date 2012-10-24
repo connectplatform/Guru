@@ -8,7 +8,8 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
         server.findModel {}, "Website", (err, websites) ->
           server.findModel {}, "Specialty", (err, specialties) ->
 
-            validWebsiteNames = websites.map (site) -> site.name
+            allowedWebsites = websites.map (site) -> {url: site.url, id: site.id}
+            console.log 'allowedWebsites: ', allowedWebsites
             validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
             server.getRoles (err, allowedRoles) ->
@@ -19,13 +20,17 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
                   lastName: $('#editUser .lastName').val()
                   email: $('#editUser .email').val()
                   role: $('#editUser .role').val()
-                  websites: ($(thing).val() for thing in $('#editUser .websites :checkbox:checked'))
+                  websites: ($(thing).attr('websiteId') for thing in $('#editUser .websites :checkbox:checked'))
                   specialties: ($(thing).val() for thing in $('#editUser .specialties :checkbox:checked'))
                 }
 
               extraDataPacker = (user) ->
+                siteUrls = {}
+                for site in websites
+                  siteUrls[site.id] = site.url
+                user.websiteUrls = (siteUrls[siteId] for siteId in user.websites)
                 user.allowedRoles = allowedRoles
-                user.allowedWebsites = validWebsiteNames
+                user.allowedWebsites = allowedWebsites
                 user.allowedSpecialties = validSpecialtyNames
                 return user
 
@@ -42,6 +47,15 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
               # find all users and populate listing
               server.findModel {}, "User", (err, users) ->
                 server.log 'Error retrieving users on users crud page', {error: err, severity: 'error'} if err
+
+                siteUrls = {}
+                for site in websites
+                  siteUrls[site.id] = site.url
+
+                for user in users
+                  user.websiteUrls = (siteUrls[siteId] for siteId in user.websites)
+                  user.allowedWebsites = allowedWebsites
+                  console.log 'user: ', user
 
                 $('#content').html templ users: users
                 formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"

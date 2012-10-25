@@ -12,6 +12,8 @@ parseMongooseError = (err) ->
   else
     return "Model error"
 
+#TODO: implement as required param
+#filters: ['firstArgumentIsObject']
 module.exports = (res, fields, modelName) ->
   getAccountId res.cookie('session'), (err, accountId) ->
 

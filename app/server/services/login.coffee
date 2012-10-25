@@ -8,6 +8,9 @@ db = config.require 'load/mongo'
 
 createUserSession = config.require 'services/operator/createUserSession'
 
+#TODO: implement as required param
+#filters: ['firstArgumentIsObject']
+#filters: ['loginObjectIsValid']
 module.exports = (res, fields) ->
   return res.reply 'Invalid user or password.' unless fields.email and fields.password
   search = {email: fields.email, password: digest_s fields.password}

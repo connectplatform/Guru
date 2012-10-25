@@ -6,6 +6,8 @@ populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 getAvailableOperators = config.require 'services/operator/getAvailableOperators'
 getWebsiteIdForDomain = config.require 'services/websites/getWebsiteIdForDomain'
 
+#TODO: implement as required param
+#filters: ['firstArgumentIsObject']
 module.exports = (res, userData) ->
   {Chat, Session, ChatSession} = stoic.models
 

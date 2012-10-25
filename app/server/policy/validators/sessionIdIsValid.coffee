@@ -1,8 +1,9 @@
 stoic = require 'stoic'
 {Session} = stoic.models
 
-module.exports = (sessionId, cb) ->
+module.exports = (args, next) ->
+  {sessionId} = args
   Session.accountLookup.get sessionId, (err, accountId) ->
     Session(accountId).allSessions.ismember sessionId, (err, sessionExists) ->
-      return cb('invalid or expired session Id') unless sessionExists is 1
-      cb()
+      return next 'invalid or expired session Id' unless sessionExists is 1
+      next null, args

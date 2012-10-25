@@ -1,4 +1,5 @@
 module.exports =
+  # list of rules
   [
     {
       filters: ['isAdministrator', 'setIsOnline' ]
@@ -42,19 +43,16 @@ module.exports =
     }
 
     {
-      filters:['argIsChatMember']
+      filters:['sessionIsChatMember']
       only: [
         'getChatHistory'
         'inviteOperator'
         'getNonpresentOperators'
         'leaveChat'
         'printChat'
+        'emailChat'
+        'say'
       ]
-    }
-
-    {
-      filters: ['objIsChatMember']
-      only: [ 'say' ]
     }
 
     {
@@ -70,11 +68,6 @@ module.exports =
     {
       filters: ['isNotChatMember']
       only: ['watchChat']
-    }
-
-    {
-      filters: ['isChatMember']
-      only: ['emailChat']
     }
 
     {

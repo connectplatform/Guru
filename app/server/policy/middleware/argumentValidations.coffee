@@ -1,7 +1,7 @@
 module.exports =
   [
     {
-      filters: ['cookieSessionExists']
+      filters: ['sessionIdIsValid']
       except: [
 
         # should these be here?
@@ -25,11 +25,14 @@ module.exports =
 
         # account creation
         'createAccount'
+        'inviteOperator'
+        'transferChat'
+        'setSessionOffline'
       ]
     }
 
     {
-      filters: ['argChatIdIsValid']
+      filters: ['chatIdIsValid']
       only: [
         'acceptChat'
         'acceptInvite'
@@ -49,37 +52,12 @@ module.exports =
     }
 
     {
-      filters: ['targetSessionIdIsValid']
-      only: [ 'inviteOperator', 'transferChat']
-    }
-
-    {
-      filters: ['argSessionIdIsValid']
-      only: [ 'setSessionOffline']
-    }
-
-    {
       filters: ['modelNameIsValid']
       only: [ 'deleteModel', 'findModel', 'saveModel' ]
     }
 
     {
-      filters: ['firstArgumentIsObject']
-      only: [ 'findModel', 'saveModel', 'newChat', 'login', 'say' ]
-    }
-
-    {
-      filters: ['loginObjectIsValid']
-      only: ['login']
-    }
-
-    {
-      filters: ['bothArgsAreStrings']
-      only: ['changePassword']
-    }
-
-    {
-      filters: ['objectChatIdIsValid', 'objectSessionIdIsValid', 'objectMessageExists' ]
+      filters: ['chatIdIsValid', 'sessionIdIsValid', 'objectMessageExists' ]
       only: ['say']
     }
   ]

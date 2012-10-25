@@ -10,6 +10,10 @@ createServer = require './createServer'
 loadRest = require './loadRest'
 flushCache = config.require 'load/flushCache'
 
+getServices = config.require 'load/getServices'
+connectVeinServices = config.require 'load/connectVeinServices'
+wrapServiceInMiddleware = config.require 'policy/wrapServiceInMiddleware'
+
 module.exports = (cb) ->
 
   port = (process.env.GURU_PORT or config.app.port)
@@ -28,10 +32,10 @@ module.exports = (cb) ->
 
     # Vein
     vein = Vein.createServer server: server
-    vein.addFolder config.paths.services
-
-    veinMiddlewareGlue = config.require 'policy/middleware/veinMiddlewareGlue'
-    veinMiddlewareGlue vein
+    services = getServices config.paths.services
+    wrappedServices = wrapServicesInMiddleware services # TODO: store these in config.services
+    for name, service of wrappedServices
+      vein.add name, service
 
     config.log.info "Server started on #{port}"
     config.log.info "Pulsar started on #{config.app.pulsarPort}"

@@ -1,5 +1,5 @@
 setSessionOnlineStatus = config.require 'services/session/setSessionOnlineStatus'
 
-module.exports = (args, cookies, cb) ->
-  setSessionOnlineStatus cookies.session, true, ->
-    cb()
+module.exports = (args, next) ->
+  setSessionOnlineStatus args.sessionId, true, ->
+    next null, args

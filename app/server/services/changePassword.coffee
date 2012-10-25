@@ -5,6 +5,12 @@ stoic = require 'stoic'
 
 getOperatorData = config.require 'services/operator/getOperatorData'
 
+# TODO: implement this using required args
+#{
+  #filters: ['bothArgsAreStrings']
+  #only: ['changePassword']
+#}
+
 module.exports = (res, oldPassword, newPassword) ->
   sessionId = res.cookie 'session'
 

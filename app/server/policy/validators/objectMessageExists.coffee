@@ -1,4 +1,4 @@
-module.exports = (args, cookies, cb) ->
-  message = args?[0]?.message
-  return cb 'expects message argument' unless message?
-  cb()
+module.exports = (args, next) ->
+  {message} = args
+  return next 'expects message argument' unless message?
+  next null, args

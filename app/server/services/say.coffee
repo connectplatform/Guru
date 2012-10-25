@@ -1,5 +1,5 @@
 messageReceived = config.require 'services/chats/messageReceived'
 
-module.exports = (res, {chatId, sessionId, message}) ->
+module.exports = ({chatId, sessionId, message}, done) ->
   messageReceived chatId, sessionId, message, ->
-    res.reply null, 'OK'
+    done null, 'OK'

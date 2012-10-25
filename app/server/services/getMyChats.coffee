@@ -2,14 +2,11 @@ async = require 'async'
 stoic = require 'stoic'
 {Session, ChatSession, Chat} = stoic.models
 
-module.exports = (res) ->
-  # get all my chats
-  operatorId = res.cookie 'session'
+module.exports = ({sessionId}, done) ->
+  Session.accountLookup.get sessionId, (err, accountId) ->
 
-  Session.accountLookup.get operatorId, (err, accountId) ->
-
-    ChatSession(accountId).getBySession operatorId, (err, chatSessions) ->
-      res.reply err, null if err
+    ChatSession(accountId).getBySession sessionId, (err, chatSessions) ->
+      done err, null if err
 
       # get the isWatching field from chatSession
       getIsWatching = (chatSession, cb) ->
@@ -19,7 +16,7 @@ module.exports = (res) ->
       async.map chatSessions, getIsWatching, (err, arr) ->
         if err
           config.log.error 'Error mapping chat sessions in getMyChats', {error: err, chatSessions: chatSessions}
-          return res.reply err, null
+          return done err, null
 
         # get info for a specific chat
         doLookup = ([chat, isWatching], cb) ->
@@ -29,4 +26,4 @@ module.exports = (res) ->
             data.isWatching = isWatching == "true" ? true : false
             cb err, data
 
-        async.map arr, doLookup, res.reply
+        async.map arr, doLookup, done

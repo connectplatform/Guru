@@ -49,8 +49,7 @@ packSessionData = (session, cb) ->
     sessionData.id = session.id
     cb sessionData
 
-module.exports = (res, chatId) ->
-  sessionId = res.cookie 'session'
+module.exports = ({chatId, sessionId}, done) ->
   Session.accountLookup.get sessionId, (err, accountId) ->
     Session(accountId).allSessions.members (err, sessions) ->
       if err

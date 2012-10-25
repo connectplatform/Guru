@@ -1,12 +1,12 @@
 stoic = require 'stoic'
 {Session, ChatSession} = stoic.models
 
-module.exports = (res, chatId, sessionId) ->
+module.exports = ({chatId, sessionId}, done) ->
   metaInfo =
     isWatching: 'false'
     type: 'invite'
-    requestor: res.cookie 'session'
+    requestor: sessionId
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     ChatSession(accountId).add sessionId, chatId, metaInfo, (err) ->
-      res.reply err
+      done err

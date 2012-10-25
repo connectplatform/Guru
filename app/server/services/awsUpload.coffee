@@ -2,7 +2,7 @@ crypto = require 'crypto'
 objectToBase64 = (obj) -> (new Buffer JSON.stringify(obj)).toString('base64').replace '\n', ''
 rsaSha1Encrypt = (secret, text) -> crypto.createHmac('sha1', secret).update(text).digest('base64').replace '\n', ''
 
-module.exports = (res, siteUrl, imageName) ->
+module.exports = ({ siteUrl, imageName }, done) ->
   # TODO: add whitelist for these strings in middleware
 
   fields = {}
@@ -26,4 +26,4 @@ module.exports = (res, siteUrl, imageName) ->
   fields.policy = objectToBase64 policy
   fields.signature = rsaSha1Encrypt config.app.aws.secretKey, fields.policy
 
-  res.reply null, fields
+  done null, fields

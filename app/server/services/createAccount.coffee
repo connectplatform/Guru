@@ -1,4 +1,4 @@
 saveModel = config.require 'services/saveModel'
 
-module.exports = (res, fields) ->
-  saveModel res, {status: 'Trial'}, 'Account'
+module.exports = ({fields, sessionId}, done) ->
+  saveModel {fields: {status: 'Trial'}, modelName: 'Account', sessionId: sessionId }, done

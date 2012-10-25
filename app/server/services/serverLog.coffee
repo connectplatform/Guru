@@ -17,7 +17,7 @@ getData = (accountId, modelName, item) ->
         result = "Dump for #{modelName}: " + inspect data
       cb null, result
 
-module.exports = (res, message, obj) ->
+module.exports = ({message, obj}, done) ->
   severity = 'info'
   severity = 'warn' if obj?.severity is 'warn'
   severity = 'error' if obj?.severity is 'error'
@@ -32,7 +32,7 @@ module.exports = (res, message, obj) ->
       ], (err, results) ->
 
         config.log.client[severity] message, {clientData: obj, retrievedData: results}
-        res.reply null, 'Success'
+        done null, 'Success'
     else
       config.log.client[severity] message, {clientData: obj}
-      return res.reply null, 'Success'
+      done null, 'Success'

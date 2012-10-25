@@ -6,8 +6,7 @@ chatPriority = config.require 'services/chats/chatPriority'
 getChatRelations = config.require 'services/chats/getChatRelations'
 filterRelevant = config.require 'services/chats/filterRelevant'
 
-module.exports = (res) ->
-  sessionId = res.cookie 'session'
+module.exports = ({sessionId}, done) ->
   {Session, Chat} = stoic.models
 
   Session.accountLookup.get sessionId, (err, accountId) ->
@@ -25,4 +24,4 @@ module.exports = (res) ->
           chat.relation = relations[chat.id] for chat in chats
           chats = chats.sortBy(chatPriority)
 
-          filterRelevant accountId, sessionId, chats, res.reply
+          filterRelevant accountId, sessionId, chats, done

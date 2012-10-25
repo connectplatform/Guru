@@ -4,10 +4,10 @@ stoic = require 'stoic'
 sendEmail = config.require 'services/email/sendEmail'
 render = config.require 'services/templates/renderTemplate'
 
-module.exports = (res, chatId, email) ->
-  Session.accountLookup.get res.cookie('session'), (err, accountId) ->
+module.exports = ({chatId, email, sessionId}, done) ->
+  Session.accountLookup.get sessionId, (err, accountId) ->
     Chat(accountId).get(chatId).history.all (err, history) ->
-      return res.reply err if err?
+      return done err if err
 
       body = render 'chatHistory', history: history
 
@@ -15,4 +15,4 @@ module.exports = (res, chatId, email) ->
         to: email
         subject: "Transcript of your chat on #{config.app.name}"
 
-      sendEmail body, sendingOptions, res.reply
+      sendEmail body, sendingOptions, done

@@ -4,9 +4,7 @@ getInvites = config.require 'services/operator/getInvites'
 stoic = require 'stoic'
 {Session} = stoic.models
 
-module.exports = (res) ->
-  sessionId = res.cookie 'session'
-
+module.exports = ({sessionId}, done) ->
   Session.accountLookup.get sessionId, (err, accountId) ->
     session = Session(accountId).get sessionId
 
@@ -15,4 +13,4 @@ module.exports = (res) ->
       unanswered: session.unansweredChats.all
       invites: getInvites sessionId
 
-    }, res.reply
+    }, done

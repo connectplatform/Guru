@@ -1,10 +1,10 @@
 db = config.require 'load/mongo'
 
-module.exports = (res, id, modelName) ->
+module.exports = ({modelId, modelName}, done) ->
   Model = db.models[modelName]
-  Model.findOne {_id: id}, (err, model) ->
-    return res.reply err if err? or not model?
+  Model.findOne {_id: modelId}, (err, model) ->
+    return done err if err or not model?
 
     model.remove (err) ->
-      return res.reply err if err?
-      return res.reply err, "#{modelName} removed"
+      return done err if err
+      return done err, "#{modelName} removed"

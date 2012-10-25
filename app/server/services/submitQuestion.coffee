@@ -1,9 +1,9 @@
 sendEmail = config.require 'services/email/sendEmail'
 render = config.require 'services/templates/renderTemplate'
 
-module.exports = (res, emailData, customerData) ->
+module.exports = ({emailData, customerData}, done) ->
   for field in ['email', 'body', 'subject']
-    return res.reply "Missing required field: #{field}" unless emailData[field]
+    return done "Missing required field: #{field}" unless emailData[field]
 
   addedInfo = ([field, data] for field, data of customerData)
   emailData.body += '<br/><br/>User Data:'
@@ -15,4 +15,4 @@ module.exports = (res, emailData, customerData) ->
     replyTo: emailData.email
     subject: emailData.subject
 
-  sendEmail emailData.body, sendingOptions, res.reply
+  sendEmail emailData.body, sendingOptions, done

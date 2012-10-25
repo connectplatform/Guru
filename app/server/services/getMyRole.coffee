@@ -1,12 +1,12 @@
 stoic = require 'stoic'
 {Session} = stoic.models
 
-module.exports = (res) ->
+module.exports = ({sessionId}, done) ->
   sessionId = res.cookie 'session'
-  return res.reply null, 'None' unless sessionId?
+  return done null, 'None' unless sessionId?
 
   Session.accountLookup.get sessionId, (err, accountId) ->
-    return res.reply err, 'None' if err or not accountId
+    return done err, 'None' if err or not accountId
     Session(accountId).get(sessionId).role.get (err, role) ->
       role ||= 'None'
-      res.reply err, role
+      done err, role

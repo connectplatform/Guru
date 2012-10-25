@@ -3,8 +3,8 @@ stoic = require 'stoic'
 pulsar = config.require 'load/pulsar'
 {Session, ChatSession, Chat} = stoic.models
 
-module.exports = (res, chatId) ->
-  Session.accountLookup.get res.cookie('session'), (err, accountId) ->
+module.exports = ({chatId, sessionId}, done) ->
+  Session.accountLookup.get sessionId, (err, accountId) ->
     ChatSession(accountId).getByChat chatId, (err, chatSessions) ->
       getRole = (chatSession, cb) ->
         chatSession.session.role.get (err, role) ->
@@ -27,4 +27,4 @@ module.exports = (res, chatId) ->
               notify = pulsar.channel chatId
               notify.emit 'chatEnded'
 
-              res.reply null, null
+              done null, null

@@ -1,5 +1,5 @@
 setSessionOnlineStatus = config.require 'services/session/setSessionOnlineStatus'
 
-module.exports = (res, sessionId) ->
+module.exports = ({sessionId}, done) ->
   setSessionOnlineStatus sessionId, false, (err) ->
-    res.reply err
+    done err

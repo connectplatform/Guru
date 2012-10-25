@@ -14,11 +14,11 @@ parseMongooseError = (err) ->
 
 #TODO: implement as required param
 #filters: ['firstArgumentIsObject']
-module.exports = (res, fields, modelName) ->
-  getAccountId res.cookie('session'), (err, accountId) ->
+module.exports = ({fields, modelName, sessionId}, done) ->
+  getAccountId sessionId, (err, accountId) ->
 
     unless modelName in globalModels
-      return res.reply 'Could not determine account ID.' unless accountId
+      return done 'Could not determine account ID.' unless accountId
       fields.merge accountId: accountId
 
     Model = db.models[modelName]
@@ -35,8 +35,8 @@ module.exports = (res, fields, modelName) ->
 
     # update field data
     getRecord fields, (err, foundModel) ->
-      return res.reply err, null if err?
+      return done err, null if err?
       foundModel[key] = value for key, value of fields when key isnt 'id'
       foundModel.save (err, savedModel) ->
         savedModel = filterOutput savedModel unless err?
-        res.reply parseMongooseError(err), savedModel
+        done parseMongooseError(err), savedModel

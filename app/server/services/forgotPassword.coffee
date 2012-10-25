@@ -1,13 +1,13 @@
 db = config.require 'load/mongo'
 {User} = db.models
 
-module.exports = (res, email) ->
+module.exports = ({email}, done) ->
   User.findOne {email: email}, (err, user) ->
 
-    if err? or not user?
-      return res.reply "Could not find user."
+    if err or not user?
+      return done "Could not find user."
 
     else
       user.sentEmail = false
       user.save()
-      return res.reply null, "Success! Please check your email for reset instructions."
+      return done null, "Success! Please check your email for reset instructions."

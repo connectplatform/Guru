@@ -7,7 +7,7 @@ boiler 'Service - Change Password', ->
         should.not.exist err
 
         # change password
-        client.changePassword "foobar", "newPassword", (err) =>
+        client.changePassword {oldPassword: "foobar", newPassword: "newPassword"}, (err) =>
           should.not.exist err
 
           # log out

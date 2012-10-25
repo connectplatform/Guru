@@ -1,12 +1,12 @@
 should = require 'should'
 
-boiler 'Service - Find User', ->
+boiler 'Service - Find Model', ->
 
-  it 'should let you get all users', (done) ->
+  it 'should let you get all instances of a model', (done) ->
     @getAuthed =>
 
       #do test
-      @client.findModel {}, "User", (err, users) ->
+      @client.findModel {queryObject: {}, modelName: 'User'}, (err, users) ->
         false.should.eql err?
         for user in users
           user.firstName.should.exist
@@ -23,7 +23,7 @@ boiler 'Service - Find User', ->
   it 'should let you find a user by their id', (done) ->
     @getAuthed =>
 
-      @client.findModel {email: 'admin@foo.com'}, "User", (err, [admin]) ->
+      @client.findModel {queryObject: {email: 'admin@foo.com'}, modelName: 'User'}, (err, [admin]) ->
         admin.firstName.should.eql 'Admin'
         admin.lastName.should.eql 'Guy'
         admin.role.should.eql 'Administrator'

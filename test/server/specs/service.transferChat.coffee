@@ -7,11 +7,11 @@ boiler 'Service - Transfer Chat', ->
     @loginOperator =>
       @getAuthed (_..., accountId) =>
         @newChat =>
-          @client.acceptChat @chatId, (err) =>
+          @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
 
             # Try to transfer
-            @client.transferChat @chatId, @targetSession, (err) =>
+            @client.transferChat {chatId: @chatId, targetSession: @targetSession}, (err) =>
               should.not.exist err
 
               # Check whether transfer worked
@@ -19,12 +19,15 @@ boiler 'Service - Transfer Chat', ->
               {ChatSession} = stoic.models
               ChatSession(accountId).getByChat @chatId, (err, chatSessions) =>
                 should.not.exist err
+
+                # Get the chat session we care about
+                chatSession = {}
                 for cs in chatSessions when cs.sessionId is @targetSession
                   chatSession = cs
 
-                  chatSession.relationMeta.get 'type', (err, type) =>
-                    type.should.eql 'transfer'
-                    chatSession.relationMeta.get 'requestor', (err, requestor) =>
-                      requestor.should.eql @client.cookie 'session'
-                      @client.disconnect()
-                      done()
+                chatSession.relationMeta.get 'type', (err, type) =>
+                  type.should.eql 'transfer'
+                  chatSession.relationMeta.get 'requestor', (err, requestor) =>
+                    requestor.should.eql @client.cookie 'session'
+                    @client.disconnect()
+                    done()

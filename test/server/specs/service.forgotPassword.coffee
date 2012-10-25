@@ -4,13 +4,13 @@ forgotPassword = config.require 'services/forgotPassword'
 email = 'guru1@foo.com'
 badEmail = 'foo@bar.com'
 
-boiler 'Service - Reset Password', ->
+boiler 'Service - Forgot Password', ->
 
   it 'should let a user reset their password', (done) ->
     client = @getClient()
     client.ready ->
 
-      client.forgotPassword email, (err, status) ->
+      client.forgotPassword {email: email}, (err, status) ->
         should.not.exist err
         should.exist status
         status.should.eql 'Success! Please check your email for reset instructions.'
@@ -21,7 +21,7 @@ boiler 'Service - Reset Password', ->
     client = @getClient()
     client.ready ->
 
-      client.forgotPassword badEmail, (err, status) ->
+      client.forgotPassword {email: badEmail}, (err, status) ->
         should.exist err
         err.should.eql 'Could not find user.'
         client.disconnect()

@@ -11,13 +11,13 @@ createUserSession = config.require 'services/operator/createUserSession'
 #TODO: implement as required param
 #filters: ['firstArgumentIsObject']
 #filters: ['loginObjectIsValid']
-module.exports = ({fields}, done) ->
-  return done 'Invalid user or password.' unless fields.email and fields.password
+module.exports = ({email, password}, done) ->
+  return done 'Invalid user or password.' unless email and password
 
-  search = {email: fields.email, password: digest_s fields.password}
+  search = {email: email, password: digest_s password}
   User.findOne search, (err, user) ->
     if err
-      config.log.error 'Error searching for operator in login', {error: err, email: fields.email} if err
+      config.log.error 'Error searching for operator in login', {error: err, email: email} if err
       return done err.message
     return done 'Invalid user or password.' unless user?
 

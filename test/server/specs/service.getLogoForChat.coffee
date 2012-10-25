@@ -14,7 +14,7 @@ boiler 'Service - Get Logo For Chat', ->
         @client.newChat chatData, (err, {chatId}) =>
           should.not.exist err
 
-          @client.getLogoForChat chatId, (err, url) =>
+          @client.getLogoForChat {chatId: chatId}, (err, url) =>
             should.not.exist err
 
             {Chat} = stoic.models

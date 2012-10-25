@@ -6,16 +6,13 @@ boiler 'Service - Email Chat', ->
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, client) =>
 
         pack = (message) =>
-          {
-            chatId: @chatId
-            sessionId: @visitorSession
-            message: message
-          }
+          chatId: @chatId
+          message: message
 
-        client.say (pack 'Hello'), =>
-          client.say (pack 'How are you?'), =>
+        client.say pack('Hello'), =>
+          client.say pack('How are you?'), =>
 
-            client.emailChat @chatId, 'success@simulator.amazonses.com', (err, exitStatus) =>
+            client.emailChat {chatId: @chatId, email: 'success@simulator.amazonses.com'}, (err, exitStatus) =>
               should.not.exist err
               should.exist exitStatus
               exitStatus.message.should.match /MessageId/

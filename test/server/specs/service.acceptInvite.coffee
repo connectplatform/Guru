@@ -10,28 +10,15 @@ boiler 'Service - Accept Invite', ->
     @loginOperator =>
       @getAuthed =>
         @newChat =>
-          @client.acceptChat @chatId, (err) =>
+          @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.inviteOperator @chatId, @targetSession, (err) =>
+            @client.inviteOperator {chatId: @chatId, targetSession: @targetSession}, (err) =>
               should.not.exist err
 
-              # Do test
-              mockRes =
-                cookie: (string) => @targetSession
-                reply: (err, chatId) =>
-                  #body of test here
+              acceptInvite {chatId: @chatId, sessionId: @targetSession}, (err, chatId) =>
+
+                getMyChats {sessionId: @targetSession}, (err, chats) =>
                   should.not.exist err
-                  chatId.should.eql @chatId
-
-                  getMyChatsRes =
-                    cookie: (string) =>
-                      @targetSession if string is 'session'
-                    reply: (err, chats) =>
-                      should.not.exist err
-                      chats.length.should.eql 1
-                      chats[0].id.should.eql @chatId
-                      done()
-
-                  getMyChats getMyChatsRes
-
-              acceptInvite mockRes, @chatId
+                  chats.length.should.eql 1
+                  chats[0].id.should.eql @chatId
+                  done()

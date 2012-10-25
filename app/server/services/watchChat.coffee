@@ -1,4 +1,5 @@
 joinChat = config.require 'services/joinChat'
 
-module.exports = (res, chatId) ->
-  joinChat res, chatId, 'true'
+module.exports = (params, done) ->
+  params.isWatching = true
+  joinChat params, done

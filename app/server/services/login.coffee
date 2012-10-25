@@ -27,9 +27,7 @@ module.exports = ({email, password}, done) ->
       if sessionId?
         Session(accountId).get(sessionId).online.set true, (err) ->
           config.log.error 'Error setting operator online status when reconnecting to session', {error: err, sessionId: sessionId} if err
-          res.cookie 'session', sessionId
-          done null, user
+          done null, user, {setCookie: {sessionId: sessionId}}
       else
         createUserSession user, (err, session) ->
-          res.cookie 'session', session.id
-          done null, user
+          done null, user, {setCookie: {sessionId: session.id}}

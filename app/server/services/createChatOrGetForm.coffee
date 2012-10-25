@@ -3,7 +3,7 @@ db = config.require 'load/mongo'
 
 newChat = config.require 'services/newChat'
 
-module.exports = (res, params) ->
+module.exports = (params, done) ->
 
   # get required params
   Website.findOne {url: params.websiteUrl}, (err, website) ->
@@ -11,7 +11,7 @@ module.exports = (res, params) ->
     # if there's no website, present a selection from available websites
     if err or not website
       config.log.error 'Could not route chat due to missing website.', {error: err, params: params}
-      return res.reply 'Could not route chat due to missing website.'
+      return done 'Could not route chat due to missing website.'
 
     # check supplied params vs. required
     remaining = website.requiredFields.exclude (f) ->
@@ -20,8 +20,8 @@ module.exports = (res, params) ->
     # if we have everything needed, create the chat
     if remaining.isEmpty()
       #NOTE: this would seem to get around middleware, which is probably not a good thing
-      return newChat res, params
+      return newChat params, done
 
     # otherwise return additional fields required
     else
-      res.reply null, {fields: remaining}
+      done null, {fields: remaining}

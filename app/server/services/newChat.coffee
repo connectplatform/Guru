@@ -8,17 +8,17 @@ getWebsiteIdForDomain = config.require 'services/websites/getWebsiteIdForDomain'
 
 #TODO: implement as required param
 #filters: ['firstArgumentIsObject']
-module.exports = (res, userData) ->
+module.exports = (params, done) ->
   {Chat, Session, ChatSession} = stoic.models
 
-  return res.reply "Field required: websiteUrl" unless userData?.websiteUrl
+  return res.reply "Field required: websiteUrl" unless params?.websiteUrl
 
-  getWebsiteIdForDomain userData.websiteUrl, (err, websiteId) ->
-    department = userData.department
-    username = userData.username or 'anonymous'
+  getWebsiteIdForDomain params.websiteUrl, (err, websiteId) ->
+    department = params.department
+    username = params.username or 'anonymous'
     visitorMeta =
       username: username
-      referrerData: userData || null
+      referrerData: params || null
 
     getAvailableOperators websiteId, department, (err, accountId, operators) ->
       if err
@@ -67,4 +67,4 @@ module.exports = (res, userData) ->
           res.reply err, chatId: chat.id
 
           # query for ACP data and store it in redis
-          populateVisitorAcpData accountId, chat.id, userData
+          populateVisitorAcpData accountId, chat.id, params

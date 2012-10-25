@@ -19,7 +19,7 @@ boiler 'Service - Login', ->
     @adminLogin (err, client) =>
       sessionId = client.cookie 'session'
 
-      client.setSessionOffline client.cookie('session'), (err) =>
+      client.setSessionOffline {sessionId: client.cookie('session')}, (err) =>
         should.not.exist err
         client.disconnect()
 

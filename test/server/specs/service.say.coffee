@@ -9,7 +9,7 @@ boiler 'Service - Say', ->
           should.not.exist err
           success.should.eql 'OK'
 
-          @visitor.getChatHistory @chatId, (err, [{username, message, timestamp}]) =>
+          @visitor.getChatHistory {chatId: @chatId}, (err, [{username, message, timestamp}]) =>
             should.not.exist err
             username.should.eql 'visitor'
             message.should.eql 'Hello, world!'

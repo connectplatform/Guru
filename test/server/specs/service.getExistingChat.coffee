@@ -7,7 +7,7 @@ boiler 'Service - Get Existing Chat', ->
   it 'should not say to reconnect you if you have no session', (done) ->
     client = @getClient()
     client.ready ->
-      client.getExistingChat (err, data) ->
+      client.getExistingChat {}, (err, data) ->
         false.should.eql err?
         false.should.eql data?
         client.disconnect()
@@ -17,18 +17,18 @@ boiler 'Service - Get Existing Chat', ->
     client = @getClient()
     client.ready =>
       data = {username: 'clientTest1', websiteUrl: 'foo.com'}
-      client.newChat data, (err, data) =>
+      client.newChat data, (err, {chatId}) =>
         should.not.exist err
-        {chatId} = data
         session = client.cookie 'session'
         client.disconnect()
 
         client2 = @getClient()
         client2.ready ->
           client2.cookie 'session', session
-          client2.getExistingChat (err, existingChannel) ->
+          client2.getExistingChat (err, data) ->
             should.not.exist err
-            should.exist existingChannel, 'expected to find an existing channel'
-            existingChannel.chatId.should.eql chatId
+            oldChatId = data.chatId
+            should.exist oldChatId, 'expected to find an existing chat'
+            oldChatId.should.eql chatId
             client2.disconnect()
             done()

@@ -7,11 +7,11 @@ boiler 'Service - Kick User', ->
     # Setup
     @getAuthed (_..., accountId) =>
       @newChat =>
-        @client.joinChat @chatId, (err) =>
+        @client.joinChat {chatId: @chatId}, (err) =>
           should.not.exist err
 
           # Kick user
-          @client.kickUser @chatId, (err) =>
+          @client.kickUser {chatId: @chatId}, (err) =>
             should.not.exist err
 
             # Check that kick worked

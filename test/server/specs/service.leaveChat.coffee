@@ -6,21 +6,21 @@ boiler 'Service - Leave Chat', ->
     # Setup
     @getAuthed =>
       @newChat =>
-        @client.acceptChat @chatId, (err) =>
+        @client.acceptChat {chatId: @chatId}, (err) =>
           should.not.exist err
 
           # Try to leave
-          @client.leaveChat @chatId, (err, channelName) =>
+          @client.leaveChat {chatId: @chatId}, (err, channelName) =>
             should.not.exist err
             channelName.should.eql @chatId
 
             # Check whether we're still in channel
-            @client.getMyChats (err, chats) =>
+            @client.getMyChats {}, (err, chats) =>
               should.not.exist err
               chats.length.should.eql 0
 
               # Check whether the chat has the right status
-              @client.getActiveChats (err, [chat]) =>
+              @client.getActiveChats {}, (err, [chat]) =>
                 should.exist chat, 'expected one chat record'
                 chat.status.should.eql 'waiting'
 
@@ -31,25 +31,25 @@ boiler 'Service - Leave Chat', ->
     @getAuthed =>
       @newChat =>
         @guru1Login (err, firstClient) =>
-          firstClient.acceptChat @chatId, (err) =>
+          firstClient.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
             firstClient.disconnect()
 
-            @client.joinChat @chatId, (err) =>
+            @client.joinChat {chatId: @chatId}, (err) =>
               should.not.exist err
 
               # Try to leave
-              @client.leaveChat @chatId, (err, channelName) =>
+              @client.leaveChat {chatId: @chatId}, (err, channelName) =>
                 should.not.exist err
                 channelName.should.eql @chatId
 
                 # Check whether we're still in channel
-                @client.getMyChats (err, chats) =>
+                @client.getMyChats {}, (err, chats) =>
                   should.not.exist err
                   chats.length.should.eql 0
 
                 # Check whether the chat has the right status
-                @client.getActiveChats (err, [chat]) =>
+                @client.getActiveChats {}, (err, [chat]) =>
                   should.exist chat, 'expected one chat record'
                   chat.status.should.eql 'active'
 

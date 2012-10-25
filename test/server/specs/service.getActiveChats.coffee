@@ -8,7 +8,7 @@ boiler 'Service - Get Active Chats', ->
       @newChat =>
 
         # get active chats
-        @client.getActiveChats (err, [chatData]) =>
+        @client.getActiveChats {}, (err, [chatData]) =>
           should.not.exist err
           should.exist chatData, 'expected a chat record'
           chatData.visitor.username.should.eql 'visitor'
@@ -23,10 +23,10 @@ boiler 'Service - Get Active Chats', ->
       @newChat =>
 
         # have our operator join the chat
-        @client.joinChat @chatId, =>
+        @client.joinChat {chatId: @chatId}, =>
 
           # get active chats
-          @client.getActiveChats (err, [chatData]) =>
+          @client.getActiveChats {}, (err, [chatData]) =>
             should.not.exist err
             should.exist chatData.operators
             chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
@@ -41,7 +41,7 @@ boiler 'Service - Get Active Chats', ->
           @newChatWith chatData, =>
 
             # get active chats
-            @client.getActiveChats (err, chats) =>
+            @client.getActiveChats {}, (err, chats) =>
               should.not.exist err
               should.exist chats
 
@@ -107,7 +107,7 @@ boiler 'Service - Get Active Chats', ->
         ChatSession(accountId).add session, inviteChat.id, {type: 'invite'}, =>
 
           # get active chats
-          @client.getActiveChats (err, chats) =>
+          @client.getActiveChats {}, (err, chats) =>
             should.not.exist err
             should.exist chats
             chats.length.should.eql 4
@@ -125,19 +125,14 @@ boiler 'Service - Get Active Chats', ->
     @loginOperator =>
       @getAuthed =>
         @newChat =>
-          @client.acceptChat @chatId, (err) =>
+          @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.inviteOperator @chatId, @targetSession, (err) =>
+            @client.inviteOperator {chatId: @chatId, targetSession: @targetSession}, (err) =>
               should.not.exist err
 
-              # Do test
-              getActiveChatsRes =
-                cookie: (string) => @targetSession
-                reply: (err, chats) =>
-                  should.not.exist err
-                  chats.length.should.eql 1
-                  chats[0].id.should.eql @chatId
-                  chats[0].relation.should.eql 'invite'
-                  done()
-
-              getActiveChats getActiveChatsRes
+              getActiveChats {sessionId: @targetSession}, (err, chats) =>
+                should.not.exist err
+                chats.length.should.eql 1
+                chats[0].id.should.eql @chatId
+                chats[0].relation.should.eql 'invite'
+                done()

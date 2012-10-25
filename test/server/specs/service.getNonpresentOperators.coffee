@@ -2,35 +2,35 @@ should = require 'should'
 stoic = require 'stoic'
 
 boiler 'Service - Get Nonpresent Opertors', ->
-  it "should return a list of operators not currently visible in chat", (done) ->
+  it 'should return a list of operators not currently visible in chat', (done) ->
     # Setup
     @getAuthed (_..., accountId) =>
       @newChat =>
-        @client.watchChat @chatId, (err) =>
+        @client.watchChat {chatId: @chatId}, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators @chatId, (err, operatorSessions) =>
+          @client.getNonpresentOperators {chatId: @chatId}, (err, operatorSessions) =>
             should.not.exist err
 
             # Validate returned data
             operatorSessions.length.should.eql 1
-            operatorSessions[0].chatName.should.eql "Admin Guy"
-            operatorSessions[0].role.should.eql "Administrator"
+            operatorSessions[0].chatName.should.eql 'Admin Guy'
+            operatorSessions[0].role.should.eql 'Administrator'
 
             # Make sure we have the right id
             {Session} = stoic.models
             Session(accountId).get(operatorSessions[0].id).chatName.get (err, chatName) =>
-              chatName.should.eql "Admin Guy"
+              chatName.should.eql 'Admin Guy'
               done()
 
-  it "should not return operators who are visible in the chat", (done) ->
+  it 'should not return operators who are visible in the chat', (done) ->
     # Setup
     @getAuthed =>
       @newChat =>
-        @client.acceptChat @chatId, (err) =>
+        @client.acceptChat {chatId: @chatId}, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators @chatId, (err, operatorSessions) =>
+          @client.getNonpresentOperators {chatId: @chatId}, (err, operatorSessions) =>
             should.not.exist err
 
             # Validate returned data

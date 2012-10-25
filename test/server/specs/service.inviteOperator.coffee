@@ -16,11 +16,11 @@ boiler 'Service - Invite Operator', ->
       @getAuthed =>
 
         # create a new chat
-        @newChat (err, data) =>
+        @newChat {}, (err, data) =>
           should.not.exist err
 
           # accept the chat
-          @client.acceptChat @chatId, (err) =>
+          @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
             done()
 
@@ -30,22 +30,25 @@ boiler 'Service - Invite Operator', ->
   it "should let you invite an operator to the chat", (done) ->
 
     # Try to invite other operator
-    @client.inviteOperator @chatId, @targetSession, (err) =>
+    @client.inviteOperator {chatId: @chatId, targetSession: @targetSession}, (err) =>
       should.not.exist err
 
       # Check whether operator was invited
-      # TODO: once they're updated, use accept invite or getActiveChats to test this instead
+      # TODO: test this on the server level, rather than querying db directly
       {ChatSession} = stoic.models
       ChatSession(@accountId).getByChat @chatId, (err, chatSessions) =>
         should.not.exist err
+
+        # get the chatSession we care about
+        chatSession = {}
         for cs in chatSessions when cs.sessionId is @targetSession
           chatSession = cs
 
-          chatSession.relationMeta.get 'type', (err, type) =>
-            type.should.eql 'invite'
-            chatSession.relationMeta.get 'requestor', (err, requestor) =>
-              requestor.should.eql @client.cookie 'session'
-              done()
+        chatSession.relationMeta.get 'type', (err, type) =>
+          type.should.eql 'invite'
+          chatSession.relationMeta.get 'requestor', (err, requestor) =>
+            requestor.should.eql @client.cookie 'session'
+            done()
 
   it "should notify the operator you invited", (done) ->
 
@@ -60,5 +63,5 @@ boiler 'Service - Invite Operator', ->
     recipient.ready =>
 
       # Try to invite other operator
-      @client.inviteOperator @chatId, @targetSession, (err) =>
+      @client.inviteOperator {chatId: @chatId, targetSession: @targetSession}, (err) =>
         should.not.exist err

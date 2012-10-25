@@ -5,7 +5,7 @@ boiler 'Service - Get Online Operators', ->
     @adminLogin (err, client) =>
       sessionId = client.cookie 'session'
 
-      client.getOnlineOperators (err, operators) =>
+      client.getOnlineOperators {}, (err, operators) =>
         should.not.exist err
         operators.should.includeEql "Admin Guy"
 

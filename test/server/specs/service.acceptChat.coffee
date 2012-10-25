@@ -5,7 +5,7 @@ boiler 'Service - Accept Chat', ->
   it 'should join the operator into the chat', (done) ->
     @getAuthed =>
       @newChat =>
-        @client.acceptChat @chatId, (err, result) =>
+        @client.acceptChat {chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
           result.chatId.should.eql @chatId
@@ -32,13 +32,13 @@ boiler 'Service - Accept Chat', ->
         should.not.exist err
         should.exist data
 
-        client.acceptChat @chatId, (err, result) =>
+        client.acceptChat {chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
           client.disconnect()
 
           @getAuthed =>
-            @client.acceptChat @chatId, (err, result) =>
+            @client.acceptChat {chatId: @chatId}, (err, result) =>
               false.should.eql err?
               result.status.should.eql "ALREADY ACCEPTED"
               done()
@@ -50,11 +50,11 @@ boiler 'Service - Accept Chat', ->
         should.not.exist err
         should.exist data
 
-        client.acceptChat @chatId, (err, result) =>
+        client.acceptChat {chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
 
-          client.getChatStats (err, {unanswered}) ->
+          client.getChatStats {}, (err, {unanswered}) ->
             should.not.exist err
             should.exist unanswered
             unanswered.length.should.eql 0, 'expected no unanswered chats'

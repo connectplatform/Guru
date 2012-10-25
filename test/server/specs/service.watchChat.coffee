@@ -6,28 +6,27 @@ boiler 'Service - Watch Chat', ->
   #TODO add test that shows that this operator can't post in pulsarChannel
   it 'should let an operator view a chat', (done) ->
 
-    #given
+    # given
     @getAuthed =>
       visitorClient = @getClient()
       visitorClient.ready =>
-        visitorClient.newChat {username: 'foo', websiteUrl: 'foo.com'}, (err, data) =>
+        visitorClient.newChat {username: 'foo', websiteUrl: 'foo.com'}, (err, {chatId}) =>
           should.not.exist err
-          {chatId} = data
-          sessionId = visitorClient.cookie 'session'
+
           visitorClient.ready =>
             visitorClient.disconnect()
-            message = "hello, world!"
+            clientMessage = "hello, world!"
 
-            pulsarChannel = @getPulsar().channel chatId
-            pulsarChannel.emit 'clientMessage', {message: message, session: sessionId}
+            visitorClient.say {message: clientMessage, chatId: chatId}, =>
 
-            #when
-            @client.watchChat chatId, (err, data) =>
-              false.should.eql err?
-              @client.getChatHistory chatId, (err, data)=>
-                false.should.eql err?
+              # when
+              @client.watchChat {chatId: chatId}, (err, data) =>
 
-                #expect
-                data[0].username.should.eql 'foo'
-                data[0].message.should.eql message
-                done()
+                # expect
+                should.not.exist err
+                @client.getChatHistory {chatId: chatId}, (err, {username, message}) =>
+                  should.not.exist err
+
+                  username.should.eql 'foo'
+                  message.should.eql message
+                  done()

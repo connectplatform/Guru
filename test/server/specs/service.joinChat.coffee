@@ -7,7 +7,7 @@ boiler 'Service - Join Chat', ->
     beforeEach (done) ->
       @getAuthed (_..., @accountId) =>
         @newChat =>
-          @client.joinChat @chatId, done
+          @client.joinChat {chatId: @chatId}, done
 
     it 'should associate an operator with a chat', (done) ->
 
@@ -35,6 +35,5 @@ boiler 'Service - Join Chat', ->
 
       sessionNotifications.ready =>
 
-        # send a new chat
-        chatChannel = pulsar.channel @chatId
-        chatChannel.emit 'clientMessage', {message: 'hi', session: @visitorSession}
+        # send a new message
+        @client.say {message: 'hi', session: @visitorSession, chatId: @chatId}

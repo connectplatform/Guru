@@ -10,34 +10,24 @@ boiler 'Service - Accept Transfer', ->
     @loginOperator =>
       @getAuthed =>
         @newChat =>
-          @client.acceptChat @chatId, (err) =>
+          @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.transferChat @chatId, @targetSession, (err) =>
+            @client.transferChat {chatId: @chatId, targetSession: @targetSession}, (err) =>
               should.not.exist err
 
               # Do test
-              mockRes =
-                cookie: (string) => @targetSession
-                reply: (err, chatId) =>
-                  #body of test here
+              acceptTransfer {chatId: chatId, sessionId: @targetSession}, (err, chatId) =>
+                should.not.exist err
+                chatId.should.eql @chatId
+
+                # after the tranfer, target operator should be in the chat
+                getMyChats {sessionId: @targetSession}, (err, chats) =>
                   should.not.exist err
-                  chatId.should.eql @chatId
+                  chats.length.should.eql 1
+                  chats[0].id.should.eql @chatId
 
-                  # after the tranfer, target operator should be in the chat
-                  getAcceptorsChatsRes =
-                    cookie: (string) =>
-                      @targetSession if string is 'session'
-                    reply: (err, chats) =>
-                      should.not.exist err
-                      chats.length.should.eql 1
-                      chats[0].id.should.eql @chatId
-
-                      # after the transfer, transferring operator should not be in the chat
-                      @client.getMyChats (err, chats) =>
-                        should.not.exist err
-                        chats.length.should.eql 0
-                        done()
-
-                  getMyChats getAcceptorsChatsRes
-
-              acceptTransfer mockRes, @chatId
+                  # after the transfer, transferring operator should not be in the chat
+                  @client.getMyChats {}, (err, chats) =>
+                    should.not.exist err
+                    chats.length.should.eql 0
+                    done()

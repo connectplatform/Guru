@@ -5,17 +5,10 @@ boiler 'Service - Print Chat', ->
     @getAuthed =>
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, client) =>
 
-        pack = (message) =>
-          {
-            chatId: @chatId
-            sessionId: @visitorSession
-            message: message
-          }
+        client.say {chatId: @chatId, message: 'Hello'}, =>
+          client.say {chatId: @chatId, message: 'How are you?'}, =>
 
-        client.say (pack 'Hello'), =>
-          client.say (pack 'How are you?'), =>
-
-            client.printChat @chatId, (err, html) =>
+            client.printChat {chatId: @chatId}, (err, html) =>
               should.not.exist err
               html.should.eql "<p>visitor: Hello</p><p>visitor: How are you?</p>"
               client.disconnect()

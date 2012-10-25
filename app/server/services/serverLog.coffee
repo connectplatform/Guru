@@ -17,22 +17,22 @@ getData = (accountId, modelName, item) ->
         result = "Dump for #{modelName}: " + inspect data
       cb null, result
 
-module.exports = ({message, obj}, done) ->
+module.exports = ({message, context}, done) ->
   severity = 'info'
-  severity = 'warn' if obj?.severity is 'warn'
-  severity = 'error' if obj?.severity is 'error'
+  severity = 'warn' if context?.severity is 'warn'
+  severity = 'error' if context?.severity is 'error'
 
   Session.accountLookup.get res.cookie('session'), (err, accountId) ->
 
-    if (getType obj?.ids) is 'Object'
+    if (getType context?.ids) is 'Object'
       async.parallel [
-        getData accountId, 'Chat', obj.ids.chatId
-        getData accountId, 'Session', obj.ids.sessionId
+        getData accountId, 'Chat', context.ids.chatId
+        getData accountId, 'Session', context.ids.sessionId
 
       ], (err, results) ->
 
-        config.log.client[severity] message, {clientData: obj, retrievedData: results}
+        config.log.client[severity] message, {clientData: context, retrievedData: results}
         done null, 'Success'
     else
-      config.log.client[severity] message, {clientData: obj}
+      config.log.client[severity] message, {clientData: context}
       done null, 'Success'

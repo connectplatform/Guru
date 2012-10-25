@@ -11,8 +11,8 @@ loadRest = require './loadRest'
 flushCache = config.require 'load/flushCache'
 
 getServices = config.require 'load/getServices'
-connectVeinServices = config.require 'load/connectVeinServices'
-wrapServiceInMiddleware = config.require 'policy/wrapServiceInMiddleware'
+connectVeinServices = config.require 'load/getServices'
+wrapServicesInMiddleware = config.require 'policy/wrapServicesInMiddleware'
 
 module.exports = (cb) ->
 

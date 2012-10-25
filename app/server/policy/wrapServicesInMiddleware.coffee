@@ -1,8 +1,8 @@
 async = require 'async'
 
-argumentValidations = require './argumentValidations'
-policy = require './policy'
-{policiesToFunctions} = require './middlewareTools'
+argumentValidations = require './middleware/argumentValidations'
+policy = require './middleware/policy'
+{policiesToFunctions} = require './middleware/middlewareTools'
 
 module.exports = (services) ->
   {serviceFilters, defaultFilters} = policiesToFunctions [argumentValidations, policy]
@@ -14,8 +14,8 @@ module.exports = (services) ->
     wrappedServices[serviceName] = (res, params) ->
 
       # build up call stack
-      callStack = [(next) -> next params.merge {sessionId: res.cookies 'session'}]
-      callStack.concat packageFilters (serviceFilters[serviceName] or defaultFilters)
+      callStack = [(next) -> next params.merge {sessionId: res.cookie 'session'}]
+      callStack.concat serviceFilters[serviceName] or defaultFilters
       callStack.concat serviceDef
       # TODO: apply side effects for output params
 

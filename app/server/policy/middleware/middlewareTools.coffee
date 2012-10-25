@@ -1,5 +1,4 @@
 # Purpose: this sets up the sugar we are using to define vein middleware
-{tandoor} = config.require 'load/util'
 
 loadValidatorFunctions = (validatorNames) ->
   validators = []

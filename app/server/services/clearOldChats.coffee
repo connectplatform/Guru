@@ -37,7 +37,7 @@ archiveChats = (accountId) ->
         chatSessions: ChatSession(accountId).getByChat chat.id
 
       }, (err, {chatData, chatSessions}) ->
-        return next err if err?
+        return next err if err
 
         getOperatorId = (chatSession, next) ->
           chatSession.session.operatorId.get next

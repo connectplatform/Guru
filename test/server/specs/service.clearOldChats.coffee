@@ -88,14 +88,12 @@ boiler 'Service - Clear Old Chats', ->
       visitor = @getClient()
       visitor.ready =>
         newChatData = {username: 'visitor', websiteUrl: 'foo.com'}
-        visitor.newChat newChatData, (err, createdChat) =>
+        visitor.newChat newChatData, (err, {chatId}) =>
           should.not.exist err
           visitorSession = visitor.cookie 'session'
-          chatChannelName = createdChat.chatId
 
           # modify the chat's creation date
-          chat = Chat(@accountId).get chatChannelName
-          chat.creationDate.set halfHourAgo, (err) =>
+          Chat(@accountId).get(chatId).creationDate.set halfHourAgo, (err) =>
             should.not.exist err
 
             # delete the chat
@@ -108,10 +106,11 @@ boiler 'Service - Clear Old Chats', ->
                 allChats.length.should.eql 0
 
                 # Create a new chat and make sure it's different than the one we had
-                visitor.newChat newChatData, (err, createdChat) ->
+                visitor.newChat newChatData, (err, newChatResponse) ->
                   should.not.exist err
+                  newChatId = newChatResponse.chatId
                   visitorSession.should.not.eql visitor.cookie 'session'
-                  chatChannelName.should.not.eql createdChat.chatId
+                  chatId.should.not.eql newChatId
                   done()
 
   testWithSessions = (method) ->
@@ -122,12 +121,15 @@ boiler 'Service - Clear Old Chats', ->
 
           # make sure user has properly joined chat
           @getAuthed =>
-            @client[method] chatId, (err) =>
+            console.log 'method: ', method
+            @client[method] {chatId: chatId}, (err) =>
+              console.log 'received callback from joinChat'
               should.not.exist err
               done()
 
       it 'should show me as joined', (done) ->
-        @client.getMyChats (err, chats) =>
+        console.log 'foo'
+        @client.getMyChats {}, (err, chats) =>
           should.not.exist err
           chats.length.should.eql 1, 'chat should exist'
           done()
@@ -143,7 +145,7 @@ boiler 'Service - Clear Old Chats', ->
             allChats.length.should.eql 0, 'all chats should be empty'
 
             # check that operator was properly removed
-            @client.getMyChats (err, chats) =>
+            @client.getMyChats {}, (err, chats) =>
               should.not.exist err
               chats.length.should.eql 0, 'my chat sessions should be empty'
               done()

@@ -42,6 +42,10 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
         return base
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
+        console.log 'in chatSession'
+        console.log 'sessionId: ', sessionId
+        console.log 'chatId: ', chatId
+        console.log 'metaInfo: ', metaInfo
         cs = chatSession.get sessionId, chatId
 
         async.parallel [
@@ -51,7 +55,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
         ], (err) ->
           if err
-            config.err 'Error adding chatSession', {error: err, chatId: chatId, sessionId: sessionId, relationMeta: metaInfo}
+            config.log.err 'Error adding chatSession', {error: err, chatId: chatId, sessionId: sessionId, relationMeta: metaInfo}
             return cb err
 
           # send pulsar notifications

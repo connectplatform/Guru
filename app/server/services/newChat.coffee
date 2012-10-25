@@ -11,7 +11,7 @@ getWebsiteIdForDomain = config.require 'services/websites/getWebsiteIdForDomain'
 module.exports = (params, done) ->
   {Chat, Session, ChatSession} = stoic.models
 
-  return res.reply "Field required: websiteUrl" unless params?.websiteUrl
+  return done "Field required: websiteUrl" unless params?.websiteUrl
 
   getWebsiteIdForDomain params.websiteUrl, (err, websiteId) ->
     department = params.department
@@ -25,7 +25,7 @@ module.exports = (params, done) ->
         errData = {error: err, websiteId: websiteId, department: department, operators: operators}
         config.log.error 'Error getting availible operators in newChat', errData
 
-      return res.reply err, {noOperators: true} if err or operators.length is 0
+      return done err, {noOperators: true} if err or operators.length is 0
 
       # create all necessary artifacts
       async.parallel {
@@ -59,12 +59,11 @@ module.exports = (params, done) ->
             }
             config.log.error 'Error in newChat', errData
 
-          # set cookie and create pulsar channel
-          res.cookie 'session', session.id
+          # create pulsar channel
           createChannel chat.id
 
           # respond to visitor browser
-          res.reply err, chatId: chat.id
+          done err, {chatId: chat.id}, {setCookie: sessionId: session.id}
 
           # query for ACP data and store it in redis
           populateVisitorAcpData accountId, chat.id, params

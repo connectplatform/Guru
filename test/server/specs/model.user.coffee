@@ -19,7 +19,7 @@ boiler 'Model - User', ->
       lastName: 'Guru'
 
     User.create user, (err, data) ->
-      err.message.should.eql "Validation failed"
+      err.message.should.eql 'Validation failed'
       done()
 
   it 'should gracefully call back with an error if you leave a required field blank', (done)->
@@ -31,6 +31,6 @@ boiler 'Model - User', ->
       lastName: 'Guru'
 
     @getAuthed =>
-      @client.saveModel user, "User", (err, savedModel) ->
+      @client.saveModel {fields: user, modelName: 'User'}, (err, savedModel) ->
         err.should.eql 'Validator "required" failed for path role\n'
         done()

@@ -4,21 +4,41 @@ argumentValidations = require './middleware/argumentValidations'
 policy = require './middleware/policy'
 {policiesToFunctions} = require './middleware/middlewareTools'
 
+wireUpSideEffects = (stack, processSideEffects) ->
+  for fn in stack
+    # return signature required by waterfall
+    (params, next) ->
+
+      # run the filtered function
+      fn params, (err, out, effects) ->
+        return next err, out if err
+
+        # perform any side effects
+        processSideEffects effects, (err) ->
+          next err, out
+
 module.exports = (services) ->
   {serviceFilters, defaultFilters} = policiesToFunctions [argumentValidations, policy]
 
-  wrappedServices = {}
+  Object.map services, (serviceName, serviceDef) ->
+    (res, params) ->
 
-  for serviceName, serviceDef of services
+      setCookie = (effects, next) ->
+        if effects?.setCookie?.sessionId
+          res.cookie 'session', effects.setCookie.sessionId
+        next()
 
-    wrappedServices[serviceName] = (res, params) ->
+      filters = serviceFilters[serviceName] or defaultFilters
 
       # build up call stack
-      callStack = [(next) -> next params.merge {sessionId: res.cookie 'session'}]
-      callStack.concat serviceFilters[serviceName] or defaultFilters
-      callStack.concat serviceDef
-      # TODO: apply side effects for output params
+      callStack = []
+      callStack = callStack.concat filters
+      callStack = callStack.concat serviceDef
+      callStack = wireUpSideEffects callStack, setCookie
+
+      # thread in input args
+      callStack = [
+        (next) -> next null, {sessionId: res.cookie 'session'}.merge params
+      ].concat callStack
 
       async.waterfall callStack, res.reply
-
-  return wrappedServices

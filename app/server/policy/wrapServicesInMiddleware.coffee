@@ -5,13 +5,14 @@ policy = require './middleware/policy'
 {policiesToFunctions} = require './middleware/middlewareTools'
 
 wireUpSideEffects = (stack, processSideEffects) ->
-  for fn in stack
+  stack.map (fn) ->
+
     # return signature required by waterfall
     (params, next) ->
 
       # run the filtered function
       fn params, (err, out, effects) ->
-        return next err, out if err
+        return next err, out if err or not effects
 
         # perform any side effects
         processSideEffects effects, (err) ->
@@ -29,6 +30,11 @@ module.exports = (services) ->
         next()
 
       filters = serviceFilters[serviceName] or defaultFilters
+      filters = filters.map (filter) ->
+        (args, next) ->
+          filter args, (err, out) ->
+            return next "Filter: #{filter.filterName} did not return an object." unless err or (typeof out is 'object')
+            next err, out
 
       # build up call stack
       callStack = []

@@ -121,14 +121,13 @@ boiler 'Service - Clear Old Chats', ->
 
           # make sure user has properly joined chat
           @getAuthed =>
-            console.log 'method: ', method
+            console.log "method: #{method}, called with chatId: #{chatId}"
             @client[method] {chatId: chatId}, (err) =>
               console.log 'received callback from joinChat'
               should.not.exist err
               done()
 
       it 'should show me as joined', (done) ->
-        console.log 'foo'
         @client.getMyChats {}, (err, chats) =>
           should.not.exist err
           chats.length.should.eql 1, 'chat should exist'

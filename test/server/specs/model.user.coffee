@@ -5,7 +5,7 @@ db = config.require 'server/load/mongo'
 
 boiler 'Model - User', ->
   beforeEach (done) ->
-    Account.create {status: 'Trial'}, (err, account) =>
+    Account.findOne {}, (err, account) =>
       @accountId = account._id
       done err
 

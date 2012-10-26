@@ -3,7 +3,7 @@ stoic = require 'stoic'
 
 module.exports = (args, next) ->
   {sessionId} = args
-  return next "expected cookie: {session: sessionId}" unless sessionId?
+  return next "expected arg: {session: sessionId}" unless sessionId?
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     Session(accountId).get(sessionId).role.get (err, role) ->

@@ -34,6 +34,7 @@ module.exports = (cb) ->
     vein = Vein.createServer server: server
     services = getServices config.paths.services
     wrappedServices = wrapServicesInMiddleware services # TODO: store these in config.services
+    #veinServices = wrapServicesInVein wrappedServices
     for name, service of wrappedServices
       vein.add name, service
 

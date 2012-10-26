@@ -1,6 +1,11 @@
 module.exports =
   [
     {
+      filters: ['enforceServiceSignature']
+      except: []
+    }
+
+    {
       filters: ['sessionIdIsValid']
       except: [
 

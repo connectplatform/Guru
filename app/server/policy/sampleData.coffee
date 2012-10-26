@@ -31,7 +31,7 @@ module.exports = (done) ->
     createWebsite = (account) ->
       (website, cb) ->
         Website.create website.merge(accountId: account), (err, data) ->
-          console.log 'error creating website: ', err if err
+          config.log.warn 'error creating website: ', err if err
           cb err, data
 
     accounts = [

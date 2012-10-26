@@ -42,10 +42,6 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
         return base
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
-        console.log 'in chatSession'
-        console.log 'sessionId: ', sessionId
-        console.log 'chatId: ', chatId
-        console.log 'metaInfo: ', metaInfo
         cs = chatSession.get sessionId, chatId
 
         async.parallel [

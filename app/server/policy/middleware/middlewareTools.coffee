@@ -5,6 +5,7 @@ loadValidatorFunctions = (validatorNames) ->
   for name in validatorNames
     validator = config.require "policy/validators/#{name}"
     throw new Error "validator #{name} not found" unless validator
+    validator.filterName = name
     validators.push validator
   validators
 

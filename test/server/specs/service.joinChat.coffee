@@ -36,4 +36,4 @@ boiler 'Service - Join Chat', ->
       sessionNotifications.ready =>
 
         # send a new message
-        @client.say {message: 'hi', session: @visitorSession, chatId: @chatId}
+        @client.say {message: 'hi', session: @visitorSession, chatId: @chatId}, =>

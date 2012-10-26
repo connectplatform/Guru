@@ -8,8 +8,8 @@ boiler 'Service - Get Existing Chat', ->
     client = @getClient()
     client.ready ->
       client.getExistingChat {}, (err, data) ->
-        false.should.eql err?
-        false.should.eql data?
+        should.not.exist err
+        should.not.exist data
         client.disconnect()
         done()
 

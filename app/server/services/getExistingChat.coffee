@@ -6,5 +6,5 @@ module.exports = ({sessionId}, done) ->
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     ChatSession(accountId).getBySession sessionId, (err, [chatSession]) ->
-      found = if chatSession then {chatId: chatSession} else null
+      found = if chatSession then {chatId: chatSession.chatId} else null
       return done err, found

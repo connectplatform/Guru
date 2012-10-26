@@ -14,19 +14,19 @@ boiler 'Service - Watch Chat', ->
           should.not.exist err
 
           visitorClient.ready =>
-            visitorClient.disconnect()
             clientMessage = "hello, world!"
 
             visitorClient.say {message: clientMessage, chatId: chatId}, =>
+              visitorClient.disconnect()
 
               # when
               @client.watchChat {chatId: chatId}, (err, data) =>
 
                 # expect
                 should.not.exist err
-                @client.getChatHistory {chatId: chatId}, (err, {username, message}) =>
+                @client.getChatHistory {chatId: chatId}, (err, [entry]) =>
                   should.not.exist err
 
-                  username.should.eql 'foo'
-                  message.should.eql message
+                  entry.username.should.eql 'foo'
+                  entry.message.should.eql clientMessage
                   done()

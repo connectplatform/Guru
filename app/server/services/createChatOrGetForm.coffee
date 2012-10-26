@@ -10,7 +10,7 @@ module.exports = (params, done) ->
 
     # if there's no website, present a selection from available websites
     if err or not website
-      config.log.error 'Could not route chat due to missing website.', {error: err, params: params}
+      config.log.warn 'Could not route chat due to missing website.', {error: err, params: params}
       return done 'Could not route chat due to missing website.'
 
     # check supplied params vs. required

@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Accept Transfer', ->
   it "should let an operator accept a transfer and kick the requesting operator", (done) ->
@@ -7,22 +6,24 @@ boiler 'Service - Accept Transfer', ->
     getMyChats = config.require 'services/getMyChats'
 
     # Setup
-    @loginOperator =>
+    @loginOperator (err, transferee) =>
       @getAuthed =>
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.transferChat {chatId: @chatId, targetSession: @targetSession}, (err) =>
+
+            @client.transferChat {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
               should.not.exist err
 
               # Do test
-              acceptTransfer {chatId: chatId, sessionId: @targetSession}, (err, chatId) =>
+              transferee.acceptTransfer {chatId: @chatId}, (err, chatId) =>
                 should.not.exist err
                 chatId.should.eql @chatId
 
                 # after the tranfer, target operator should be in the chat
-                getMyChats {sessionId: @targetSession}, (err, chats) =>
+                transferee.getMyChats {sessionId: @targetSession}, (err, chats) =>
                   should.not.exist err
+                  transferee.disconnect()
                   chats.length.should.eql 1
                   chats[0].id.should.eql @chatId
 

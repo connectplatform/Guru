@@ -16,7 +16,7 @@ boiler 'Service - Invite Operator', ->
       @getAuthed =>
 
         # create a new chat
-        @newChat {}, (err, data) =>
+        @newChat (err, data) =>
           should.not.exist err
 
           # accept the chat
@@ -30,7 +30,7 @@ boiler 'Service - Invite Operator', ->
   it "should let you invite an operator to the chat", (done) ->
 
     # Try to invite other operator
-    @client.inviteOperator {chatId: @chatId, targetSession: @targetSession}, (err) =>
+    @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
       should.not.exist err
 
       # Check whether operator was invited
@@ -63,5 +63,5 @@ boiler 'Service - Invite Operator', ->
     recipient.ready =>
 
       # Try to invite other operator
-      @client.inviteOperator {chatId: @chatId, targetSession: @targetSession}, (err) =>
+      @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
         should.not.exist err

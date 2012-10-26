@@ -51,7 +51,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
         ], (err) ->
           if err
-            config.log.err 'Error adding chatSession', {error: err, chatId: chatId, sessionId: sessionId, relationMeta: metaInfo}
+            config.log.error 'Error adding chatSession', {error: err, chatId: chatId, sessionId: sessionId, relationMeta: metaInfo}
             return cb err
 
           # send pulsar notifications

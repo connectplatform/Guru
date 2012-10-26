@@ -2,7 +2,6 @@ require 'sugar'
 Object.extend()
 
 connect = require 'connect'
-Vein = require 'vein'
 mongo = require './mongo'
 pulsar = require './pulsar'
 initStoic = require './initStoic'
@@ -11,8 +10,8 @@ loadRest = require './loadRest'
 flushCache = config.require 'load/flushCache'
 
 getServices = config.require 'load/getServices'
-connectVeinServices = config.require 'load/getServices'
 wrapServicesInMiddleware = config.require 'policy/wrapServicesInMiddleware'
+veinAdapter = config.require 'load/veinAdapter'
 
 module.exports = (cb) ->
 
@@ -30,13 +29,10 @@ module.exports = (cb) ->
 
     server = createServer port, app
 
-    # Vein
-    vein = Vein.createServer server: server
+    # Wire up services
     services = getServices config.paths.services
     wrappedServices = wrapServicesInMiddleware services # TODO: store these in config.services
-    #veinServices = wrapServicesInVein wrappedServices
-    for name, service of wrappedServices
-      vein.add name, service
+    veinAdapter(server) wrappedServices
 
     config.log.info "Server started on #{port}"
     config.log.info "Pulsar started on #{config.app.pulsarPort}"

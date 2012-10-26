@@ -13,7 +13,8 @@ boiler 'Service - Save Model', ->
     beforeEach (done) ->
       @getAuthed =>
         @client.saveModel {fields: userFields, modelName: 'User'}, (err, @user) =>
-          done err
+          should.not.exist err
+          done()
 
     it 'should store fields', (done) ->
       @user.firstName.should.eql userFields.firstName
@@ -21,7 +22,6 @@ boiler 'Service - Save Model', ->
       @user.email.should.eql userFields.email
 
       #check results
-      should.not.exist err
       @client.findModel {queryObject: {_id: @user.id}, modelName: 'User'}, (err, foundUsers) =>
         should.not.exist err
         foundUsers[0].firstName.should.eql userFields.firstName

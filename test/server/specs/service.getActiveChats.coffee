@@ -119,19 +119,19 @@ boiler 'Service - Get Active Chats', ->
             done()
 
   it "should have a chat relation if an operator is invited", (done) ->
-    getActiveChats = config.require 'services/getActiveChats'
 
     # Setup
-    @loginOperator =>
+    @loginOperator (err, invitee) =>
       @getAuthed =>
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.inviteOperator {chatId: @chatId, targetSession: @targetSession}, (err) =>
+            @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
               should.not.exist err
 
-              getActiveChats {sessionId: @targetSession}, (err, chats) =>
+              invitee.getActiveChats {sessionId: @targetSession}, (err, chats) =>
                 should.not.exist err
+                invitee.disconnect()
                 chats.length.should.eql 1
                 chats[0].id.should.eql @chatId
                 chats[0].relation.should.eql 'invite'

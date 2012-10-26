@@ -121,9 +121,7 @@ boiler 'Service - Clear Old Chats', ->
 
           # make sure user has properly joined chat
           @getAuthed =>
-            console.log "method: #{method}, called with chatId: #{chatId}"
             @client[method] {chatId: chatId}, (err) =>
-              console.log 'received callback from joinChat'
               should.not.exist err
               done()
 

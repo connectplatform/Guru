@@ -3,16 +3,22 @@ should = require 'should'
 boiler 'Service - New Chat', ->
 
   it 'should let you chat', (done) ->
-    @getAuthed (err, client) =>
-      @newChat =>
-        # establish listener
-        @channel = @getPulsar().channel @chatId
-        @channel.on 'serverMessage', (data) ->
-          data.message.should.eql 'hello!'
-          done()
+    @getAuthed =>
+      client = @getClient()
+      client.ready =>
+        client.newChat {username: 'visitor', websiteUrl: 'foo.com'}, (err, response) =>
+          should.not.exist err
+          chatId = response.chatId
 
-        client.say {message: 'hello!', chat: @chatId}, =>
-          client.disconnect()
+          # establish listener
+          @channel = @getPulsar().channel chatId
+          @channel.on 'serverMessage', (data) ->
+            data.message.should.eql 'hello!'
+            done()
+
+          client.say {message: 'hello!', chatId: chatId}, (err) =>
+            should.not.exist err
+            client.disconnect()
 
   it 'should notify operators of a new chat', (done) ->
     @getAuthed =>

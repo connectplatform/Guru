@@ -89,8 +89,7 @@ module.exports = global.boiler = (testName, tests) ->
         @guru1Login (err, client) =>
           throw new Error err if err
           @targetSession = client.cookie 'session'
-          client.disconnect()
-          cb()
+          cb null, client
 
       @createChats = (cb) ->
         {Chat} = stoic.models

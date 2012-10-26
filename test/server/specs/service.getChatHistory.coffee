@@ -15,9 +15,9 @@ boiler 'Service - Get Chat History', ->
           @client.say {chatId: chatId, message: messages[0]}, =>
             @client.say {chatId: chatId, message: messages[1]}, =>
 
-              @client.getChatHistory chatId, (err, data) =>
+              @client.getChatHistory {chatId: chatId}, (err, data) =>
                 @client.disconnect()
-                false.should.eql err?
+                should.not.exist err
 
                 testEntry = (entry, count) ->
                   entry.username.should.eql username

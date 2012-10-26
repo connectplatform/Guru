@@ -17,12 +17,12 @@ getData = (accountId, modelName, item) ->
         result = "Dump for #{modelName}: " + inspect data
       cb null, result
 
-module.exports = ({message, context}, done) ->
+module.exports = ({sessionId, message, context}, done) ->
   severity = 'info'
   severity = 'warn' if context?.severity is 'warn'
   severity = 'error' if context?.severity is 'error'
 
-  Session.accountLookup.get res.cookie('session'), (err, accountId) ->
+  Session.accountLookup.get sessionId, (err, accountId) ->
 
     if (getType context?.ids) is 'Object'
       async.parallel [

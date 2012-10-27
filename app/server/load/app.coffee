@@ -31,8 +31,11 @@ module.exports = (cb) ->
 
     # Wire up services
     services = getServices config.paths.services
-    wrappedServices = wrapServicesInMiddleware services # TODO: store these in config.services
-    veinAdapter(server) wrappedServices
+    config.services = wrapServicesInMiddleware services
+
+    # Wire up vein
+    topLevelServices = Object.findAll config.services, (name) -> name.match /[^\/]/
+    veinAdapter(server) topLevelServices
 
     config.log.info "Server started on #{port}"
     config.log.info "Pulsar started on #{config.app.pulsarPort}"

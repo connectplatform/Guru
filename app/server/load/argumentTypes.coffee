@@ -6,7 +6,7 @@ redisId = /[a-z0-9]{16}/
 module.exports = [
     typeName: 'String'
     validation: (arg, assert) ->
-      return assert typeof arg is 'string'
+      assert typeof arg is 'string'
     defaultArgs: ['email', 'password']
   ,
     typeName: 'AccountId'
@@ -18,6 +18,6 @@ module.exports = [
   ,
     typeName: 'SessionId'
     validation: (arg, assert) ->
-      return assert (typeof arg is 'string') and arg.match redisId
+      assert (typeof arg is 'string') and arg.match redisId
     defaultArgs: ['sessionId']
 ]

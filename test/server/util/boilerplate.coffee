@@ -14,24 +14,28 @@ Pulsar = require 'pulsar'
 #Helper functions
 helpers = require './helpers'
 
-# initialize app server
+# singleton helper to start app
 initApp = (cb) ->
   return cb() if @app?
   @app = config.require 'load/app'
   @app cb
 
 module.exports = global.boiler = (testName, tests) ->
-  #Adding helpers to global.boiler
+
+  # Adding helpers to global.boiler
   for helperName, helper of helpers
       do (helperName, helper) =>
         this[helperName] = helper
 
   describe testName, (done)->
     before (done) ->
-      #Adding helpers to before context
+
+      # Adding helpers to before context
       for helperName, helper of helpers
         do (helperName, helper) =>
           this[helperName] = helper
+
+      # initialize app server
       initApp ->
         done()
 

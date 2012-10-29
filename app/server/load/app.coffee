@@ -3,7 +3,6 @@ Object.extend()
 
 connect = require 'connect'
 mongo = require './mongo'
-pulsar = require './pulsar'
 initStoic = require './initStoic'
 createServer = require './createServer'
 loadRest = require './loadRest'
@@ -14,6 +13,9 @@ wrapServicesInMiddleware = config.require 'policy/wrapServicesInMiddleware'
 veinAdapter = config.require 'load/veinAdapter'
 
 module.exports = (cb) ->
+
+  # this creates the server as soon as you require it
+  pulsar = require './pulsar'
 
   port = (process.env.GURU_PORT or config.app.port)
 

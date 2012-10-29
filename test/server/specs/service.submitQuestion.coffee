@@ -3,7 +3,9 @@ should = require 'should'
 boiler 'Service - Submit Question', ->
 
   it 'should send an email', (done) ->
-    @getAuthed =>
+    @client = @getClient()
+    @client.ready =>
+
       email =
         email: 'jimbo@example.com'
         subject: 'test'
@@ -13,7 +15,7 @@ boiler 'Service - Submit Question', ->
         oid: 'asdf'
         cid: '123'
 
-      @client.submitQuestion {emailData: email, customerData: params}, (err, status) ->
+      @client.submitQuestion {emailData: email, customerData: params, websiteUrl: 'foo.com'}, (err, status) ->
         should.not.exist err
         should.exist status
         status.message.should.match /MessageId/

@@ -13,5 +13,4 @@ module.exports =
       unreadMessages: session.unreadMessages.getall
       unanswered: session.unansweredChats.all
       invites: getInvites sessionId
-
     }, done

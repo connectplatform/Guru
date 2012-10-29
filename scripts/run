@@ -7,7 +7,6 @@ require(join(__dirname, '../app/config'));
 // TODO: Exercise for the reader. Add a requireDir function to config which
 // will grab all files in a directory and load them into an object
 tasks = {
-  start: config.require('scripts/server'),
   seed: config.require('scripts/seed'),
   sendRegistration: config.require('scripts/sendRegistration'),
   clearOldChats: config.require('scripts/clearOldChats'),

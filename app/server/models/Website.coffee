@@ -35,6 +35,10 @@ website = new Schema
     type: [String]
     default: []
 
+  contactEmail:
+    type: [String]
+    required: true
+
   acpEndpoint:
     type: String
 

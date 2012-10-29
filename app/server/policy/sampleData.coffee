@@ -2,16 +2,13 @@ async = require 'async'
 {digest_s} = require 'md5'
 
 mongo = config.require 'server/load/mongo'
-{Account, User, Role, Website, Specialty} = mongo.models
+{Account, User, Website, Specialty} = mongo.models
 
 module.exports = (done) ->
   mongo.wipe ->
 
     createAccount = (account, cb) ->
       Account.create account, cb
-
-    createRole = (role, cb) ->
-      Role.create role, cb
 
     createSpecialty = (account) ->
       (specialty, cb) ->
@@ -70,12 +67,6 @@ module.exports = (done) ->
         specialties: ['Sales']
     ]
 
-    roles = [
-        {name: "Administrator"}
-        {name: "Operator"}
-        {name: "Supervisor"}
-    ]
-
     websites = [
         url: "foo.com"
         contactEmail: 'success@simulator.amazonses.com'
@@ -107,7 +98,6 @@ module.exports = (done) ->
       [account] = accounts
 
       async.parallel {
-        roles: (cb) -> async.map roles, createRole, cb
         websites: (cb) -> async.map websites, createWebsite(account), cb
         specialties: (cb) -> async.map specialties, createSpecialty(account), cb
 

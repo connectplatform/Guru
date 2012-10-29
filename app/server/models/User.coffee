@@ -2,16 +2,8 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 
+enums = config.require 'load/enums'
 sendRegistrationEmail = config.require 'services/operator/sendRegistrationEmail'
-
-#TODO: remove duplication
-validateRole = (role, cb) ->
-  mongo = config.require 'load/mongo'
-  {Role} = mongo.models
-  Role.find {}, (err, roles) ->
-    for validRole in roles
-      return cb true if role is validRole.name
-    cb false
 
 validateWebsite = (websiteIds, cb) ->
   mongo = config.require 'load/mongo'
@@ -53,7 +45,7 @@ user = new Schema
   role:
     type: String
     required: true
-    validate: [validateRole, "Invalid role"]
+    enum: enums.roles
 
   websites:
     type: [String]

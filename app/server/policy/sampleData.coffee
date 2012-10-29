@@ -17,16 +17,12 @@ module.exports = (done) ->
       (specialty, cb) ->
         Specialty.create specialty.merge(accountId: account), cb
 
-    createUser = (account) ->
+    createUser = (websites, account) ->
       (user, cb) ->
         user.accountId = account
         user.password = digest_s user.password
-        Website.find {accountId: account}, (err, websites) ->
-          siteIds = {}
-          siteIds[website.url] = website._id for website in websites
-          sites = (siteIds[siteUrl] for siteUrl in user.websites)
-          user.websites = sites
-          User.create user, cb
+        user.websites = websites.filter((site) -> site.url in user.websites).map 'id'
+        User.create user, cb
 
     createWebsite = (account) ->
       (website, cb) ->
@@ -82,6 +78,7 @@ module.exports = (done) ->
 
     websites = [
         url: "foo.com"
+        contactEmail: 'contact@foo.com'
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
         requiredFields: [
@@ -97,8 +94,10 @@ module.exports = (done) ->
         ]
       ,
         url: "baz.com"
+        contactEmail: 'contact@baz.com'
       ,
         url: "bar.com"
+        contactEmail: 'contact@bar.com'
     ]
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
@@ -107,10 +106,14 @@ module.exports = (done) ->
       return done err if err
       [account] = accounts
 
-      async.parallel [
-        (cb) -> async.map roles, createRole, cb
-        (cb) -> async.map websites, createWebsite(account), cb
-        (cb) -> async.map specialties, createSpecialty(account), cb
-      ], ->
-        async.map operators, createUser(account), (err, data) ->
-          done err, data
+      async.parallel {
+        roles: (cb) -> async.map roles, createRole, cb
+        websites: (cb) -> async.map websites, createWebsite(account), cb
+        specialties: (cb) -> async.map specialties, createSpecialty(account), cb
+
+      }, (err, data) ->
+        {websites} = data
+        async.map operators, createUser(websites, account), (err, opData) ->
+
+          # return all data created
+          done err, data.merge operators: opData

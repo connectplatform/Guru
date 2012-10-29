@@ -1,7 +1,6 @@
 async = require 'async'
 sugar = require 'sugar'
 
-pulsar = config.require 'load/pulsar'
 rand = config.require 'services/rand'
 {getType} = config.require 'load/util'
 

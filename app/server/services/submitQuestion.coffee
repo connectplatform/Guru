@@ -1,18 +1,30 @@
+db = require 'mongoose'
+{Website} = db.models
+
 sendEmail = config.require 'services/email/sendEmail'
 render = config.require 'services/templates/renderTemplate'
 
-module.exports = ({emailData, customerData}, done) ->
-  for field in ['email', 'body', 'subject']
-    return done "Missing required field: #{field}" unless emailData[field]
+module.exports =
+  required: ['websiteUrl', 'emailData']
+  service: (params, done) ->
+    {websiteUrl, emailData} = params
 
-  addedInfo = ([field, data] for field, data of customerData)
-  emailData.body += '<br/><br/>User Data:'
-  emailData.body += render 'table', {headers: ['Field', 'Value'], rows: addedInfo}
+    Website.findOne {url: websiteUrl}, {contactEmail: true}, (err, website) ->
+      return done "Could not find website: #{websiteUrl}" if err or not website
 
-  sendingOptions =
-    to: config.app.mail.options.support
-    from: config.app.mail.options.from
-    replyTo: emailData.email
-    subject: emailData.subject
+      # require all email fields
+      for field in ['email', 'body', 'subject']
+        return done "Missing required field: #{field}" unless emailData[field]
 
-  sendEmail emailData.body, sendingOptions, done
+      # render table of customer data
+      customerData = ([field, data] for field, data of params when field isnt 'emailData')
+      emailData.body += '<br/><br/>User Data:'
+      emailData.body += render 'table', {headers: ['Field', 'Value'], rows: customerData}
+
+      sendingOptions =
+        to: website.contactEmail
+        from: config.app.mail.options.from
+        replyTo: emailData.email
+        subject: emailData.subject
+
+      sendEmail emailData.body, sendingOptions, done

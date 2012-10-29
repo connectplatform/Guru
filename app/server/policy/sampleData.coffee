@@ -78,7 +78,7 @@ module.exports = (done) ->
 
     websites = [
         url: "foo.com"
-        contactEmail: 'contact@foo.com'
+        contactEmail: 'success@simulator.amazonses.com'
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
         requiredFields: [
@@ -94,10 +94,10 @@ module.exports = (done) ->
         ]
       ,
         url: "baz.com"
-        contactEmail: 'contact@baz.com'
+        contactEmail: 'success@simulator.amazonses.com'
       ,
         url: "bar.com"
-        contactEmail: 'contact@bar.com'
+        contactEmail: 'success@simulator.amazonses.com'
     ]
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]

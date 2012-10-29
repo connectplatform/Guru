@@ -24,9 +24,9 @@ define ["load/server", "load/notify", 'helpers/renderForm'], (server, notify, re
 
     renderForm options, fields, (err, formData) ->
       return notify.error "Error: #{err}" if err
-      {params} = formData
 
+      args = queryParams.merge {emailData: formData.params}
       server.ready ->
-        server.submitQuestion params.merge(recordId: history.recordId), (err, result) ->
+        server.submitQuestion args, (err, result) ->
           return notify.error "Error: #{err}" if err
           window.location.hash = '/submitSuccess'

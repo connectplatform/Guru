@@ -17,3 +17,38 @@ module.exports = util =
       fn args...
 
     return naan
+
+  queryArray: (array, queries) ->
+    where = (whereConstraints, array) ->
+      return array unless whereConstraints
+
+      filteredArray = array.clone()
+
+      for constraintKey, whereConstraint of whereConstraints
+        if typeof whereConstraint is 'function'
+          constraint = whereConstraint
+        else if typeof whereConstraint is 'string' and whereConstraint[0] is '!'
+          constraint = (item) -> item[constraintKey] is whereConstraint.slice(1)
+        else
+          constraint = (item) -> item[constraintKey] is whereConstraint
+
+        filteredArray = filteredArray.filter constraint
+
+      return filteredArray
+
+    select = (selectConstraints, array) ->
+      return array unless selectConstraints
+
+      output = []
+      for item in array
+        result = {}
+        result[key] = item[key] for key in selectConstraints
+        output.push result
+
+      return output
+
+    results = {}
+    for alias, constraints of queries
+      results[alias] = select constraints.select, where constraints.where, array
+
+    results

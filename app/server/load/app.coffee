@@ -31,11 +31,19 @@ module.exports = (cb) ->
 
     # Wire up services
     services = getServices config.paths.services
-    wrappedServices = wrapServicesInMiddleware services # TODO: store these in config.services
-    veinAdapter(server) wrappedServices
+    config.services = wrapServicesInMiddleware services
 
+    # Wire up vein
+    topLevelServices = Object.findAll config.services, (name) -> name.match /[^\/]/
+    veinAdapter(server) topLevelServices
+
+    # Good job, we made it!
     config.log.info "Server started on #{port}"
     config.log.info "Pulsar started on #{config.app.pulsarPort}"
-    config.log.info "Using mongo database #{config.mongo.host}"
-    config.log.info "Using redis database #{config.redis.database}"
+
+    # Don't put connection strings in our logs
+    if config.env is 'development'
+      config.log.info "Using mongo database #{config.mongo.host}"
+      config.log.info "Using redis database #{config.redis.database}"
+
     cb()

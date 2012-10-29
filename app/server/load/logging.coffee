@@ -16,10 +16,11 @@ module.exports = (options) ->
   makeLogger 'client'
   makeLogger 'server'
 
-  process.on 'uncaughtException', (err) ->
-    #process.removeAllListeners 'uncaughtException'
-    loggers.server.error 'Uncaught Exception', {exception: err.toString()}, ->
-      throw err
+  unless config.env is 'development'
+    process.on 'uncaughtException', (err) ->
+      #process.removeAllListeners 'uncaughtException'
+      loggers.server.error 'Uncaught Exception', {exception: err.toString()}, ->
+        throw err
 
   log = loggers.server.info
   log.info = loggers.server.info

@@ -1,4 +1,3 @@
-console.log 'got here somehow'
 Pulsar = require "pulsar"
 createServer = require './createServer'
 

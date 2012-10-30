@@ -4,7 +4,7 @@ boiler 'Service - Create Chat or Get Form', ->
   beforeEach (done) ->
     @client = @getClient()
     @client.ready =>
-      @adminLogin =>
+      @ownerLogin =>
         done()
 
   describe 'with sufficient paramaters', ->

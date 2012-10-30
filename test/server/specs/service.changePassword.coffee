@@ -3,7 +3,7 @@ should = require 'should'
 boiler 'Service - Change Password', ->
   before ->
     @changePassword = (cb) =>
-      @adminLogin (err, client) =>
+      @ownerLogin (err, client) =>
         should.not.exist err
 
         # change password
@@ -19,7 +19,7 @@ boiler 'Service - Change Password', ->
 
       # try to log in with new password
       newLogin =
-        email: 'admin@foo.com'
+        email: 'owner@foo.com'
         password: "newPassword"
 
       @getAuthedWith newLogin, (err, client) =>
@@ -35,7 +35,7 @@ boiler 'Service - Change Password', ->
     @changePassword =>
 
       # try to log in with old password
-      @adminLogin (err, client) =>
+      @ownerLogin (err, client) =>
 
         # verify that login failed
         err.should.eql "Invalid user or password."

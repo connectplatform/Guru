@@ -27,7 +27,7 @@ response = (req, res) ->
 
 boiler 'Service - Populate Visitor ACP Data', ->
   beforeEach (done) ->
-    @adminLogin -> done()
+    @ownerLogin -> done()
 
   # note: this is not a service proper, but a subservice located in server/domain that is called by newChat
   it 'should hit the ACP server and dump data into redis', (done) ->

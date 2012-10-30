@@ -32,7 +32,7 @@ helpers =
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
-    @adminLogin (err, @client, accountId) =>
+    @ownerLogin (err, @client, accountId) =>
       cb err, @client, accountId
 
   # create a chat but disconnect the visitor when done
@@ -123,7 +123,7 @@ helpers =
 
       async.map chats, createChat, cb
 
-for name in ['admin', 'guru1', 'guru2', 'guru3']
+for name in ['admin', 'owner', 'guru1', 'guru2', 'guru3']
   helpers["#{name}Login"] = loginBuilder name
 
 module.exports = helpers

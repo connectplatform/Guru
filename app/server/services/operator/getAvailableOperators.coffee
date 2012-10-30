@@ -5,6 +5,8 @@ stoic = require 'stoic'
 db = config.require 'load/mongo'
 {User, Website} = db.models
 
+enums = config.require 'load/enums'
+
 module.exports = (websiteId, specialty, done) ->
 
   #  Website.findOne {_id: websiteId, accountId: true}, (err, website) ->
@@ -32,7 +34,7 @@ module.exports = (websiteId, specialty, done) ->
         query =
           _id: $in: opIds
           accountId: accountId
-          $or: [role: 'Administrator']
+          $or: [role: $in: enums.managerRoles]
 
         route =
           websites: websiteId

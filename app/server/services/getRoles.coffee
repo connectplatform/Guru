@@ -4,4 +4,4 @@ db = config.require 'load/mongo'
 enums = config.require 'load/enums'
 
 module.exports = (args, done) ->
-  done null, enums.roles
+  done null, enums.staffRoles

@@ -23,11 +23,11 @@ boiler 'Service - Find Model', ->
   it 'should let you find a user by their id', (done) ->
     @getAuthed =>
 
-      @client.findModel {queryObject: {email: 'admin@foo.com'}, modelName: 'User'}, (err, [admin]) ->
-        admin.firstName.should.eql 'Admin'
-        admin.lastName.should.eql 'Guy'
-        admin.role.should.eql 'Administrator'
-        admin.websites.should.eql []
-        admin.specialties.should.eql []
+      @client.findModel {queryObject: {_id: @ownerUser.id}, modelName: 'User'}, (err, [owner]) ->
+        owner.firstName.should.eql 'Owner'
+        owner.lastName.should.eql 'Man'
+        owner.role.should.eql 'Owner'
+        should.exist owner.websites
+        owner.specialties.should.eql []
 
         done()

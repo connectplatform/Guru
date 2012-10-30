@@ -5,7 +5,7 @@ boiler 'Service - Set Session Offline', ->
 
   it 'should set you as offline', (done) ->
 
-    @adminLogin (err, @client, accountId) =>
+    @ownerLogin (err, @client, accountId) =>
       should.not.exist err
       id = @client.cookie 'session'
 

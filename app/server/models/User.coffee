@@ -18,7 +18,8 @@ user = new Schema
 
   accountId:
     type: ObjectId
-    required: true
+    validation: ->
+      @role is 'Administrator' or accountId
 
   sentEmail:
     type: Boolean
@@ -45,7 +46,7 @@ user = new Schema
   role:
     type: String
     required: true
-    enum: enums.roles
+    enum: enums.staffRoles
 
   websites:
     type: [String]

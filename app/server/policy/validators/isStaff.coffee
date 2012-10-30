@@ -1,12 +1,14 @@
 stoic = require 'stoic'
 {Session} = stoic.models
 
+enums = config.require 'load/enums'
+
 module.exports = (args, next) ->
   {sessionId} = args
   return next "expected argument: sessionId" unless sessionId?
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     Session(accountId).get(sessionId).role.get (err, role) ->
-      unless role in ["Administrator", "Supervisor", "Operator"]
-        return next "You are not a registered user"
+      unless role in enums.staffRoles
+        return next "You must login to access this feature."
       next null, args

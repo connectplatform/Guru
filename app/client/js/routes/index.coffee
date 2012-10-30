@@ -3,7 +3,10 @@ define ["load/server", "load/notify"], (server, notify) ->
 
     server.ready ->
       server.getMyRole (err, role) ->
-        if (role is 'Operator') or (role is 'Administrator')
-          window.location.hash = '/dashboard'
-        else
-          window.location.hash = '/login'
+        switch role
+          when 'Visitor'
+            window.location.hash = '/newChat'
+          when 'None'
+            window.location.hash = '/login'
+          else
+            window.location.hash = '/dashboard'

@@ -2,7 +2,7 @@ module.exports =
   # list of rules
   [
     {
-      filters: ['isAdministrator', 'setIsOnline' ]
+      filters: ['isOwner', 'setIsOnline' ]
       only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
     }
 
@@ -35,7 +35,7 @@ module.exports =
         # account creation
         'createAccount'
 
-        # these three are covered by isAdministrator
+        # these three are covered by isOwner
         'deleteModel'
         'findModel'
         'saveModel'

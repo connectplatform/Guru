@@ -1,9 +1,9 @@
 async = require 'async'
 stoic = require 'stoic'
-{Session} = stoic.models
 
 {inspect} = require 'util'
 {getType} = config.require 'load/util'
+{Session} = stoic.models
 
 getData = (accountId, modelName, item) ->
   (cb) ->
@@ -17,12 +17,12 @@ getData = (accountId, modelName, item) ->
         result = "Dump for #{modelName}: " + inspect data
       cb null, result
 
-module.exports = ({sessionId, message, context}, done) ->
-  severity = 'info'
-  severity = 'warn' if context?.severity is 'warn'
-  severity = 'error' if context?.severity is 'error'
-
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['sessionId', 'accountId', 'message', 'context']
+  service: ({sessionId, accountId, message, context}, done) ->
+    severity = 'info'
+    severity = 'warn' if context?.severity is 'warn'
+    severity = 'error' if context?.severity is 'error'
 
     if (getType context?.ids) is 'Object'
       async.parallel [

@@ -9,7 +9,7 @@ boiler 'Model - User', ->
       @accountId = account._id
       done err
 
-  it 'should not let you save an invalid role', (done)->
+  it 'should not let you save an invalid role', (done) ->
     user =
       accountId: @accountId
       email: 'invalidrole@foo.com'
@@ -22,7 +22,7 @@ boiler 'Model - User', ->
       err.message.should.eql 'Validation failed'
       done()
 
-  it 'should gracefully call back with an error if you leave a required field blank', (done)->
+  it 'should gracefully call back with an error if you leave a required field blank', (done) ->
     user =
       accountId: @accountId
       password: digest_s 'foobar'

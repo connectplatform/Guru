@@ -7,5 +7,5 @@ module.exports = (args, next) ->
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     Session(accountId).get(sessionId).role.get (err, role) ->
-      return next "You are not an administrator" unless role is "Administrator"
+      return next "You must be an account Owner to access this feature." unless role is 'Owner'
       next null, args

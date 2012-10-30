@@ -9,7 +9,7 @@ boiler 'Middleware - Service Meta', ->
 
   describe 'service with required fields', ->
     it 'should pass valid signature', (done) ->
-      @client.login {email: 'admin@foo.com', password: 'foobar'}, (err, user) ->
+      @client.login {email: 'owner@foo.com', password: 'foobar'}, (err, user) ->
         should.not.exist err
         should.exist user
         done()
@@ -37,7 +37,7 @@ boiler 'Middleware - Service Meta', ->
           done()
 
     it 'should work with sessionId', (done) ->
-      @adminLogin (err, @client) =>
+      @ownerLogin (err, @client) =>
         @client.getChatStats {}, (err, stats) =>
           should.not.exist err
           should.exist stats

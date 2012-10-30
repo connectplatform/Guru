@@ -16,7 +16,7 @@ module.exports = (done) ->
 
     createUser = (websites, account) ->
       (user, cb) ->
-        user.accountId = account
+        user.accountId = account unless user.role is 'Administrator'
         user.password = digest_s user.password
         user.websites = websites.filter((site) -> site.url in user.websites).map 'id'
         User.create user, cb
@@ -34,12 +34,20 @@ module.exports = (done) ->
     operators = [
         email: 'admin@foo.com'
         sentEmail: true
-        registrationKey: 'abcd'
         password: 'foobar'
         role: 'Administrator'
         firstName: 'Admin'
         lastName: 'Guy'
         websites: []
+      ,
+        email: 'owner@foo.com'
+        sentEmail: true
+        registrationKey: 'abcd'
+        password: 'foobar'
+        role: 'Owner'
+        firstName: 'Owner'
+        lastName: 'Man'
+        websites: ['foo.com']
       ,
         email: 'guru1@foo.com'
         sentEmail: true

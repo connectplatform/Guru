@@ -1,15 +1,15 @@
 async = require 'async'
 stoic = require 'stoic'
+{Chat} = stoic.models
 
 getFullChatData = config.require 'services/chats/getFullChatData'
 chatPriority = config.require 'services/chats/chatPriority'
 getChatRelations = config.require 'services/chats/getChatRelations'
 filterRelevant = config.require 'services/chats/filterRelevant'
 
-module.exports = ({sessionId}, done) ->
-  {Session, Chat} = stoic.models
-
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['sessionId', 'accountId']
+  service: ({sessionId, accountId}, done) ->
     chatDataForAccount = (chatId, next) ->
       getFullChatData accountId, chatId, next
 

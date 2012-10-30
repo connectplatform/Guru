@@ -26,7 +26,9 @@ boiler 'Service - Get Chat Stats', ->
   describe 'with various chats', ->
     beforeEach ->
 
-      @generate = (done) ->
+      @generate = (done) =>
+        #Create chats with proper context
+
         chats = [
             username: 'should show'
             websiteUrl: 'foo.com'
@@ -39,7 +41,7 @@ boiler 'Service - Get Chat Stats', ->
             websiteUrl: 'foo.com'
             department: 'Billing'
         ]
-        async.forEach chats, @newChatWith, done
+        async.forEach chats, @newChatWith.bind(@), done
 
     it 'should only return relevant chats', (done) ->
       @guru3Login (err, @client) =>
@@ -51,8 +53,8 @@ boiler 'Service - Get Chat Stats', ->
             stats.unanswered.length.should.eql 1, 'expected 1 chat'
             done()
 
-    it 'should return all chats for admin', (done) ->
-      @adminLogin (err, @client) =>
+    it 'should return all chats for owner', (done) ->
+      @ownerLogin (err, @client) =>
         @generate =>
           @client.getChatStats {}, (err, stats) =>
             should.not.exist err

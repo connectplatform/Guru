@@ -1,13 +1,13 @@
 should = require 'should'
 
 loginData =
-  email: 'admin@foo.com'
+  email: 'owner@foo.com'
   password: "newPassword"
 
 boiler 'Service - Reset Password', ->
 
   it 'should let a user reset their password', (done) ->
-    {_id, registrationKey} = @adminUser
+    {_id, registrationKey} = @ownerUser
 
     client = @getClient()
     client.ready ->

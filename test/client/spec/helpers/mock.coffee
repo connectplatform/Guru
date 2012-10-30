@@ -3,7 +3,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
 
     mock =
       renderSidebar: ->
-        sidebar {role: 'Administrator'}, sbTemp
+        sidebar {role: 'Supervisor'}, sbTemp
 
       loggedIn: ->
         server.cookie 'session', 'session_foo'

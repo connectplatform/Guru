@@ -24,14 +24,14 @@ boiler 'Service - Get My Role', ->
         role.should.eql 'None'
         done()
 
-  describe 'when Admin session exists', ->
+  describe 'when Owner session exists', ->
     beforeEach (done) ->
-      @adminLogin (err, @client) =>
+      @ownerLogin (err, @client) =>
         done()
 
-    it "should say Admin", (done) ->
+    it "should say Owner", (done) ->
       @client.getMyRole {}, (err, role) ->
-        role.should.eql 'Administrator'
+        role.should.eql 'Owner'
         done()
 
   describe 'when Operator session exists', ->

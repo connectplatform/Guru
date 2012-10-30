@@ -1,39 +1,50 @@
 {getType} = config.require 'load/util'
 argumentTypes = config.require 'load/argumentTypes'
 
+# TODO: Consider refactoring to a goal oriented state machine - better control flow,
+#       won't call Type Validations at all if arg not present and not required
+#
 # generate validations that will be added to the filter stack
 generateValidations = (name, types, required) ->
-  types.map (t) ->
-    (args, next) ->
-      #TODO: this is kind of ratty logic, it could probably be clearer with some async control flow
+  stack = []
 
-      # perform lookup if it exists
-      if not args[name]? and t.lookup
-        start = (end) ->
-          t.lookup args, (err, result) ->
-            return next err if err
-            args[name] = result
-            end()
-      else
-        start = (end) -> end()
+  # get lookups
+  stack.add types.map (t) ->
+    if t.lookup
+      (args, next) ->
 
-      start ->
-        # validate existence
+        # perform lookup if arg is not present
         if not args[name]?
-          if t.lookup
-          else if required
-            return next "Argument Required: #{name}"
-          else
-            return next null, args
-
-        # run type validation
-        if t.validation
-          t.validation args[name], (passed) ->
-            return next "Argument Validation: '#{name}' must be a valid #{t.typeName}." unless passed
-            next null, args
-
+          t.lookup args, (err, result) ->
+            args[name] = result
+            next err, args
         else
           next null, args
+
+  # check existance
+  stack.add (args, next) ->
+
+    # validate existence
+    if not args[name]? and required
+      return next "Argument Required: #{name}"
+    else
+      return next null, args
+
+  # get type validations
+  stack.add types.map (t) ->
+    if t.validation
+      (args, next) ->
+
+        # continue if field wasn't required/isn't present
+        return next null, args unless args[name]
+
+        # run type validation
+        t.validation args[name], (passed) ->
+          return next "Argument Validation: '#{name}' must be a valid #{t.typeName}." unless passed
+          next null, args
+
+  # remove any lookups/validations that weren't defined
+  stack.compact()
 
 
 module.exports =

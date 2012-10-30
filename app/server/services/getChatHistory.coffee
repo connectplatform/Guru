@@ -1,8 +1,9 @@
 stoic = require 'stoic'
-{Session, Chat} = stoic.models
+{Chat} = stoic.models
 
-module.exports = ({chatId, sessionId}, done) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['accountId', 'chatId']
+  service: ({accountId, chatId}, done) ->
     Chat(accountId).get(chatId).history.all (err, history) ->
       if err
         config.log.error 'Error recovering history for chat', {error: err, chatId: chatId, history: history}

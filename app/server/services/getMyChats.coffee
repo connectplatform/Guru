@@ -1,10 +1,11 @@
 async = require 'async'
 stoic = require 'stoic'
-{Session, ChatSession, Chat} = stoic.models
+{ChatSession, Chat} = stoic.models
 
-module.exports = ({sessionId}, done) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
 
+  required: ['accountId', 'sessionId']
+  service: ({accountId, sessionId}, done) ->
     ChatSession(accountId).getBySession sessionId, (err, chatSessions) ->
       done err, null if err
 

@@ -4,8 +4,8 @@ stoic = require 'stoic'
 {Session} = stoic.models
 async = require 'async'
 
-getChatName = (session, cb) ->
-  session.chatName.get cb
+getChatName = (session, done) ->
+  session.chatName.get done
 
 module.exports =
   required: ['accountId']

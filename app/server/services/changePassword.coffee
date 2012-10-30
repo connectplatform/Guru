@@ -10,8 +10,9 @@ getOperatorData = config.require 'services/operator/getOperatorData'
   #filters: ['bothArgsAreStrings']
   #only: ['changePassword']
 #}
-module.exports = ({oldPassword, newPassword, sessionId}, done) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['oldPassword', 'newPassword', 'accountId', 'sessionId']
+  service: ({oldPassword, newPassword, accountId, sessionId}, done) ->
     getOperatorData accountId, sessionId, (err, user) ->
       config.log.error 'Error getting user from sessionId in changePassword', {error: err, sessionId: sessionId} if err
       return done "User not found." unless user

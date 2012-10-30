@@ -1,12 +1,12 @@
 stoic = require 'stoic'
-{Session, ChatSession} = stoic.models
+{ChatSession} = stoic.models
 
-module.exports = ({chatId, sessionId}, done) ->
+module.exports =
+  required: ['chatId', 'accountId', 'sessionId']
+  service: ({chatId, accountId, sessionId}, done) ->
+    newMeta =
+      type: 'member'
+      isWatching: 'false'
 
-  newMeta =
-    type: 'member'
-    isWatching: 'false'
-
-  Session.accountLookup.get sessionId, (err, accountId) ->
     ChatSession(accountId).get(sessionId, chatId).relationMeta.mset newMeta, (err) ->
       done err, chatId

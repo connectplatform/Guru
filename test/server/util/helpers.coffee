@@ -8,22 +8,22 @@ Pulsar = require 'pulsar'
 testPort = process.env.GURU_PORT
 pulsarPort = process.env.GURU_PULSAR_PORT
 
-loginBuilder = (name) ->
-  (cb) =>
-    data =
-      email: "#{name}@foo.com"
-      password: 'foobar'
-    helpers.getAuthedWith data, cb
-
 #Exported object of helper functions
 helpers =
   getClient: -> Vein.createClient port: testPort
   getPulsar: -> Pulsar.createClient port: pulsarPort
   testPort: testPort
 
+  loginBuilder: (name) ->
+    (cb) =>
+      data =
+        email: "#{name}@foo.com"
+        password: 'foobar'
+      @getAuthedWith data, cb
+
   getAuthedWith: (data, cb) ->
     {Session} = stoic.models
-    client = helpers.getClient()
+    client = @getClient()
     client.ready =>
       client.login data, (err) =>
         console.log 'error on test login:', err if err
@@ -35,10 +35,6 @@ helpers =
     @ownerLogin (err, @client, accountId) =>
       cb err, @client, accountId
 
-  # create a chat but disconnect the visitor when done
-  newChat: (cb) ->
-    @newChatWith {username: 'visitor', websiteUrl: 'foo.com'}, cb
-
   # create a chat and hang onto visitor client
   newVisitor: (data, cb) ->
     visitor = @getClient()
@@ -49,10 +45,15 @@ helpers =
         @chatId = data.chatId
         cb null, visitor, data
 
+  # create a chat but disconnect the visitor when done
   newChatWith: (data, cb) ->
     @newVisitor data, (err, visitor, chatData) ->
       visitor.disconnect()
       cb err, Object.merge data, {data: chatData}
+
+  # shorthand for default use case
+  newChat: (cb) ->
+    @newChatWith {username: 'visitor', websiteUrl: 'foo.com'}, cb
 
   expectSessionIsOnline: (sessionId, expectation, cb) ->
     {Session} = stoic.models
@@ -124,6 +125,6 @@ helpers =
       async.map chats, createChat, cb
 
 for name in ['admin', 'owner', 'guru1', 'guru2', 'guru3']
-  helpers["#{name}Login"] = loginBuilder name
+  helpers["#{name}Login"] = helpers.loginBuilder name
 
 module.exports = helpers

@@ -25,8 +25,7 @@ module.exports = global.boiler = (testName, tests) ->
     before (done) ->
 
       # Adding helpers to before context
-      for helperName, helper of helpers
-        this[helperName] = helper
+      @.merge helpers
 
       # initialize app server
       initApp ->

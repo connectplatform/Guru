@@ -21,19 +21,12 @@ initApp = (cb) ->
   @app cb
 
 module.exports = global.boiler = (testName, tests) ->
-
-  # Adding helpers to global.boiler
-  for helperName, helper of helpers
-      do (helperName, helper) =>
-        this[helperName] = helper
-
   describe testName, (done)->
     before (done) ->
 
       # Adding helpers to before context
       for helperName, helper of helpers
-        do (helperName, helper) =>
-          this[helperName] = helper
+        this[helperName] = helper
 
       # initialize app server
       initApp ->

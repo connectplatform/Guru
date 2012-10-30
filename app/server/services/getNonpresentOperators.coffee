@@ -49,8 +49,9 @@ packSessionData = (session, cb) ->
     sessionData.id = session.id
     cb sessionData
 
-module.exports = ({chatId, sessionId}, done) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['chatId', 'sessionId', 'accountId']
+  service: ({chatId, sessionId, accountId}, done) ->
     Session(accountId).allSessions.members (err, sessions) ->
       if err
         config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}

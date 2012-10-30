@@ -1,9 +1,9 @@
 stoic = require 'stoic'
 {Chat, ChatSession, Session} = stoic.models
 
-module.exports = ({chatId, sessionId}, done) ->
-
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['accountId', 'chatId', 'sessionId']
+  service: ({chatId, sessionId, accountId}, done) ->
     ChatSession(accountId).remove sessionId, chatId, (err) ->
       config.log.error 'Error removing chatSession in leaveChat', {error: err, chatId: chatId, sessionId: sessionId} if err
 

@@ -8,8 +8,8 @@ getChatRelations = config.require 'services/chats/getChatRelations'
 filterRelevant = config.require 'services/chats/filterRelevant'
 
 module.exports =
-  required: ['sessionId', 'chatId', 'accountId']
-  service: ({sessionId, chatId, accountId}, done) ->
+  required: ['sessionId', 'accountId']
+  service: ({sessionId, accountId}, done) ->
     chatDataForAccount = (chatId, next) ->
       getFullChatData accountId, chatId, next
 

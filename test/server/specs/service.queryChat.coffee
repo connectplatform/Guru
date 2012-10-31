@@ -34,7 +34,7 @@ boiler 'Service - Query Chat', ->
       chatId: @chatId
       queries:
         queriedSessions:
-          select: ['sessionId']
+          select: sessionId: 'chatSession.sessionId'
     }, (err, {queriedSessions}) =>
       should.not.exist err
 
@@ -51,8 +51,8 @@ boiler 'Service - Query Chat', ->
       chatId: @chatId
       queries:
         queriedSessions:
-          select: ['sessionId']
-          where: isWatching: 'false'
+          select: sessionId: 'chatSession.sessionId'
+          where: 'chatSession.relationMeta.isWatching': 'false'
     }, (err, {queriedSessions}) =>
       should.not.exist err
 
@@ -69,10 +69,10 @@ boiler 'Service - Query Chat', ->
       chatId: @chatId
       queries:
         queriedSessions:
-          select: ['sessionId']
+          select: sessionId: 'chatSession.sessionId'
           where:
-            isWatching: 'false'
-            role: '!Visitor'
+            'chatSession.relationMeta.isWatching': 'false'
+            'session.role': '!Visitor'
     }, (err, {queriedSessions}) =>
       should.not.exist err
 

@@ -26,9 +26,8 @@ boiler 'Service - Get Chat Stats', ->
   describe 'with various chats', ->
     beforeEach ->
 
-      @generate = (done) ->
+      @generate = (done) =>
         #Create chats with proper context
-        @newChat = (chat, done) => @newChatWith chat, done
 
         chats = [
             username: 'should show'
@@ -42,7 +41,7 @@ boiler 'Service - Get Chat Stats', ->
             websiteUrl: 'foo.com'
             department: 'Billing'
         ]
-        async.forEach chats, @newChat, done
+        async.forEach chats, @newChatWith.bind(@), done
 
     it 'should only return relevant chats', (done) ->
       @guru3Login (err, @client) =>

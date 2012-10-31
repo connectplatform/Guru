@@ -5,7 +5,7 @@ boiler 'Service - Say', ->
   it 'should let you say a message in a chat', (done) ->
     @getAuthed =>
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @visitor) =>
-        @visitor.say {chatId: @chatId, sessionId: @visitorSession, message: 'Hello, world!'}, (err, success) =>
+        @visitor.say {chatId: @chatId, message: 'Hello, world!'}, (err, success) =>
           should.not.exist err
           success.should.eql 'OK'
 

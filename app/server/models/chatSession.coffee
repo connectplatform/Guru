@@ -1,5 +1,5 @@
 async = require 'async'
-{tandoor} = config.require 'load/util'
+{tandoor, getType} = config.require 'load/util'
 
 stoic = require 'stoic'
 {Chat, Session} = stoic.models
@@ -16,6 +16,14 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
       # get a chatSession
       get: (sessionId, chatId) ->
+        # Patch to let me use object args temporarily without refactoring whole application
+        if getType(sessionId) is 'Object'
+          chatId = sessionId.chatId
+          sessionId = sessionId.sessionId
+          # I want 'get' to return a function if its only given one argument
+          return chatSession.get sessionId, chatId if chatId? and sessionId?
+          return chatSession.getByChat chatId if chatId?
+          return chatSession.getBySession sessionId if sessionId?
 
         # base object
         base =
@@ -25,11 +33,11 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
         # accessors
         chatIndex base, ({after}) ->
-          after ['members', 'all'], (context, sessionIds, next) ->
+          after ['members', 'all', 'retrieve'], (context, sessionIds, next) ->
             next null, (chatSession.get sessionId, chatId for sessionId in sessionIds)
 
         sessionIndex base, ({after}) ->
-          after ['members', 'all'], (context, chatIds, next) ->
+          after ['members', 'all', 'retrieve'], (context, chatIds, next) ->
             next null, (chatSession.get sessionId, chatId for chatId in chatIds)
 
         relationMeta base

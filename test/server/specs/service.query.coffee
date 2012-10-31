@@ -1,6 +1,6 @@
 should = require 'should'
 
-boiler 'Service - Query Chat', ->
+boiler 'Service - Query', ->
   beforeEach (done) ->
     # Make a chat
     @sessions = []
@@ -28,12 +28,12 @@ boiler 'Service - Query Chat', ->
               done()
 
   it 'should let you get all the sessions for a chat', (done) ->
-    queryChat = config.require 'services/chats/queryChat'
-    queryChat {
+    query = config.require 'services/queries/query'
+    query {
       accountId: @accountId
-      chatId: @chatId
       queries:
         queriedSessions:
+          ids: chatId: @chatId
           select: sessionId: 'chatSession.sessionId'
     }, (err, {queriedSessions}) =>
       should.not.exist err
@@ -45,12 +45,12 @@ boiler 'Service - Query Chat', ->
       done()
 
   it 'should let you get all the visible sessions for a chat', (done) ->
-    queryChat = config.require 'services/chats/queryChat'
-    queryChat {
+    query = config.require 'services/queries/query'
+    query {
       accountId: @accountId
-      chatId: @chatId
       queries:
         queriedSessions:
+          ids: chatId: @chatId
           select: sessionId: 'chatSession.sessionId'
           where: 'chatSession.relationMeta.isWatching': 'false'
     }, (err, {queriedSessions}) =>
@@ -63,12 +63,12 @@ boiler 'Service - Query Chat', ->
       done()
 
   it 'should let you get all the visible staff for a chat', (done) ->
-    queryChat = config.require 'services/chats/queryChat'
-    queryChat {
+    query = config.require 'services/queries/query'
+    query {
       accountId: @accountId
-      chatId: @chatId
       queries:
         queriedSessions:
+          ids: chatId: @chatId
           select: sessionId: 'chatSession.sessionId'
           where:
             'chatSession.relationMeta.isWatching': 'false'
@@ -79,3 +79,18 @@ boiler 'Service - Query Chat', ->
       queriedSessions.length.should.eql 1
 
       done()
+
+  it 'should let you query for individual models', (done) ->
+    @visitor.say {chatId: @chatId, message: 'wheee'}, =>
+      query = config.require 'services/queries/query'
+      query {
+        accountId: @accountId
+        queries:
+          aChat:
+            ids: chatId: @chatId
+            select: history: 'chat.history'
+      }, (err, {aChat:[chat]}) =>
+        should.not.exist err
+        history = chat.history
+        history[0].message.should.eql 'wheee'
+        done()

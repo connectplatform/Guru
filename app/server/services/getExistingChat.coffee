@@ -3,7 +3,7 @@ stoic = require 'stoic'
 
 module.exports =
 
-  required: ['sessionId', 'accountId']
+  optional: ['sessionId', 'accountId']
   service: ({sessionId, accountId}, done) ->
     return done() unless sessionId
 

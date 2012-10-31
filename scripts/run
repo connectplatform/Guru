@@ -8,6 +8,7 @@ require(join(__dirname, '../app/config'));
 // will grab all files in a directory and load them into an object
 tasks = {
   seed: config.require('scripts/seed'),
+  start: config.require('scripts/server'),
   sendRegistration: config.require('scripts/sendRegistration'),
   clearOldChats: config.require('scripts/clearOldChats'),
   printMiddleware: config.require('scripts/printMiddleware'),

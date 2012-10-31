@@ -14,12 +14,14 @@ validateWebsite = (websiteIds, cb) ->
       return cb false unless websiteId in validIds
     cb true
 
+validateAccountId = (accountId, cb) ->
+  cb @role is 'Administrator' or @accountId
+
 user = new Schema
 
   accountId:
     type: ObjectId
-    validation: ->
-      @role is 'Administrator' or accountId
+    validate: [validateAccountId, 'accountId required' ]
 
   sentEmail:
     type: Boolean

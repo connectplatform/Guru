@@ -3,6 +3,7 @@ all = [
   '/visitorChat/:id'
   '/'
   '/login'
+  '/createAccount'
   '/logout'
   '/dashboard'
   '/userProfile'
@@ -37,6 +38,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
       dermis.before [
         '/'
         '/login'
+        '/createAccount'
         '/dashboard'
         '/userProfile'
         '/operatorChat'

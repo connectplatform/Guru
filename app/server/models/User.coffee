@@ -63,7 +63,8 @@ user.path('role').set (newVal) ->
 
 user.pre 'save', (next) ->
   return next new Error "Cannot change #{@oldRole} role." if @oldRole in ['Owner', 'Administrator'] and @isModified 'role'
-  return next new Error "Cannot make user a #{@oldRole}." if @role in ['Owner', 'Administrator'] and @isModified 'role'
+  if @role in ['Owner', 'Administrator'] and @oldRole in enums.editableRoles and @isModified 'role'
+    return next new Error "Cannot make user a #{@oldRole}."
   sendRegistrationEmail @, next
 
 module.exports = user

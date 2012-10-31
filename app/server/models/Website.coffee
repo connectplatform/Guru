@@ -31,6 +31,11 @@ website = new Schema
     index:
       unique: true
 
+  subdomain:
+    type: String
+    required: true
+    unique: true
+
   specialties:
     type: [String]
     default: []

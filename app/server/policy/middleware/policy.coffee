@@ -2,7 +2,7 @@ module.exports =
   # list of rules
   [
     {
-      filters: ['isOwner', 'setIsOnline' ]
+      filters: ['isOwner', 'setIsOnline']
       only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
     }
 

@@ -9,10 +9,6 @@ module.exports =
       filters: ['sessionIdIsValid']
       except: [
 
-        # should these be here?
-        'getRoles'
-        'getChatStats'
-
         # everyone
         'getMyRole'
 

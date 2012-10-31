@@ -11,11 +11,14 @@
       input.email.small-modal-box(type="text", value="#{user.email}", placeholder="email")
       .clear
       select.role.small-modal-box(name="role")
-        each role in user.allowedRoles
-          if role == user.role
-            option(value="#{role}", selected="selected") #{role}
-          else
-            option(value="#{role}") #{role}
+        if user.role == 'Owner' || user.role == 'Administrator'
+          option(value="#{user.role}", selected="selected") #{role}
+        else
+          each role in user.allowedRoles
+            if role == user.role
+              option(value="#{role}", selected="selected") #{role}
+            else
+              option(value="#{role}") #{role}
       .clear
       |Websites:
       .websites.small-modal-box.scrolling-checkboxes

@@ -22,6 +22,14 @@ boiler 'Model - User', ->
       err.message.should.eql 'Validation failed'
       done()
 
+  it 'should not let you change an Owner to an Operator', (done) ->
+    User.findOne {role: 'Owner'}, (err, user) ->
+      user.role = 'Operator'
+      user.save (err, data) ->
+        should.exist err
+        err.message.should.eql 'Cannot change Owner role.'
+        done()
+
   it 'should gracefully call back with an error if you leave a required field blank', (done) ->
     user =
       accountId: @accountId

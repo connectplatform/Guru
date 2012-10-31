@@ -57,6 +57,13 @@ user = new Schema
     type: [String]
     default: []
 
-user.pre 'save', (next) -> sendRegistrationEmail @, next
+user.path('role').set (newVal) ->
+  @oldRole = @role
+  newVal
+
+user.pre 'save', (next) ->
+  return next new Error "Cannot change #{@oldRole} role." if @oldRole in ['Owner', 'Administrator'] and @isModified 'role'
+  return next new Error "Cannot make user a #{@oldRole}." if @role in ['Owner', 'Administrator'] and @isModified 'role'
+  sendRegistrationEmail @, next
 
 module.exports = user

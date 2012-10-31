@@ -9,6 +9,9 @@ form.form-horizontal(id="#{options.name}-form")
           when 'text'
             input(type="text", placeholder="#{field.default}", name="#{field.name}")
 
+          when 'password'
+            input(type="password", placeholder="#{field.default}", name="#{field.name}")
+
           when 'selection'
             select.small-modal-box(name="#{field.name}")
               each selection in field.selections

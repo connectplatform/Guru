@@ -6,6 +6,9 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     dermis.route '/visitorChat/:chatId'
     dermis.route '/submitQuestion'
 
+    # account creation for new owners
+    dermis.route '/createAccount'
+
     # login for backend users
     dermis.route '/', 'routes/index'
     dermis.route '/login'

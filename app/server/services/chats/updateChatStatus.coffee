@@ -1,6 +1,6 @@
 stoic = require 'stoic'
 {Chat} = stoic.models
-queryChat = config.require 'services/chats/queryChat'
+queryChat = config.require 'services/queries/query'
 
 module.exports = ({accountId, chatId}) ->
   queryChat {

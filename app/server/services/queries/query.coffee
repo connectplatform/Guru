@@ -36,8 +36,8 @@ packNeededData = (accountId, ids, neededFields, cb) ->
       wrapped = ids:
         chatId: value.chatId
         sessionId: value.sessionId
-      wrapped.chatId = value.id if model is 'chat'
-      wrapped.sessionId = value.id if model is 'session'
+      wrapped.ids.chatId = value.id if model is 'chat'
+      wrapped.ids.sessionId = value.id if model is 'session'
       wrapped[model] = value
       result.push wrapped
     return result
@@ -60,7 +60,8 @@ packNeededData = (accountId, ids, neededFields, cb) ->
       dataObject[model] = {} unless dataObject[model]?
 
       # Check whether the field exists
-      return cb() if dataObject[model][field]? and rest.length is 0
+      #return cb() if dataObject[model][field]? and rest.length is 0
+      return cb() unless instance[field]?.retrieve?
 
       # If we don't have a field specified then we want to dump everything
       unless field?

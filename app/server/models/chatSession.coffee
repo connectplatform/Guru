@@ -34,11 +34,11 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
         # accessors
         chatIndex base, ({after}) ->
-          after ['members', 'all'], (context, sessionIds, next) ->
+          after ['members', 'all', 'retrieve'], (context, sessionIds, next) ->
             next null, (chatSession.get sessionId, chatId for sessionId in sessionIds)
 
         sessionIndex base, ({after}) ->
-          after ['members', 'all'], (context, chatIds, next) ->
+          after ['members', 'all', 'retrieve'], (context, chatIds, next) ->
             next null, (chatSession.get sessionId, chatId for chatId in chatIds)
 
         relationMeta base

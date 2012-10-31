@@ -95,7 +95,7 @@ face = (decorators) ->
             next null, args
 
           # filter retreived values with a parseInt
-          after ['getall'], (context, unreadMessages, next) ->
+          after ['getall', 'retrieve'], (context, unreadMessages, next) ->
             for chat, num of unreadMessages
               unreadMessages[chat] = parseInt num
             next null, unreadMessages
@@ -135,7 +135,7 @@ face = (decorators) ->
         faceValue.allSessions.ismember id, cb
 
     wrapModel = ({after}) ->
-      after ['members', 'all'], (context, sessionIds, next) ->
+      after ['members', 'all', 'retrieve'], (context, sessionIds, next) ->
         next null, (faceValue.get sessionId for sessionId in sessionIds)
 
     allSessions faceValue, wrapModel

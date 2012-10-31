@@ -66,14 +66,14 @@ face = (decorators) ->
           before ['mset'], (context, args, next) ->
             next null, args.map dehydrateJSON
 
-          after ['get'], (context, data, next) ->
+          after ['get', 'retrieve'], (context, data, next) ->
             next null, JSON.parse(data)
 
         creationDate chat, ({before, after}) ->
           before ['getset', 'set'], (context, [date], next) ->
             next null, [JSON.stringify date]
 
-          after ['get'], (context, date, next) ->
+          after ['get', 'retrieve'], (context, date, next) ->
             next null, Date.create(JSON.parse(date))
 
         status chat, ({before, after}) ->
@@ -92,7 +92,7 @@ face = (decorators) ->
           # JSON serialize/deserialize
           before ['rpush'], (context, args, next) ->
             next null, args.map JSON.stringify
-          after ['all'], (context, data, next) ->
+          after ['all', 'retrieve'], (context, data, next) ->
             next null, data.map JSON.parse
 
         chat.dump = (cb) ->

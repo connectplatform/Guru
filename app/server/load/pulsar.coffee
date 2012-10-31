@@ -1,8 +1,6 @@
 Pulsar = require "pulsar"
 createServer = require './createServer'
 
-throw new Error 'hey man'
-
 port = process.env.GURU_PULSAR_PORT or config.app.pulsarPort
 
 unless port is 'DISABLED'

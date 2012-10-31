@@ -1,6 +1,5 @@
 async = require 'async'
 {tandoor, getType} = config.require 'load/util'
-pulsar = config.require 'load/pulsar'
 
 stoic = require 'stoic'
 {Chat, Session} = stoic.models

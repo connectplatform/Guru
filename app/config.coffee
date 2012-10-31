@@ -135,6 +135,9 @@ global.config = config[environment].merge
   path: path
   require: (spec) ->
     require path spec
+  services: [] # loaded with application
+  service: (serviceName) ->
+    global.config.services[serviceName]
 
 global.config.log = initLogging global.config.logging
 

@@ -76,7 +76,12 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
         ], (err) ->
           config.log.error 'Error removing chatSession', {error: err} if err
-          cb err, cs
+          # We have a circular dependency if we load this immediately
+          updateChatStatus = config.require 'services/chats/updateChatStatus'
+          updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
+            config.log.error 'Error updating chat status when removing chat session', {error: err, chatId: chatId, accountId: accountId} if err
+
+            cb err, cs
 
       # just sugar
       getBySession: tandoor (sessionId, cb) ->

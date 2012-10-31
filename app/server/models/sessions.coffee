@@ -1,6 +1,5 @@
 async = require 'async'
 rand = config.require 'services/rand'
-pulsar = config.require 'server/load/pulsar'
 {tandoor} = config.require 'load/util'
 
 face = (decorators) ->
@@ -46,6 +45,8 @@ face = (decorators) ->
           cb err, session
 
       get: (id) ->
+        pulsar = config.require 'server/load/pulsar'
+
         session =
           id: id
           accountId: accountId

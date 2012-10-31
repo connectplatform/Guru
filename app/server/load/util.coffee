@@ -18,6 +18,16 @@ module.exports = util =
 
     return naan
 
+  accessKeypath: (input, keypath) ->
+    keyArray = keypath.split '.'
+    target = input
+    for key in keyArray
+      if target[key]?
+        target = target[key]
+      else
+        return null
+    return target
+
   queryArray: (array, queries) ->
     where = (whereConstraints, array) ->
       return array unless whereConstraints
@@ -28,11 +38,13 @@ module.exports = util =
         if typeof whereConstraint is 'function'
           constraint = whereConstraint
         else if typeof whereConstraint is 'string' and whereConstraint[0] is '!'
-          constraint = (item) -> item[constraintKey] is whereConstraint.slice(1)
+          constraint = (item) -> item isnt whereConstraint.slice(1)
         else
-          constraint = (item) -> item[constraintKey] is whereConstraint
+          constraint = (item) -> item is whereConstraint
 
-        filteredArray = filteredArray.filter constraint
+        filter = (item) -> constraint util.accessKeypath item, constraintKey
+
+        filteredArray = filteredArray.filter filter
 
       return filteredArray
 
@@ -42,7 +54,7 @@ module.exports = util =
       output = []
       for item in array
         result = {}
-        result[key] = item[key] for key in selectConstraints
+        result[alias] = util.accessKeypath item, keypath for alias, keypath of selectConstraints
         output.push result
 
       return output

@@ -1,14 +1,15 @@
 stoic = require 'stoic'
-{Session, ChatSession} = stoic.models
+{ChatSession} = stoic.models
 
 pulsar = config.require 'load/pulsar'
 
-module.exports = ({chatId, sessionId}, done) ->
-  newMeta =
-    type: 'member'
-    isWatching: 'false'
+module.exports =
+  required: ['chatId', 'accountId', 'sessionId']
+  service: ({chatId, accountId, sessionId}, done) ->
+    newMeta =
+      type: 'member'
+      isWatching: 'false'
 
-  Session.accountLookup.get sessionId, (err, accountId) ->
     chatSession = ChatSession(accountId).get sessionId, chatId
     chatSession.relationMeta.get 'requestor', (err, requestor) ->
       if err

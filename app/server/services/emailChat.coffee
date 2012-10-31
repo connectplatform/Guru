@@ -1,11 +1,12 @@
 stoic = require 'stoic'
-{Session, Chat} = stoic.models
+{Chat} = stoic.models
 
 sendEmail = config.require 'services/email/sendEmail'
 render = config.require 'services/templates/renderTemplate'
 
-module.exports = ({chatId, email, sessionId}, done) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['chatId', 'email', 'accountId', 'sessionId']
+  service: ({chatId, email, accountId, sessionId}, done) ->
     Chat(accountId).get(chatId).history.all (err, history) ->
       return done err if err
 

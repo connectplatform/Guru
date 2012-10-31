@@ -1,10 +1,11 @@
 async = require 'async'
 stoic = require 'stoic'
 pulsar = config.require 'load/pulsar'
-{Session, ChatSession, Chat} = stoic.models
+{ChatSession, Chat} = stoic.models
 
-module.exports = ({chatId, sessionId}, done) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['chatId', 'accountId', 'sessionId']
+  service: ({chatId, accountId, sessionId}, done) ->
 
     # get sessions by chat
     ChatSession(accountId).getByChat chatId, (err, chatSessions) ->

@@ -1,12 +1,14 @@
 stoic = require 'stoic'
-{ChatSession} = stoic.models
+{Session, ChatSession} = stoic.models
 
 module.exports =
 
-  optional: ['sessionId', 'accountId']
+  optional: ['sessionId']
   service: ({sessionId, accountId}, done) ->
     return done() unless sessionId
 
-    ChatSession(accountId).getBySession sessionId, (err, [chatSession]) ->
-      found = if chatSession then {chatId: chatSession.chatId} else null
-      return done err, found
+    Session.accountLookup.get sessionId, (err, accountId) ->
+
+      ChatSession(accountId).getBySession sessionId, (err, [chatSession]) ->
+        found = if chatSession then {chatId: chatSession.chatId} else null
+        return done err, found

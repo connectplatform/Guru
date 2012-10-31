@@ -31,9 +31,9 @@ boiler 'Service - Query Chat', ->
     queryChat = config.require 'services/chats/queryChat'
     queryChat {
       accountId: @accountId
-      chatId: @chatId
       queries:
         queriedSessions:
+          ids: chatId: @chatId
           select: sessionId: 'chatSession.sessionId'
     }, (err, {queriedSessions}) =>
       should.not.exist err
@@ -48,9 +48,9 @@ boiler 'Service - Query Chat', ->
     queryChat = config.require 'services/chats/queryChat'
     queryChat {
       accountId: @accountId
-      chatId: @chatId
       queries:
         queriedSessions:
+          ids: chatId: @chatId
           select: sessionId: 'chatSession.sessionId'
           where: 'chatSession.relationMeta.isWatching': 'false'
     }, (err, {queriedSessions}) =>
@@ -66,9 +66,9 @@ boiler 'Service - Query Chat', ->
     queryChat = config.require 'services/chats/queryChat'
     queryChat {
       accountId: @accountId
-      chatId: @chatId
       queries:
         queriedSessions:
+          ids: chatId: @chatId
           select: sessionId: 'chatSession.sessionId'
           where:
             'chatSession.relationMeta.isWatching': 'false'
@@ -78,4 +78,18 @@ boiler 'Service - Query Chat', ->
 
       queriedSessions.length.should.eql 1
 
+      done()
+
+  it 'should let you query for individual models', (done) ->
+    queryChat = config.require 'services/chats/queryChat'
+    queryChat {
+      accountId: @accountId
+      queries:
+        aChat:
+          ids: chatId: @chatId
+          select: history: 'chat.history'
+    }, (err, {aChat:[chat]}) =>
+      should.not.exist err
+
+      console.log 'got item: ', chat
       done()

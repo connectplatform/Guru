@@ -37,6 +37,8 @@ face = (decorators) ->
           cb err, chat
 
       get: (id) ->
+        if getType(id) is 'Object'
+          id = id.chatId
         chat =
           id: id
           accountId: accountId

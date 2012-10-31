@@ -28,7 +28,7 @@ module.exports = util =
         return null
     return target
 
-  queryArray: (array, queries) ->
+  queryArray: (array, constraints) ->
     where = (whereConstraints, array) ->
       return array unless whereConstraints
 
@@ -59,8 +59,4 @@ module.exports = util =
 
       return output
 
-    results = {}
-    for alias, constraints of queries
-      results[alias] = select constraints.select, where constraints.where, array
-
-    results
+    select constraints.select, where constraints.where, array

@@ -21,9 +21,9 @@ getBaseModel = (from, all) ->
 getNeededData = (query, cb) -> 
   neededFields = {where: [], select: []}
   if query.where
-    neededFields.select.push keypath.split '.' for keypath of query.where
+    neededFields.where.push keypath.split '.' for keypath of query.where
   if query.select
-    neededFields.where.push keypath.split '.' for alias, keypath of query.select
+    neededFields.select.push keypath.split '.' for alias, keypath of query.select
   neededFields.all = neededFields.select.concat neededFields.where
   neededFields.baseModel = getBaseModel query.from, neededFields.all
   cb null, neededFields
@@ -54,30 +54,38 @@ packNeededData = (accountId, ids, neededFields, cb) ->
     (dataObject, cb) ->
       theseIds = dataObject.ids or ids
 
+      unless modelsByName[model]
+        config.log.error 'Query for invalid model', model: model
+        return cb "Invalid model #{model}"
       instance = modelsByName[model](accountId).get theseIds
 
       # Make sure the model entry exists
       dataObject[model] = {} unless dataObject[model]?
 
-      # Check whether the field exists
-      #return cb() if dataObject[model][field]? and rest.length is 0
-      return cb() unless instance[field]?.retrieve?
-
-      # If we don't have a field specified then we want to dump everything
       unless field?
+        # If we don't have a field specified then we want to dump everything
         instance.dump (err, data) ->
+          config.log.error "Error dumping data in query", {error: err, model: model, field: field} if err
           dataObject[model] = data
           return cb err
+      else
+        # Check whether the field is valid
+        unless instance[field]
+          config.log.error 'Query for invalid field', {model: model, field: field}
+          return cb "Invalid field #{field}"
 
-      # field or field contents don't exist, get them
+        # We're done if the field isn't something that can be queried
+        return cb() unless instance[field].retrieve
 
-      instance[field].retrieve (err, data) ->
-        if getType(data) is 'Object'
-          dataObject[model][field] ?= {}
-          dataObject[model][field][key] = value for key, value of data
-        else
-          dataObject[model][field] = data
-        cb err
+        # field or field contents don't exist, get them
+        instance[field].retrieve (err, data) ->
+          config.log.error "Error retrieving data in query", {error: err, model: model, field: field} if err
+          if getType(data) is 'Object'
+            dataObject[model][field] ?= {}
+            dataObject[model][field][key] = value for key, value of data
+          else
+            dataObject[model][field] = data
+          cb err
 
   augment = (baseData) ->
     (neededField, cb) ->
@@ -93,10 +101,10 @@ packNeededData = (accountId, ids, neededFields, cb) ->
 module.exports = ({accountId, queries}, done) ->
   results = {}
   run = (alias, cb) ->
-    query = queries[alias]
-    getNeededData query, (err, neededFields) ->
-      packNeededData accountId, query.ids, neededFields, (err, dataToQuery) ->
-        results[alias] = queryArray dataToQuery, query
+    constraints = queries[alias]
+    getNeededData constraints, (err, neededFields) ->
+      packNeededData accountId, constraints.ids, neededFields, (err, dataToQuery) ->
+        results[alias] = queryArray dataToQuery, constraints
         cb err
 
   async.forEach Object.keys(queries), run, (err) ->

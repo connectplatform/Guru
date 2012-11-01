@@ -40,7 +40,12 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           after ['members', 'all', 'retrieve'], (context, chatIds, next) ->
             next null, (chatSession.get sessionId, chatId for chatId in chatIds)
 
-        relationMeta base
+        relationMeta base, ({after}) ->
+          after ['get', 'getall', 'retrieve'], (context, data, next) ->
+            if data and getType(data.isWatching) is 'String'
+              data.isWatching = data.isWatching == "true" ? true : false
+            next null, data
+
 
         # relations
         base.session = Session(accountId).get sessionId
@@ -76,7 +81,12 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
         ], (err) ->
           config.log.error 'Error removing chatSession', {error: err} if err
-          cb err, cs
+          # We have a circular dependency if we load this immediately
+          updateChatStatus = config.require 'services/chats/updateChatStatus'
+          updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
+            config.log.error 'Error updating chat status when removing chat session', {error: err, chatId: chatId, accountId: accountId} if err
+
+            cb err, cs
 
       # just sugar
       getBySession: tandoor (sessionId, cb) ->

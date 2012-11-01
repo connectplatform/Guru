@@ -2,10 +2,11 @@ stoic = require 'stoic'
 
 removeUnanswered = config.require 'services/operator/removeUnanswered'
 
-module.exports = ({chatId, sessionId}, done) ->
-  {Session, Chat, ChatSession} = stoic.models
+module.exports =
+  required: ['sessionId', 'accountId', 'chatId']
+  service: ({chatId, sessionId, accountId}, done) ->
+    {Session, Chat, ChatSession} = stoic.models
 
-  Session.accountLookup.get sessionId, (err, accountId) ->
     Chat(accountId).get(chatId).status.getset 'active', (err, status) ->
       config.log.warn 'Error getsetting chat status in acceptChat', {error: err, chatId: chatId} if err
 

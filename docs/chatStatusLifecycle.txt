@@ -1,0 +1,7 @@
+Chat statuses are set based on the visible members of a chat, according to the following rules:
+
+Visitor present, no visible operators: waiting
+Visitor present, visible operators present: active
+Visitor not present, regardless of operators: vacant
+
+statuses are set via an after hook in the chatSessions model.  The 'updateChatStatus' service is called to enforce these rules.

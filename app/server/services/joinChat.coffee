@@ -1,12 +1,14 @@
 stoic = require 'stoic'
 {Session, ChatSession} = stoic.models
 
-module.exports = ({chatId, isWatching, sessionId}, done) ->
-  relationMeta =
-    isWatching: (if isWatching then 'true' else 'false')
-    type: 'member'
+module.exports =
+  required: ['sessionId', 'accountId', 'chatId']
+  optional: ['isWatching']
+  service: ({chatId, isWatching, sessionId, accountId}, done) ->
+    relationMeta =
+      isWatching: (if isWatching then 'true' else 'false')
+      type: 'member'
 
-  Session.accountLookup.get sessionId, (err, accountId) ->
     ChatSession(accountId).add sessionId, chatId, relationMeta, (err) ->
       if err
         meta =

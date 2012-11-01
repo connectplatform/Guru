@@ -1,30 +1,29 @@
 async = require 'async'
 stoic = require 'stoic'
 {ChatSession, Chat} = stoic.models
+query = config.require 'services/queries/query'
 
 module.exports =
 
   required: ['accountId', 'sessionId']
   service: ({accountId, sessionId}, done) ->
-    ChatSession(accountId).getBySession sessionId, (err, chatSessions) ->
-      done err, null if err
+    query {
+      accountId: accountId,
+      queries:
+        chatPairs:
+          ids: sessionId: sessionId
+          select:
+            isWatching: 'chatSession.relationMeta.isWatching'
+            chat: 'chat'
+    }, (err, {chatPairs}) ->
 
-      # get the isWatching field from chatSession
-      getIsWatching = (chatSession, cb) ->
-        chatSession.relationMeta.get 'isWatching', (err, isWatching) ->
-          cb err, [chatSession.chatId, isWatching]
+      chats = []
+      # get info for a specific chat
+      rehydrate = (chatPair, cb) ->
+        message.timestamp = new Date(parseInt(message.timestamp)) for message in chatPair.chat.history
+        chatPair.chat.isWatching = chatPair.isWatching == "true" ? true : false
+        chats.push chatPair.chat
+        cb()
 
-      async.map chatSessions, getIsWatching, (err, arr) ->
-        if err
-          config.log.error 'Error mapping chat sessions in getMyChats', {error: err, chatSessions: chatSessions}
-          return done err, null
-
-        # get info for a specific chat
-        doLookup = ([chat, isWatching], cb) ->
-          Chat(accountId).get(chat).dump (err, data) ->
-            config.log.error 'Error getting chat in getMyChats', {error: err, chatId: chat} if err
-            message.timestamp = new Date(parseInt(message.timestamp)) for message in data.history
-            data.isWatching = isWatching == "true" ? true : false
-            cb err, data
-
-        async.map arr, doLookup, done
+      async.forEach chatPairs, rehydrate, ->
+        done null, chats

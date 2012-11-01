@@ -13,7 +13,8 @@ tasks = {
   clearOldChats: config.require('scripts/clearOldChats'),
   printMiddleware: config.require('scripts/printMiddleware'),
   testEmail: config.require('scripts/testEmail'),
-  testLogging: config.require('scripts/testLogging')
+  testLogging: config.require('scripts/testLogging'),
+  jasmine: config.require('scripts/SpecServer')
 };
 
 task = process.argv[2]

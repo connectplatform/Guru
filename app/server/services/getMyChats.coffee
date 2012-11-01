@@ -13,17 +13,14 @@ module.exports =
         chatPairs:
           ids: sessionId: sessionId
           select:
-            isWatching: 'chatSession.relationMeta.isWatching'
             chat: 'chat'
+            isWatching: 'chatSession.relationMeta.isWatching'
     }, (err, {chatPairs}) ->
 
       chats = []
       # get info for a specific chat
-      rehydrate = (chatPair, cb) ->
-        message.timestamp = new Date(parseInt(message.timestamp)) for message in chatPair.chat.history
-        chatPair.chat.isWatching = chatPair.isWatching == "true" ? true : false
+      for chatPair in chatPairs
+        chatPair.chat.isWatching = chatPair.isWatching
         chats.push chatPair.chat
-        cb()
 
-      async.forEach chatPairs, rehydrate, ->
-        done null, chats
+      done null, chats

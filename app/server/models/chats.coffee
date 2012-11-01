@@ -93,7 +93,10 @@ face = (decorators) ->
           before ['rpush'], (context, args, next) ->
             next null, args.map JSON.stringify
           after ['all', 'retrieve'], (context, data, next) ->
-            next null, data.map JSON.parse
+            parsed = data.map JSON.parse
+            for entry in parsed
+              entry.timestamp = new Date(parseInt(entry.timestamp))
+            next null, parsed
 
         chat.dump = (cb) ->
           return cb 'Chat does not exist' unless id

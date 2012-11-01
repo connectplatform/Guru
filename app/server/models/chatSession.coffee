@@ -40,7 +40,12 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           after ['members', 'all', 'retrieve'], (context, chatIds, next) ->
             next null, (chatSession.get sessionId, chatId for chatId in chatIds)
 
-        relationMeta base
+        relationMeta base, ({after}) ->
+          after ['get', 'getall', 'retrieve'], (context, data, next) ->
+            if data and getType(data.isWatching) is 'String'
+              data.isWatching = data.isWatching == "true" ? true : false
+            next null, data
+
 
         # relations
         base.session = Session(accountId).get sessionId

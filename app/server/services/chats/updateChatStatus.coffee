@@ -27,8 +27,6 @@ module.exports = ({accountId, chatId}, done) ->
     else
       status = 'active'
 
-    console.log 'foo'
-
     Chat(accountId).get(chatId).status.set status, (err) ->
       config.log.error 'Error setting chat status in updateChatStatus', {error: err, accountId: accountId, chatId: chatId} if err
       done err

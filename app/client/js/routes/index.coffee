@@ -2,7 +2,7 @@ define ["load/server", "load/notify"], (server, notify) ->
   (args, templ) ->
 
     server.ready ->
-      server.getMyRole (err, role) ->
+      server.getMyRole {}, (err, role) ->
         switch role
           when 'Visitor'
             window.location.hash = '/newChat'

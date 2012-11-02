@@ -34,11 +34,11 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
             notify.error "Problem connecting to chat: #{err}" if err?
 
           initial: ->
-            server.getExistingChat fsm.transition
+            server.getExistingChat {}, fsm.transition
 
           needChat: ->
             $("#content .form-area").html "Connecting to chat..."
-            server.createChatOrGetForm params, fsm.transition
+            server.createChatOrGetForm {sessionId: params._id}, fsm.transition
 
           # ask the user for additional params
           needParams: (err, fields) ->

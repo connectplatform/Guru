@@ -37,7 +37,7 @@ define ['load/server', 'load/notify'], (server, notify) ->
                 console.log 'fields: ', fields
                 fields.id = element.id if element.id?
 
-                server.saveModel fields, uppercaseName, (err, savedElement) ->
+                server.saveModel {fields: fields, uppercaseName: uppercaseName}, (err, savedElement) ->
                   return notify.error "Error saving element: #{err}" if err?
                   formBuilder.setElement savedElement
 
@@ -73,7 +73,7 @@ define ['load/server', 'load/notify'], (server, notify) ->
           $("#delete#{uppercaseName} .deleteButton").click (evt) ->
             evt.preventDefault()
 
-            server.deleteModel currentElement.id, uppercaseName, (err) ->
+            server.deleteModel {modelId: currentElement.id, modelName: uppercaseName}, (err) ->
               return notify.error "Error deleting #{elementName}: #{err}" if err?
               $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{currentElement.id}]").remove()
               $("#delete#{uppercaseName}").modal 'hide'

@@ -11,7 +11,7 @@ define ["load/server", "load/notify"], (server, notify) ->
 
         if email
 
-          server.forgotPassword email, (err, status) ->
+          server.forgotPassword {email: email}, (err, status) ->
             if err?
               return notify.error "Error: #{err}"
             else

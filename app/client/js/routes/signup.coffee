@@ -14,7 +14,7 @@ define ["load/server", "load/notify", "templates/signup"], (server, notify, temp
         email: $('#signup-modal #email').val()
         password: $('#signup-modal #password').val()
 
-      server.signup fields, (err, okay) ->
+      server.signup {fields: fields}, (err, okay) ->
         return notify.error "Error during signup: #{err}" if err?
         $('#signup-modal').modal 'hide'
         window.location.hash = '/dashboard'

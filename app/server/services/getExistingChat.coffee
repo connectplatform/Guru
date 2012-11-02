@@ -2,7 +2,6 @@ stoic = require 'stoic'
 {Session, ChatSession} = stoic.models
 
 module.exports =
-
   optional: ['sessionId']
   service: ({sessionId, accountId}, done) ->
     return done() unless sessionId

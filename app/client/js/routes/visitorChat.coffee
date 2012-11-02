@@ -4,7 +4,7 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
     setup: ({chatId}, templ) ->
       self = this
       server.ready ->
-        server.visitorCanAccessChannel chatId, (err, canAccess) ->
+        server.visitorCanAccessChannel {chatId: chatId}, (err, canAccess) ->
           return window.location.hash = '/newChat' unless canAccess
 
           $("#content").html templ()
@@ -33,7 +33,7 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
             appendServerMessage "Welcome to live chat!  An operator will be with you shortly."
 
           # display initial chat history
-          server.getChatHistory chatId, (err, history) ->
+          server.getChatHistory {chatId: chatId}, (err, history) ->
             notify.error "Error loading chat history: #{err}" if err
             appendChatMessage msg for msg in history
             displayGreeting() if history.length is 0
@@ -48,14 +48,14 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
               $(".message-form").hide()
 
           # display chat logo
-          server.getLogoForChat chatId, (err, logoUrl) ->
+          server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
             notify.error "Error getting logo url: #{err}" if err
             embedImage logoUrl, '.websiteLogo'
 
           # wire up leave button
           $('.leaveButton').click (evt) ->
             evt.preventDefault()
-            server.leaveChat chatId, (err) ->
+            server.leaveChat {chatId: chatId}, (err) ->
               notify.error "Error leaving chat: #{err}" if err
               server.cookie 'session', null
               appendServerMessage 'You have left the chat.'

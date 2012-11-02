@@ -15,7 +15,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
         server.ready (services) ->
 
-          server.getMyChats (err, chats) ->
+          server.getMyChats {}, (err, chats) ->
             if err
               server.log 'Error getting chats in operatorChat', {
                 error: err
@@ -32,7 +32,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
             $('#content').html templ chats: chats
 
             renderLogo = (chat) ->
-              server.getLogoForChat chat.id, (err, logoUrl) ->
+              server.getLogoForChat {chatId: chat.id}, (err, logoUrl) ->
                 notify.error "Error getting logo for chat ", err if err?
                 embedImage logoUrl, "##{chat.renderedId} .websiteLogo"
 

@@ -36,9 +36,9 @@ define ["load/server", "load/notify", "templates/editWebsite", "templates/delete
             server.log 'Error retrieving websites on websites crud page', {error: err, severity: error} if err
 
             beforeRender = (element, cb) ->
-              server.awsUpload element.url, 'logo', (err, logoFields) ->
-                server.awsUpload element.url, 'online', (err, onlineFields) ->
-                  server.awsUpload element.url, 'offline', (err, offlineFields) ->
+              server.awsUpload {siteUrl: element.url, imageName: 'logo'}, (err, logoFields) ->
+                server.awsUpload {siteUrl: element.url, imageName: 'online'}, (err, onlineFields) ->
+                  server.awsUpload {siteUrl: element.url, imageName: 'offline'}, (err, offlineFields) ->
                     cb {logo: logoFields, online: onlineFields, offline: offlineFields}
 
             beforeSubmit = (element, beforeData, cb) ->

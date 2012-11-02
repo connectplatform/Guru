@@ -10,7 +10,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {hasTe
 
     it 'should log me out when I click logout', ->
       offlineSet = false
-      server.setSessionOffline = (args..., cb) ->
+      server.setSessionOffline = (params, cb) ->
         offlineSet = true
 
       isOffline = -> offlineSet
@@ -19,7 +19,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {hasTe
 
     it 'should set me offline when the window unloads', ->
       offlineSet = false
-      server.setSessionOffline = (args..., cb) ->
+      server.setSessionOffline = (params, cb) ->
         offlineSet = true
 
       isOffline = -> offlineSet

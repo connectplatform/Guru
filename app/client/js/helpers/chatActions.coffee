@@ -17,7 +17,7 @@ define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, serv
 
         $("#enterEmail").modal "hide"
         server.ready ->
-          server.emailChat chatId, email, (err, response) ->
+          server.emailChat {chatId: chatId, email: email}, (err, response) ->
             if err
               server.log 'Error sending email', {error: err, severity: 'warn', email: email}
               notify.error 'Error sending email: ', err

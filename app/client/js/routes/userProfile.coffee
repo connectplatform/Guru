@@ -20,7 +20,7 @@ define ["load/server", "load/notify"], (server, notify) ->
           notify.error "Passwords do not match"
           return
 
-        server.changePassword oldPassword, newPassword, (err) ->
+        server.changePassword {oldPassword: oldPassword, newPassword: newPassword}, (err) ->
           $(".submit-button").removeAttr("disabled")
           if err?
             notify.error "Error changing password: #{err}" if err?

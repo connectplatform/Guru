@@ -1,7 +1,7 @@
 define ["load/server", 'helpers/submitToAws'], (server, submitToAws) ->
   (_, templ) ->
     server.ready ->
-      server.awsUpload 'aSite', 'aFile', (err, fields) ->
+      server.awsUpload {siteUrl: 'aSite', imageName: 'aFile'}, (err, fields) ->
 
         $('#content').html templ s3: fields
 

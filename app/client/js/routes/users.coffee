@@ -12,7 +12,7 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
             console.log 'allowedWebsites: ', allowedWebsites
             validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
-            server.getRoles (err, allowedRoles) ->
+            server.getRoles {}, (err, allowedRoles) ->
 
               getFormFields = ->
                 {

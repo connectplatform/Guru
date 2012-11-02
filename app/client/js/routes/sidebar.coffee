@@ -19,7 +19,7 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
 
       $('#sidebar').html templ role: args.role
 
-      server.getChatStats (err, stats) ->
+      server.getChatStats {}, (err, stats) ->
         updateBadge "#sidebar .notifyUnanswered", stats.unanswered.length
         updateBadge "#sidebar .notifyInvites", stats.invites.length
         updateBadge "#sidebar .notifyUnread", countUnreadMessages stats.unreadMessages

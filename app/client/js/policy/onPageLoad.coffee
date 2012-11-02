@@ -8,4 +8,4 @@ define ['policy/registerSessionUpdates', 'policy/setOfflineOnUnload', 'load/serv
          error: message
          url: url
          linenumber: linenumber
-       }, ->
+       }

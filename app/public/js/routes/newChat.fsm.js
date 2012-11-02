@@ -34,9 +34,7 @@
           },
           needChat: function() {
             $("#content .form-area").html("Connecting to chat...");
-            return server.createChatOrGetForm({
-              sessionId: params._id
-            }, fsm.transition);
+            return server.createChatOrGetForm(params, fsm.transition);
           },
           needParams: function(err, fields) {
             var options;

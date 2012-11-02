@@ -38,7 +38,7 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
 
           needChat: ->
             $("#content .form-area").html "Connecting to chat..."
-            server.createChatOrGetForm {sessionId: params._id}, fsm.transition
+            server.createChatOrGetForm params, fsm.transition
 
           # ask the user for additional params
           needParams: (err, fields) ->

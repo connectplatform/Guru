@@ -7,7 +7,7 @@ boiler 'Service - Find Model', ->
 
       #do test
       @client.findModel {queryObject: {}, modelName: 'User'}, (err, users) ->
-        false.should.eql err?
+        should.not.exist err
         for user in users
           user.firstName.should.exist
           user.lastName.should.exist
@@ -16,7 +16,7 @@ boiler 'Service - Find Model', ->
           user.websites.should.exist
           user.specialties.should.exist
           user.id.should.exist
-          false.should.eql user.password?
+          should.not.exist user.password
 
         done()
 

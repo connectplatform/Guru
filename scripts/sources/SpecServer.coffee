@@ -8,5 +8,5 @@ module.exports = (args) ->
   webroot = join(__dirname, '../../test/client/public/')
   app.use connect.static webroot
   app.listen port
-  console.log 'webroot:', webroot
-  console.log 'listening on:', port
+  config.log 'webroot:', webroot
+  config.log 'listening on:', port

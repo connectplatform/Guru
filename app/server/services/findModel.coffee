@@ -1,8 +1,6 @@
-getAccountId = config.require 'services/account/getAccountId'
-findModel = config.require 'services/model/findModel'
-
-#TODO: implement as required param
-#filters: ['firstArgumentIsObject']
-module.exports = ({queryObject, modelName, sessionId}, done) ->
-  getAccountId sessionId, (err, accountId) ->
-    findModel accountId, queryObject, modelName, done
+module.exports =
+  required: ['sessionId', 'accountId', 'queryObject', 'modelName']
+  service: ({queryObject, modelName, sessionId, accountId}, done) ->
+    findModel = config.service 'model/findModel'
+    console.log 'accountId:', accountId
+    findModel {accountId: accountId, queryObject: queryObject, modelName: modelName}, done

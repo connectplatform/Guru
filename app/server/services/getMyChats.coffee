@@ -4,7 +4,6 @@ stoic = require 'stoic'
 query = config.require 'services/queries/query'
 
 module.exports =
-
   required: ['accountId', 'sessionId']
   service: ({accountId, sessionId}, done) ->
     query {

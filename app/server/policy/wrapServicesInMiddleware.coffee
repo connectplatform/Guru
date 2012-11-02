@@ -30,6 +30,7 @@ module.exports = (services) ->
 
     # return wrapped service
     (params, done, processSideEffects) ->
+      processSideEffects ||= ->
       #console.log 'typeValidations:', typeValidations.map((t) -> t.toString()).join '\n\n'
 
       # intercept side effects from filters and service and pass to processor

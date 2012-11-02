@@ -11,6 +11,7 @@ flushCache = config.require 'load/flushCache'
 getServices = config.require 'load/getServices'
 wrapServicesInMiddleware = config.require 'policy/wrapServicesInMiddleware'
 veinAdapter = config.require 'load/veinAdapter'
+attachFilters = config.require 'load/attachFilters'
 
 module.exports = (cb) ->
 
@@ -36,7 +37,8 @@ module.exports = (cb) ->
     config.services = wrapServicesInMiddleware services
 
     # Wire up vein
-    topLevelServices = Object.findAll config.services, (name) -> name.match /[^\/]/
+    topLevelServices = Object.findAll config.services, (name) -> not name.has /\//
+    attachFilters topLevelServices
     veinAdapter(server) topLevelServices
 
     # Good job, we made it!

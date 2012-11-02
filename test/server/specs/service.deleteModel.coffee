@@ -6,9 +6,10 @@ boiler 'Service - Delete Model', ->
     @getAuthed =>
 
       #Get the user that we are going to delete
-      @client.findModel {queryObject: {firstName: 'First'}, modelName: 'User'}, (err, [targetUser]) =>
-        #log to make sure changing the db seed will cause reasonable failures
-        config.log.error "error finding user... not deleteModel's fault that test failed" if err? or not targetUser?
+      @client.findModel {queryObject: {firstName: 'First'}, modelName: 'User'}, (err, users) =>
+        should.not.exist err
+        [targetUser] = users
+        should.exist targetUser, 'could not find user'
 
         #Now delete the user
         @client.deleteModel {modelId: targetUser.id, modelName: 'User'}, (err) =>

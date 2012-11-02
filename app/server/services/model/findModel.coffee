@@ -1,9 +1,8 @@
 db = config.require 'load/mongo'
 
 module.exports =
-  required: ['modelName', 'queryObject']
-  service: ({queryObject, modelName}, done) ->
-    console.log 'foo'
+  required: ['accountId', 'modelName', 'queryObject']
+  service: ({accountId, queryObject, modelName}, done) ->
     queryObject.merge accountId: accountId
 
     Model = db.models[modelName]

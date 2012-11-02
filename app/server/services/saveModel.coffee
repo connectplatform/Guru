@@ -19,23 +19,23 @@ module.exports =
     # Somewhat of a hack but not sure where else to put this.  Maybe the CRUD services could be controlled by a data structure?
     return done "Cannot create a #{fields.role} user." if modelName is 'User' and fields.role and fields.role not in enums.editableRoles
 
-      fields.merge accountId: accountId
-      Model = db.models[modelName]
-      {createFields, filterOutput} = config.require "models/#{modelName}Filters"
+    fields.merge accountId: accountId
+    Model = db.models[modelName]
+    {createFields, filterOutput} = config.require "models/#{modelName}Filters"
 
-      # get or create
-      getRecord = (fields, cb) ->
-        if fields.id?
-          Model.findOne {_id: fields.id}, (err, foundModel) ->
-            cb err, foundModel
-        else
-          cb null, createFields new Model
+    # get or create
+    getRecord = (fields, cb) ->
+      if fields.id?
+        Model.findOne {_id: fields.id}, (err, foundModel) ->
+          cb err, foundModel
+      else
+        cb null, createFields new Model
 
-      # update field data
-      getRecord fields, (err, foundModel) ->
-        return done err, null if err?
-        foundModel[key] = value for key, value of fields when key isnt 'id'
+    # update field data
+    getRecord fields, (err, foundModel) ->
+      return done err, null if err?
+      foundModel[key] = value for key, value of fields when key isnt 'id'
 
-        foundModel.save (err, savedModel) ->
-          savedModel = filterOutput savedModel unless err?
-          done parseMongooseError(err), savedModel
+      foundModel.save (err, savedModel) ->
+        savedModel = filterOutput savedModel unless err?
+        done parseMongooseError(err), savedModel

@@ -24,9 +24,9 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
       services: ->
         server.login = (args..., cb) ->
           mock.loggedIn()
-          cb null, {name: 'Bob'}
+          cb null, {firstName: 'Bob'} #short version of the user object
         server.leaveChat = (args..., cb) ->
-          cb null, null
+          cb null, 'foo'
         server.getMyRole = (args..., cb) ->
           cb null, 'None'
         server.getMyChats = (args..., cb) ->

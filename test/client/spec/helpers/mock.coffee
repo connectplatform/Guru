@@ -8,36 +8,36 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
       loggedIn: ->
         server.cookie 'session', 'session_foo'
         registerSessionUpdates()
-        server.getMyRole = (args..., cb) ->
+        server.getMyRole = (params, cb) ->
           cb null, 'Operator'
 
       loggedOut: ->
         server.cookie 'session', null
-        server.getMyRole = (args..., cb) ->
+        server.getMyRole = (params, cb) ->
           cb null, 'None'
 
       visitor: ->
         server.cookie 'session', 'session_foo'
-        server.getMyRole = (args..., cb) ->
+        server.getMyRole = (params, cb) ->
           cb null, 'Visitor'
 
       services: ->
-        server.login = (args..., cb) ->
+        server.login = (params, cb) ->
           mock.loggedIn()
           cb null, {firstName: 'Bob'} #short version of the user object
-        server.leaveChat = (args..., cb) ->
+        server.leaveChat = (params, cb) ->
           cb null, 'foo'
-        server.getMyRole = (args..., cb) ->
+        server.getMyRole = (params, cb) ->
           cb null, 'None'
-        server.getMyChats = (args..., cb) ->
+        server.getMyChats = (params, cb) ->
           cb null, []
-        server.getChatStats = (args..., cb) ->
+        server.getChatStats = (params, cb) ->
           cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
-        server.getActiveChats = (args..., cb) ->
+        server.getActiveChats = (params, cb) ->
           cb null, []
-        server.getExistingChat = (args..., cb) ->
+        server.getExistingChat = (params, cb) ->
           cb null, null
-        server.createChatOrGetForm = (args..., cb) ->
+        server.createChatOrGetForm = (params, cb) ->
           cb null, fields: [
                 name: 'username'
                 inputType: 'text'
@@ -49,21 +49,20 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
                 selections: ['Sales', 'Billing']
                 label: 'Department'
             ]
-        server.newChat = (args..., cb) ->
+        server.newChat = (params, cb) ->
           cb null, {chatId: 'foo'}
-        server.visitorCanAccessChannel = (args..., cb) ->
+        server.visitorCanAccessChannel = (params, cb) ->
           cb null, 'true'
-        server.getChatHistory = (args..., cb) ->
+        server.getChatHistory = (params, cb) ->
           cb null, []
-        server.getLogoForChat = (args..., cb) ->
+        server.getLogoForChat = (params, cb) ->
           cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'foo.com'}/logo"
-        server.printChat = (args..., cb) ->
+        server.printChat = (params, cb) ->
           cb null, null
-        server.serverLog = (args..., cb) ->
+        server.serverLog = (params, cb) ->
           cb null, 'Success'
-        server.log = (args..., cb) ->
-          cb null, 'Success'
-        server.setSessionOffline = (args..., cb) ->
+        server.log = (params) ->
+        server.setSessionOffline = (params, cb) ->
           cb null, null
 
       returnChat: ->
@@ -74,11 +73,11 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, chatId: 'foo'
 
       noOperators: ->
-        server.createChatOrGetForm = (args..., cb) ->
+        server.createChatOrGetForm = (params, cb) ->
           cb null, noOperators: true
 
       activeChats: ->
-        server.getActiveChats = (args..., cb) ->
+        server.getActiveChats = (params, cb) ->
           # this is duplicated in boilerplate for server tests
           # TODO: refactor into general collection of mocks
           now = (new Date).getTime()
@@ -127,7 +126,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           ]
 
       hasChats: ->
-        server.getMyChats = (args..., cb) ->
+        server.getMyChats = (params, cb) ->
 
           history =
             message: 'hello'

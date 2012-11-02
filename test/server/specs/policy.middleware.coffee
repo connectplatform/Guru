@@ -5,5 +5,5 @@ boiler 'Policy - Middleware', ->
     @client = @getClient()
     @client.ready =>
       @client.deleteModel {modelId: 'some_id', modelName: 'Website'}, (err) ->
-        err.should.eql 'expected arg: {sessionId: sessionId}'
+        err.should.eql 'Argument Required: {sessionId: sessionId}'
         done()

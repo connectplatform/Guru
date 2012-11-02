@@ -3,7 +3,7 @@ stoic = require 'stoic'
 
 module.exports = (args, next) ->
   {sessionId} = args
-  return next "expected arg: {sessionId: sessionId}" unless sessionId
+  return next 'Argument Required: {sessionId: sessionId}' unless sessionId
 
   Session.accountLookup.get sessionId, (err, accountId) ->
     Session(accountId).allSessions.ismember sessionId, (err, sessionExists) ->

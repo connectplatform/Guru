@@ -17,9 +17,8 @@
           password: $('#login-form #password').val()
         };
         return server.ready(function() {
-          return server.login({
-            fields: fields
-          }, function(err, user) {
+          console.log(fields);
+          return server.login(fields, function(err, user) {
             if (err != null) {
               return notify.error("Error logging in: " + err);
             }

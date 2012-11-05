@@ -25,7 +25,7 @@ generateValidations = (name, types, required) ->
   stack.add (args, next) ->
 
     # validate existence
-    if not args.fields[name] and required
+    if not args[name]? and required
       return next "Argument Required: #{name}"
     else
       return next null, args

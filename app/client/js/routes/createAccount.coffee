@@ -43,5 +43,5 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
           console.log 'params:', params.params
 
           server.createAccount {fields: params.params}, (err, args) ->
-            console.log 'err:', err
+            console.log 'err:', err if err
             console.log 'args:', args

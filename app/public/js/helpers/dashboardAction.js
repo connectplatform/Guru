@@ -14,7 +14,9 @@
         var chatId;
         evt.preventDefault();
         chatId = $(this).attr('chatId');
-        return server[action](chatId, function(err, data) {
+        return server[action]({
+          chatId: chatId
+        }, function(err, data) {
           if (err) {
             server.log('Error performing dashboard action', {
               error: err,

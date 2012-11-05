@@ -34,6 +34,9 @@
             dashboardAction('acceptInvite');
             dashboardAction('acceptTransfer');
             dashboardAction('acceptChat', function(err, result) {
+              if (err) {
+                return console.log('err: ', err);
+              }
               if (result.status === 'OK') {
                 return window.location.hash = '/operatorChat';
               } else {

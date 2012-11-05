@@ -1,6 +1,7 @@
 define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', 'spec/helpers/mock',
 
     # spec files
+    'spec/createAccount',
     'spec/dashboard',
     'spec/login',
     'spec/logout',

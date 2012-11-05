@@ -14,9 +14,9 @@ define ["templates/renderForm", 'helpers/util'], (renderForm, {random}) ->
     options.placement ||= '#content'
 
     $(options.placement).html renderForm {options: options, fields: fields}
-    $("##{options.name}-form").find(':input').filter(':visible:first')
+    $("##{options.name}").find(':input').filter(':visible:first')
 
-    $("##{options.name}-form").submit (evt) ->
+    $("##{options.name}").submit (evt) ->
       evt.preventDefault()
 
       # gather up form params into key/value object

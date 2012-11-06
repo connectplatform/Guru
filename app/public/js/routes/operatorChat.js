@@ -21,7 +21,7 @@
                 error: err,
                 severity: 'error',
                 ids: {
-                  sessionId: server.cookie('session')
+                  sessionId: sessionId
                 }
               });
             }

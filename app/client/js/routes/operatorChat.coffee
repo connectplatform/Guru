@@ -21,7 +21,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                 error: err
                 severity: 'error'
                 ids:
-                  sessionId: server.cookie 'session'
+                  sessionId: sessionId
               }
 
             for chat in chats

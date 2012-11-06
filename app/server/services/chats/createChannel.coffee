@@ -1,7 +1,7 @@
-messageReceived = config.require 'services/chats/messageReceived'
 pulsar = config.require 'load/pulsar'
 
 module.exports = (chatId) ->
+  messageReceived = config.service 'chats/messageReceived'
   channel = pulsar.channel chatId
   channel.on 'clientMessage', (contents) ->
-    messageReceived chatId, contents.session, contents.message, ->
+    messageReceived {chatId: chatId, sessionId: contents.session, message: contents.message}, ->

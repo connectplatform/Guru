@@ -48,7 +48,9 @@
           return server.createAccount({
             fields: params.params
           }, function(err, args) {
-            console.log('err:', err);
+            if (err) {
+              console.log('err:', err);
+            }
             return console.log('args:', args);
           });
         });

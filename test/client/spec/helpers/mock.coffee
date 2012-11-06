@@ -22,22 +22,22 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, 'Visitor'
 
       services: ->
-        server.login = (params, cb) ->
+        server.addService 'login', params, cb ->
           mock.loggedIn()
           cb null, {firstName: 'Bob'} #short version of the user object
-        server.leaveChat = (params, cb) ->
+        server.addService 'leaveChat', params, cb ->
           cb null, 'foo'
-        server.getMyRole = (params, cb) ->
+        server.addService 'getMyRole', params, cb ->
           cb null, 'None'
-        server.getMyChats = (params, cb) ->
+        server.addService 'getMyChats', params, cb ->
           cb null, []
-        server.getChatStats = (params, cb) ->
+        server.addService 'getChatStats', params, cb ->
           cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
-        server.getActiveChats = (params, cb) ->
+        server.addService 'getActiveChats', params, cb ->
           cb null, []
-        server.getExistingChat = (params, cb) ->
+        server.addService 'getExistingChat', params, cb ->
           cb null, null
-        server.createChatOrGetForm = (params, cb) ->
+        server.addService 'createChatOrGetForm', params, cb ->
           cb null, fields: [
                 name: 'username'
                 inputType: 'text'
@@ -49,21 +49,21 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
                 selections: ['Sales', 'Billing']
                 label: 'Department'
             ]
-        server.newChat = (params, cb) ->
+        server.addService 'newChat', params, cb ->
           cb null, {chatId: 'foo'}
-        server.visitorCanAccessChannel = (params, cb) ->
+        server.addService 'visitorCanAccessChannel', params, cb ->
           cb null, 'true'
-        server.getChatHistory = (params, cb) ->
+        server.addService 'getChatHistory', params, cb ->
           cb null, []
-        server.getLogoForChat = (params, cb) ->
+        server.addService 'getLogoForChat', params, cb ->
           cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'foo.com'}/logo"
-        server.printChat = (params, cb) ->
+        server.addService 'printChat', params, cb ->
+          cb null, null
+        server.addService 'setSessionOffline', params, cb ->
           cb null, null
         server.serverLog = (params, cb) ->
           cb null, 'Success'
-        server.log = (params) ->
-        server.setSessionOffline = (params, cb) ->
-          cb null, null
+        server.log = (params, cb) ->
 
       returnChat: ->
         server.createChatOrGetForm = ({websiteUrl, department, username}, cb) ->

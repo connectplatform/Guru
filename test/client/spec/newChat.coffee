@@ -38,5 +38,4 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             mock.noOperators()
             window.location.hash = '/newChat?websiteUrl=bar.com'
 
-          console.log $('input')
           waitsFor exists('input[name=subject]'), 'email window did not load', 200

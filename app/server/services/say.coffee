@@ -2,7 +2,7 @@
 #filters: ['firstArgumentIsObject']
 module.exports =
   required: ['chatId', 'sessionId', 'message']
-  service: ({chatId, sessionId, message}, done) ->
+  service: (params, done) ->
     messageReceived = config.service 'chats/messageReceived'
-    messageReceived {chatId: chatId, sessionId: sessionId, message: message}, ->
+    messageReceived params, ->
       done null, 'OK'

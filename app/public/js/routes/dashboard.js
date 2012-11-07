@@ -35,7 +35,9 @@
             dashboardAction('acceptTransfer');
             dashboardAction('acceptChat', function(err, result) {
               if (err) {
-                return console.log('err: ', err);
+                return server.serverLog({
+                  message: err
+                });
               }
               if (result.status === 'OK') {
                 return window.location.hash = '/operatorChat';

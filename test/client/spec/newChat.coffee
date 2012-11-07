@@ -1,5 +1,5 @@
 require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
-  (mock, {hasText, exists, delay}, server) ->
+  (mock, {defaultTimeout, hasText, exists, delay}, server) ->
 
     describe 'New Chat', ->
       describe 'when username required', ->
@@ -8,7 +8,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             mock.services()
             window.location.hash = '/newChat?websiteUrl=foo.com'
 
-          waitsFor hasText('.page-header h1', 'Welcome to live chat!'), 'New Chat did not load', 200
+          waitsFor hasText('.page-header h1', 'Welcome to live chat!'), 'New Chat did not load', defaultTimeout
 
         it 'should display a form for a new chat', (done) ->
           runs ->
@@ -20,7 +20,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             $('#newChat-form input[name=username]').val 'Bob'
             $('#newChat-form button[type=submit]').click()
 
-          waitsFor exists('.chatPage input.message'), 'chat window did not load', 200
+          waitsFor exists('.chatPage input.message'), 'chat window did not load', defaultTimeout
 
       describe 'when no params needed', ->
         it 'should redirect to chat', (done) ->
@@ -29,7 +29,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             mock.returnChat()
             window.location.hash = '/newChat?websiteUrl=foo.com'
 
-          waitsFor exists('.chatPage input.message'), 'chat window did not load', 200
+          waitsFor exists('.chatPage input.message'), 'chat window did not load', defaultTimeout
 
       describe 'when no operators exist', ->
         it 'should redirect to email', (done) ->
@@ -38,4 +38,4 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             mock.noOperators()
             window.location.hash = '/newChat?websiteUrl=bar.com'
 
-          waitsFor exists('input[name=subject]'), 'email window did not load', 200
+          waitsFor exists('input[name=subject]'), 'email window did not load', defaultTimeout

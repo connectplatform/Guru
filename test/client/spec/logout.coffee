@@ -1,4 +1,4 @@
-require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {hasText}, server) ->
+require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {defaultTimeout, hasText}, server) ->
 
   describe 'logout', ->
     beforeEach ->
@@ -6,7 +6,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {hasTe
       mock.loggedIn()
       window.location.hash = '/dashboard'
       mock.renderSidebar()
-      waitsFor hasText('#dashboard h1', 'Dashboard'), 'dashboard to load', 200
+      waitsFor hasText('#dashboard h1', 'Dashboard'), 'dashboard to load', defaultTimeout
 
     it 'should log me out when I click logout', ->
       offlineSet = false
@@ -15,7 +15,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {hasTe
 
       isOffline = -> offlineSet
       window.location.hash = '/logout'
-      waitsFor isOffline, "didn't set session to offline", 200
+      waitsFor isOffline, "didn't set session to offline", defaultTimeout
 
     it 'should set me offline when the window unloads', ->
       offlineSet = false
@@ -24,4 +24,4 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'], (mock, {hasTe
 
       isOffline = -> offlineSet
       $(window).unload()
-      waitsFor isOffline, "didn't set session to offline", 200
+      waitsFor isOffline, "didn't set session to offline", defaultTimeout

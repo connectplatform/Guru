@@ -1,5 +1,5 @@
 require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
-  (mock, {hasText, exists}, pulsar) ->
+  (mock, {defaultTimeout, hasText, exists}, pulsar) ->
     sendInvite = ->
       pulsar.channel('notify:session:session_foo').emit 'pendingInvites', {chatId: 'chat_3', type: 'invite'}
 
@@ -21,7 +21,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
           window.location.hash = '/dashboard'
           mock.renderSidebar()
 
-        waitsFor hasText('#dashboard h1', 'Dashboard'), 'dashboard to load', 200
+        waitsFor hasText('#dashboard h1', 'Dashboard'), 'dashboard to load', defaultTimeout
 
       afterEach ->
         runs ->
@@ -37,7 +37,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
           sendInvite()
 
         # should see chats
-        waitsFor hasChats, 'dashboard to refresh', 200
+        waitsFor hasChats, 'dashboard to refresh', defaultTimeout
 
       it 'should show an invite badge on the sidebar', ->
         runs ->
@@ -48,7 +48,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
           sendInvite()
 
         # should see invite badge in sidebar
-        waitsFor hasText('#sidebar .notifyInvites .badge', '2'), 'invite badge in sidebar', 200
+        waitsFor hasText('#sidebar .notifyInvites .badge', '2'), 'invite badge in sidebar', defaultTimeout
 
       it 'should show an unread badge on the sidebar', ->
         runs ->
@@ -57,13 +57,13 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
           sendWaitingChats()
 
         # should see invite badge in sidebar
-        waitsFor hasText('#sidebar .notifyUnanswered .badge', '3'), 'unread badge in sidebar', 200
+        waitsFor hasText('#sidebar .notifyUnanswered .badge', '3'), 'unread badge in sidebar', defaultTimeout
 
       it 'should show department and website information', ->
         runs ->
           mock.activeChats()
 
-        waitsFor hasChats, 'dashboard to refresh', 200
+        waitsFor hasChats, 'dashboard to refresh', defaultTimeout
 
         runs ->
           numChats = $('tbody').children().length

@@ -1,9 +1,16 @@
 cookies = {}
 
 define [], ->
-  addService: (serviceName, params, done) ->
+  addServices: (services) ->
+    for serviceName, serviceDef of services
+      @addService serviceName, serviceDef
+    
+  addService: (serviceName, serviceDef) ->
+    #Service signature validation
     this[serviceName] = (params, done) ->
-      return done "Unexpect Argument Format" unless typeof params is 'object' and typeof done is 'function'
+      unless typeof params is 'object' and typeof done is 'function'
+        console.log 'params: ', params
+        return done 'Unexpected Argument Format'
       serviceDef params, done
 
   ready: (fn) -> fn()

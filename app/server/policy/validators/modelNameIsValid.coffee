@@ -3,7 +3,7 @@
 
 module.exports = (args, next) ->
   modelName = args?.modelName
-  return next "expected model name as second argument" unless modelName?
+  return next "expected model name" unless modelName?
 
   return next "invalid model name" unless modelName in ["User", "Specialty", "Website"]
   next null, args

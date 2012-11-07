@@ -34,10 +34,16 @@ define ['load/server', 'load/notify'], (server, notify) ->
               beforeSubmit element, beforeData, ->
 
                 fields = getFormFields()
-                console.log 'fields: ', fields
+
+                #Get modelName based on availiable fields in form,
+                #TODO: help fixing this, maybe some meta data from the form or something
+                if fields.role then modelName = 'User'
+                else if fields.acpApiKey then modelName = 'Website'
+                else modelName = 'Specialty'
+
                 fields.id = element.id if element.id?
 
-                server.saveModel {fields: fields, uppercaseName: uppercaseName}, (err, savedElement) ->
+                server.saveModel {modelName: modelName, fields: fields, uppercaseName: uppercaseName}, (err, savedElement) ->
                   return notify.error "Error saving element: #{err}" if err?
                   formBuilder.setElement savedElement
 

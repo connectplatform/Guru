@@ -62,15 +62,15 @@
             }
             beforeRender = function(element, cb) {
               return server.awsUpload({
-                siteUrl: element.url,
+                siteId: element.id,
                 imageName: 'logo'
               }, function(err, logoFields) {
                 return server.awsUpload({
-                  siteUrl: element.url,
+                  siteId: element.id,
                   imageName: 'online'
                 }, function(err, onlineFields) {
                   return server.awsUpload({
-                    siteUrl: element.url,
+                    siteId: element.id,
                     imageName: 'offline'
                   }, function(err, offlineFields) {
                     return cb({

@@ -2,14 +2,12 @@ crypto = require 'crypto'
 objectToBase64 = (obj) -> (new Buffer JSON.stringify(obj)).toString('base64').replace '\n', ''
 rsaSha1Encrypt = (secret, text) -> crypto.createHmac('sha1', secret).update(text).digest('base64').replace '\n', ''
 
-module.exports = (params, done) ->
-  console.log 'params:', params
-  {siteUrl, imageName} = params
+module.exports = ({siteId, imageName}, done) ->
   # TODO: add whitelist for these strings in middleware
 
   fields = {}
 
-  fields.key = "#{encodeURIComponent siteUrl}/#{imageName}"
+  fields.key = "#{encodeURIComponent siteId}/#{imageName}"
   fields.awsAccessKey = config.app.aws.accessKey
   fields.acl = config.app.aws.s3.acl
   fields.bucket = config.app.aws.s3.bucket

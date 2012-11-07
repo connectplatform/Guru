@@ -2,7 +2,9 @@ crypto = require 'crypto'
 objectToBase64 = (obj) -> (new Buffer JSON.stringify(obj)).toString('base64').replace '\n', ''
 rsaSha1Encrypt = (secret, text) -> crypto.createHmac('sha1', secret).update(text).digest('base64').replace '\n', ''
 
-module.exports = ({ siteUrl, imageName }, done) ->
+module.exports = (params, done) ->
+  console.log 'params:', params
+  {siteUrl, imageName} = params
   # TODO: add whitelist for these strings in middleware
 
   fields = {}

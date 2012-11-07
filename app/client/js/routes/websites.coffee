@@ -1,11 +1,11 @@
-define ["load/server", "load/notify", "templates/editWebsite", "templates/deleteWebsite", "templates/websiteRow", "helpers/formBuilder", "helpers/submitToAws"],
+define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws'],
   (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 
       server.ready ->
 
-        server.findModel {}, "Specialty", (err, specialties) ->
+        server.findModel {modelName: 'Specialty', queryObject:{}}, (err, specialties) ->
           validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
           getFormFields = ->
@@ -23,16 +23,16 @@ define ["load/server", "load/notify", "templates/editWebsite", "templates/delete
 
           getNewWebsite = ->
             site = extraDataPacker {
-              name: ""
-              url: ""
+              name: ''
+              url: ''
               specialties: []
-              acpEndpoint: ""
-              acpApiKey: ""
+              acpEndpoint: ''
+              acpApiKey: ''
             }
             site
 
           # find all websites and populate listing
-          server.findModel {}, 'Website', (err, websites) ->
+          server.findModel {modelName: 'Website', queryObject:{}}, (err, websites) ->
             server.log 'Error retrieving websites on websites crud page', {error: err, severity: error} if err
 
             beforeRender = (element, cb) ->
@@ -65,12 +65,12 @@ define ["load/server", "load/notify", "templates/editWebsite", "templates/delete
             #Done with edit/delete handlers, now render page
             $('#content').html templ websites: websites
 
-            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, extraDataPacker, websiteRow, websites, "website", beforeRender, beforeSubmit
+            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, extraDataPacker, websiteRow, websites, 'website', beforeRender, beforeSubmit
 
             $('#addWebsite').click formBuild.elementForm editWebsite, getNewWebsite(), (err, savedWebsite) ->
               return notify.error "Error saving website: #{err}" if err?
               formBuild.setElement savedWebsite
-              $("#websiteTableBody").append websiteRow website: savedWebsite
+              $('#websiteTableBody').append websiteRow website: savedWebsite
 
             #Attach handlers to all rows
             formBuild.wireUpRow website.id for website in websites

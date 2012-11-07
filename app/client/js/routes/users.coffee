@@ -1,15 +1,17 @@
-define ["load/server", "load/notify", "templates/editUser", "templates/deleteUser", "templates/userRow", "helpers/formBuilder"],
+define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUser', 'templates/userRow', 'helpers/formBuilder'],
   (server, notify, editUser, deleteUser, userRow, formBuilder) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 
       server.ready ->
 
-        server.findModel {}, "Website", (err, websites) ->
-          server.findModel {}, "Specialty", (err, specialties) ->
+        server.findModel {modelName: 'Website', queryObject: {}}, (err, websites) ->
+          server.serverLog message: err if err
+
+          server.findModel {modelName: 'Specialty', queryObject: {}}, (err, specialties) ->
+            server.serverLog message: err if err
 
             allowedWebsites = websites.map (site) -> {url: site.url, id: site.id}
-            console.log 'allowedWebsites: ', allowedWebsites
             validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
             server.getRoles {}, (err, allowedRoles) ->
@@ -36,17 +38,17 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
 
               getNewUser = ->
                 extraDataPacker {
-                  firstName: ""
-                  lastName: ""
-                  email: ""
-                  role: "Operator"
+                  firstName: ''
+                  lastName: ''
+                  email: ''
+                  role: 'Operator'
                   websites: []
                   specialties: []
                 }
 
               # find all users and populate listing
-              server.findModel {}, "User", (err, users) ->
-                server.log 'Error retrieving users on users crud page', {error: err, severity: 'error'} if err
+              server.findModel {modelName: 'User', queryObject: {}}, (err, users) ->
+                server.serverLog message: err if err
 
                 siteUrls = {}
                 for site in websites
@@ -55,16 +57,15 @@ define ["load/server", "load/notify", "templates/editUser", "templates/deleteUse
                 for user in users
                   user.websiteUrls = (siteUrls[siteId] for siteId in user.websites)
                   user.allowedWebsites = allowedWebsites
-                  console.log 'user: ', user
 
                 $('#content').html templ users: users
-                formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, "user"
+                formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, 'user'
                 #Done with edit/delete handlers, now render page
 
                 $('#addUser').click formBuild.elementForm editUser, getNewUser(), (err, savedUser) ->
                   return notify.error "Error saving user: #{err}" if err?
                   formBuild.setElement savedUser
-                  $("#userTableBody").append userRow user: savedUser
+                  $('#userTableBody').append userRow user: savedUser
 
                 #Attach handlers to all rows
                 formBuild.wireUpRow user.id for user in users

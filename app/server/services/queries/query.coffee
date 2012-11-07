@@ -18,7 +18,7 @@ getBaseModel = (from, all) ->
     modelName = models[0]
   modelName
 
-getNeededData = (query, cb) -> 
+getNeededData = (query, cb) ->
   neededFields = {where: [], select: []}
   if query.where
     neededFields.where.push keypath.split '.' for keypath of query.where
@@ -75,10 +75,13 @@ packNeededData = (accountId, ids, neededFields, cb) ->
           return cb "Invalid field #{field}"
 
         # We're done if the field isn't something that can be queried
-        return cb() unless instance[field].retrieve
+        unless instance[field].retrieve
+          #config.log "no data for #{field}"
+          return cb()
 
         # field or field contents don't exist, get them
         instance[field].retrieve (err, data) ->
+          {inspect} = require 'util'
           config.log.error "Error retrieving data in query", {error: err, model: model, field: field} if err
           if getType(data) is 'Object'
             dataObject[model][field] ?= {}
@@ -103,9 +106,12 @@ module.exports = ({accountId, queries}, done) ->
   run = (alias, cb) ->
     constraints = queries[alias]
     getNeededData constraints, (err, neededFields) ->
+      #config.log 'neededFields:', neededFields
       packNeededData accountId, constraints.ids, neededFields, (err, dataToQuery) ->
+        #config.log 'dataToQuery:', dataToQuery
         results[alias] = queryArray dataToQuery, constraints
         cb err
 
+  # TODO: should be a reduce, not a forEach
   async.forEach Object.keys(queries), run, (err) ->
     done err, results

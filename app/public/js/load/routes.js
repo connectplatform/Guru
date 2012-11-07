@@ -14,6 +14,7 @@
     dermis.route('/userProfile');
     dermis.route('/operatorChat');
     dermis.route('/printChat/:chatId');
+    dermis.route('/account');
     dermis.route('/users');
     dermis.route('/websites');
     dermis.route('/specialties');

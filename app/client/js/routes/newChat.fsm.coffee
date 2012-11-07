@@ -49,7 +49,8 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
               submitText: 'Enter Chat'
               placement: '#content .form-area'
 
-            renderForm options, fields, fsm.transition
+            renderForm options, fields, (params) ->
+              fsm.transition {params: params}
 
           # redirect if we have a chat for this session
           gotChat: (chatId) ->

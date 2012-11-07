@@ -43,7 +43,11 @@
               submitText: 'Enter Chat',
               placement: '#content .form-area'
             };
-            return renderForm(options, fields, fsm.transition);
+            return renderForm(options, fields, function(params) {
+              return fsm.transition({
+                params: params
+              });
+            });
           },
           gotChat: function(chatId) {
             return window.location.hash = "/visitorChat/" + chatId;

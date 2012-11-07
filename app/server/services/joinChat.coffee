@@ -6,7 +6,7 @@ module.exports =
   optional: ['isWatching']
   service: ({chatId, isWatching, sessionId, accountId}, done) ->
     relationMeta =
-      isWatching: (if isWatching then 'true' else 'false')
+      isWatching: isWatching
       type: 'member'
 
     ChatSession(accountId).add sessionId, chatId, relationMeta, (err) ->

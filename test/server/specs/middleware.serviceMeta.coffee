@@ -33,7 +33,7 @@ boiler 'Middleware - Service Meta', ->
       @client.ready =>
         @client.getChatStats {}, (err, stats) =>
           should.exist err
-          err.should.eql 'Argument Required: {sessionId: sessionId}'
+          err.should.eql 'You must be logged in to access this feature.'
           done()
 
     it 'should work with sessionId', (done) ->

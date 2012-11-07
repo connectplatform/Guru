@@ -2,6 +2,9 @@
 
   define(["templates/treeviewParentNode", "templates/li", "templates/treeview"], function(treeviewParentNode, li, treeview) {
     return {
+      getType: function(obj) {
+        return Object.prototype.toString.call(obj).slice(8, -1);
+      },
       readableSize: function(size) {
         var i, units;
         units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];

@@ -14,7 +14,7 @@ boiler 'Service - Save Account', ->
     it 'should create an account', (done) ->
       @client = @getClient()
       @client.ready =>
-        @client.createAccount fields: fields, (err, status) =>
+        @client.createAccount fields, (err, status) =>
           should.not.exist err
           should.exist status?.accountId, 'expected accountId'
           should.exist status?.userId, 'expected userId'

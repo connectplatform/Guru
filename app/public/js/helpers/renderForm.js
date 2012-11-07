@@ -1,13 +1,21 @@
 (function() {
 
-  define(["templates/renderForm", 'helpers/util'], function(renderForm, _arg) {
+  define(['load/server', "templates/renderForm", 'helpers/validateField', 'helpers/notifyInline', 'helpers/util'], function(server, renderForm, validateField, notifyInline, _arg) {
     var random;
     random = _arg.random;
-    return function(options, fields, next) {
-      var f, _i, _len;
+    return function(options, fields, receive) {
+      var f, validatedFields, _i, _len;
       if (options == null) options = {};
       if (!(fields && fields.length > 0)) {
-        return next("Called renderForm with no fields.");
+        server.serverLog({
+          message: "Called renderForm with no fields.",
+          context: {
+            fields: fields,
+            options: options
+          }
+        });
+        $(options.placement).html("Oops! There's no data for this form. The support team has been notified.");
+        return;
       }
       for (_i = 0, _len = fields.length; _i < _len; _i++) {
         f = fields[_i];
@@ -20,19 +28,36 @@
         options: options,
         fields: fields
       }));
-      $("#" + options.name).find(':input').filter(':visible:first');
+      $("#" + options.name).find(':input').filter(':visible:first').focus();
+      validatedFields = fields.filter(function(f) {
+        return f.required || f.validation;
+      });
+      validatedFields.map(function(field) {
+        var name;
+        name = field.name;
+        return $("" + options.placement + " .controls [name=" + name + "]").change(function() {
+          var error;
+          error = validateField(field, $(this).val());
+          return notifyInline(options.placement, field.name, error);
+        });
+      });
       return $("#" + options.name).submit(function(evt) {
-        var formParams, toObj;
+        var error, field, formParams, toObj, valid, _j, _len2;
         evt.preventDefault();
         toObj = function(obj, item) {
           obj[item.name] = item.value;
           return obj;
         };
         formParams = $(this).serializeArray().reduce(toObj, {});
-        return next(null, {
-          action: 'receive',
-          params: formParams
-        });
+        valid = true;
+        for (_j = 0, _len2 = validatedFields.length; _j < _len2; _j++) {
+          field = validatedFields[_j];
+          error = validateField(field, formParams[field.name]);
+          notifyInline(field.name, error);
+          valid = false;
+        }
+        if (!valid) return;
+        return receive(formParams);
       });
     };
   });

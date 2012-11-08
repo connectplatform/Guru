@@ -46,13 +46,11 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
 
       server.ready ->
         renderForm options, fields, (params) ->
-          console.log 'params:', params.params
-
-          server.createAccount params.params, (err, args) ->
+          server.createAccount params: params, (err, args) ->
             console.log 'err:', err
             console.log 'args:', args
 
             if err
-              notify err
+              notify.error err
             else
               window.location.hash = '/account'

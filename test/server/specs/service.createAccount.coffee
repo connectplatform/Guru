@@ -5,7 +5,6 @@ fields =
   firstName: 'Bob'
   lastName: 'Smith'
   password: 'foobar'
-  passwordConfirm: 'foobar'
 
 boiler 'Service - Save Account', ->
 

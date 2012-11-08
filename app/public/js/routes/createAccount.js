@@ -51,12 +51,13 @@
       };
       return server.ready(function() {
         return renderForm(options, fields, function(params) {
-          console.log('params:', params.params);
-          return server.createAccount(params.params, function(err, args) {
+          return server.createAccount({
+            params: params
+          }, function(err, args) {
             console.log('err:', err);
             console.log('args:', args);
             if (err) {
-              return notify(err);
+              return notify.error(err);
             } else {
               return window.location.hash = '/account';
             }

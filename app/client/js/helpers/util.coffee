@@ -1,4 +1,6 @@
 define ["templates/treeviewParentNode", "templates/li", "templates/treeview"], (treeviewParentNode, li, treeview) ->
+  getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
+
   readableSize: (size) ->
     units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     i = 0

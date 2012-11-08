@@ -40,10 +40,17 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           after ['members', 'all', 'retrieve'], (context, chatIds, next) ->
             next null, (chatSession.get sessionId, chatId for chatId in chatIds)
 
-        relationMeta base, ({after}) ->
+        relationMeta base, ({after, before}) ->
+          before ['mset'], (context, [meta], next) ->
+            meta = Object.map meta, (k, v) -> v.toString()
+            next null, [meta]
+
+          before ['set'], (context, [key, val], next) ->
+            next null, [key, val.toString()]
+
           after ['get', 'getall', 'retrieve'], (context, data, next) ->
-            if data and getType(data.isWatching) is 'String'
-              data.isWatching = data.isWatching == "true" ? true : false
+            if getType(data?.isWatching) is 'Boolean'
+              data.isWatching = data.isWatching == "true" ? 'true' : 'false'
             next null, data
 
 
@@ -55,7 +62,10 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
         cs = chatSession.get sessionId, chatId
+        metaInfo ||= {}
+        metaInfo.isWatching ||= 'false'
 
+        #config.log "adding #{metaInfo.type}.  sessionId: #{sessionId}, chatId: #{chatId}"
         async.parallel [
           cs.sessionIndex.add chatId
           cs.chatIndex.add sessionId
@@ -74,6 +84,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
       remove: tandoor (sessionId, chatId, cb) ->
         cs = chatSession.get sessionId, chatId
 
+        #config.log "removing chatSession.  sessionId: #{sessionId}, chatId: #{chatId}"
         async.parallel [
           cs.sessionIndex.srem chatId
           cs.chatIndex.srem sessionId

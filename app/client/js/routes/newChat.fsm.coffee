@@ -31,7 +31,7 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
         states:
           error: (err) ->
             $("#content .form-area").html "Oops, a problem occurred!  We've been notified, thank you for your patience."
-            notify.error "Problem connecting to chat: #{err}" if err?
+            server.serverLog {message: "Problem connecting to chat.", context: {error: err}} if err
 
           initial: ->
             server.getExistingChat {}, fsm.transition
@@ -42,14 +42,15 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
 
           # ask the user for additional params
           needParams: (err, fields) ->
-            notify.error "Problem connecting to chat: #{err}" if err?
+            notify.error "Problem connecting to chat: #{err}" if err
 
             options =
               name: 'newChat'
               submitText: 'Enter Chat'
               placement: '#content .form-area'
 
-            renderForm options, fields, fsm.transition
+            renderForm options, fields, (params) ->
+              fsm.transition null, {params: params}
 
           # redirect if we have a chat for this session
           gotChat: (chatId) ->

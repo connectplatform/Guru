@@ -1,3 +1,5 @@
+{digest_s} = require 'md5'
+
 db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
@@ -64,9 +66,16 @@ user.path('role').set (newVal) ->
   newVal
 
 user.pre 'save', (next) ->
+  @password = digest_s @password if @isModified 'password'
+  next()
+
+user.pre 'save', (next) ->
   return next new Error "Cannot change #{@oldRole} role." if @oldRole in ['Owner', 'Administrator'] and @isModified 'role'
   if @role in ['Owner', 'Administrator'] and @oldRole in enums.editableRoles and @isModified 'role'
     return next new Error "Cannot make user a #{@oldRole}."
   sendRegistrationEmail @, next
+
+user.methods.comparePassword = (password) ->
+  @password is digest_s password
 
 module.exports = user

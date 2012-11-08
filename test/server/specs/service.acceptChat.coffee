@@ -1,4 +1,5 @@
 should = require 'should'
+stoic = require 'stoic'
 
 boiler 'Service - Accept Chat', ->
 
@@ -61,3 +62,16 @@ boiler 'Service - Accept Chat', ->
 
             client.disconnect()
             done()
+
+  it 'should set my visible status to true', (done) ->
+    {ChatSession} = stoic.models
+    getVisibleOperators = config.require 'services/chats/getVisibleOperators'
+
+    @getAuthed (_..., accountId) =>
+      @newChat =>
+        @client.acceptChat {chatId: @chatId}, (err, result) =>
+          ChatSession(accountId).getByChat @chatId, (err, chatSessions) =>
+            getVisibleOperators chatSessions, (err, [me]) =>
+              should.exist me
+              me.should.eql 'Owner Man'
+              done()

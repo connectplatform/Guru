@@ -1,5 +1,4 @@
 async = require 'async'
-{digest_s} = require 'md5'
 
 mongo = config.require 'server/load/mongo'
 {Account, User, Website, Specialty} = mongo.models
@@ -17,7 +16,6 @@ module.exports = (done) ->
     createUser = (websites, account) ->
       (user, cb) ->
         user.accountId = account unless user.role is 'Administrator'
-        user.password = digest_s user.password
         user.websites = websites.filter((site) -> site.url in user.websites).map 'id'
         User.create user, cb
 
@@ -73,6 +71,15 @@ module.exports = (done) ->
         lastName: 'Guru'
         websites: ['foo.com']
         specialties: ['Sales']
+      ,
+        email: 'wrongpassword@foo.com'
+        sentEmail: true
+        password: 'wrongpassword'
+        role: 'Operator'
+        firstName: 'Wrong'
+        lastName: 'Password'
+        websites: []
+        specialties: []
     ]
 
     websites = [

@@ -15,6 +15,18 @@ boiler 'Service - Login', ->
         client.disconnect()
         done()
 
+  it 'should not accept invalid email', (done) ->
+    @invalidLogin (err, client, accountId) =>
+      should.exist err
+      err.should.eql 'Invalid user.'
+      done()
+
+  it 'should not accept invalid password', (done) ->
+    @wrongpasswordLogin (err, client, accountId) =>
+      should.exist err
+      err.should.eql 'Invalid password.'
+      done()
+
   it 'should reattatch you to an existing session', (done) ->
     @ownerLogin (err, client) =>
       sessionId = client.cookie 'session'

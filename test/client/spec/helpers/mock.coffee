@@ -17,6 +17,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
         cb null, []
       getExistingChat: (params, cb) ->
         cb null, null
+      createAccount: (params, cb) ->
+        cb null, {accountId: 'account_foo', userId: 'owner_bar'}
       createChatOrGetForm: (params, cb) ->
         cb null, fields: [
               name: 'username'
@@ -47,11 +49,11 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
       renderSidebar: ->
         sidebar {role: 'Supervisor'}, sbTemp
 
-      loggedIn: ->
+      loggedIn: (role = 'Operator') ->
         server.cookie 'session', 'session_foo'
         registerSessionUpdates()
         server.getMyRole = (params, cb) ->
-          cb null, 'Operator'
+          cb null, role
 
       loggedOut: ->
         server.cookie 'session', null

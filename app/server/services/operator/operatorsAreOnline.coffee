@@ -13,6 +13,8 @@ module.exports = (domain, done) ->
       config.log.error message, {error: err}
       return done message
 
+    # BUG: this is not sufficient to determine whether operators are online for a given site
+    # it will only show whether they are online for a whole account.
     {accountId} = website
     Session(accountId).onlineOperators.count (err, count) ->
       done err, count > 0

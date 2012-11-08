@@ -4,11 +4,10 @@ db = require 'mongoose'
 {Account, User} = db.models
 
 module.exports =
-  required: ['fields']
-  service: ({fields}, done) ->
+  required: ['email', 'firstName', 'lastName', 'password']
+  service: (fields, done) ->
     fields.role = 'Owner'
-    user = new User
-    user.merge fields
+    user = new User fields
 
     saveUser = (next, {account}) ->
       user.accountId = account.id

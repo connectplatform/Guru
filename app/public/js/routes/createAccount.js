@@ -38,7 +38,7 @@
           "default": '',
           label: 'Confirm Password',
           validation: function(text) {
-            if (text !== $("#createAccount .controls [name=password]").val()) {
+            if (text !== $(".controls [name=password]").val()) {
               return 'Password confirmation must match.';
             }
           }

@@ -1,4 +1,14 @@
 module.exports = util =
+
+  # return random 16 digits
+  random: ->
+    digit = -> ((Math.random() * 16) | 0).toString 16
+    buffer = []
+    for n in [1..16]
+      buffer.push digit()
+
+    return buffer.join ''
+
   curry: (fn, args...) -> fn.bind fn.prototype, args...
 
   getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1

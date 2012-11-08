@@ -1,8 +1,7 @@
 async = require 'async'
 sugar = require 'sugar'
 
-rand = config.require 'services/rand'
-{getType} = config.require 'load/util'
+{getType, random} = config.require 'load/util'
 
 face = (decorators) ->
   {account: {chat: {
@@ -23,7 +22,7 @@ face = (decorators) ->
       accountId: accountId
 
       create: (cb) ->
-        id = "chat_#{rand()}"
+        id = "chat_#{random()}"
         chat = faceValue.get id
 
         # initialization

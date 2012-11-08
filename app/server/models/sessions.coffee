@@ -1,6 +1,5 @@
 async = require 'async'
-rand = config.require 'services/rand'
-{tandoor, getType} = config.require 'load/util'
+{tandoor, getType, random} = config.require 'load/util'
 
 face = (decorators) ->
   { account:
@@ -16,7 +15,7 @@ face = (decorators) ->
       accountId: accountId
 
       create: tandoor (fields, cb) ->
-        id = rand()
+        id = random()
         session = faceValue.get id
 
         addOperatorData = (cb) =>

@@ -53,8 +53,8 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
         valid = true
         for field in validatedFields
           error = validateField field, formParams[field.name]
-          notifyInline field.name, error
-          valid = false
+          notifyInline options.placement, field.name, error
+          valid = false if error
 
         # done
         return unless valid

@@ -53,8 +53,8 @@
         for (_j = 0, _len2 = validatedFields.length; _j < _len2; _j++) {
           field = validatedFields[_j];
           error = validateField(field, formParams[field.name]);
-          notifyInline(field.name, error);
-          valid = false;
+          notifyInline(options.placement, field.name, error);
+          if (error) valid = false;
         }
         if (!valid) return;
         return receive(formParams);

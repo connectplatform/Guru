@@ -10,7 +10,14 @@ pulsarPort = process.env.GURU_PULSAR_PORT
 
 #Exported object of helper functions
 helpers =
-  getClient: -> Vein.createClient port: testPort
+  getClient: (receive) ->
+    client = Vein.createClient port: testPort
+    if receive
+      client.ready ->
+        receive client
+    else
+      return client
+
   getPulsar: -> Pulsar.createClient port: pulsarPort
   testPort: testPort
 

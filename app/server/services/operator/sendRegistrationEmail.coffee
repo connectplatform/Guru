@@ -1,7 +1,7 @@
 db = require 'mongoose'
 {User} = db.models
 sendEmail = config.require 'services/email/sendEmail'
-rand = config.require 'services/rand'
+{random} = config.require 'load/util'
 {getActivationLink} = config.app.mail
 
 renderTemplate = config.require 'services/templates/renderTemplate'
@@ -11,7 +11,7 @@ module.exports = (user, next) ->
   if user.sentEmail
     return next()
 
-  regkey = rand()
+  regkey = random()
 
   renderOptions =
     userName: user.firstName

@@ -31,4 +31,4 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {hasText}) ->
     it 'should validate email', ->
       submitForm {email: null}
 
-      waitsFor hasText('.notify', 'Please enter a valid Email.'), 'Did not see validation error.', 200
+      waitsFor hasText('.help-inline', 'Email is required.'), 'Did not see validation error.', 200

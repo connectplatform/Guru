@@ -24,8 +24,13 @@
         states: {
           error: function(err) {
             $("#content .form-area").html("Oops, a problem occurred!  We've been notified, thank you for your patience.");
-            if (err != null) {
-              return notify.error("Problem connecting to chat: " + err);
+            if (err) {
+              return server.serverLog({
+                message: "Problem connecting to chat.",
+                context: {
+                  error: err
+                }
+              });
             }
           },
           initial: function() {
@@ -37,14 +42,14 @@
           },
           needParams: function(err, fields) {
             var options;
-            if (err != null) notify.error("Problem connecting to chat: " + err);
+            if (err) notify.error("Problem connecting to chat: " + err);
             options = {
               name: 'newChat',
               submitText: 'Enter Chat',
               placement: '#content .form-area'
             };
             return renderForm(options, fields, function(params) {
-              return fsm.transition({
+              return fsm.transition(null, {
                 params: params
               });
             });

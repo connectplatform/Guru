@@ -6,9 +6,11 @@
     .modal-body
       input.name.small-modal-box(type="text", value="#{website.name}", placeholder="Name")
       .clear
-      input.url.small-modal-box(type="text", value="#{website.url}", placeholder="URL")
+      input.name.small-modal-box(type="text", value="#{website.subdomain}", placeholder="Subdomain")
       .clear
-      input.subdomain.small-modal-box(type="text", value="#{website.subdomain}", placeholder="mysite")
+      input.name.small-modal-box(type="text", value="#{website.contactEmail}", placeholder="Contact Email")
+      .clear
+      input.url.small-modal-box(type="text", value="#{website.url}", placeholder="URL")
       .clear
 
       |Specialties:

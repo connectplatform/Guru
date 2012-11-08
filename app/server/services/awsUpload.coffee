@@ -7,7 +7,7 @@ module.exports = ({siteId, imageName}, done) ->
 
   fields = {}
 
-  fields.key = "#{encodeURIComponent siteId}/#{imageName}"
+  fields.key = "website/#{siteId}/#{imageName}"
   fields.awsAccessKey = config.app.aws.accessKey
   fields.acl = config.app.aws.s3.acl
   fields.bucket = config.app.aws.s3.bucket

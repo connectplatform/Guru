@@ -1,5 +1,3 @@
-{digest_s} = require 'md5'
-
 db = config.require 'load/mongo'
 {User} = db.models
 {ObjectId} = db.Schema.Types
@@ -13,7 +11,7 @@ module.exports = ({userId, registrationKey, newPassword}, done) ->
     if err? or not user?
       return done 'Could not find user or registration key.'
 
-    user.password = digest_s newPassword
+    user.password = newPassword
     user.registrationKey = null
     user.save (err) ->
       config.log.error 'Error saving new password in resetPassword', {error: err, userId: userId, registrationKey: registrationKey} if err

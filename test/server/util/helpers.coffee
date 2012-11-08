@@ -131,7 +131,7 @@ helpers =
 
       async.map chats, createChat, cb
 
-for name in ['admin', 'owner', 'guru1', 'guru2', 'guru3']
+for name in ['admin', 'owner', 'guru1', 'guru2', 'guru3', 'invalid', 'wrongpassword']
   helpers["#{name}Login"] = helpers.loginBuilder name
 
 module.exports = helpers

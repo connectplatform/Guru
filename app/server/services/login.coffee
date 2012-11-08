@@ -1,5 +1,3 @@
-{digest_s} = require 'md5'
-
 stoic = require 'stoic'
 {Session} = stoic.models
 
@@ -11,12 +9,14 @@ createUserSession = config.require 'services/operator/createUserSession'
 module.exports =
   required: ['email', 'password']
   service: ({email, password}, done) ->
-    search = {email: email, password: digest_s password}
+    search = {email: email}
     User.findOne search, (err, user) ->
       if err
         config.log.error 'Error searching for operator in login', {error: err, email: email} if err
         return done err.message
-      return done 'Invalid user or password.' unless user?
+
+      return done 'Invalid user.' unless user?
+      return done 'Invalid password.' unless user.comparePassword password
 
       accountId = user.accountId.toString()
       Session(accountId).sessionsByOperator.get user.id, (err, sessionId) ->

@@ -53,11 +53,6 @@ module.exports =
     }
 
     {
-      filters: ['modelNameIsValid']
-      only: [ 'deleteModel', 'findModel', 'saveModel' ]
-    }
-
-    {
       filters: ['chatIdIsValid', 'sessionIdIsValid', 'objectMessageExists' ]
       only: ['say']
     }

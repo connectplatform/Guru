@@ -3,7 +3,7 @@
 
   define(['load/server', 'load/notify'], function(server, notify) {
     return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) {
-      var elements, formBuilder, getElementById, uppercaseName,
+      var elements, formBuilder, getElementById, modelName,
         _this = this;
       if (beforeRender == null) {
         beforeRender = function(_, cb) {
@@ -15,7 +15,7 @@
           return cb();
         };
       }
-      uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1);
+      modelName = elementName.charAt(0).toUpperCase() + elementName.slice(1);
       elements = initialElements;
       getElementById = function(id) {
         var element, _i, _len;
@@ -35,27 +35,19 @@
               templateObject = {};
               templateObject[elementName] = element;
               $("#" + elementName + "ModalBox").html(template(templateObject));
-              $("#edit" + uppercaseName).modal();
-              $("#edit" + uppercaseName + " .saveButton").click(function(evt) {
+              $("#edit" + modelName).modal();
+              $("#edit" + modelName + " .saveButton").click(function(evt) {
                 evt.preventDefault();
                 console.log('ping');
                 return beforeSubmit(element, beforeData, function() {
-                  var fields, modelName;
+                  var fields;
                   fields = getFormFields();
-                  if (fields.role) {
-                    modelName = 'User';
-                  } else if (fields.acpApiKey) {
-                    modelName = 'Website';
-                  } else {
-                    modelName = 'Specialty';
-                  }
                   if (element.id != null) {
                     fields.id = element.id;
                   }
                   return server.saveModel({
                     modelName: modelName,
-                    fields: fields,
-                    uppercaseName: uppercaseName
+                    fields: fields
                   }, function(err, savedElement) {
                     if (err != null) {
                       return notify.error("Error saving element: " + err);
@@ -66,13 +58,13 @@
                       return;
                     }
                     formBuilder.wireUpRow(savedElement.id);
-                    return $("#edit" + uppercaseName).modal('hide');
+                    return $("#edit" + modelName).modal('hide');
                   });
                 });
               });
-              return $("#edit" + uppercaseName + " .cancelButton").click(function(evt) {
+              return $("#edit" + modelName + " .cancelButton").click(function(evt) {
                 evt.preventDefault();
-                return $("#edit" + uppercaseName).modal('hide');
+                return $("#edit" + modelName).modal('hide');
               });
             });
           };
@@ -93,26 +85,26 @@
             templateObject = {};
             templateObject[elementName] = currentElement;
             $("#" + elementName + "ModalBox").html(deletingTemplate(templateObject));
-            $("#delete" + uppercaseName).modal();
-            $("#delete" + uppercaseName + " .deleteButton").click(function(evt) {
+            $("#delete" + modelName).modal();
+            $("#delete" + modelName + " .deleteButton").click(function(evt) {
               evt.preventDefault();
               return server.deleteModel({
                 modelId: currentElement.id,
-                modelName: uppercaseName
+                modelName: modelName
               }, function(err) {
                 if (err != null) {
                   return notify.error("Error deleting " + elementName + ": " + err);
                 }
                 $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + currentElement.id + "]").remove();
-                return $("#delete" + uppercaseName).modal('hide');
+                return $("#delete" + modelName).modal('hide');
               });
             });
-            return $("#delete" + uppercaseName + " .cancelButton").click(function() {
-              return $("#delete" + uppercaseName).modal('hide');
+            return $("#delete" + modelName + " .cancelButton").click(function() {
+              return $("#delete" + modelName).modal('hide');
             });
           };
-          $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + id + "] .edit" + uppercaseName).click(editElementClicked);
-          return $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + id + "] .delete" + uppercaseName).click(deleteElementClicked);
+          $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + id + "] .edit" + modelName).click(editElementClicked);
+          return $("#" + elementName + "TableBody ." + elementName + "Row[" + elementName + "Id=" + id + "] .delete" + modelName).click(deleteElementClicked);
         },
         addElement: function(newElement, cb) {
           return function(evt) {

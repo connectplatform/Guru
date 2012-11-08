@@ -12,13 +12,13 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
 
         it 'should display a form for a new chat', (done) ->
           runs ->
-            expect($ '#newChat-form input[name=username]').toExist()
+            expect($ '#newChat input[name=username]').toExist()
 
         it 'submitting form should create a new chat', (done) ->
           runs ->
             mock.returnChat()
-            $('#newChat-form input[name=username]').val 'Bob'
-            $('#newChat-form button[type=submit]').click()
+            $('#newChat input[name=username]').val 'Bob'
+            $('#newChat button[type=submit]').click()
 
           waitsFor exists('.chatPage input.message'), 'chat window did not load', 200
 

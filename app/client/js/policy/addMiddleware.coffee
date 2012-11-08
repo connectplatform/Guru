@@ -9,6 +9,7 @@ all = [
   '/userProfile'
   '/operatorChat'
   '/users'
+  '/account'
   '/websites'
   '/specialties'
 ]
@@ -31,6 +32,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/newChat'
         '/visitorChat/:chatId'
         '/users'
+        '/account'
         '/websites'
         '/specialties'
       ], [redirectOperators]
@@ -43,6 +45,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/userProfile'
         '/operatorChat'
         '/users'
+        '/account'
         '/websites'
         '/specialties'
       ], [redirectVisitors]
@@ -52,6 +55,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/userProfile'
         '/operatorChat'
         '/users'
+        '/account'
         '/websites'
         '/specialties'
       ], [redirectGuestsToLogin, renderSidebar]

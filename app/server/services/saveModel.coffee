@@ -17,7 +17,8 @@ module.exports =
   service: ({fields, modelName, sessionId, accountId}, done) ->
 
     # Somewhat of a hack but not sure where else to put this.  Maybe the CRUD services could be controlled by a data structure?
-    return done "Cannot create a #{fields.role} user." if modelName is 'User' and fields.role and fields.role not in enums.editableRoles
+    if modelName is 'User' and fields.role and fields.role not in enums.editableRoles and not fields.id
+      return done "Cannot create a #{fields.role} user."
 
     fields.merge accountId: accountId
     Model = db.models[modelName]
@@ -25,7 +26,7 @@ module.exports =
 
     # get or create
     getRecord = (fields, cb) ->
-      if fields.id?
+      if fields.id
         Model.findOne {_id: fields.id}, (err, foundModel) ->
           cb err, foundModel
       else

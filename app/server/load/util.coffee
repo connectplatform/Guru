@@ -1,4 +1,14 @@
 module.exports = util =
+
+  # return random 16 digits
+  random: ->
+    digit = -> ((Math.random() * 16) | 0).toString 16
+    buffer = []
+    for n in [1..16]
+      buffer.push digit()
+
+    return buffer.join ''
+
   curry: (fn, args...) -> fn.bind fn.prototype, args...
 
   getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
@@ -29,18 +39,23 @@ module.exports = util =
     return target
 
   queryArray: (array, constraints) ->
+
     where = (whereConstraints, array) ->
       return array unless whereConstraints
 
       filteredArray = array.clone()
 
       for constraintKey, whereConstraint of whereConstraints
+
         if typeof whereConstraint is 'function'
           constraint = whereConstraint
         else if typeof whereConstraint is 'string' and whereConstraint[0] is '!'
           constraint = (item) -> item isnt whereConstraint.slice(1)
         else
-          constraint = (item) -> item is whereConstraint
+          constraint = (item) ->
+            result = item is whereConstraint
+            #config.log "comparing [#{typeof item}]#{item} to [#{typeof whereConstraint}]#{whereConstraint}: #{result}"
+            return result
 
         filter = (item) -> constraint util.accessKeypath item, constraintKey
 
@@ -59,4 +74,5 @@ module.exports = util =
 
       return output
 
-    select constraints.select, where constraints.where, array
+    data = where(constraints.where, array)
+    return select constraints.select, data

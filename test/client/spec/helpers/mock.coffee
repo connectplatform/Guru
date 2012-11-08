@@ -5,11 +5,11 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
       renderSidebar: ->
         sidebar {role: 'Supervisor'}, sbTemp
 
-      loggedIn: ->
+      loggedIn: (role = 'Operator') ->
         server.cookie 'session', 'session_foo'
         registerSessionUpdates()
         server.getMyRole = (params, cb) ->
-          cb null, 'Operator'
+          cb null, role
 
       loggedOut: ->
         server.cookie 'session', null
@@ -22,6 +22,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, 'Visitor'
 
       services: ->
+        server.createAccount = (params, cb) ->
+          cb null, {accountId: 'account_foo', userId: 'owner_bar'} #short version of the user object
         server.login = (params, cb) ->
           mock.loggedIn()
           cb null, {firstName: 'Bob'} #short version of the user object

@@ -10,7 +10,7 @@ module.exports = [
     typeName: 'String'
     validation: (arg, assert) ->
       assert typeof arg is 'string'
-    defaultArgs: ['email', 'password']
+    defaultArgs: ['email', 'password', 'isWatching']
   ,
     typeName: 'SessionId'
     validation: (arg, assert) ->

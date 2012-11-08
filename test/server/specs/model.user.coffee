@@ -1,7 +1,6 @@
 should = require 'should'
 db = config.require 'server/load/mongo'
 {Account, User} = db.models
-{digest_s} = require 'md5'
 
 boiler 'Model - User', ->
   beforeEach (done) ->
@@ -13,7 +12,7 @@ boiler 'Model - User', ->
     user =
       accountId: @accountId
       email: 'invalidrole@foo.com'
-      password: digest_s 'foobar'
+      password: 'foobar'
       role: 'Invalid'
       firstName: 'First'
       lastName: 'Guru'
@@ -33,7 +32,7 @@ boiler 'Model - User', ->
   it 'should gracefully call back with an error if you leave a required field blank', (done) ->
     user =
       accountId: @accountId
-      password: digest_s 'foobar'
+      password: 'foobar'
       email: "jkl@foo.com"
       firstName: 'First'
       lastName: 'Guru'

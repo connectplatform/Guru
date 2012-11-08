@@ -3,9 +3,11 @@ stoic = require 'stoic'
 
 module.exports = (args, next) ->
   {sessionId} = args
-  return next 'Argument Required: {sessionId: sessionId}' unless sessionId
+  return next 'You must be logged in to access this feature.' unless sessionId
 
   Session.accountLookup.get sessionId, (err, accountId) ->
+    return next 'You must be logged in to access this feature.' unless accountId
+
     Session(accountId).allSessions.ismember sessionId, (err, sessionExists) ->
-      return next 'invalid or expired session Id' unless sessionExists is 1
+      return next 'You must be logged in to access this feature.' unless sessionExists is 1
       next null, args

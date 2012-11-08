@@ -8,12 +8,12 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
           mock.visitor()
           window.location.hash = '/newChat'
 
-        waitsFor exists('#newChat-form'), 'New Chat did not load', 200
+        waitsFor exists('#newChat'), 'New Chat did not load', 200
 
         runs ->
           mock.returnChat()
           $('#username').val 'aVisitor'
-          $('#newChat-form button.btn-primary').click()
+          $('#newChat button.btn-primary').click()
 
         waitsFor exists('.chat-display-box'), 'Visitor chat did not load', 200
 

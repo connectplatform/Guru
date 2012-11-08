@@ -1,3 +1,8 @@
+# this service could be far more useful if it
+# 1) took args in a standard format
+# 2) accepted chatId instead of chatSessions
+# 3) returned more information (IDs?)
+
 async = require 'async'
 
 module.exports = (chatSessions, cb) ->

@@ -1,7 +1,7 @@
-form.form-horizontal(id="#{options.name}-form")
+form.form-horizontal(id="#{options.name}")
   for field in fields
 
-    .control-group
+    .control-group(name="#{field.name}")
       .control-label #{field.label}
       .controls
         case field.inputType
@@ -25,6 +25,8 @@ form.form-horizontal(id="#{options.name}-form")
 
           default
             - console.log('Unrecognized field type:', field.inputType)
+
+        span.help-inline
 
   .controls
     button.btn.btn-primary(type="submit") #{options.submitText}

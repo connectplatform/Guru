@@ -1,7 +1,7 @@
 should = require 'should'
 stoic = require 'stoic'
 
-boiler 'Service - Get Nonpresent Opertors', ->
+boiler 'Service - Get Nonpresent Operators', ->
   it 'should return a list of operators not currently visible in chat', (done) ->
     # Setup
     @getAuthed (_..., accountId) =>
@@ -28,6 +28,7 @@ boiler 'Service - Get Nonpresent Opertors', ->
     @getAuthed =>
       @newChat =>
         @client.acceptChat {chatId: @chatId}, (err) =>
+          should.not.exist err
 
           # Get a list of operators who are online and not visible in chat
           @client.getNonpresentOperators {chatId: @chatId}, (err, operatorSessions) =>

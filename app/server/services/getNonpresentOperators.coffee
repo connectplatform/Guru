@@ -18,7 +18,6 @@ filterSessions = (accountId, sessions, chatId, done) ->
 
       removePresentOperators = (session, cb) ->
         sessionIds = presentChatSessions.map (chatSession) -> chatSession.sessionId
-
         currentIndex = sessionIds.indexOf session.id
         result = null
 
@@ -28,13 +27,20 @@ filterSessions = (accountId, sessions, chatId, done) ->
 
         else
           currentChatSession = presentChatSessions[currentIndex]
+
+          #TODO: use getVisibleOperators to do this
+
           #This operator is in this chat, but we only weed them out if they're a visible member
           currentChatSession.relationMeta.getall (err, relationMeta) ->
-            config.log.warn 'Error getting relationMeta for chatSession in getNonpresentOperators', {error: err, chatId: currentChatSession.chatId, sessionId: currentChatSession.sessionId} if err
+            if err
+              meta = {error: err, chatId: currentChatSession.chatId, sessionId: currentChatSession.sessionId}
+              config.log.warn 'Error getting relationMeta for chatSession in getNonpresentOperators', meta
+
             if relationMeta.type is 'member' and relationMeta.isWatching is 'false'
               result = null
             else
               result = session
+
             cb err, result
 
       async.map operatorSessionList, removePresentOperators, (err, nonpresentList) ->

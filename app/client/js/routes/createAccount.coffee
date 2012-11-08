@@ -1,7 +1,6 @@
 define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
   (server, notify, util, renderForm) ->
     (args, templ) ->
-      console.log 'loaded createAccount route'
 
       $("#content").html templ()
 
@@ -10,26 +9,34 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
           inputType: 'text'
           default: 'name@example.com'
           label: 'Email'
+          validation: (email) ->
+            /^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test email
+          required: true
         ,
           name: 'firstName'
           inputType: 'text'
           default: 'Bob'
           label: 'First Name'
+          required: true
         ,
           name: 'lastName'
           inputType: 'text'
           default: 'Smith'
           label: 'Last Name'
+          required: true
         ,
           name: 'password'
           inputType: 'password'
           default: ''
           label: 'Password'
+          required: true
         ,
-          name: 'password'
+          name: 'confirmPassword'
           inputType: 'password'
           default: ''
           label: 'Confirm Password'
+          validation: (text) ->
+            return 'Password confirmation must match.' unless text is $(".controls [name=password]").val()
       ]
 
       options =
@@ -38,10 +45,12 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
         placement: '#content .form-area'
 
       server.ready ->
-        renderForm options, fields, (err, params) ->
-          console.log 'err:', err if err
-          console.log 'params:', params.params
-
-          server.createAccount {fields: params.params}, (err, args) ->
+        renderForm options, fields, (params) ->
+          server.createAccount params, (err, args) ->
             console.log 'err:', err
             console.log 'args:', args
+
+            if err
+              notify.error err
+            else
+              window.location.hash = '/account'

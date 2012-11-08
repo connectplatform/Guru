@@ -94,3 +94,20 @@ boiler 'Service - Query', ->
         history = chat.history
         history[0].message.should.eql 'wheee'
         done()
+
+  it 'should let you get all the visible staff for a chat', (done) ->
+    query = config.require 'services/queries/query'
+    query {
+      accountId: @accountId
+      queries:
+        visitors:
+          ids: chatId: @chatId
+          select: sessionId: 'chatSession.sessionId'
+          where:
+            'session.role': 'Visitor'
+    }, (err, {visitors}) =>
+      should.not.exist err
+
+      visitors.length.should.eql 1
+
+      done()

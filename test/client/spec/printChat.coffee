@@ -1,5 +1,5 @@
 require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server'],
-  (mock, {hasText, exists}, pulsar, server) ->
+  (mock, {defaultTimeout, hasText, exists}, pulsar, server) ->
 
     describe 'Visitor Chat', ->
       beforeEach ->
@@ -19,5 +19,5 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
           window.location.hash = '/printChat/some_chat_id'
 
-          waitsFor windowWasPrinted, 200
+          waitsFor windowWasPrinted, defaultTimeout
           runs ->

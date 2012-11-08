@@ -40,13 +40,20 @@
                 evt.preventDefault();
                 console.log('ping');
                 return beforeSubmit(element, beforeData, function() {
-                  var fields;
+                  var fields, modelName;
                   fields = getFormFields();
-                  console.log('fields: ', fields);
+                  if (fields.role) {
+                    modelName = 'User';
+                  } else if (fields.acpApiKey) {
+                    modelName = 'Website';
+                  } else {
+                    modelName = 'Specialty';
+                  }
                   if (element.id != null) {
                     fields.id = element.id;
                   }
                   return server.saveModel({
+                    modelName: modelName,
                     fields: fields,
                     uppercaseName: uppercaseName
                   }, function(err, savedElement) {

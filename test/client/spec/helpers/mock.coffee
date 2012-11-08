@@ -1,5 +1,47 @@
 define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'templates/sidebar', 'routes/sidebar'],
   (server, pulsar, registerSessionUpdates, sbTemp, sidebar) ->
+    
+    server.addServices {
+      login: (params, cb) ->
+        mock.loggedIn()
+        cb null, {firstName: 'Bob'} #short version of the user object
+      leaveChat: (params, cb) ->
+        cb null, 'foo'
+      getMyRole: (params, cb) ->
+        cb null, 'None'
+      getMyChats: (params, cb) ->
+        cb null, []
+      getChatStats: (params, cb) ->
+        cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
+      getActiveChats: (params, cb) ->
+        cb null, []
+      getExistingChat: (params, cb) ->
+        cb null, null
+      createChatOrGetForm: (params, cb) ->
+        cb null, fields: [
+              name: 'username'
+              inputType: 'text'
+              default: 'Chat Name'
+              label: 'Chat Name'
+            ,
+              name: 'department'
+              inputType: 'selection'
+              selections: ['Sales', 'Billing']
+              label: 'Department'
+          ]
+      newChat: (params, cb) ->
+        cb null, {chatId: 'foo'}
+      visitorCanAccessChannel: (params, cb) ->
+        cb null, 'true'
+      getChatHistory: (params, cb) ->
+        cb null, []
+      getLogoForChat: (params, cb) ->
+        cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'foo.com'}/logo"
+      printChat: (params, cb) ->
+        cb null, null
+      setSessionOffline: (params, cb) ->
+        cb null, null
+    }
 
     mock =
       renderSidebar: ->
@@ -22,43 +64,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, 'Visitor'
 
       services: ->
-        server.login = (params, cb) ->
-          mock.loggedIn()
-          cb null, {firstName: 'Bob'} #short version of the user object
-        server.leaveChat = (params, cb) ->
-          cb null, 'foo'
-        server.getMyRole = (params, cb) ->
-          cb null, 'None'
-        server.getMyChats = (params, cb) ->
-          cb null, []
-        server.getChatStats = (params, cb) ->
-          cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
-        server.getActiveChats = (params, cb) ->
-          cb null, []
-        server.getExistingChat = (params, cb) ->
-          cb null, null
-        server.createChatOrGetForm = (params, cb) ->
-          cb null, fields: [
-                name: 'username'
-                inputType: 'text'
-                default: 'Chat Name'
-                label: 'Chat Name'
-              ,
-                name: 'department'
-                inputType: 'selection'
-                selections: ['Sales', 'Billing']
-                label: 'Department'
-            ]
-        server.newChat = (params, cb) ->
-          cb null, {chatId: 'foo'}
-        server.visitorCanAccessChannel = (params, cb) ->
-          cb null, 'true'
-        server.getChatHistory = (params, cb) ->
-          cb null, []
-        server.getLogoForChat = (params, cb) ->
-          cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'foo.com'}/logo"
-        server.printChat = (params, cb) ->
-          cb null, null
         server.serverLog = (params, cb) ->
           cb null, 'Success'
         server.log = (params) ->

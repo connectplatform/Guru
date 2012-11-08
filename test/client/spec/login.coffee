@@ -1,9 +1,9 @@
-require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {hasText}) ->
+require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasText}) ->
 
   describe 'Login', ->
     beforeEach ->
       window.location.hash = '/login'
-      waitsFor hasText('#login-modal h3', 'Login'), 'no login prompt', 200
+      waitsFor hasText('#login-modal h3', 'Login'), 'no login prompt', defaultTimeout
       mock.services()
 
     it 'should log me into the dashboard', ->
@@ -11,4 +11,4 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {hasText}) ->
       $('#login-modal input#password').val 'foobar'
       $('#login-modal button.btn-primary').click()
 
-      waitsFor hasText('#dashboard h1', 'Dashboard'), 'Did not see dashboard', 200
+      waitsFor hasText('#dashboard h1', 'Dashboard'), 'Did not see dashboard', defaultTimeout

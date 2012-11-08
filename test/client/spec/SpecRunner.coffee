@@ -1,14 +1,15 @@
 define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', 'spec/helpers/mock',
 
     # spec files
-    'spec/createAccount'
-    'spec/dashboard',
-    'spec/login',
-    'spec/logout',
-    'spec/newChat',
-    'spec/operatorChat',
-    'spec/printChat',
-    'spec/visitorChat'
+    #'spec/createAccount'
+    #'spec/dashboard',
+    #'spec/login',
+    #'spec/logout',
+    #'spec/newChat',
+    #'spec/operatorChat',
+    #'spec/printChat',
+    #'spec/visitorChat'
+    'spec/account'
 
   ], (jasmineHtml, jjq, {delay}, mock) ->
 

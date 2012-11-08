@@ -1,17 +1,17 @@
-define ["load/server", "load/notify", "helpers/util"], #, 'helpers/renderDetails'
-  (server, notify, util) -> #, renderDetails
+define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
+  (server, notify, util, renderForm) ->
     (args, templ) ->
 
       $('#content').html templ()
 
-      #options =
-        #name: 'account'
-        #title: 'Account Details'
-        #placement: '#content'
+      options =
+        name: 'account'
+        title: 'Account Details'
+        placement: '.form-area'
 
-      #server.ready ->
-        #server.getAccount {}, (err, {account}) ->
-          #console.log 'err:', err
-          #console.log 'account:', account
+      server.ready ->
+        server.findModel {modelName: 'User'}, (err, [account]) ->
+          console.log 'err:', err
+          console.log 'account:', account
 
-          #renderDetails options, account
+          renderForm options, account

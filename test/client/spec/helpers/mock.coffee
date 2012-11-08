@@ -1,49 +1,5 @@
 define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'templates/sidebar', 'routes/sidebar'],
   (server, pulsar, registerSessionUpdates, sbTemp, sidebar) ->
-    
-    server.addServices {
-      login: (params, cb) ->
-        mock.loggedIn()
-        cb null, {firstName: 'Bob'} #short version of the user object
-      leaveChat: (params, cb) ->
-        cb null, 'foo'
-      getMyRole: (params, cb) ->
-        cb null, 'None'
-      getMyChats: (params, cb) ->
-        cb null, []
-      getChatStats: (params, cb) ->
-        cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
-      getActiveChats: (params, cb) ->
-        cb null, []
-      getExistingChat: (params, cb) ->
-        cb null, null
-      createAccount: (params, cb) ->
-        cb null, {accountId: 'account_foo', userId: 'owner_bar'}
-      createChatOrGetForm: (params, cb) ->
-        cb null, fields: [
-              name: 'username'
-              inputType: 'text'
-              default: 'Chat Name'
-              label: 'Chat Name'
-            ,
-              name: 'department'
-              inputType: 'selection'
-              selections: ['Sales', 'Billing']
-              label: 'Department'
-          ]
-      newChat: (params, cb) ->
-        cb null, {chatId: 'foo'}
-      visitorCanAccessChannel: (params, cb) ->
-        cb null, 'true'
-      getChatHistory: (params, cb) ->
-        cb null, []
-      getLogoForChat: (params, cb) ->
-        cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'foo.com'}/logo"
-      printChat: (params, cb) ->
-        cb null, null
-      setSessionOffline: (params, cb) ->
-        cb null, null
-    }
 
     mock =
       renderSidebar: ->
@@ -66,11 +22,55 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           cb null, 'Visitor'
 
       services: ->
-        server.serverLog = (params, cb) ->
-          cb null, 'Success'
-        server.log = (params) ->
-        server.setSessionOffline = (params, cb) ->
-          cb null, null
+        server.addServices
+          login: (params, cb) ->
+            mock.loggedIn()
+            cb null, {firstName: 'Bob'} #short version of the user object
+          leaveChat: (params, cb) ->
+            cb null, 'foo'
+          getMyRole: (params, cb) ->
+            cb null, 'None'
+          getMyChats: (params, cb) ->
+            cb null, []
+          getChatStats: (params, cb) ->
+            cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
+          getActiveChats: (params, cb) ->
+            cb null, []
+          getExistingChat: (params, cb) ->
+            cb null, null
+          createAccount: (params, cb) ->
+            cb null, {accountId: 'account_foo', userId: 'owner_bar'}
+          createChatOrGetForm: (params, cb) ->
+            cb null, fields: [
+                  name: 'username'
+                  inputType: 'text'
+                  default: 'Chat Name'
+                  label: 'Chat Name'
+                ,
+                  name: 'department'
+                  inputType: 'selection'
+                  selections: ['Sales', 'Billing']
+                  label: 'Department'
+              ]
+          newChat: (params, cb) ->
+            cb null, {chatId: 'foo'}
+          visitorCanAccessChannel: (params, cb) ->
+            cb null, 'true'
+          getChatHistory: (params, cb) ->
+            cb null, []
+          getLogoForChat: (params, cb) ->
+            cb null, "http://s3.amazonaws.com/guru-dev/#{encodeURIComponent 'foo.com'}/logo"
+          printChat: (params, cb) ->
+            cb null, null
+          setSessionOffline: (params, cb) ->
+            cb null, null
+          findModel: (params, cb) ->
+            cb null, [{status: 'Trial'}]
+          serverLog: (params, cb) ->
+            cb null, 'Success'
+          log: (params, cb) ->
+          setSessionOffline: (params, cb) ->
+            cb null, null
 
       returnChat: ->
         server.createChatOrGetForm = ({websiteUrl, department, username}, cb) ->

@@ -23,6 +23,9 @@ form.form-horizontal(id="#{options.name}")
           when 'paragraph'
             textarea(name='#{field.name}')
 
+          when 'static'
+            p #{field.name}
+
           default
             - console.log('Unrecognized field type:', field.inputType)
 

@@ -6,7 +6,7 @@ define ['load/server', 'load/notify'], (server, notify) ->
     unless beforeSubmit?
       beforeSubmit = (_, __, cb) -> cb()
 
-    uppercaseName = elementName.charAt(0).toUpperCase() + elementName.slice(1)
+    modelName = elementName.charAt(0).toUpperCase() + elementName.slice(1)
 
     elements = initialElements
 
@@ -25,9 +25,9 @@ define ['load/server', 'load/notify'], (server, notify) ->
             templateObject[elementName] = element
 
             $("##{elementName}ModalBox").html template templateObject
-            $("#edit#{uppercaseName}").modal()
+            $("#edit#{modelName}").modal()
 
-            $("#edit#{uppercaseName} .saveButton").click (evt) ->
+            $("#edit#{modelName} .saveButton").click (evt) ->
               evt.preventDefault()
               console.log 'ping'
 
@@ -35,15 +35,9 @@ define ['load/server', 'load/notify'], (server, notify) ->
 
                 fields = getFormFields()
 
-                #Get modelName based on availiable fields in form,
-                #TODO: help fixing this, maybe some meta data from the form or something
-                if fields.role then modelName = 'User'
-                else if fields.acpApiKey then modelName = 'Website'
-                else modelName = 'Specialty'
-
                 fields.id = element.id if element.id?
 
-                server.saveModel {modelName: modelName, fields: fields, uppercaseName: uppercaseName}, (err, savedElement) ->
+                server.saveModel {modelName: modelName, fields: fields}, (err, savedElement) ->
                   return notify.error "Error saving element: #{err}" if err?
                   formBuilder.setElement savedElement
 
@@ -51,11 +45,11 @@ define ['load/server', 'load/notify'], (server, notify) ->
                   return if err?
 
                   formBuilder.wireUpRow(savedElement.id)
-                  $("#edit#{uppercaseName}").modal 'hide'
+                  $("#edit#{modelName}").modal 'hide'
 
-            $("#edit#{uppercaseName} .cancelButton").click (evt) ->
+            $("#edit#{modelName} .cancelButton").click (evt) ->
               evt.preventDefault()
-              $("#edit#{uppercaseName}").modal 'hide'
+              $("#edit#{modelName}").modal 'hide'
 
       wireUpRow: (id) =>
         currentElement = getElementById id
@@ -74,21 +68,21 @@ define ['load/server', 'load/notify'], (server, notify) ->
           templateObject = {}
           templateObject[elementName] = currentElement
           $("##{elementName}ModalBox").html deletingTemplate templateObject
-          $("#delete#{uppercaseName}").modal()
+          $("#delete#{modelName}").modal()
 
-          $("#delete#{uppercaseName} .deleteButton").click (evt) ->
+          $("#delete#{modelName} .deleteButton").click (evt) ->
             evt.preventDefault()
 
-            server.deleteModel {modelId: currentElement.id, modelName: uppercaseName}, (err) ->
+            server.deleteModel {modelId: currentElement.id, modelName: modelName}, (err) ->
               return notify.error "Error deleting #{elementName}: #{err}" if err?
               $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{currentElement.id}]").remove()
-              $("#delete#{uppercaseName}").modal 'hide'
+              $("#delete#{modelName}").modal 'hide'
 
-          $("#delete#{uppercaseName} .cancelButton").click ->
-            $("#delete#{uppercaseName}").modal 'hide'
+          $("#delete#{modelName} .cancelButton").click ->
+            $("#delete#{modelName}").modal 'hide'
 
-        $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .edit#{uppercaseName}").click editElementClicked
-        $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .delete#{uppercaseName}").click deleteElementClicked
+        $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .edit#{modelName}").click editElementClicked
+        $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .delete#{modelName}").click deleteElementClicked
 
       addElement: (newElement, cb) ->
         (evt) ->

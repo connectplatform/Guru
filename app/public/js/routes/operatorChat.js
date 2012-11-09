@@ -114,7 +114,7 @@
               chat = chats[_k];
               channel = pulsar.channel(chat.id);
               self.channels.push(channel);
-              if (chat.isWatching) {
+              if (chat.isWatching === 'true') {
                 $("#" + chat.renderedId + " .message-form").hide();
               } else {
                 $("#" + chat.renderedId + " .message-form").submit(createSubmitHandler(chat.renderedId, channel));

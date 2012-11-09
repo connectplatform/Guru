@@ -94,7 +94,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               self.channels.push channel
 
               #Only render and wire up submit button if we're not watching
-              if chat.isWatching
+              if chat.isWatching is 'true'
                 $("##{chat.renderedId} .message-form").hide()
               else
                 $("##{chat.renderedId} .message-form").submit createSubmitHandler chat.renderedId, channel

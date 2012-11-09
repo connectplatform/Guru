@@ -16,10 +16,9 @@ module.exports =
             isWatching: 'chatSession.relationMeta.isWatching'
     }, (err, {chatPairs}) ->
 
-      chats = []
       # get info for a specific chat
-      for chatPair in chatPairs
+      chats = for chatPair in chatPairs
         chatPair.chat.isWatching = chatPair.isWatching
-        chats.push chatPair.chat
+        chatPair.chat
 
       done null, chats

@@ -97,7 +97,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               relation: 'invite'
               creationDate: now
               history: []
-              website: 'foo.com'
+              websiteUrl: 'foo.com'
               department: 'Sales'
             }
             {
@@ -107,7 +107,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               status: 'waiting'
               creationDate: now
               history: []
-              website: 'foo.com'
+              websiteUrl: 'foo.com'
               department: 'Sales'
             }
             {
@@ -117,7 +117,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               status: 'active'
               creationDate: now
               history: []
-              website: 'foo.com'
+              websiteUrl: 'foo.com'
               department: 'Sales'
             }
             {
@@ -127,7 +127,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               status: 'vacant'
               creationDate: now
               history: []
-              website: 'foo.com'
+              websiteUrl: 'foo.com'
               department: 'Sales'
             }
           ]

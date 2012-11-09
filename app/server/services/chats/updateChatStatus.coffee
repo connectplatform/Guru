@@ -1,6 +1,7 @@
 stoic = require 'stoic'
 {Chat} = stoic.models
 queryChat = config.require 'services/queries/query'
+removeUnanswered = config.require 'services/operator/removeUnanswered'
 
 module.exports = ({accountId, chatId}, done) ->
   queryChat {
@@ -27,6 +28,13 @@ module.exports = ({accountId, chatId}, done) ->
     else
       status = 'active'
 
-    Chat(accountId).get(chatId).status.set status, (err) ->
-      config.log.error 'Error setting chat status in updateChatStatus', {error: err, accountId: accountId, chatId: chatId} if err
-      done err
+    Chat(accountId).get(chatId).status.getset status, (err, oldStatus) ->
+      if err
+        meta = {error: err, accountId: accountId, chatId: chatId}
+        config.log.error 'Error setting chat status in updateChatStatus', meta
+
+      # refactor this to a state machine if it gets messy
+      if oldStatus is 'waiting' and status isnt 'waiting'
+        removeUnanswered accountId, chatId, done
+      else
+        done err

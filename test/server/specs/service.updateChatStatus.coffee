@@ -1,12 +1,12 @@
 should = require 'should'
+stoic = require 'stoic'
 
 boiler 'Service - Update Chat Status', ->
   beforeEach (done) ->
-    stoic = require 'stoic'
     {Chat} = stoic.models
-    @getAuthed (err, _, accountId) =>
+    @getAuthed (err, _, @accountId) =>
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @visitor) =>
-        @chatHandle = Chat(accountId).get(@chatId)
+        @chatHandle = Chat(@accountId).get(@chatId)
         done()
 
   it "should set a chat's status to 'waiting' when there is a visitor and no operator", (done) ->
@@ -31,3 +31,12 @@ boiler 'Service - Update Chat Status', ->
         status.should.eql 'vacant'
         done()
 
+  it "should remove notifications when chat leaves waiting status", (done) ->
+    {Session} = stoic.models
+    @visitor.leaveChat {chatId: @chatId}, (err) =>
+      should.not.exist err
+      Session(@accountId).get(@client.cookie 'session').unansweredChats.all (err, unanswered) ->
+        should.not.exist err
+        unanswered.length.should.eql 0
+
+        done()

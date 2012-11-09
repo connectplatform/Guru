@@ -44,17 +44,17 @@
             updateBadge("#sidebar .notifyUnanswered", count);
             if (chime) return playSound("newChat");
           });
-          sessionUpdates.on('pendingInvites', function(invites) {
+          sessionUpdates.on('pendingInvites', function(invites, chime) {
             var pendingInvites;
             pendingInvites = invites.keys().length;
             updateBadge("#sidebar .notifyInvites", pendingInvites, 'warning');
-            if (pendingInvites > 0) return playSound("newInvite");
+            if ((pendingInvites > 0) && chime) return playSound("newInvite");
           });
-          sessionUpdates.on('unreadMessages', function(unread) {
+          sessionUpdates.on('unreadMessages', function(unread, chime) {
             var newMessages;
             newMessages = countUnreadMessages(unread);
             updateBadge("#sidebar .notifyUnread", newMessages);
-            return playSound("newMessage");
+            if (chime) return playSound("newMessage");
           });
           return sessionUpdates.on('echoViewed', function(unread) {
             var newMessages;

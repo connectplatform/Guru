@@ -62,16 +62,10 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
       it 'should show department and website information', ->
         runs ->
           mock.activeChats()
+          sendWaitingChats()
 
         waitsFor hasChats, 'dashboard to refresh', defaultTimeout
 
         runs ->
-          numChats = $('tbody').children().length
-          numWebsites = $('tbody .websiteDomain').length
-          numDepartments = $('tbody .departmentName').length
-
-          expect(numWebsites).toBe numChats
-          expect(numDepartments).toBe numChats
-
           expect($('tbody .websiteDomain').eq(1).text()).toBe 'foo.com'
           expect($('tbody .departmentName').eq(1).text()).toBe 'Sales'

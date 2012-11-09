@@ -31,15 +31,15 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
           updateBadge "#sidebar .notifyUnanswered", count
           playSound "newChat" if chime
 
-        sessionUpdates.on 'pendingInvites', (invites) ->
+        sessionUpdates.on 'pendingInvites', (invites, chime) ->
           pendingInvites = invites.keys().length
           updateBadge "#sidebar .notifyInvites", pendingInvites, 'warning'
-          playSound "newInvite" if pendingInvites > 0
+          playSound "newInvite" if (pendingInvites > 0) and chime
 
-        sessionUpdates.on 'unreadMessages', (unread) ->
+        sessionUpdates.on 'unreadMessages', (unread, chime) ->
           newMessages = countUnreadMessages unread
           updateBadge "#sidebar .notifyUnread", newMessages
-          playSound "newMessage"
+          playSound "newMessage" if chime
 
         # update badge number on change
         sessionUpdates.on 'echoViewed', (unread) ->

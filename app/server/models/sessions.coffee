@@ -84,15 +84,19 @@ face = (decorators) ->
               next null, false
 
         unansweredChats session, ({after}) ->
-          after ['add'], (context, args, next) ->
+          after ['srem'], (context, data, next) ->
+            notifySession session.id, {type: 'new'}
+            next null, data
+
+          after ['add'], (context, data, next) ->
             notifySession session.id, {type: 'new'}, true
-            next null, args
+            next null, data
 
         unreadMessages session, ({after}) ->
 
-          after ['incrby'], (context, args, next) ->
+          after ['incrby'], (context, data, next) ->
             notifySession session.id, {type: 'unread'}, true
-            next null, args
+            next null, data
 
           # filter retreived values with a parseInt
           after ['getall', 'retrieve'], (context, unreadMessages, next) ->

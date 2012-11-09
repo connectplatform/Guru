@@ -39,7 +39,7 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
         sessionUpdates.on 'unreadMessages', (unread) ->
           newMessages = countUnreadMessages unread
           updateBadge "#sidebar .notifyUnread", newMessages
-          playSound "newMessage" if newMessages > 0
+          playSound "newMessage"
 
         # update badge number on change
         sessionUpdates.on 'echoViewed', (unread) ->

@@ -54,7 +54,7 @@
             var newMessages;
             newMessages = countUnreadMessages(unread);
             updateBadge("#sidebar .notifyUnread", newMessages);
-            if (newMessages > 0) return playSound("newMessage");
+            return playSound("newMessage");
           });
           return sessionUpdates.on('echoViewed', function(unread) {
             var newMessages;

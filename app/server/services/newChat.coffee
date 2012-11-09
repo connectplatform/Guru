@@ -14,6 +14,8 @@ module.exports = (params, done) ->
   return done "Field required: websiteUrl" unless params?.websiteUrl
 
   getWebsiteIdForDomain params.websiteUrl, (err, websiteId) ->
+    return done "Could not find website: #{params.websiteUrl}" if err or not websiteId
+
     department = params.department
     username = params.username or 'anonymous'
     visitorMeta =
@@ -48,7 +50,8 @@ module.exports = (params, done) ->
           showToOperators
           ChatSession(accountId).add session.id, chat.id, { isWatching: 'false', type: 'member' }
         ]
-        tasks.push chat.website.set websiteId if websiteId
+        tasks.push chat.websiteId.set websiteId
+        tasks.push chat.websiteUrl.set params.websiteUrl
         tasks.push chat.department.set department if department
 
         async.parallel tasks, (err) ->

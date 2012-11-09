@@ -1,5 +1,6 @@
-define ['load/server', 'load/notify', 'load/util'], (server, notify, util) ->
+define ['load/server', 'load/notify', 'helpers/util'], (server, notify, {toTitle}) ->
   (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) ->
+
     unless beforeRender?
       beforeRender = (_, cb) -> cb {}
 

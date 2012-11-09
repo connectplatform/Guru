@@ -80,56 +80,63 @@ helpers =
     {Chat} = stoic.models
     now = Date.create().getTime()
 
-    chats = [
-      {
-        visitor:
-          username: 'Bob'
-        website: 'foo.com'
-        department: 'Sales'
-        status: 'waiting'
-        creationDate: now
-        history: []
-      }
-      {
-        visitor:
-          username: 'Suzie'
-        status: 'active'
-        creationDate: now
-        history: []
-      }
-      {
-        visitor:
-          username: 'Ralph'
-        status: 'active'
-        creationDate: now
-        history: []
-      }
-      {
-        visitor:
-          username: 'Frank'
-        status: 'vacant'
-        creationDate: now
-        history: []
-      }
-    ]
+    {Account, Website} = db.models
 
-    {Account} = db.models
-    Account.findOne {}, {_id: true}, (err, account) ->
+    websiteUrl = 'foo.com'
+    Website.findOne {url: websiteUrl}, {_id: true}, (err, website) ->
+      throw new Error "Could not find website [#{websiteUrl}]: #{err}" if err or not website
 
-      createChat = (chat, cb) ->
-        Chat(account._id).create (err, c) ->
-          chatData = [
-            c.visitor.mset chat.visitor
-            c.status.set chat.status
-            c.creationDate.set chat.creationDate
-            #c.history.rpush chat.history... #this needs to be a loop
-          ]
-          chatData.push c.website.set chat.website if chat.website?
-          chatData.push c.department.set chat.department if chat.department?
+      chats = [
+        {
+          visitor:
+            username: 'Bob'
+          websiteUrl: websiteUrl
+          websiteId: website._id
+          department: 'Sales'
+          status: 'waiting'
+          creationDate: now
+          history: []
+        }
+        {
+          visitor:
+            username: 'Suzie'
+          status: 'active'
+          creationDate: now
+          history: []
+        }
+        {
+          visitor:
+            username: 'Ralph'
+          status: 'active'
+          creationDate: now
+          history: []
+        }
+        {
+          visitor:
+            username: 'Frank'
+          status: 'vacant'
+          creationDate: now
+          history: []
+        }
+      ]
 
-          async.parallel chatData, (err) -> cb err, c
+      Account.findOne {}, {_id: true}, (err, account) ->
 
-      async.map chats, createChat, cb
+        createChat = (chat, cb) ->
+          Chat(account._id).create (err, c) ->
+            chatData = [
+              c.visitor.mset chat.visitor
+              c.status.set chat.status
+              c.creationDate.set chat.creationDate
+              #c.history.rpush chat.history... #this needs to be a loop
+            ]
+            chatData.push c.websiteId.set chat.websiteId if chat.websiteId?
+            chatData.push c.websiteUrl.set chat.websiteUrl if chat.websiteUrl?
+            chatData.push c.department.set chat.department if chat.department?
+
+            async.parallel chatData, (err) -> cb err, c
+
+        async.map chats, createChat, cb
 
 for name in ['admin', 'owner', 'guru1', 'guru2', 'guru3', 'invalid', 'wrongpassword']
   helpers["#{name}Login"] = helpers.loginBuilder name

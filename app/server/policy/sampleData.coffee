@@ -16,7 +16,7 @@ module.exports = (done) ->
     createUser = (websites, account) ->
       (user, cb) ->
         user.accountId = account unless user.role is 'Administrator'
-        user.websites = websites.filter((site) -> site.url in user.websites).map 'id'
+        user.websites = websites.filter((site) -> site.url in user.websites).map '_id'
         User.create user, cb
 
     createWebsite = (account) ->
@@ -120,8 +120,7 @@ module.exports = (done) ->
         specialties: (cb) -> async.map specialties, createSpecialty(account), cb
 
       }, (err, data) ->
-        {websites} = data
-        async.map operators, createUser(websites, account), (err, opData) ->
+        async.map operators, createUser(data.websites, account), (err, opData) ->
 
           # return all data created
           done err, data.merge operators: opData

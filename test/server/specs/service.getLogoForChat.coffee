@@ -18,8 +18,8 @@ boiler 'Service - Get Logo For Chat', ->
             should.not.exist err
 
             {Chat} = stoic.models
-            Chat(accountId).get(chatId).website.get (err, website) =>
+            Chat(accountId).get(chatId).websiteId.get (err, websiteId) =>
               should.not.exist err
-              url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/#{website}/logo"
+              url.should.eql "http://s3.amazonaws.com/#{config.app.aws.s3.bucket}/website/#{websiteId}/logo"
               @client.disconnect()
               done()

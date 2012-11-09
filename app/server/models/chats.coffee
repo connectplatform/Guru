@@ -9,7 +9,8 @@ face = (decorators) ->
     status,
     history,
     creationDate,
-    website,
+    websiteId,
+    websiteUrl,
     department,
 
     allChats,
@@ -42,7 +43,8 @@ face = (decorators) ->
           id: id
           accountId: accountId
 
-        website chat
+        websiteId chat
+        websiteUrl chat
         department chat
 
         visitor chat, ({before, after}) ->
@@ -106,7 +108,8 @@ face = (decorators) ->
             async.parallel {
               visitor: chat.visitor.getall
               status: chat.status.get
-              website: chat.website.get
+              websiteId: chat.websiteId.get
+              websiteUrl: chat.websiteUrl.get
               department: chat.department.get
               history: chat.history.all
               creationDate: chat.creationDate.get
@@ -119,7 +122,8 @@ face = (decorators) ->
           async.parallel [
             chat.visitor.del
             chat.status.del
-            chat.website.del
+            chat.websiteId.del
+            chat.websiteUrl.del
             chat.department.del
             chat.creationDate.del
             chat.history.del
@@ -141,7 +145,8 @@ schema =
     'chat:!{id}':
       visitor: 'Hash'
       status: 'String' # transfer, invite, waiting, active, vacant
-      website: 'String'
+      websiteId: 'String'
+      websiteUrl: 'String'
       department: 'String'
       creationDate: 'String'
       history: 'List' # message, username, timestamp

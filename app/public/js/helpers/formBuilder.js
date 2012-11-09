@@ -1,6 +1,8 @@
 (function() {
 
-  define(['load/server', 'load/notify', 'load/util'], function(server, notify, util) {
+  define(['load/server', 'load/notify', 'helpers/util'], function(server, notify, _arg) {
+    var toTitle;
+    toTitle = _arg.toTitle;
     return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) {
       var elements, formBuilder, getElementById, modelName,
         _this = this;

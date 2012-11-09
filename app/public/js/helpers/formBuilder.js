@@ -1,6 +1,6 @@
 (function() {
 
-  define(['load/server', 'load/notify'], function(server, notify) {
+  define(['load/server', 'load/notify', 'load/util'], function(server, notify, util) {
     return function(getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) {
       var elements, formBuilder, getElementById, modelName,
         _this = this;
@@ -14,7 +14,7 @@
           return cb();
         };
       }
-      modelName = elementName.charAt(0).toUpperCase() + elementName.slice(1);
+      modelName = toTitle(elementName);
       elements = initialElements;
       getElementById = function(id) {
         var element, _i, _len;

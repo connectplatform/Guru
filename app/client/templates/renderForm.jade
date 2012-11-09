@@ -24,12 +24,13 @@ form.form-horizontal(id="#{options.name}")
             textarea(name='#{field.name}')
 
           when 'static'
-            p #{field.name}
+            span.field(name='#{field.name}') #{field.value}
 
           default
             - console.log('Unrecognized field type:', field.inputType)
 
         span.help-inline
 
-  .controls
-    button.btn.btn-primary(type="submit") #{options.submitText}
+  if options.submit == 'group'
+    .controls
+      button.btn.btn-primary(type="submit") #{options.submitText}

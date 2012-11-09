@@ -27,14 +27,13 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
         ,
           name: 'password'
           inputType: 'password'
-          default: ''
           label: 'Password'
           required: true
         ,
-          name: 'confirmPassword'
+          name: 'passwordConfirm'
           inputType: 'password'
-          default: ''
           label: 'Confirm Password'
+          required: true
           validation: (text) ->
             return 'Password confirmation must match.' unless text is $(".controls [name=password]").val()
       ]

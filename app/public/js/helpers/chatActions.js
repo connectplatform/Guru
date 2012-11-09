@@ -26,7 +26,8 @@
                 email: email
               }, function(err, response) {
                 if (err) {
-                  server.log('Error sending email', {
+                  server.serverLog({
+                    message: 'Error sending email',
                     error: err,
                     severity: 'warn',
                     email: email

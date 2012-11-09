@@ -5,6 +5,9 @@
       getType: function(obj) {
         return Object.prototype.toString.call(obj).slice(8, -1);
       },
+      toTitle: function(word) {
+        return word[0].toUpperCase() + word.slice(1);
+      },
       readableSize: function(size) {
         var i, units;
         units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];

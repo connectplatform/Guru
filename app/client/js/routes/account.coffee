@@ -1,17 +1,28 @@
 define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
-  (server, notify, util, renderForm) ->
+  (server, notify, {toTitle}, renderForm) ->
     (args, templ) ->
 
       $('#content').html templ()
 
       options =
-        name: 'account'
         title: 'Account Details'
         placement: '.form-area'
+        submit: 'disabled'
 
       server.ready ->
-        server.findModel {modelName: 'User'}, (err, [account]) ->
-          console.log 'err:', err
-          console.log 'account:', account
+        server.findModel {modelName: 'Account'}, (err, accounts) ->
+          if err
+            $(options.placement).html 'Could not find account.'
+            return
 
-          renderForm options, account
+          [account] = accounts
+
+          fields = for fieldName, fieldVal of account when fieldName isnt '_id'
+            {
+              label: toTitle fieldName
+              name: fieldName
+              value: fieldVal
+              inputType: 'static'
+            }
+
+          renderForm options, fields

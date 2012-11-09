@@ -21,6 +21,7 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
         f.default ||= ''
 
       options.name ||= random()
+      options.submit ||= 'group'
       options.submitText ||= 'Send'
       options.placement ||= '#content'
 

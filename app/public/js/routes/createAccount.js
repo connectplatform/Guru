@@ -29,14 +29,13 @@
         }, {
           name: 'password',
           inputType: 'password',
-          "default": '',
           label: 'Password',
           required: true
         }, {
-          name: 'confirmPassword',
+          name: 'passwordConfirm',
           inputType: 'password',
-          "default": '',
           label: 'Confirm Password',
+          required: true,
           validation: function(text) {
             if (text !== $(".controls [name=password]").val()) {
               return 'Password confirmation must match.';

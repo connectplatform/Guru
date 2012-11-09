@@ -1,5 +1,5 @@
 module.exports =
-  required: ['sessionId', 'accountId', 'queryObject', 'modelName']
+  required: ['sessionId', 'accountId', 'modelName']
   optional: ['queryObject']
   service: ({queryObject, modelName, sessionId, accountId}, done) ->
     queryObject ||= {}

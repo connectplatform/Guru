@@ -31,3 +31,15 @@ boiler 'Service - Find Model', ->
         owner.specialties.should.eql []
 
         done()
+
+  it 'should let you get your account', (done) ->
+    @getAuthed =>
+
+      @client.findModel {modelName: 'Account'}, (err, account) ->
+        should.not.exist err
+        [account] = account
+        should.exist account, 'expected account to exist'
+        should.exist account.status, 'expected account status to exist'
+        account.status.should.eql 'Trial'
+
+        done()

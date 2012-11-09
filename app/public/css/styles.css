@@ -159,3 +159,12 @@ form input, form .controls button {
   margin-right: 6px;
   margin-top: 6px;
 }
+
+span.field {
+  background-color: #EEE;
+  padding: 4px;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  position: relative;
+  top: 5px;
+}

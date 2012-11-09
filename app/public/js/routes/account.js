@@ -1,23 +1,43 @@
 (function() {
 
-  define(['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'], function(server, notify, util, renderForm) {
+  define(['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'], function(server, notify, _arg, renderForm) {
+    var toTitle;
+    toTitle = _arg.toTitle;
     return function(args, templ) {
       var options;
       $('#content').html(templ());
       options = {
-        name: 'account',
         title: 'Account Details',
-        placement: '.form-area'
+        placement: '.form-area',
+        submit: 'disabled'
       };
       return server.ready(function() {
         return server.findModel({
-          modelName: 'User'
-        }, function(err, _arg) {
-          var account;
-          account = _arg[0];
-          console.log('err:', err);
-          console.log('account:', account);
-          return renderForm(options, account);
+          modelName: 'Account'
+        }, function(err, accounts) {
+          var account, fieldName, fieldVal, fields;
+          if (err) {
+            $(options.placement).html('Could not find account.');
+            return;
+          }
+          account = accounts[0];
+          fields = (function() {
+            var _results;
+            _results = [];
+            for (fieldName in account) {
+              fieldVal = account[fieldName];
+              if (fieldName !== '_id') {
+                _results.push({
+                  label: toTitle(fieldName),
+                  name: fieldName,
+                  value: fieldVal,
+                  inputType: 'static'
+                });
+              }
+            }
+            return _results;
+          })();
+          return renderForm(options, fields);
         });
       });
     };

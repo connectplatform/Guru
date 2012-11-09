@@ -5,7 +5,7 @@
     random = _arg.random;
     return function(options, fields, receive) {
       var f, validatedFields, _i, _len;
-      options || (options = {});
+      if (options == null) options = {};
       if (!(fields && fields.length > 0)) {
         server.serverLog({
           message: "Called renderForm with no fields.",
@@ -22,6 +22,7 @@
         f["default"] || (f["default"] = '');
       }
       options.name || (options.name = random());
+      options.submit || (options.submit = 'group');
       options.submitText || (options.submitText = 'Send');
       options.placement || (options.placement = '#content');
       $(options.placement).html(renderForm({

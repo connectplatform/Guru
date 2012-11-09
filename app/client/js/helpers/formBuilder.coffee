@@ -1,12 +1,12 @@
-define ['load/server', 'load/notify'], (server, notify) ->
-  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit)->
+define ['load/server', 'load/notify', 'load/util'], (server, notify, util) ->
+  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) ->
     unless beforeRender?
       beforeRender = (_, cb) -> cb {}
 
     unless beforeSubmit?
       beforeSubmit = (_, __, cb) -> cb()
 
-    modelName = elementName.charAt(0).toUpperCase() + elementName.slice(1)
+    modelName = toTitle elementName
 
     elements = initialElements
 

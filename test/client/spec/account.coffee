@@ -5,6 +5,8 @@ define ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasTe
       mock.services()
       mock.loggedIn 'Owner'
       window.location.hash = '/account'
-      waitsFor hasText('#page-header h1', 'Account Details'), "account details didn't load", defaultTimeout
+      waitsFor hasText('.page-header h1', 'Account Details'), "account details didn't load", defaultTimeout
 
     it 'should load account page', ->
+      expect($ '.form-area [name=status]').toExist()
+

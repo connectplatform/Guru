@@ -3,5 +3,4 @@ module.exports =
 
   filterOutput: (inModel) ->
     # TODO: take this out, it will cause a mismatch if the data is obtained without this filter
-    user = {id: inModel['_id']}
-    user
+    inModel.merge {id: delete inModel['_id']}

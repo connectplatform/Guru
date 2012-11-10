@@ -63,18 +63,17 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                   channel.emit 'clientMessage', {message: message, session: server.cookie('session')}
 
                   $("##{renderedId} .message-form .message").val("")
-                  $("##{renderedId} .chat-display-box").scrollTop($("##{renderedId} .chat-display-box").prop("scrollHeight"))
 
             createChatAppender = (renderedId) ->
               (message) ->
-                $("##{renderedId} .chat-display-box").append chatMessage message
+                util.append $("##{renderedId} .chat-display-box"), chatMessage message
 
             createChatRemover = (thisChatId, channel) ->
               (endedId) ->
                 return unless thisChatId is endedId
                 channel.removeAllListeners 'serverMessage'
                 renderedId = renderId endedId
-                $("##{renderedId} .chat-display-box").append serverMessage message: "Another operator has taken this chat"
+                util.append $("##{renderedId} .chat-display-box"), serverMessage message: "Another operator has taken this chat"
                 $(".message-form").hide()
 
             updateChatBadge = (chatId) ->
@@ -87,6 +86,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                 else
                   content = ''
 
+                console.log 'should be updating to:', content
                 $(".notifyUnread[chatid=#{chatId}]").html content
 
             for chat in chats

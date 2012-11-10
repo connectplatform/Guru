@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "templates/serverMessage", "templates/selectUser"], function(server, serverMessage, selectUser) {
+  define(["load/server", "helpers/util", "templates/serverMessage", "templates/selectUser"], function(server, util, serverMessage, selectUser) {
     var showUserSelectionBox;
     showUserSelectionBox = function(chatId, cb) {
       return server.getNonpresentOperators({
@@ -54,6 +54,7 @@
           return server.kickUser({
             chatId: chatId
           }, function(err) {
+            var chatbox;
             if (err) {
               server.log('Error kicking user', {
                 error: err,
@@ -61,7 +62,8 @@
                 chatId: chatId
               });
             }
-            return $("#" + renderedId + " .chat-display-box").append(serverMessage({
+            chatbox = $("#" + renderedId + " .chat-display-box");
+            return util.append(chatbox, serverMessage({
               message: "The visitor has been kicked from the room"
             }));
           });

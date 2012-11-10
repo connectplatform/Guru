@@ -78,7 +78,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
           # send pulsar notifications
           notifySession = config.require 'services/session/notifySession'
-          notifySession sessionId, metaInfo, true
+          notifySession sessionId, metaInfo, 'true'
           cb err, cs
 
       remove: tandoor (sessionId, chatId, cb) ->

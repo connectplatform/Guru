@@ -72,14 +72,13 @@
                     message: message,
                     session: server.cookie('session')
                   });
-                  $("#" + renderedId + " .message-form .message").val("");
-                  return $("#" + renderedId + " .chat-display-box").scrollTop($("#" + renderedId + " .chat-display-box").prop("scrollHeight"));
+                  return $("#" + renderedId + " .message-form .message").val("");
                 }
               };
             };
             createChatAppender = function(renderedId) {
               return function(message) {
-                return $("#" + renderedId + " .chat-display-box").append(chatMessage(message));
+                return util.append($("#" + renderedId + " .chat-display-box"), chatMessage(message));
               };
             };
             createChatRemover = function(thisChatId, channel) {
@@ -88,7 +87,7 @@
                 if (thisChatId !== endedId) return;
                 channel.removeAllListeners('serverMessage');
                 renderedId = renderId(endedId);
-                $("#" + renderedId + " .chat-display-box").append(serverMessage({
+                util.append($("#" + renderedId + " .chat-display-box"), serverMessage({
                   message: "Another operator has taken this chat"
                 }));
                 return $(".message-form").hide();
@@ -106,6 +105,7 @@
                 } else {
                   content = '';
                 }
+                console.log('should be updating to:', content);
                 return $(".notifyUnread[chatid=" + chatId + "]").html(content);
               };
             };

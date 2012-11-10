@@ -18,7 +18,8 @@
               unreadMessages[currentChat] = 0;
               sessionUpdates.emit('viewedMessages', currentChat);
             }
-            return emit(unreadMessages);
+            args[0] = unreadMessages;
+            return emit.apply(null, args);
           } else {
             return emit();
           }

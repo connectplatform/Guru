@@ -1,5 +1,5 @@
-define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists' ],
-  (server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
+define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists' ],
+  (server, pulsar, notify, util, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
@@ -9,6 +9,7 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
 
           $("#content").html templ()
           $(".message-form .message").focus()
+          console.log 'listening on channel:', chatId
           self.channel = pulsar.channel chatId
 
           $(".message-form").submit (evt) ->
@@ -23,11 +24,12 @@ define ["load/server", "load/pulsar", "load/notify", "templates/newChat", "templ
 
             return false
 
+          chatbox = $(".chat-display-box")
           appendChatMessage = (message) ->
-            $(".chat-display-box").append chatMessage message
+            util.append chatbox, chatMessage message
 
           appendServerMessage = (message) ->
-            $(".chat-display-box").append serverMessage message: message
+            util.append chatbox, serverMessage message: message
 
           displayGreeting = ->
             appendServerMessage "Welcome to live chat!  An operator will be with you shortly."

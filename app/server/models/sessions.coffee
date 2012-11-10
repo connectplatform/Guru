@@ -70,8 +70,8 @@ face = (decorators) ->
             # add/remove from onlineOperators
             session.role.get (err, role) ->
               config.log.error "Error getting role in session.online before/after step", {error: err, sessionId: session.id, role: role} if err
-              unless ((role is 'Visitor') or (role is 'None'))
-                op = if ((isOnline is true) or (isOnline is 'true')) then 'add' else 'srem'
+              unless (role is 'Visitor') or (role is 'None')
+                op = if (isOnline is true) or (isOnline is 'true') then 'add' else 'srem'
                 faceValue.onlineOperators[op] session.id, (err) ->
                   next err, [isOnline]
               else
@@ -89,13 +89,13 @@ face = (decorators) ->
             next null, data
 
           after ['add'], (context, data, next) ->
-            notifySession session.id, {type: 'new'}, true
+            notifySession session.id, {type: 'new'}, 'true'
             next null, data
 
         unreadMessages session, ({after}) ->
 
           after ['incrby'], (context, data, next) ->
-            notifySession session.id, {type: 'unread'}, true
+            notifySession session.id, {type: 'unread'}, 'true'
             next null, data
 
           # filter retreived values with a parseInt

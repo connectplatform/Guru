@@ -77,7 +77,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           expect(websiteUrl).toBeDefined 'Missing websiteUrl.'
           expect(department).toBeDefined 'Missing department.'
           expect(username).toBeDefined 'Missing username.'
-          cb null, chatId: 'foo'
+          cb null, chatId: 'chat_foo'
 
       noOperators: ->
         server.createChatOrGetForm = (params, cb) ->

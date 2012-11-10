@@ -1,6 +1,6 @@
 (function() {
 
-  define(["load/server", "load/pulsar", "load/notify", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'], function(server, pulsar, notify, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) {
+  define(["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'], function(server, pulsar, notify, util, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) {
     return {
       channel: {},
       setup: function(_arg, templ) {
@@ -11,10 +11,11 @@
           return server.visitorCanAccessChannel({
             chatId: chatId
           }, function(err, canAccess) {
-            var appendChatMessage, appendServerMessage, displayGreeting;
+            var appendChatMessage, appendServerMessage, chatbox, displayGreeting;
             if (!canAccess) return window.location.hash = '/newChat';
             $("#content").html(templ());
             $(".message-form .message").focus();
+            console.log('listening on channel:', chatId);
             self.channel = pulsar.channel(chatId);
             $(".message-form").submit(function(evt) {
               var message;
@@ -30,11 +31,12 @@
               }
               return false;
             });
+            chatbox = $(".chat-display-box");
             appendChatMessage = function(message) {
-              return $(".chat-display-box").append(chatMessage(message));
+              return util.append(chatbox, chatMessage(message));
             };
             appendServerMessage = function(message) {
-              return $(".chat-display-box").append(serverMessage({
+              return util.append(chatbox, serverMessage({
                 message: message
               }));
             };

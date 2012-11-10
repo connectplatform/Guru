@@ -8,6 +8,13 @@
       toTitle: function(word) {
         return word[0].toUpperCase() + word.slice(1);
       },
+      append: function(selector, message) {
+        $(selector).append(message);
+        return this.scrollToBottom(selector);
+      },
+      scrollToBottom: function(selector) {
+        return $(selector).scrollTop($(selector).height());
+      },
       readableSize: function(size) {
         var i, units;
         units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];

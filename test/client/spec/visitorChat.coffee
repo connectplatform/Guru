@@ -3,6 +3,8 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
     describe 'Visitor Chat', ->
       beforeEach ->
+
+        # run through the chat creation process
         runs ->
           mock.services()
           mock.visitor()
@@ -11,6 +13,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
         waitsFor exists('#newChat'), 'New Chat did not load', defaultTimeout
 
         runs ->
+          # given proper params, server returns a chatId
           mock.returnChat()
           $('#username').val 'aVisitor'
           $('#newChat button.btn-primary').click()
@@ -24,6 +27,14 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
       it 'should display a welcome message', ->
         waitsFor hasText('.chat-display-box p', "Welcome to live chat!  An operator will be with you shortly."), defaultTimeout, 'Welcome message did not display'
+
+      it 'should receive and display messages', ->
+        pulsar.channel("chat_foo").emit 'serverMessage', {username: "Helper Dude", message: "How can I help?", timestamp: 1}
+
+                                          # this crazy selector gets the second p tag
+        waitsFor hasText(".chat-display-box p:visible+p", 'Helper Dude: How can I help?'), 'Message sent did not display', defaultTimeout
+
+        expect( $(".chat-display-box p:visible").length).toEqual 2
 
       it 'should give the visitor a button to leave the chat', ->
         waitsFor exists('.leaveButton'), 'Visitor chat did not load', defaultTimeout
@@ -50,7 +61,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
         runs ->
           window.open = (location) ->
-            expect location, "https://localhost:4003/#/foo"
+            expect location, "https://localhost:4003/#/chat_foo"
             opened = true
 
           $('.printButton').click()

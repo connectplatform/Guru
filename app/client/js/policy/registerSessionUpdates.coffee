@@ -6,7 +6,7 @@ define ["load/pulsar", "load/server"], (pulsar, server) ->
         sessionUpdates.use (emit, event, args...) ->
 
           if event is 'unreadMessages'
-            [unreadMessages] = args
+            unreadMessages = args[0]
             currentChat = $('.chatWindow:visible').attr('chatid')
             unreadCount = unreadMessages[currentChat]
 
@@ -14,6 +14,7 @@ define ["load/pulsar", "load/server"], (pulsar, server) ->
               unreadMessages[currentChat] = 0
               sessionUpdates.emit 'viewedMessages', currentChat
 
-            emit unreadMessages
+            args[0] = unreadMessages
+            emit args...
           else
             emit()

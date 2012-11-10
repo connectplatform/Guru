@@ -29,17 +29,18 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
 
         sessionUpdates.on 'unansweredChats', ({count}, chime) ->
           updateBadge "#sidebar .notifyUnanswered", count
-          playSound "newChat" if chime
+          playSound "newChat" if chime is 'true'
 
         sessionUpdates.on 'pendingInvites', (invites, chime) ->
           pendingInvites = invites.keys().length
           updateBadge "#sidebar .notifyInvites", pendingInvites, 'warning'
-          playSound "newInvite" if (pendingInvites > 0) and chime
+          playSound "newInvite" if (pendingInvites > 0) and chime is 'true'
 
-        sessionUpdates.on 'unreadMessages', (unread, chime) ->
+        sessionUpdates.on 'unreadMessages', (args...) ->
+          [unread, chime] = args
           newMessages = countUnreadMessages unread
           updateBadge "#sidebar .notifyUnread", newMessages
-          playSound "newMessage" if chime
+          playSound "newMessage" if chime is 'true'
 
         # update badge number on change
         sessionUpdates.on 'echoViewed', (unread) ->

@@ -2,6 +2,13 @@ define ["templates/treeviewParentNode", "templates/li", "templates/treeview"], (
   getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
   toTitle: (word) -> word[0].toUpperCase() + word.slice(1)
 
+  append: (selector, message) ->
+    $(selector).append message
+    @scrollToBottom selector
+
+  scrollToBottom: (selector) ->
+    $(selector).scrollTop($(selector).height())
+
   readableSize: (size) ->
     units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     i = 0

@@ -1,5 +1,6 @@
 (function() {
-  var countUnreadMessages, playSound;
+  var countUnreadMessages, playSound,
+    __slice = Array.prototype.slice;
 
   countUnreadMessages = function(unread) {
     var chat, count, total;
@@ -42,19 +43,23 @@
             var count;
             count = _arg.count;
             updateBadge("#sidebar .notifyUnanswered", count);
-            if (chime) return playSound("newChat");
+            if (chime === 'true') return playSound("newChat");
           });
           sessionUpdates.on('pendingInvites', function(invites, chime) {
             var pendingInvites;
             pendingInvites = invites.keys().length;
             updateBadge("#sidebar .notifyInvites", pendingInvites, 'warning');
-            if ((pendingInvites > 0) && chime) return playSound("newInvite");
+            if ((pendingInvites > 0) && chime === 'true') {
+              return playSound("newInvite");
+            }
           });
-          sessionUpdates.on('unreadMessages', function(unread, chime) {
-            var newMessages;
+          sessionUpdates.on('unreadMessages', function() {
+            var args, chime, newMessages, unread;
+            args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+            unread = args[0], chime = args[1];
             newMessages = countUnreadMessages(unread);
             updateBadge("#sidebar .notifyUnread", newMessages);
-            if (chime) return playSound("newMessage");
+            if (chime === 'true') return playSound("newMessage");
           });
           return sessionUpdates.on('echoViewed', function(unread) {
             var newMessages;

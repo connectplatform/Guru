@@ -27,7 +27,6 @@ boiler 'Service - New Chat', ->
       notify.on 'unansweredChats', ({count}) =>
         count.should.eql 1
         notify.removeAllListeners 'unansweredChats'
-        @client.disconnect()
         done()
 
       @newChat ->

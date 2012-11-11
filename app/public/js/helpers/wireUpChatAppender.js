@@ -14,9 +14,7 @@
         return false;
       };
       appendChatMessageIfNew = function(message) {
-        var rcvd;
-        rcvd = alreadyReceivedChatMessage(message);
-        if (!rcvd) return appender(message);
+        if (!alreadyReceivedChatMessage(message)) return appender(message);
       };
       return chatChannel.on('serverMessage', appendChatMessageIfNew);
     };

@@ -23,10 +23,10 @@ module.exports =
         config.log.warn 'Error getting operator session in login', {error: err, userId: user.id} if err
         if sessionId?
           Session(accountId).get(sessionId).online.set true, (err) ->
-          if err
-            meta = {error: err, sessionId: sessionId}
-            config.log.error 'Error setting operator online status when reconnecting to session', meta
-          done null, user, {setCookie: {sessionId: sessionId}}
+            if err
+              meta = {error: err, sessionId: sessionId}
+              config.log.error 'Error setting operator online status when reconnecting to session', meta
+            done null, user, {setCookie: {sessionId: sessionId}}
         else
           createUserSession user, (err, session) ->
             done null, user, {setCookie: {sessionId: session.id}}

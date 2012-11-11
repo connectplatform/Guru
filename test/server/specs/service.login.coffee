@@ -19,12 +19,14 @@ boiler 'Service - Login', ->
     @invalidLogin (err, client, accountId) =>
       should.exist err
       err.should.eql 'Invalid user.'
+      client.disconnect()
       done()
 
   it 'should not accept invalid password', (done) ->
     @wrongpasswordLogin (err, client, accountId) =>
       should.exist err
       err.should.eql 'Invalid password.'
+      client.disconnect()
       done()
 
   it 'should reattatch you to an existing session', (done) ->

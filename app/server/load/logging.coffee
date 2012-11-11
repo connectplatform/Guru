@@ -7,11 +7,15 @@ module.exports = (options) ->
 
   makeLogger = (type) ->
     loggers[type] = new winston.Logger
-    loggerOptions = {}
-    loggerOptions.merge config[options[type].referenceOptions]
-    loggerOptions.merge options[type]
 
-    loggers[type].add winston.transports[options[type].transport], loggerOptions
+    # some loggers (mongo) require the config for that persistance method
+    loggerOptions = options[type]
+    if loggerOptions.transport is 'MongoDB'
+      loggerOptions.merge
+        host: config.mongo.host
+        db: config.mongo.name
+
+    loggers[type].add winston.transports[loggerOptions.transport], loggerOptions
 
   makeLogger 'client'
   makeLogger 'server'

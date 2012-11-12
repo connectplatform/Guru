@@ -1,6 +1,6 @@
 winston = require 'winston'
-require 'sugar'
-require('winston-mongodb').MongoDB
+{MongoDB} = require 'winston-mongodb'
+url = require 'url'
 
 module.exports = (options) ->
   loggers = {}
@@ -10,12 +10,25 @@ module.exports = (options) ->
 
     # some loggers (mongo) require the config for that persistance method
     loggerOptions = options[type]
-    if loggerOptions.transport is 'MongoDB'
-      loggerOptions.merge
-        host: config.mongo.host
-        db: config.mongo.name
+    transport = loggerOptions.transport
+    delete loggerOptions.transport
+    if transport is 'MongoDB'
 
-    loggers[type].add winston.transports[loggerOptions.transport], loggerOptions
+      connParts = url.parse config.mongo.host
+      loggerOptions.merge
+        host: connParts.hostname
+        port: connParts.port || 27017
+        db: connParts.pathname.replace '/', ''
+
+      if connParts.auth
+        [username, password] = connParts.auth.split ':'
+        loggerOptions.merge
+          username: username
+          password: password
+
+      #console.log 'options:', loggerOptions
+
+    loggers[type].add winston.transports[transport], loggerOptions
 
   makeLogger 'client'
   makeLogger 'server'

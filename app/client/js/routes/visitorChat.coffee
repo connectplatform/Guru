@@ -9,7 +9,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
           $("#content").html templ()
           $(".message-form .message").focus()
-          console.log 'listening on channel:', chatId
           self.channel = pulsar.channel chatId
 
           $(".message-form").submit (evt) ->

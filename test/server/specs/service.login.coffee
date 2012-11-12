@@ -47,3 +47,9 @@ boiler 'Service - Login', ->
             online.should.eql true
             client.disconnect()
             done()
+
+  it 'Admin login should not crash the server', (done) ->
+    @adminLogin (err, client, accountId) =>
+      should.exist err
+      err.should.eql 'User not associated with accountId.'
+      done()

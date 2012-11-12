@@ -17,6 +17,7 @@ module.exports =
 
       return done 'Invalid user.' unless user?
       return done 'Invalid password.' unless user.comparePassword password
+      return done 'User not associated with accountId.' unless user.accountId # disables admin login
 
       accountId = user.accountId.toString()
       Session(accountId).sessionsByOperator.get user.id, (err, sessionId) ->

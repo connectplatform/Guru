@@ -36,77 +36,15 @@ config =
         secretKey: '4IdLGyU52rbz3pFrTLJjgZIJnyT7FkrxRQTSrJDr'
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
-      name: 'guru-dev'
     redis:
       database: 0
     logging:
       client:
-        level: 'warn'
-        transport: 'MongoDB'
-        options:
-          collection: 'clientLogs'
-          capped: true
-          cappedSize: 104857600 #100 MB
+        level: 'info'
+        transport: 'Console'
       server:
         level: 'info'
-        transport: 'MongoDB'
-        options:
-          collection: 'serverLogs'
-          capped: true
-          cappedSize: 104857600 #100 MB
-
-  production:
-    app:
-      name: 'Live Chat Host'
-      port: 443
-      pulsarPort: 4001
-      ssl:
-        key: "../../../../certs/privatekey.pem"
-        cert: "../../../../certs/livechathost.com.crt"
-        ca: ["../../../../certs/gd_bundle.crt"]
-        redirectFrom: 80
-      chats:
-        minutesToTimeout: 15
-      mail:
-        transport: 'SES'
-        options:
-          AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
-          AWSSecretKey: '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'
-          from: 'info@livechathost.com'
-          support: 'support@livechathost.com'
-        getActivationLink: (uid, regkey) ->
-          "https://livechathost.com/#/resetPassword?uid=#{uid}&regkey=#{regkey}"
-      # TODO: duplication!
-      aws:
-        s3:
-          bucket: 'guru-prod'
-          acl: 'public-read'
-          maxSize: '102400'
-        accessKey: 'AKIAILLS5MBMHVD62AEA'
-        secretKey: '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'
-
-    mongo:
-      host: 'mongodb://guru:gk31Ql8151BTOS1@ds035137.mongolab.com:35137/guru-dev'
-      name: 'guru-dev'
-    redis:
-      database: 1
-    logging:
-      client:
-        level: 'warn'
-        transport: 'MongoDB'
-        referenceOptions: 'mongo'
-        options:
-          collection: 'clientLogs'
-          capped: true
-          cappedSize: 104857600 #100 MB
-      server:
-        level: 'info'
-        transport: 'MongoDB'
-        referenceOptions: 'mongo'
-        options:
-          collection: 'serverLogs'
-          capped: true
-          cappedSize: 104857600 #100 MB
+        transport: 'Console'
 
 paths =
   root:       rel '.'
@@ -130,6 +68,11 @@ path = (spec) ->
   root = parts.shift()
   throw new Error "'#{root}' is not a path in config.coffee" unless paths[root]?
   join paths[root], parts.join '/'
+
+# sensible error message if env is wrong
+unless config[environment]
+  console.log "Could not find config for environment: [#{environment}].  Valid environments: [#{Object.keys(config).join ', '}]"
+  process.exit(1)
 
 global.config = config[environment].merge
   env: environment

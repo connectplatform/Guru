@@ -21,4 +21,5 @@ module.exports = (server) ->
         params = {sessionId: res.cookie 'session'}.merge args
 
         # run the service
+        #console.log 'Service Ran:', name
         service params, res.reply, processSideEffects

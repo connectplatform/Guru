@@ -69,7 +69,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           serverLog: (params, cb) ->
             cb null, 'Success'
           log: (params, cb) ->
-          setSessionOffline: (params, cb) ->
             cb null, null
 
       returnChat: ->

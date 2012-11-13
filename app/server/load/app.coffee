@@ -41,6 +41,9 @@ module.exports = (cb) ->
     attachFilters topLevelServices
     veinAdapter(server) topLevelServices
 
+    #restServices = Object.findAll config.services, (name) -> name.has /^rest\//
+    #restAdapter(app) restServices
+
     # Good job, we made it!
     config.log.info "Server started on #{port}"
     config.log.info "Pulsar started on #{config.app.pulsarPort}"

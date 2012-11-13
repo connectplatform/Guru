@@ -10,5 +10,5 @@ module.exports =
     notify = pulsar.channel chatId
     ChatSession(accountId).remove sessionId, chatId, (err) ->
       config.log.error 'Error removing chatSession in leaveChat', {error: err, chatId: chatId, sessionId: sessionId} if err
-      notify.emit 'operatorLeave'
+      notify.emit 'leave'
       done err, chatId

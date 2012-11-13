@@ -47,7 +47,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             self.channel.on 'operatorJoin', ->
               appendServerMessage 'An operator has joined the chat.'
 
-            self.channel.on 'operatorLeave', ->
+            self.channel.on 'leave', ->
               appendServerMessage 'Operator has left the chat.'
 
             # when you get to the end, stop

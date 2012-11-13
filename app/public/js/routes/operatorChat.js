@@ -127,6 +127,13 @@
               wireUpChatAppender(createChatAppender(chat.renderedId), channel);
               self.sessionUpdates.on('kickedFromChat', createChatRemover(chat.id, channel));
               self.sessionUpdates.on('unreadMessages', updateChatBadge(chat.id));
+              channel.on('leave', function() {
+                var renderedId;
+                renderedId = renderId(chat.id);
+                return util.append($("#" + renderedId + " .chat-display-box"), serverMessage({
+                  message: "Visitor has left the chat."
+                }));
+              });
               $("#" + chat.renderedId + " .inviteButton").click(controls.createHandler('inviteOperator', chat.id));
               $("#" + chat.renderedId + " .transferButton").click(controls.createHandler('transferChat', chat.id));
               $("#" + chat.renderedId + " .kickButton").click(controls.createKickHandler(chat.id, chat.renderedId));

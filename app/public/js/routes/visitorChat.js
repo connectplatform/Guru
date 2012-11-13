@@ -64,7 +64,7 @@
               self.channel.on('operatorJoin', function() {
                 return appendServerMessage('An operator has joined the chat.');
               });
-              self.channel.on('operatorLeave', function() {
+              self.channel.on('leave', function() {
                 return appendServerMessage('Operator has left the chat.');
               });
               return self.channel.on('chatEnded', function() {

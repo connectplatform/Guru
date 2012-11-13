@@ -27,3 +27,9 @@ boiler 'REST - Chat Link Image', ->
             should.not.exist err
 
             @expectOffline done
+
+    it 'should cache results', (done) ->
+      @timeout 20
+      @expectOffline =>
+        @expectOffline =>
+          @expectOffline done

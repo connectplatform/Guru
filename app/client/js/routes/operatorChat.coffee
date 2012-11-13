@@ -104,6 +104,10 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               self.sessionUpdates.on 'kickedFromChat', createChatRemover chat.id, channel
               self.sessionUpdates.on 'unreadMessages', updateChatBadge chat.id
 
+              channel.on 'leave', ->
+                renderedId = renderId chat.id
+                util.append $("##{renderedId} .chat-display-box"), serverMessage message: "Visitor has left the chat."
+
               #wire up control buttons
               $("##{chat.renderedId} .inviteButton").click controls.createHandler 'inviteOperator', chat.id
               $("##{chat.renderedId} .transferButton").click controls.createHandler 'transferChat', chat.id

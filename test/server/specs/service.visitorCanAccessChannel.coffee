@@ -7,7 +7,7 @@ boiler 'Service - Visitor Can Access Channel', ->
         @owner.joinChat {chatId: @chatId}, done
 
   afterEach ->
-    @client.disconnect()
+    @owner.disconnect()
 
   it 'should say a visitor can connect to a chat that they created', (done) ->
     @client.visitorCanAccessChannel {chatId: @chatId}, (err, accessAllowed) =>
@@ -20,5 +20,4 @@ boiler 'Service - Visitor Can Access Channel', ->
       @client.visitorCanAccessChannel {chatId: @chatId}, (err, accessAllowed) =>
         should.not.exist err
         accessAllowed.should.eql false
-        @owner.disconnect()
         done()

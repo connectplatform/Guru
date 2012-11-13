@@ -46,8 +46,6 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
       server.ready ->
         renderForm options, fields, (params) ->
           server.createAccount params, (err, args) ->
-            console.log 'err:', err
-            console.log 'args:', args
 
             if err
               notify.error err

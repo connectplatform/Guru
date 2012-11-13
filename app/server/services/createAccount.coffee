@@ -3,6 +3,8 @@ db = require 'mongoose'
 {curry} = config.require 'load/util'
 {Account, User} = db.models
 
+login = config.require 'services/login'
+
 module.exports =
   required: ['email', 'firstName', 'lastName', 'password']
   service: (fields, done) ->
@@ -26,5 +28,5 @@ module.exports =
         config.log.warning "Error creating account: #{err}", fields: fields
         return done err
 
-      {account, user: [user]} = results
-      done null, {accountId: account.id, userId: user.id}
+      loginFields = Object.findAll fields, (k) -> k in ['email', 'password']
+      login.service loginFields, done

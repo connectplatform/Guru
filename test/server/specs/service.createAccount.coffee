@@ -10,11 +10,10 @@ boiler 'Service - Save Account', ->
 
   describe 'with valid info', ->
 
-    it 'should create an account', (done) ->
+    it 'should create an account and log me in', (done) ->
       @client = @getClient()
       @client.ready =>
         @client.createAccount fields, (err, status) =>
           should.not.exist err
-          should.exist status?.accountId, 'expected accountId'
-          should.exist status?.userId, 'expected userId'
+          should.exist @client.cookie('session'), 'expected to be logged in'
           done()

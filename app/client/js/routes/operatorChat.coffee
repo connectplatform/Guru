@@ -86,7 +86,6 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                 else
                   content = ''
 
-                #console.log 'should be updating to:', content
                 $(".notifyUnread[chatid=#{chatId}]").html content
 
             for chat in chats

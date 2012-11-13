@@ -17,16 +17,17 @@ module.exports =
 
       return done 'Invalid user.' unless user?
       return done 'Invalid password.' unless user.comparePassword password
+      return done 'User not associated with accountId.' unless user.accountId # disables admin login
 
       accountId = user.accountId.toString()
       Session(accountId).sessionsByOperator.get user.id, (err, sessionId) ->
         config.log.warn 'Error getting operator session in login', {error: err, userId: user.id} if err
         if sessionId?
           Session(accountId).get(sessionId).online.set true, (err) ->
-          if err
-            meta = {error: err, sessionId: sessionId}
-            config.log.error 'Error setting operator online status when reconnecting to session', meta
-          done null, user, {setCookie: {sessionId: sessionId}}
+            if err
+              meta = {error: err, sessionId: sessionId}
+              config.log.error 'Error setting operator online status when reconnecting to session', meta
+            done null, user, {setCookie: {sessionId: sessionId}}
         else
           createUserSession user, (err, session) ->
             done null, user, {setCookie: {sessionId: session.id}}

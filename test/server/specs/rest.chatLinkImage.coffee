@@ -3,27 +3,27 @@ should = require 'should'
 
 boiler 'REST - Chat Link Image', ->
   describe 'Chat link image', ->
-    before ->
+
+    beforeEach ->
       statusShouldBe = (status,  cb) =>
-        rest.get("http://localhost:#{@testPort}/foo.com/chatLinkImage").on '3XX', (data, response) =>
+        rest.get("http://localhost:#{@testPort}/chatLinkImage/#{@website._id}").on 'complete', (data, response) =>
           response.statusCode.should.eql 307
-          new RegExp("foo.com\/#{status}$").test(response.headers.location).should.eql true
+          response.headers.location.should.match new RegExp "#{@website._id}\/#{status}$"
           cb()
 
       @expectOnline = (cb) -> statusShouldBe 'online', cb
       @expectOffline = (cb) -> statusShouldBe 'offline', cb
 
-    it 'should redirect you based on whether operators are online', (done) ->
+    it 'should display online image when operators are online', (done) ->
+      @getAuthed =>
+        @expectOnline done
+
+    it 'should display offline image when operators are offline', (done) ->
       @expectOffline =>
 
+        # set online/back offline
         @getAuthed =>
-          sessionId = @client.cookie 'session'
+          @client.setSessionOffline @client.cookie('session'), (err) =>
+            should.not.exist err
 
-          @expectOnline =>
-
-            @client.setSessionOffline @client.cookie('session'), (err) =>
-              should.not.exist err
-              @expectOffline =>
-
-                @client.disconnect()
-                done()
+            @expectOffline done

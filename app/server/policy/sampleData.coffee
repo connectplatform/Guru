@@ -83,7 +83,6 @@ module.exports = (done) ->
     ]
 
     websites = [
-        name: 'FooBar Inc.'
         url: "foo.com"
         subdomain: "foo"
         contactEmail: 'success@simulator.amazonses.com'
@@ -101,12 +100,10 @@ module.exports = (done) ->
             label: 'Department'
         ]
       ,
-        name: 'Baz LLC'
         url: "baz.com"
         subdomain: "baz"
         contactEmail: 'success@simulator.amazonses.com'
       ,
-        name: 'Bar Underground'
         url: "bar.com"
         subdomain: "bar"
         contactEmail: 'success@simulator.amazonses.com'

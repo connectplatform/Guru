@@ -25,7 +25,10 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
           chatbox = $(".chat-display-box")
           appendChatMessage = (message) ->
-            util.append chatbox, chatMessage message
+            if message.type is 'notification'
+              appendServerMessage message.message
+            else
+              util.append chatbox, chatMessage message
 
           appendServerMessage = (message) ->
             util.append chatbox, serverMessage message: message
@@ -41,13 +44,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
             # display messages when received
             wireUpChatAppender appendChatMessage, self.channel
-
-            # display inline status messages
-            self.channel.on 'operatorJoin', ->
-              appendServerMessage 'An operator has joined the chat.'
-
-            self.channel.on 'leave', ->
-              appendServerMessage 'Operator has left the chat.'
 
             # when you get to the end, stop
             self.channel.on 'chatEnded', ->

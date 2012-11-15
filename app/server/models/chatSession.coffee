@@ -2,6 +2,8 @@ async = require 'async'
 {tandoor, getType} = config.require 'load/util'
 
 stoic = require 'stoic'
+pulsar = config.require 'load/pulsar'
+channel = pulsar.channel chatId
 {Chat, Session} = stoic.models
 
 # Interface for document
@@ -62,9 +64,16 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
         cs = chatSession.get sessionId, chatId
+        cs.session.role.get (err, role)->
+          if role is 'Visitor'
+            console.log 'visit join'
+            channel.emit 'serverMessage', {message: 'Visitor has joined the chat', type: 'notification'}
+          else
+            channel.emit 'serverMessage', {message: 'Operator has joined the chat', type: 'notification'}
+            console.log 'oper join'
+
         metaInfo ||= {}
         metaInfo.isWatching ||= 'false'
-
         #config.log "adding #{metaInfo.type}.  sessionId: #{sessionId}, chatId: #{chatId}"
         async.parallel [
           cs.sessionIndex.add chatId
@@ -83,6 +92,13 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
       remove: tandoor (sessionId, chatId, cb) ->
         cs = chatSession.get sessionId, chatId
+        cs.session.role.get (err, role)->
+          if role is 'Visitor'
+            channel.emit 'serverMessage', {message: 'Visitor has left the chat', type: 'notification'}
+            console.log 'visit leave'
+          else
+            channel.emit 'serverMessage', {message: 'Operator has left the chat', type: 'notification'}
+            console.log 'oper leave'
 
         #config.log "removing chatSession.  sessionId: #{sessionId}, chatId: #{chatId}"
         async.parallel [

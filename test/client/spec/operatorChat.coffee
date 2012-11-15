@@ -44,6 +44,16 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
         waitsFor hasText('#chatTabs .notifyUnread[chatid=chat_2]', '3'), 'Did not update unread messages', defaultTimeout
         expect($ '#chatTabs .notifyUnread[chatid=chat_1]').toBeEmpty()
 
+      it 'should display notification messages', ->
+
+        # Emit a server message with type: notification
+        pulsar.channel("chat_1").emit 'serverMessage',
+          message: 'Operator/Visitor has joined/left the chat',
+          type: 'notification'
+
+        waitsFor hasText('.chat-display-box .bold', 'Operator/Visitor has joined/left the chat'), defaultTimeout
+
+
       describe 'Sidebar', ->
 
         it 'should only show message count for unread chats', ->

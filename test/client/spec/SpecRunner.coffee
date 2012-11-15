@@ -9,6 +9,7 @@ define ['jasmine/jasmine-html', 'jasmine/jasmine-jquery', 'spec/helpers/util', '
     'spec/operatorChat',
     'spec/printChat',
     'spec/visitorChat',
+    'spec/website',
     'spec/account'
 
   ], (jasmineHtml, jjq, {delay}, mock) ->

@@ -3,7 +3,6 @@ async = require 'async'
 
 stoic = require 'stoic'
 pulsar = config.require 'load/pulsar'
-channel = pulsar.channel chatId
 {Chat, Session} = stoic.models
 
 # Interface for document
@@ -63,6 +62,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
         return base
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
+        channel = pulsar.channel chatId
         cs = chatSession.get sessionId, chatId
         cs.session.role.get (err, role)->
           if role is 'Visitor'
@@ -91,6 +91,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           cb err, cs
 
       remove: tandoor (sessionId, chatId, cb) ->
+        channel = pulsar.channel chatId
         cs = chatSession.get sessionId, chatId
         cs.session.role.get (err, role)->
           if role is 'Visitor'

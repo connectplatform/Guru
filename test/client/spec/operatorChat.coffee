@@ -46,12 +46,13 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
 
       it 'should display notification messages', ->
 
-        # Emit a server message with type: notification
-        pulsar.channel("chat_1").emit 'serverMessage',
-          message: 'Operator/Visitor has joined/left the chat',
+        # Emit a server message (to chat_2 because I guess a test changes chat windows)
+        # with type: notification
+        pulsar.channel("chat_2").emit 'serverMessage',
+          message: 'Operator has joined/left the chat',
           type: 'notification'
 
-        waitsFor hasText('.chat-display-box .bold', 'Operator/Visitor has joined/left the chat'), defaultTimeout
+        waitsFor hasText('.chat-display-box .bold', 'Operator has joined/left the chat'), defaultTimeout
 
 
       describe 'Sidebar', ->

@@ -31,7 +31,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
       it 'should display notification messages', ->
         # Emit a server message with type: notification
         pulsar.channel("chat_foo").emit 'serverMessage',
-          message: 'Visitor has joined/left the chat',
+          message: 'Visitor has joined the chat',
           type: 'notification'
         waitsFor hasText('.chat-display-box p:visible+p', 'Visitor has joined/left the chat'), defaultTimeout, 'Notification did not display'
 

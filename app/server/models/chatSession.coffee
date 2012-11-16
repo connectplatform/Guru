@@ -1,8 +1,8 @@
 async = require 'async'
+pulsar = config.require 'load/pulsar'
 {tandoor, getType} = config.require 'load/util'
 
 stoic = require 'stoic'
-pulsar = config.require 'load/pulsar'
 {Chat, Session} = stoic.models
 
 # Interface for document
@@ -64,13 +64,17 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
         channel = pulsar.channel chatId
         cs = chatSession.get sessionId, chatId
-        cs.session.role.get (err, role)->
+        cs.session.role.get (err, role) ->
           if role is 'Visitor'
-            console.log 'visit join'
-            channel.emit 'serverMessage', {message: 'Visitor has joined the chat', type: 'notification'}
+            channel.emit 'serverMessage',
+              message: 'Visitor has joined the chat',
+              type: 'notification',
+              timestamp: new Date().getTime()
           else
-            channel.emit 'serverMessage', {message: 'Operator has joined the chat', type: 'notification'}
-            console.log 'oper join'
+            channel.emit 'serverMessage',
+              message: 'Operator has joined the chat',
+              type: 'notification',
+              timestamp: new Date().getTime()
 
         metaInfo ||= {}
         metaInfo.isWatching ||= 'false'
@@ -93,28 +97,31 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
       remove: tandoor (sessionId, chatId, cb) ->
         channel = pulsar.channel chatId
         cs = chatSession.get sessionId, chatId
-        cs.session.role.get (err, role)->
+        cs.session.role.get (err, role) ->
           if role is 'Visitor'
-            channel.emit 'serverMessage', {message: 'Visitor has left the chat', type: 'notification'}
-            console.log 'visit leave'
+            channel.emit 'serverMessage',
+              message: 'Visitor has left the chat',
+              type: 'notification',
+              timestamp: new Date().getTime()
           else
-            channel.emit 'serverMessage', {message: 'Operator has left the chat', type: 'notification'}
-            console.log 'oper leave'
+            channel.emit 'serverMessage',
+              message: 'Operator has left the chat',
+              type: 'notification',
+              timestamp: new Date().getTime()
 
-        #config.log "removing chatSession.  sessionId: #{sessionId}, chatId: #{chatId}"
-        async.parallel [
-          cs.sessionIndex.srem chatId
-          cs.chatIndex.srem sessionId
-          cs.relationMeta.del
+          async.parallel [
+            cs.sessionIndex.srem chatId
+            cs.chatIndex.srem sessionId
+            cs.relationMeta.del
 
-        ], (err) ->
-          config.log.error 'Error removing chatSession', {error: err} if err
-          # We have a circular dependency if we load this immediately
-          updateChatStatus = config.require 'services/chats/updateChatStatus'
-          updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
-            config.log.error 'Error updating chat status when removing chat session', {error: err, chatId: chatId, accountId: accountId} if err
+          ], (err) ->
+            config.log.error 'Error removing chatSession', {error: err} if err
+            # We have a circular dependency if we load this immediately
+            updateChatStatus = config.require 'services/chats/updateChatStatus'
+            updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
+              config.log.error 'Error updating chat status when removing chat session', {error: err, chatId: chatId, accountId: accountId} if err
 
-            cb err, cs
+              cb err, cs
 
       # just sugar
       getBySession: tandoor (sessionId, cb) ->

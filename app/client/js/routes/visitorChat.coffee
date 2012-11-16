@@ -24,6 +24,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             return false
 
           chatbox = $(".chat-display-box")
+
           appendChatMessage = (message) ->
             if message.type is 'notification'
               appendServerMessage message.message

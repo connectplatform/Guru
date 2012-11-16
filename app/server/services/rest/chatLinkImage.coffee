@@ -1,6 +1,6 @@
 async = require 'async'
 db = config.require 'load/mongo'
-operatorsOnline = config.require 'services/operator/operatorsAreOnline'
+getAvailableOperators = config.require 'services/operator/getAvailableOperators'
 
 cache = {}
 
@@ -38,13 +38,10 @@ module.exports = ({pathParts}, response) ->
     respond cache[websiteId][0]
 
   else
-    # look up account by websiteId
-    {Website} = db.models
-    Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
-      return if handleError err
 
-      # is anyone online?
-      operatorsOnline {accountId: website.accountId}, (err, isOnline) ->
-        cache[websiteId] = [isOnline, Date.now()]
-        return if handleError err
-        respond isOnline
+    # is anyone online?
+    getAvailableOperators websiteId, null, (err, accountId, operators) ->
+      return if handleError err
+      isOnline = (operators.length > 0)
+      cache[websiteId] = [isOnline, Date.now()]
+      respond isOnline

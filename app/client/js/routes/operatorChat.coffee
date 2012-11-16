@@ -66,7 +66,10 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
             createChatAppender = (renderedId) ->
               (message) ->
-                util.append $("##{renderedId} .chat-display-box"), chatMessage message
+                if message.type is 'notification'
+                  util.append $("##{renderedId} .chat-display-box"), serverMessage message
+                else
+                  util.append $("##{renderedId} .chat-display-box"), chatMessage message
 
             createChatRemover = (thisChatId, channel) ->
               (endedId) ->

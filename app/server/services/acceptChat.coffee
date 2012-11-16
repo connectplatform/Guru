@@ -1,5 +1,4 @@
 stoic = require 'stoic'
-pulsar = config.require 'load/pulsar'
 
 removeUnanswered = config.require 'services/operator/removeUnanswered'
 
@@ -7,7 +6,6 @@ module.exports =
   required: ['sessionId', 'accountId', 'chatId']
   service: ({chatId, sessionId, accountId}, done) ->
     {Session, Chat, ChatSession} = stoic.models
-    notify = pulsar.channel chatId
 
     Chat(accountId).get(chatId).status.getset 'active', (err, status) ->
       config.log.warn 'Error getsetting chat status in acceptChat', {error: err, chatId: chatId} if err
@@ -32,6 +30,4 @@ module.exports =
           removeUnanswered accountId, chatId, (err, status) ->
             if err
               config.log.error 'Error removing chat from unanswered chats in acceptChat', {error: err, chatId: chatId}
-            notify.emit 'operatorJoin'
-
             done null, {status:"OK", chatId: chatId}

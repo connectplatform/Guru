@@ -45,9 +45,11 @@ config =
       client:
         level: 'info'
         transport: 'Console'
+        timestamp: true
       server:
         level: 'info'
         transport: 'Console'
+        timestamp: true
 
 paths =
   root:       rel '.'

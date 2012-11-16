@@ -34,6 +34,9 @@ config =
           maxSize: '102400'
         accessKey: 'AKIAILLS5MBMHVD62AEA'
         secretKey: '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'
+    recurly:
+      apiKey: '162807d2b937497ca43e25db7a01380b'
+      apiUrl: 'https://api.recurly.com/v2/'
     mongo:
       host: 'mongodb://localhost:27017/guru-dev'
     redis:
@@ -80,7 +83,7 @@ global.config = config[environment].merge
   path: path
   require: (spec) ->
     require path spec
-  services: [] # loaded with application
+  services: {} # loaded with application
   service: (serviceName) ->
     global.config.services[serviceName]
 

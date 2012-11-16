@@ -35,6 +35,7 @@ website = new Schema
     type: String
     required: true
     unique: true
+    default: ''
 
   specialties:
     type: [String]
@@ -43,6 +44,7 @@ website = new Schema
   contactEmail:
     type: [String]
     required: true
+    default: ''
 
   acpEndpoint:
     type: String

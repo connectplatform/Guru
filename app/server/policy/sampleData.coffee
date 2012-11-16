@@ -123,4 +123,4 @@ module.exports = (done) ->
         async.map operators, createUser(data.websites, account), (err, opData) ->
 
           # return all data created
-          done err, data.merge operators: opData
+          done err, data.merge {operators: opData, accounts: accounts}

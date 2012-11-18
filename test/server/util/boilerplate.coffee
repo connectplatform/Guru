@@ -20,6 +20,7 @@ initApp = (cb) ->
   @app = config.require 'load/app'
   @app cb
 
+# globals
 module.exports = global.boiler = (testName, tests) ->
   describe testName, (done)->
     before (done) ->
@@ -35,7 +36,8 @@ module.exports = global.boiler = (testName, tests) ->
       flushCache config.redis.database, config.redis.database, =>
         sampleData (err, data) =>
           throw new Error "when creating sample data: #{err}" if err?
-          @website = data.websites[1]
+          @account = data.accounts[0]
+          @website = data.websites[0]
           @ownerUser = data.operators[1]
           done()
 

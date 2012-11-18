@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<account href="http://a_shop.recurly.com/v2/accounts/example_account_code">
+  <adjustments href=" .. some url .. "/>
+  <billing_info href=" .. some url .. "/>
+  <invoices href=" .. some url .. "/>
+  <subscriptions href=" .. some url .. "/>
+  <transactions href=" .. some url .. "/>
+  <account_code>example_account_code</account_code>
+  <state>active</state>
+  <username>joe</username>
+  <email>joe@recurly.com</email>
+  <first_name>Joe</first_name>
+  <last_name>Jones</last_name>
+  <company_name>Recurly</company_name>
+  <accept_language nil="nil"></accept_language>
+  <hosted_login_token>1ab3f1ff4e1c7c49cdec7a404e91d154</hosted_login_token>
+  <created_at type="datetime">2012-08-20T17:48:50Z</created_at>
+</account>

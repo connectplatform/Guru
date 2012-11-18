@@ -26,7 +26,7 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
             dashboardAction 'acceptTransfer'
 
             dashboardAction 'acceptChat', (err, result) ->
-              return server.serverLog message: err if err
+              return server.log 'Error accepting chat', {error: err, severity: 'error'} if err
               if result.status is 'OK'
                 window.location.hash = '/operatorChat'
               else

@@ -28,9 +28,15 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
       it 'should display a welcome message', ->
         waitsFor hasText('.chat-display-box p', "Welcome to live chat!  An operator will be with you shortly."), defaultTimeout, 'Welcome message did not display'
 
+      it 'should display notification messages', ->
+        # Emit a server message with type: notification
+        pulsar.channel("chat_foo").emit 'serverMessage',
+          message: 'Visitor has joined the chat',
+          type: 'notification'
+        waitsFor hasText('.chat-display-box p:visible+p', 'Visitor has joined/left the chat'), defaultTimeout, 'Notification did not display'
+
       it 'should receive and display messages', ->
         pulsar.channel("chat_foo").emit 'serverMessage', {username: "Helper Dude", message: "How can I help?", timestamp: 1}
-
                                           # this crazy selector gets the second p tag
         waitsFor hasText(".chat-display-box p:visible+p", 'Helper Dude: How can I help?'), 'Message sent did not display', defaultTimeout
 

@@ -23,10 +23,10 @@
           br
       .clear
 
-      input.acpEndpoint.small-modal-box(type="text", value="#{typeof(website.acpEndpoint) == 'undefined' ? '' : website.acpEndpoint}", placeholder="ACP Endpoint (optional)")
+      input.acpEndpoint.small-modal-box(type="text", value="#{website.acpEndpoint}", placeholder="ACP Endpoint (optional)")
       .clear
 
-      input.acpApiKey.small-modal-box(type="text", value="#{typeof(website.acpApiKey) == 'undefined' ? '' : website.acpApiKey}", placeholder="ACP API Key (optional)")
+      input.acpApiKey.small-modal-box(type="text", value="#{website.acpApiKey}", placeholder="ACP API Key (optional)")
 
     .modal-footer
       button.saveButton.btn.btn-primary() Save

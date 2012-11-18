@@ -46,8 +46,10 @@ website = new Schema
 
   acpEndpoint:
     type: String
+    default: ''
 
   acpApiKey:
     type: String
+    default: ''
 
 module.exports = website

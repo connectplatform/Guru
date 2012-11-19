@@ -78,7 +78,9 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             fields.acl = 'public-read'
             fields.bucket = 'guru-dev'
             fields.maxSize = '102400'
-
+            cb null, fields
+          saveModel: ({fields, modelName, sessionId, accountId}, cb) ->
+            savedModel = fields
             cb null, fields
 
       returnChat: ->

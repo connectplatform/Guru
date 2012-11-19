@@ -25,6 +25,7 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       $('input.contactEmail').val('BazOwner@baz.com')
       $('input.url').val('baz.com')
       $('button.saveButton').click()
+      expect($('tr.websiteRow td').text()).toMatch(/baz\.com/)
 
     it 'should list websites', ->
 

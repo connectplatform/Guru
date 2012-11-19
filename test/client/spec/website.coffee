@@ -10,8 +10,7 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
     it 'should list websites'
 
     it 'should not display anything "undefined"', ->
-      expect(($(':contains("undefined")').length)).toEqual(0)
-      #waitsFor $(':contains("undefined")').length is 0, 'Something is displaying "undefined"', defaultTimeout
+      expect($(':contains("undefined")').length).toEqual(0)
 
     it 'should let me add a website', ->
       $('#addWebsite').click()

@@ -7,15 +7,18 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       window.location.hash = '/websites'
       waitsFor hasText('h1', 'Websites'), 'no login prompt', defaultTimeout
 
-    it 'should list websites'
+    it 'should list websites', ->
 
     it 'should not display anything "undefined"', ->
-      expect($(':contains("undefined")').length).toEqual(0)
+      $('#addWebsite').click()
+
+      waitsFor hasText('.modal-header h3', 'Website Information'), 'Did not see edit website form', defaultTimeout
+      expect($('input').val()).not.toEqual("undefined")
 
     it 'should let me add a website', ->
       $('#addWebsite').click()
 
-      waitsFor hasText('#dashboard h1', 'Add Website'), 'Did not see edit website form', defaultTimeout
+      waitsFor hasText('.modal-header h3', 'Website Information'), 'Did not see edit website form', defaultTimeout
       expect ($ '#website-modal input#url').toExist()
 
       # add some fields

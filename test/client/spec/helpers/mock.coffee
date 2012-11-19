@@ -70,6 +70,17 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             cb null, 'Success'
           log: (params, cb) ->
             cb null, null
+          awsUpload: ({imageName, siteId}, cb) ->
+            fields = {}
+
+            fields.key = "website/#{siteId}/#{imageName}"
+            fields.awsAccessKey = 'AKIAILLS5MBMHVD62AEA'
+            fields.acl = 'public-read'
+            fields.bucket = 'guru-dev'
+            fields.maxSize = '102400'
+
+            console.log fields
+            cb null, fields
 
       returnChat: ->
         server.createChatOrGetForm = ({websiteUrl, department, username}, cb) ->

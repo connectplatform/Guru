@@ -79,7 +79,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             fields.bucket = 'guru-dev'
             fields.maxSize = '102400'
 
-            console.log fields
             cb null, fields
 
       returnChat: ->

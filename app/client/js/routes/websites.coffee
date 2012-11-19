@@ -24,6 +24,8 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
 
           getNewWebsite = ->
             site = extraDataPacker {
+              subdomain: ''
+              contactEmail: ''
               name: ''
               url: ''
               specialties: []

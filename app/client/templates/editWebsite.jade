@@ -4,11 +4,9 @@
 
   form
     .modal-body
-      input.name.small-modal-box(type="text", value="#{typeof(website.name) == 'undefined' ? '' : website.name}", placeholder="Name")
+      input.subdomain.small-modal-box(type="text", value="#{website.subdomain}", placeholder="Subdomain")
       .clear
-      input.name.small-modal-box(type="text", value="#{website.subdomain}", placeholder="Subdomain")
-      .clear
-      input.name.small-modal-box(type="text", value="#{website.contactEmail}", placeholder="Contact Email")
+      input.contactEmail.small-modal-box(type="text", value="#{website.contactEmail}", placeholder="Contact Email")
       .clear
       input.url.small-modal-box(type="text", value="#{website.url}", placeholder="URL")
       .clear
@@ -25,25 +23,24 @@
           br
       .clear
 
-      input.acpEndpoint.small-modal-box(type="text", value="#{typeof(website.acpEndpoint) == 'undefined' ? '' : website.acpEndpoint}", placeholder="ACP Endpoint (optional)")
+      input.acpEndpoint.small-modal-box(type="text", value="#{website.acpEndpoint}", placeholder="ACP Endpoint (optional)")
       .clear
 
-      input.acpApiKey.small-modal-box(type="text", value="#{typeof(website.acpApiKey) == 'undefined' ? '' : website.acpApiKey}", placeholder="ACP API Key (optional)")
+      input.acpApiKey.small-modal-box(type="text", value="#{website.acpApiKey}", placeholder="ACP API Key (optional)")
 
     .modal-footer
       button.saveButton.btn.btn-primary() Save
       button.cancelButton.btn Cancel
 
-  |Logo:
-  form
-    input.logoUpload(type="file", name="logoUpload")
+  .modal-body
+    |Logo:
+    form
+      input.logoUpload(type="file", name="logoUpload")
 
-  |Online Image:
-  form
-    input.onlineUpload(type="file", name="onlineUpload")
+    |Online Image:
+    form
+      input.onlineUpload(type="file", name="onlineUpload")
 
-  |Offline:
-  form
-    input.offlineUpload(type="file", name="offlineUpload")
-
-
+    |Offline:
+    form
+      input.offlineUpload(type="file", name="offlineUpload")

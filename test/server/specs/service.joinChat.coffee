@@ -3,11 +3,24 @@ stoic = require 'stoic'
 
 boiler 'Service - Join Chat', ->
 
+  it 'should emit "join" notification', (done) ->
+    @getAuthed =>
+      @newChat =>
+
+        # listen for joinChat
+        @channel = @getPulsar().channel @chatId
+        @channel.on 'serverMessage', (data) ->
+          data.type.should.eql 'notification'
+          done()
+
+        @client.joinChat {chatId: @chatId}, ->
+
   describe 'after joining', ->
     beforeEach (done) ->
       @getAuthed (_..., @accountId) =>
         @newChat =>
           @client.joinChat {chatId: @chatId}, done
+
 
     it 'should associate an operator with a chat', (done) ->
 

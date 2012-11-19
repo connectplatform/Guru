@@ -6,22 +6,22 @@ mongo = config.require 'server/load/mongo'
 module.exports = (done) ->
   mongo.wipe ->
 
-    createAccount = (account, cb) ->
-      Account.create account, cb
+    createAccount = (accountId, cb) ->
+      Account.create accountId, cb
 
-    createSpecialty = (account) ->
+    createSpecialty = (accountId) ->
       (specialty, cb) ->
-        Specialty.create specialty.merge(accountId: account), cb
+        Specialty.create specialty.merge(accountId: accountId), cb
 
-    createUser = (websites, account) ->
+    createUser = (websites, accountId) ->
       (user, cb) ->
-        user.accountId = account unless user.role is 'Administrator'
+        user.accountId = accountId unless user.role is 'Administrator'
         user.websites = websites.filter((site) -> site.url in user.websites).map '_id'
         User.create user, cb
 
-    createWebsite = (account) ->
+    createWebsite = (accountId) ->
       (website, cb) ->
-        Website.create website.merge(accountId: account), (err, data) ->
+        Website.create website.merge(accountId: accountId), (err, data) ->
           config.log.warn 'error creating website: ', err if err
           cb err, data
 
@@ -113,14 +113,19 @@ module.exports = (done) ->
 
     async.map accounts, createAccount, (err, accounts) ->
       return done err if err
+
+      accounts = accounts.map (a) ->
+        a._doc._id = a._doc._id.toString()
+        a._doc
+
       [account] = accounts
 
       async.parallel {
-        websites: (cb) -> async.map websites, createWebsite(account), cb
-        specialties: (cb) -> async.map specialties, createSpecialty(account), cb
+        websites: (cb) -> async.map websites, createWebsite(account._id), cb
+        specialties: (cb) -> async.map specialties, createSpecialty(account._id), cb
 
       }, (err, data) ->
-        async.map operators, createUser(data.websites, account), (err, opData) ->
+        async.map operators, createUser(data.websites, account._id), (err, opData) ->
 
           # return all data created
           done err, data.merge {operators: opData, accounts: accounts}

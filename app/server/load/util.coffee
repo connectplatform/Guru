@@ -28,6 +28,9 @@ module.exports = util =
 
     return naan
 
+  getString: (thing) ->
+    if thing then thing.toString() else null
+
   accessKeypath: (input, keypath) ->
     keyArray = keypath.split '.'
     target = input

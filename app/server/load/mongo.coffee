@@ -1,7 +1,10 @@
 db = require 'mongoose'
 async = require 'async'
 
-loadModel = (name) -> db.model name, config.require "models/#{name}"
+loadModel = (name) ->
+  schema = config.require "models/#{name}"
+  schema.path('_id').get (_id) -> _id.toString() # convert objectIDs to strings
+  db.model name, schema
 
 db.connect config.mongo.host
 loadModel "User"

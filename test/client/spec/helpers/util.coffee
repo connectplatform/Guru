@@ -2,7 +2,7 @@ define ->
 
   defaultTimeout: 400
 
-  # verify that some element in the DOM contains text
+  # these are used with waitsFor
   hasText: (selector, value) ->
     -> ($(selector).text() is value)
 

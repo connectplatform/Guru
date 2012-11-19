@@ -113,11 +113,6 @@ module.exports = (done) ->
 
     async.map accounts, createAccount, (err, accounts) ->
       return done err if err
-
-      accounts = accounts.map (a) ->
-        a._doc._id = a._doc._id.toString()
-        a._doc
-
       [account] = accounts
 
       async.parallel {

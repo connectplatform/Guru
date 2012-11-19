@@ -52,7 +52,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
           message: 'Operator has joined the chat',
           type: 'notification'
 
-        waitsFor hasText('.chat-display-box .bold', 'Operator has joined/left the chat'), defaultTimeout
+        waitsFor hasText('.chat-display-box .bold', 'Operator has joined the chat'), defaultTimeout
 
 
       describe 'Sidebar', ->

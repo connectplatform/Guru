@@ -4,6 +4,8 @@ db = require 'mongoose'
 stoic = require 'stoic'
 {Session} = stoic.models
 
+{getString} = config.require 'load/util'
+
 redisId = /[a-z0-9]{16}/
 
 module.exports = [
@@ -21,7 +23,7 @@ module.exports = [
     lookup: (args, found) ->
       query = Object.findAll args, (name) -> name in ['websiteUrl', 'subdomain']
       Website.findOne query, {_id: true}, (err, site) ->
-        found err, site?._id
+        found err, getString(site?._id)
     defaultArgs: ['websiteId']
   ,
     typeName: 'WebsiteUrl'
@@ -37,8 +39,8 @@ module.exports = [
         Session.accountLookup.get sessionId, found
 
       else if websiteId
-        Website.findOne {_id: websiteId}, {accountId: true}, (err, {accountId}) ->
-          found null, accountId
+        Website.findOne {_id: websiteId}, {accountId: true}, (err, account) ->
+          found err, getString(account?._id)
 
     defaultArgs: ['accountId']
 ]

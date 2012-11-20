@@ -1,6 +1,7 @@
-module.exports =
-  createFields: (inModel) -> inModel #TODO: don't call createFields
+{getString} = require 'util'
 
-  filterOutput: (inModel) ->
-    # TODO: take this out, it will cause a mismatch if the data is obtained without this filter
-    inModel.merge {id: delete inModel['_id']}
+#TODO: remove the 'filter' files
+module.exports =
+  createFields: (inModel) -> inModel
+
+  filterOutput: (inModel) -> inModel

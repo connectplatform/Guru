@@ -3,6 +3,7 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
   describe 'Websites', ->
     beforeEach ->
       mock.services()
+      mock.findWebsite()
       mock.loggedIn 'Owner'
       window.location.hash = '/websites'
       waitsFor hasText('h1', 'Websites'), 'no login prompt', defaultTimeout
@@ -33,7 +34,26 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
     it 'should list websites', ->
       expect($('tr.websiteRow td').text()).toMatch(/baz\.com/)
 
-    it 'should let me edit a website'
+    it 'should let me edit a website', ->
+      #Click edit for first website row
+      $('a.editWebsite').eq(0).click()
+
+      # should be on edit modal
+      waitsFor hasText('button.saveButton', 'Save'), 'Did not see edit website form', defaultTimeout
+
+      # add some fields
+      $('input.subdomain').val('Bar')
+      $('input.contactEmail').val('BarOwner@bar.com')
+      $('input.url').val('bar.com')
+
+      # click submit
+      $('button.saveButton').click()
+
+      # should be on websites listing
+      waitsFor notExists('button.saveButton:visible'), defaultTimeout
+
+      # should change fields in row
+      expect($('tr.websiteRow td').text()).toMatch(/bar\.com/)
 
     it 'should let me delete a website'
 

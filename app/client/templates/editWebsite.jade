@@ -14,7 +14,7 @@
       |Specialties:
       .specialties.small-modal-box.scrolling-checkboxes
         for specialtyName in website.allowedSpecialties
-          if website.specialties.indexOf(specialtyName) == -1
+          if specialtyName in website.specialties
             input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}")
           else
             input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}", checked="yes")

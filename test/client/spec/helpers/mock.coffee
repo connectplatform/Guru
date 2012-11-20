@@ -65,6 +65,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           setSessionOffline: (params, cb) ->
             cb null, null
           findModel: (params, cb) ->
+            # Account Record
             cb null, [{status: 'Trial'}]
           serverLog: (params, cb) ->
             cb null, 'Success'
@@ -142,6 +143,16 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               department: 'Sales'
             }
           ]
+
+      findWebsite: ->
+        server.findModel = (params, cb) ->
+          record =
+            _id: '123'
+            url: 'foo.com'
+            subdomain: 'foo'
+            contactEmail: 'owner@foo.com'
+
+          cb null, record
 
       hasChats: ->
         server.getMyChats = (params, cb) ->

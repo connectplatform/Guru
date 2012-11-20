@@ -34,6 +34,7 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
           inputType: 'password'
           label: 'Confirm Password'
           required: true
+          linked: ['password']
           validation: (text) ->
             return 'Password confirmation must match.' unless text is $(".controls [name=password]").val()
       ]

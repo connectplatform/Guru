@@ -18,7 +18,6 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       waitsFor hasText('button.saveButton', 'Save'), 'Did not see edit website form', defaultTimeout
 
       # add some fields
-      $('input.subdomain').val('Baz')
       $('input.contactEmail').val('BazOwner@baz.com')
       $('input.url').val('baz.com')
 
@@ -42,7 +41,6 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       waitsFor hasText('button.saveButton', 'Save'), 'Did not see edit website form', defaultTimeout
 
       # add some fields
-      $('input.subdomain').val('Bar')
       $('input.contactEmail').val('BarOwner@bar.com')
       $('input.url').val('bar.com')
 

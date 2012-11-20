@@ -35,6 +35,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
           server.findModel {modelName: 'Website', queryObject:{}}, (err, websites) ->
             server.log 'Error retrieving websites on websites crud page', {error: err, severity: error} if err
 
+            # TODO: use async.parallel
             beforeRender = (element, cb) ->
               server.awsUpload {siteId: element.id, imageName: 'logo'}, (err, logoFields) ->
                 server.awsUpload {siteId: element.id, imageName: 'online'}, (err, onlineFields) ->

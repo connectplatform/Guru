@@ -1,3 +1,6 @@
+playSound = (type) ->
+  $("##{type}Sound")[0].play()
+
 define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists' ],
   (server, pulsar, notify, util, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     channel: {}
@@ -26,13 +29,10 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
           chatbox = $(".chat-display-box")
 
           appendChatMessage = (message) ->
+            playSound "newMessage"
             if message.type is 'notification'
-              appendServerMessage message.message
-            else
-              util.append chatbox, chatMessage message
-
-          appendServerMessage = (message) ->
-            util.append chatbox, serverMessage message: message
+              message = message.message
+            util.append chatbox, chatMessage message
 
           displayGreeting = ->
             appendServerMessage "Welcome to live chat!  An operator will be with you shortly."

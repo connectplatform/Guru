@@ -21,8 +21,7 @@ module.exports = [
   ,
     typeName: 'WebsiteId'
     lookup: (args, found) ->
-      query = Object.findAll args, (name) -> name in ['websiteUrl', 'subdomain']
-      Website.findOne query, {_id: true}, (err, site) ->
+      Website.findOne {websiteUrl: args.websiteUrl}, {_id: true}, (err, site) ->
         found err, getString(site?._id)
     defaultArgs: ['websiteId']
   ,

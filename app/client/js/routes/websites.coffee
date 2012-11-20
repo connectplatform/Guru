@@ -10,7 +10,6 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
 
           getFormFields = ->
             {
-              subdomain: $('#editWebsite .subdomain').val()
               contactEmail: $('#editWebsite .contactEmail').val()
               url: $('#editWebsite .url').val()
               specialties: ($(thing).val() for thing in $('#editWebsite .specialties :checkbox:checked'))

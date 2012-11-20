@@ -84,7 +84,6 @@ module.exports = (done) ->
 
     websites = [
         url: "foo.com"
-        subdomain: "foo"
         contactEmail: 'success@simulator.amazonses.com'
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
@@ -101,11 +100,9 @@ module.exports = (done) ->
         ]
       ,
         url: "baz.com"
-        subdomain: "baz"
         contactEmail: 'success@simulator.amazonses.com'
       ,
         url: "bar.com"
-        subdomain: "bar"
         contactEmail: 'success@simulator.amazonses.com'
     ]
 

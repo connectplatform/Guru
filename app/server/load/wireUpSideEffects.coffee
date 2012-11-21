@@ -5,9 +5,11 @@ module.exports = (stack, processSideEffects) ->
     (params, next) ->
 
       # run the filtered function
-      fn params, (err, out, effects) ->
+      triggerEffects = (err, out, effects) ->
         return next err, out if err or not effects
 
         # perform any side effects
         processSideEffects effects, (err) ->
           next err, out
+
+      fn params, triggerEffects, processSideEffects

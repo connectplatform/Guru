@@ -149,7 +149,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           record =
             _id: '123'
             url: 'foo.com'
-            subdomain: 'foo'
             contactEmail: 'owner@foo.com'
 
           cb null, record

@@ -1,7 +1,7 @@
 # I know how to ask the user for information
 
 define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers/notifyInline', 'helpers/util'],
-  (server, renderForm, validateField, notifyInline, {random}) ->
+  (server, renderForm, validateField, notifyInline, {random, getType}) ->
 
     (options={}, fields, receive) ->
 
@@ -36,9 +36,16 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
       validatedFields.map (field) ->
         {name} = field
 
+        # trigger validation on linked fields
+        if linked and getType(linked) is 'Array'
+          for linked in field.linked
+            $("#{options.placement} .controls [name=#{linked}]").change ->
+              $("#{options.placement} .controls [name=#{name}]").change()
+
+        # trigger validation
         $("#{options.placement} .controls [name=#{name}]").change ->
           error = validateField field, $(@).val()
-          notifyInline options.placement, field.name, error
+          notifyInline options.placement, name, error
 
       # wire up submit
       $("##{options.name}").submit (evt) ->

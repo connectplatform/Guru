@@ -28,6 +28,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             cb null, {firstName: 'Bob'} #short version of the user object
           leaveChat: (params, cb) ->
             cb null, 'foo'
+          awsUpload: (params, cb) ->
+            cb null, 'foo'
           getMyRole: (params, cb) ->
             cb null, 'None'
           getMyChats: (params, cb) ->

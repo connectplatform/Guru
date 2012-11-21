@@ -5,7 +5,7 @@ countUnreadMessages = (unread) ->
   total
 
 playSound = (type) ->
-  document.getElementById("#{type}Sound").play()
+  $("##{type}Sound")[0].play()
 
 define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server, notify, pulsar, badge) ->
   (args, templ) ->

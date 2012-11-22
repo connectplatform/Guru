@@ -34,7 +34,9 @@ module.exports =
 
     # submit the account details to recurly
     rest[method]("#{config.recurly.apiUrl}#{resource}", options).on 'complete', (data, response) =>
+      #{inspect} = require 'util'
       #console.log 'response:', inspect response, null, 1
+      #console.log 'data:', data
 
       err = if response.statusCode is status[method] then null else "Could not #{verbs[method]} #{rootName or resource}."
       done err, {status: response.statusCode, raw: response.rawEncoded}.merge data

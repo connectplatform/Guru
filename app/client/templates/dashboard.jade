@@ -33,17 +33,17 @@
             // different options depending on chat status or pending invites
             .btn-group
               if chat.relation == 'member'
-                btn.btn.btn-danger.leaveChat(chatId="#{chat.id}") Leave
+                button.btn.btn-danger.leaveChat(chatId="#{chat.id}") Leave
               else
 
                 if chat.relation == 'invite'
-                  btn.btn.btn-success.acceptInvite(chatId="#{chat.id}") Accept
+                  button.btn.btn-success.acceptInvite(chatId="#{chat.id}") Accept
                 else if chat.relation == 'transfer'
-                  btn.btn.btn-success.acceptTransfer(chatId="#{chat.id}") Assume
+                  button.btn.btn-success.acceptTransfer(chatId="#{chat.id}") Assume
 
                 else if chat.status == 'waiting'
-                  btn.btn.btn-success.acceptChat(chatId="#{chat.id}") Accept
+                  button.btn.btn-success.acceptChat(chatId="#{chat.id}") Accept
                 else
-                  btn.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
+                  button.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
 
-                btn.btn.watchChat(chatId="#{chat.id}", watch="true") Watch
+                button.btn.watchChat(chatId="#{chat.id}", watch="true") Watch

@@ -53,6 +53,9 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       # should change fields in row
       expect($('tr.websiteRow td').text()).toMatch(/bar\.com/)
 
-    it 'should let me delete a website'
-
-    it 'should display undefined as an empty string'
+    it 'should let me delete a website', ->
+      $('a.deleteWebsite').eq(0).click()
+      waitsFor hasText('button.deleteButton', 'Delete'), 'Did not see delete confirmation', defaultTimeout
+      $('button.deleteButton').click()
+      waitsFor notExists('button.deleteButton:visible'), defaultTimeout
+      expect($('tr.websiteRow td').text()).not.toMatch(/bar\.com/)

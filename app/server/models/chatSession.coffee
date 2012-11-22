@@ -1,9 +1,10 @@
 async = require 'async'
-pulsar = config.require 'load/pulsar'
 {tandoor, getType} = config.require 'load/util'
 
 stoic = require 'stoic'
 {Chat, Session} = stoic.models
+
+displayedRole = (role) -> if role is 'Visitor' then 'Visitor' else 'Operator'
 
 # Interface for document
 face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
@@ -11,6 +12,8 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
   # construct model
   (accountId) ->
     throw new Error "ChatSession called without accountId: #{accountId}" unless accountId and accountId isnt 'undefined'
+
+    notifyChatEvent = config.service 'chats/notifyChatEvent'
     chatSession =
 
       accountId: accountId
@@ -62,19 +65,9 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
         return base
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
-        channel = pulsar.channel chatId
         cs = chatSession.get sessionId, chatId
         cs.session.role.get (err, role) ->
-          if role is 'Visitor'
-            channel.emit 'serverMessage',
-              message: 'Visitor has joined the chat',
-              type: 'notification',
-              timestamp: new Date().getTime()
-          else
-            channel.emit 'serverMessage',
-              message: 'Operator has joined the chat',
-              type: 'notification',
-              timestamp: new Date().getTime()
+          notifyChatEvent {chatId: chatId, message: "#{displayedRole role} has joined the chat"}
 
         metaInfo ||= {}
         metaInfo.isWatching ||= 'false'
@@ -95,19 +88,9 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           cb err, cs
 
       remove: tandoor (sessionId, chatId, cb) ->
-        channel = pulsar.channel chatId
         cs = chatSession.get sessionId, chatId
         cs.session.role.get (err, role) ->
-          if role is 'Visitor'
-            channel.emit 'serverMessage',
-              message: 'Visitor has left the chat',
-              type: 'notification',
-              timestamp: new Date().getTime()
-          else
-            channel.emit 'serverMessage',
-              message: 'Operator has left the chat',
-              type: 'notification',
-              timestamp: new Date().getTime()
+          notifyChatEvent {chatId: chatId, message: "#{displayedRole role} has left the chat"}
 
           async.parallel [
             cs.sessionIndex.srem chatId

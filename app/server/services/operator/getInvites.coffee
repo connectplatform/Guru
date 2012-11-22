@@ -1,5 +1,5 @@
 async = require 'async'
-{tandoor, compact} = config.require 'load/util'
+{tandoor} = config.require 'load/util'
 
 stoic = require 'stoic'
 {Session, ChatSession} = stoic.models
@@ -15,5 +15,5 @@ module.exports = tandoor (sessionId, done) ->
   Session.accountLookup.get sessionId, (err, accountId) ->
     ChatSession(accountId).getBySession sessionId, (err, chatSessions) ->
       async.map chatSessions, getInvites, (err, chats) ->
-        chats = compact chats if chats?
+        chats = chats.compact() if chats?
         done err, chats

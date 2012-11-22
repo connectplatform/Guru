@@ -17,7 +17,7 @@ module.exports = (services) ->
 
     # return wrapped service
     wrapper = (params, done, processSideEffects) ->
-      processSideEffects ||= ->
+      processSideEffects ||= (effects, cb) -> cb()
       #console.log 'typeValidations:', typeValidations.map((t) -> t.toString()).join '\n\n'
 
       # intercept side effects from stack and pass to processor

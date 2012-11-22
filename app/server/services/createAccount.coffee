@@ -1,27 +1,34 @@
 async = require 'async'
 db = require 'mongoose'
-{curry} = config.require 'load/util'
+{curry, select} = config.require 'load/util'
 {Account, User} = db.models
-
-login = config.require 'services/login'
 
 module.exports =
   required: ['email', 'firstName', 'lastName', 'password']
-  service: (fields, done) ->
-    fields.role = 'Owner'
-    user = new User fields
+  service: (fields, done, processSideEffects) ->
 
-    saveUser = (next, {account}) ->
-      user.accountId = account.id
-      user.save next
+    login = config.service 'login'
+    createRecurlyAccount = config.service 'account/createRecurlyAccount'
+
+    fields.role = 'Owner'
+    owner = new User fields
+
+    saveOwner = (next, {account}) ->
+      owner.accountId = account._id
+      owner.save (err, userData) ->
+        next err, select(userData._doc, '_id', 'email', 'firstName', 'lastName')
 
     createAccount = (cb) ->
       Account.create {status: 'Trial'}, cb
 
+    createRecurly = (cb, {account, owner}) ->
+      createRecurlyAccount {accountId: account._id, owner: owner}, cb
+
     async.auto {
-      ok: (cb) -> user.validate cb
+      ok: (cb) -> owner.validate cb
       account: ['ok', createAccount]
-      user: ['account', saveUser]
+      owner: ['account', saveOwner]
+      recurlyAccount: ['account', 'owner', createRecurly]
 
     }, (err, results) ->
       if err
@@ -29,4 +36,4 @@ module.exports =
         return done err
 
       loginFields = Object.findAll fields, (k) -> k in ['email', 'password']
-      login.service loginFields, done
+      login loginFields, done, processSideEffects

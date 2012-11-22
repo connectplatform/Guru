@@ -3,7 +3,7 @@ module.exports =
   [
     {
       filters: ['isOwner', 'setIsOnline']
-      only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload']
+      only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload', 'getRecurlyToken']
     }
 
     {
@@ -37,6 +37,7 @@ module.exports =
 
         # these three are covered by isOwner
         'deleteModel'
+        'getRecurlyToken'
         'findModel'
         'saveModel'
       ]

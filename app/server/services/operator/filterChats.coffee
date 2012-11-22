@@ -1,5 +1,5 @@
 async = require 'async'
-{tandoor, compact, getType} = config.require 'load/util'
+{tandoor, getType} = config.require 'load/util'
 
 module.exports = tandoor (chatSessions, relationTypes, done) ->
   if getType(relationTypes) != 'Array'
@@ -17,5 +17,5 @@ module.exports = tandoor (chatSessions, relationTypes, done) ->
         next()
 
   async.map chatSessions, filter, (err, chats) ->
-    chats = compact chats if chats?
+    chats = chats.compact() if chats?
     done err, chats

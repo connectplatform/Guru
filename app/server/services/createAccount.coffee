@@ -1,6 +1,6 @@
 async = require 'async'
 db = require 'mongoose'
-{curry} = config.require 'load/util'
+{curry, select} = config.require 'load/util'
 {Account, User} = db.models
 
 module.exports =
@@ -11,24 +11,24 @@ module.exports =
     createRecurlyAccount = config.service 'account/createRecurlyAccount'
 
     fields.role = 'Owner'
-    user = new User fields
+    owner = new User fields
 
-    saveUser = (next, {account}) ->
-      console.log 'accountId:', account._id
-      user.accountId = account._id
-      user.save next
+    saveOwner = (next, {account}) ->
+      owner.accountId = account._id
+      owner.save (err, userData) ->
+        next err, select(userData._doc, '_id', 'email', 'firstName', 'lastName')
 
     createAccount = (cb) ->
       Account.create {status: 'Trial'}, cb
 
-    createRecurly = (cb, {account}) ->
-      createRecurlyAccount {accountId: account._id}, cb
+    createRecurly = (cb, {account, owner}) ->
+      createRecurlyAccount {accountId: account._id, owner: owner}, cb
 
     async.auto {
-      ok: (cb) -> user.validate cb
+      ok: (cb) -> owner.validate cb
       account: ['ok', createAccount]
-      user: ['account', saveUser]
-      recurlyAccount: ['account', 'user', createRecurly]
+      owner: ['account', saveOwner]
+      recurlyAccount: ['account', 'owner', createRecurly]
 
     }, (err, results) ->
       if err

@@ -13,8 +13,8 @@ module.exports = util =
 
   getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
 
-  compact: (arr) ->
-    return (item for item in arr when not (util.getType(item) is 'Undefined'))
+  # return a hash containing only the keys provided
+  select: (hash, keys...) -> Object.findAll hash, (k) -> k in keys
 
   # given a function, wrap it in naan and curry, then cook it
   # In English: Enables autocurrying, so if you haven't provided the callback

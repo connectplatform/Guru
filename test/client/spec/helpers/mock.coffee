@@ -73,15 +73,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             cb null, 'Success'
           log: (params, cb) ->
             cb null, null
-          awsUpload: ({imageName, siteId}, cb) ->
-            fields = {}
-
-            fields.key = "website/#{siteId}/#{imageName}"
-            fields.awsAccessKey = 'AKIAILLS5MBMHVD62AEA'
-            fields.acl = 'public-read'
-            fields.bucket = 'guru-dev'
-            fields.maxSize = '102400'
-            cb null, fields
           saveModel: ({fields, modelName, sessionId, accountId}, cb) ->
             savedModel = fields
             cb null, fields

@@ -28,14 +28,18 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
           chatbox = $(".chat-display-box")
 
+          appendServerMessage = (message) ->
+            util.append chatbox, serverMessage message
+
           appendChatMessage = (message) ->
             playSound "newMessage"
             if message.type is 'notification'
-              message = message.message
-            util.append chatbox, chatMessage message
+              appendServerMessage message
+            else
+              util.append chatbox, chatMessage message
 
           displayGreeting = ->
-            appendServerMessage "Welcome to live chat!  An operator will be with you shortly."
+            appendServerMessage message: "Welcome to live chat!  An operator will be with you shortly."
 
           # display initial chat history
           server.getChatHistory {chatId: chatId}, (err, history) ->
@@ -49,7 +53,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             # when you get to the end, stop
             self.channel.on 'chatEnded', ->
               self.channel.removeAllListeners 'serverMessage'
-              appendServerMessage "The operator has ended the chat"
               $(".message-form").hide()
 
           # display chat logo
@@ -63,7 +66,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             server.leaveChat {chatId: chatId}, (err) ->
               notify.error "Error leaving chat: #{err}" if err
               server.cookie 'session', null
-              appendServerMessage 'You have left the chat.'
               $(".message-form").hide()
               $('.leaveButton').hide()
               self.channel.removeAllListeners 'serverMessage'

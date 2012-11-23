@@ -3,10 +3,9 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
   describe 'Websites', ->
     beforeEach ->
       mock.services()
-      mock.findWebsite()
       mock.loggedIn 'Owner'
       window.location.hash = '/websites'
-      waitsFor hasText('h1', 'Websites'), 'no login prompt', defaultTimeout
+      waitsFor hasText('h1', 'Websites'), 'Website route not displaying', defaultTimeout
 
     it 'should not display anything "undefined"', ->
       $('#addWebsite').click()
@@ -25,7 +24,7 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       $('button.saveButton').click()
 
       # should be on websites listing
-      waitsFor notExists('button.saveButton:visible'), defaultTimeout
+      waitsFor notExists('button.saveButton:visible'), 'Edit website modal did not exit', defaultTimeout
 
       # should see changed fields in row
       expect($('tr.websiteRow td').text()).toMatch(/baz\.com/)
@@ -48,14 +47,16 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       $('button.saveButton').click()
 
       # should be on websites listing
-      waitsFor notExists('button.saveButton:visible'), defaultTimeout
+      waitsFor notExists('button.saveButton:visible'), 'Edit websiet modal did not exit', defaultTimeout
 
       # should change fields in row
       expect($('tr.websiteRow td').text()).toMatch(/bar\.com/)
 
     it 'should let me delete a website', ->
+      websiteCount = $('a.deleteWebsite').length
       $('a.deleteWebsite').eq(0).click()
       waitsFor hasText('button.deleteButton', 'Delete'), 'Did not see delete confirmation', defaultTimeout
       $('button.deleteButton').click()
-      waitsFor notExists('button.deleteButton:visible'), defaultTimeout
-      expect($('tr.websiteRow td').text()).not.toMatch(/bar\.com/)
+      waitsFor notExists('button.deleteButton:visible'), 'Delete confirmation did not exit', defaultTimeout
+      websiteCount2 = $('a.deleteWebsite').length
+      expect(websiteCount2).toEqual(websiteCount - 1)

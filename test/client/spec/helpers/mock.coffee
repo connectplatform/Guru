@@ -66,10 +66,43 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             cb null, null
           setSessionOffline: (params, cb) ->
             cb null, null
-          findModel: (params, cb) ->
-            # Account Record
-            cb null, [{status: 'Trial'}]
+          findModel: ({modelName}, cb) ->
+            switch modelName
+              when 'Specialty'
+                record = [
+                  {
+                    accountId: '123'
+                    id: '123abc'
+                    name: 'Sales'
+                  }
+                  {
+                    accountId: '123'
+                    id: '123abc'
+                    name: 'Billing'
+                  }
+                ]
+
+              when 'Account'
+                record = [{status: 'Trial'}]
+
+              when 'Website'
+                record = [
+                  _id: '123'
+                  id: '123'
+                  url: 'foo.com'
+                  specialties: ['Sales']
+                  contactEmail: 'owner@foo.com'
+                ]
+              when 'User'
+                record = [{_id: 123, firstName: 'Bob', role: 'Visitor'}]
+              else
+                record = [{}]
+            cb null, record
+          deleteModel: (params, cb) ->
+            console.log params
+            cb null, params
           log: (params, cb) ->
+            console.log params
             cb null, null
           saveModel: ({fields, modelName, sessionId, accountId}, cb) ->
             savedModel = fields
@@ -143,6 +176,21 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             contactEmail: 'owner@foo.com'
 
           cb null, record
+
+      findSpecialties: ->
+        server.findModel = (params, cb) ->
+          record = [
+            {
+              accountId: '123'
+              id: '123abc'
+              name: 'Sales'
+            }
+            {
+              accountId: '123'
+              id: '123abc'
+              name: 'Billing'
+            }
+          ]
 
       hasChats: ->
         server.getMyChats = (params, cb) ->

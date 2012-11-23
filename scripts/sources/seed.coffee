@@ -1,5 +1,5 @@
-config.require('load/initServices')()
 seed = config.require 'policy/sampleData'
+config.require('load/initServices')()
 
 module.exports = ->
 
@@ -15,9 +15,9 @@ module.exports = ->
     owner = data.operators[1]
 
     # create a recurly account
-    createRecurly = config.service "account/createRecurlyAccount"
+    createRecurly = config.service "recurly/createAccount"
 
-    createRecurly {accountId: accountId, owner: owner}, (err, status) ->
+    createRecurly {accountId: accountId}, (err, status) ->
       return console.log "Error creating Recurly account: #{err}" if err
       console.log 'Recurly token:', status.account.hosted_login_token
 

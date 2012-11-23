@@ -69,8 +69,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           findModel: (params, cb) ->
             # Account Record
             cb null, [{status: 'Trial'}]
-          serverLog: (params, cb) ->
-            cb null, 'Success'
           log: (params, cb) ->
             cb null, null
           saveModel: ({fields, modelName, sessionId, accountId}, cb) ->

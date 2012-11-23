@@ -19,7 +19,11 @@ define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, serv
         server.ready ->
           server.emailChat {chatId: chatId, email: email}, (err, response) ->
             if err
-              server.serverLog {message: 'Error sending email', error: err, severity: 'warn', email: email}
+              server.log
+                message: 'Error sending email',
+                error: err,
+                severity: 'warn',
+                email: email, ->
               notify.error 'Error sending email: ', err
             else
               notify.success 'Email sent'

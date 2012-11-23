@@ -3,7 +3,7 @@ should = require 'should'
 boiler 'Service - Server Log', ->
   it 'should take a set of optional fields an log data', (done) ->
     @getAuthed =>
-      @client.serverLog {message: 'Something Happened', context: {
+      @client.log {message: 'Something Happened', context: {
         service: 'Some service'
         error: 'An error'
         ids:
@@ -18,7 +18,7 @@ boiler 'Service - Server Log', ->
 
   it 'should work when no extra data is given', (done) ->
     @getAuthed =>
-      @client.serverLog {message: 'vague happening', context: {}}, (err, ack) =>
+      @client.log {message: 'vague happening', context: {}}, (err, ack) =>
         @client.disconnect()
         should.not.exist err
         ack.should.eql 'Success'

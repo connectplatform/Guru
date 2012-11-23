@@ -1,7 +1,12 @@
 should = require 'should'
 {inspect} = require 'util'
 
-boiler 'Service - Create Recurly Subscription', ->
+verify = (operation, resource, err, result) ->
+  should.not.exist err, "#{operation} #{resource} should not return error: #{err}\n
+     status code: #{result?.status}\n#{inspect result?[resource], false, 10}"
+  should.exist result[resource], "Expected #{resource} to exist."
+
+boiler 'Recurly - Subscription', ->
   beforeEach (done) ->
     @createRecurlyAccount = config.service 'recurly/createAccount'
     @createRecurlySubscription = config.service 'recurly/createSubscription'
@@ -9,7 +14,11 @@ boiler 'Service - Create Recurly Subscription', ->
     @getRecurlyAccount = config.service 'recurly/getAccount'
     @accountId = @account._id.toString()
 
-    @createRecurlyAccount {accountId: @accountId, owner: @ownerUser}, (err, result) =>
+    @getRecurlySubscription = config.service 'recurly/getSubscription'
+    @editRecurlySubscription = config.service 'recurly/editSubscription'
+    @cancelRecurlySubscription = config.service 'recurly/cancelSubscription'
+
+    @createRecurlyAccount {accountId: @accountId}, (err, result) =>
       should.not.exist err, "create account should not return error: #{err}\n#{inspect result.account, false, 10}"
       should.exist result.account
 
@@ -21,15 +30,32 @@ boiler 'Service - Create Recurly Subscription', ->
         year: '2014'
 
       @createRecurlyBilling {accountId: @accountId, billingInfo: billing}, (err, result) =>
-        should.not.exist err, "create billing should not return error: #{err}\nstatus code:#{result.status}\n#{inspect result?.billing_info, false, 10}"
-        should.exist result.billing_info
-
+        verify 'create', 'billing_info', err, result
         done()
 
-  describe 'with valid data', ->
-    it 'should create a subscription', (done) ->
-      @createRecurlySubscription {accountId: @accountId, quantity: 1}, (err, @result) =>
+  describe 'Create', ->
+    it 'should return success', (done) ->
+      @createRecurlySubscription {accountId: @accountId, quantity: 1}, (err, result) =>
+        verify 'create', 'subscription', err, result
+        done()
 
-        should.not.exist err, "create subscription should not return error: #{err}\nstatus code:#{result.status}\n#{inspect result?.subscription, false, 10}"
-        should.exist result.subscription
+  describe 'With existing subscription', ->
+    beforeEach (done) ->
+      @createRecurlySubscription {accountId: @accountId, quantity: 1}, (err, result) =>
+        verify 'create', 'subscription', err, result
+        done()
+
+    it 'Get should return success', (done) ->
+      @getRecurlySubscription {accountId: @accountId}, (err, result) =>
+        verify 'edit', 'subscription', err, result
+        done()
+
+    it 'Edit should return success', (done) ->
+      @editRecurlySubscription {accountId: @accountId, quantity: 3}, (err, result) =>
+        verify 'edit', 'subscription', err, result
+        done()
+
+    it 'Cancel should return success', (done) ->
+      @cancelRecurlySubscription {accountId: @accountId}, (err, result) =>
+        verify 'cancel', 'subscription', err, result
         done()

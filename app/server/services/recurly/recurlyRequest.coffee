@@ -6,13 +6,10 @@ verbs =
   put: 'update'
   post: 'create'
 
-status =
-  get: 200
-  put: 201
-  post: 201
+acceptableStatus = [200, 201]
 
 module.exports =
-  optional: ['body']
+  optional: ['body', 'rootName']
   required: ['method', 'resource']
   service: ({method, body, resource, rootName}, done) ->
 
@@ -31,6 +28,8 @@ module.exports =
       options.data = '<?xml version="1.0" encoding="UTF-8"?>\n'
       options.data += easyxml.render body, rootName
       #console.log 'submitting data:', options.data
+    else
+      options.data = ''
 
     # submit the account details to recurly
     rest[method]("#{config.recurly.apiUrl}#{resource}", options).on 'complete', (data, response) =>
@@ -38,8 +37,8 @@ module.exports =
       #console.log 'response:', inspect response, null, 1
       #console.log 'data:', data
 
-      err = if response.statusCode is status[method] then null else "Could not #{verbs[method]} #{rootName or resource}."
-      details = {status: response.statusCode, raw: response.rawEncoded}.merge data
+      err = if response.statusCode in acceptableStatus then null else "Could not #{verbs[method]} #{rootName or resource}."
+      details = {status: response.statusCode}.merge data
 
       config.log.error err, details if err
       done err, details

@@ -26,6 +26,9 @@ form.form-horizontal(id="#{options.name}")
           when 'static'
             span.field(name='#{field.name}') #{field.value}
 
+          when 'button'
+            a.btn(href="#{field.href}", class="btn-#{field.btnStyle} #{field.classes}") #{field.value}
+
           default
             - console.log('Unrecognized field type:', field.inputType)
 

@@ -4,6 +4,7 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
   (server, renderForm, validateField, notifyInline, {random, getType}) ->
 
     (options={}, fields, receive) ->
+      receive ||= ->
 
       # spit out an error if there's no fields
       unless fields and fields.length > 0

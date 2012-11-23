@@ -8,8 +8,7 @@ createServer = require './createServer'
 loadRest = require './loadRest'
 flushCache = config.require 'load/flushCache'
 
-getServices = config.require 'load/getServices'
-wrapServicesInMiddleware = config.require 'policy/wrapServicesInMiddleware'
+initServices = config.require 'load/initServices'
 veinAdapter = config.require 'load/veinAdapter'
 attachFilters = config.require 'load/attachFilters'
 
@@ -32,9 +31,8 @@ module.exports = (cb) ->
 
     server = createServer port, app
 
-    # Wire up services
-    services = getServices config.paths.services
-    config.services = wrapServicesInMiddleware services
+    # attaches services to config.services
+    initServices()
 
     # Wire up vein
     topLevelServices = Object.findAll config.services, (name) -> not name.has /\//

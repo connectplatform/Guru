@@ -1,5 +1,7 @@
 #!/usr/local/bin/node
 
+process.env.GURU_PULSAR_PORT = 'DISABLED';
+
 require('coffee-script');
 join = require('path').join;
 require(join(__dirname, '../app/config'));

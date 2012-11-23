@@ -3,7 +3,7 @@ should = require 'should'
 
 boiler 'Service - Recurly Request', ->
   before ->
-    @recurlyRequest = config.service 'account/recurlyRequest'
+    @recurlyRequest = config.service 'recurly/recurlyRequest'
 
   it 'should perform a GET request', (done) ->
     params =

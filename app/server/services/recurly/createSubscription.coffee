@@ -2,7 +2,7 @@ module.exports =
   required: ['accountId', 'quantity']
   service: ({accountId, quantity}, done) ->
 
-    recurlyRequest = config.service 'account/recurlyRequest'
+    recurlyRequest = config.service 'recurly/recurlyRequest'
 
     params =
       method: 'post'

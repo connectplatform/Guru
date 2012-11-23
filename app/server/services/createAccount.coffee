@@ -8,7 +8,7 @@ module.exports =
   service: (fields, done, processSideEffects) ->
 
     login = config.service 'login'
-    createRecurlyAccount = config.service 'account/createRecurlyAccount'
+    createRecurlyAccount = config.service 'recurly/createAccount'
 
     fields.role = 'Owner'
     owner = new User fields

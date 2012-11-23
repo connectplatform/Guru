@@ -36,7 +36,7 @@
   "private": true,
   "scripts": {
     "start": "scripts/run start",
-    "test": "mocha test/server/specs/",
+    "test": "mocha test/server/specs/*",
     "stop": "echo 'TODO: add stop script'"
   }
 }

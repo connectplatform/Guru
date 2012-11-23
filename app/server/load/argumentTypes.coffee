@@ -4,9 +4,10 @@ db = require 'mongoose'
 stoic = require 'stoic'
 {Session} = stoic.models
 
-{getString} = config.require 'load/util'
+{getString, getType} = config.require 'load/util'
 
 redisId = /[a-z0-9]{16}/
+mongoId = /[a-f0-9]{24}/
 
 module.exports = [
     typeName: 'String'
@@ -42,4 +43,10 @@ module.exports = [
           found err, getString(account?._id)
 
     defaultArgs: ['accountId']
+  ,
+    typeName: 'MongoId'
+    validation: (arg, assert) ->
+      assert arg.toString().match mongoId
+    defaultArgs: ['accountId', 'websiteId']
+
 ]

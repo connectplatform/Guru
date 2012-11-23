@@ -4,7 +4,7 @@ stoic = require 'stoic'
 boiler 'Service - Get Recurly Token', ->
 
   beforeEach (done) ->
-    createRecurlyAccount = config.service 'account/createRecurlyAccount'
+    createRecurlyAccount = config.service 'recurly/createAccount'
     @accountId = @account._id.toString()
 
     createRecurlyAccount {accountId: @accountId, owner: @ownerUser}, done

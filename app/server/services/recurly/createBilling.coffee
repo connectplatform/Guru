@@ -2,7 +2,7 @@ module.exports =
   required: ['accountId', 'billingInfo']
   service: ({accountId, billingInfo}, done) ->
 
-    recurlyRequest = config.service 'account/recurlyRequest'
+    recurlyRequest = config.service 'recurly/recurlyRequest'
 
     params =
       method: 'put'

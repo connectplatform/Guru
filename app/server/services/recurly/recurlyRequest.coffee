@@ -39,4 +39,7 @@ module.exports =
       #console.log 'data:', data
 
       err = if response.statusCode is status[method] then null else "Could not #{verbs[method]} #{rootName or resource}."
-      done err, {status: response.statusCode, raw: response.rawEncoded}.merge data
+      details = {status: response.statusCode, raw: response.rawEncoded}.merge data
+
+      config.log.error err, details if err
+      done err, details

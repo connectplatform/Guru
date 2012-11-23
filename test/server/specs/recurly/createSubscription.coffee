@@ -3,13 +3,13 @@ should = require 'should'
 
 boiler 'Service - Create Recurly Subscription', ->
   beforeEach (done) ->
-    @createRecurlyAccount = config.service 'account/createRecurlyAccount'
-    @createRecurlySubscription = config.service 'account/createRecurlySubscription'
-    @createRecurlyBilling = config.service 'account/createRecurlyBilling'
-    @getRecurlyAccount = config.service 'account/getRecurlyAccount'
+    @createRecurlyAccount = config.service 'recurly/createAccount'
+    @createRecurlySubscription = config.service 'recurly/createSubscription'
+    @createRecurlyBilling = config.service 'recurly/createBilling'
+    @getRecurlyAccount = config.service 'recurly/getAccount'
     @accountId = @account._id.toString()
 
-    @createRecurlyAccount {accountId: @accountId}, (err, result) =>
+    @createRecurlyAccount {accountId: @accountId, owner: @ownerUser}, (err, result) =>
       should.not.exist err, "create account should not return error: #{err}\n#{inspect result.account, false, 10}"
       should.exist result.account
 

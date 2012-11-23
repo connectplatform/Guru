@@ -18,9 +18,8 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
           return if handleErr err
           {recurlyData} = data
 
-          $('#recurlyDetails').html "<iframe height='800' width='620'
+          $('#recurlyDetails').html "<iframe height='840' width='620'
             src='https://chatpro.recurly.com/account/#{recurlyData.token}'></iframe>"
-
 
       # if we decide to present more info in the future
 

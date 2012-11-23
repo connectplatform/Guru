@@ -168,30 +168,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             }
           ]
 
-      findWebsite: ->
-        server.findModel = (params, cb) ->
-          record =
-            _id: '123'
-            url: 'foo.com'
-            contactEmail: 'owner@foo.com'
-
-          cb null, record
-
-      findSpecialties: ->
-        server.findModel = (params, cb) ->
-          record = [
-            {
-              accountId: '123'
-              id: '123abc'
-              name: 'Sales'
-            }
-            {
-              accountId: '123'
-              id: '123abc'
-              name: 'Billing'
-            }
-          ]
-
       hasChats: ->
         server.getMyChats = (params, cb) ->
 

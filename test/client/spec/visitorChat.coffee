@@ -44,21 +44,11 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
 
       it 'should give the visitor a button to leave the chat', ->
         waitsFor exists('.leaveButton'), 'Visitor chat did not load', defaultTimeout
-
-        runs ->
-          userLeft = false
-          server.leaveChat = (args..., cb) ->
-            userLeft = true
-            cb null, null
-
-          $('.leaveButton').click()
-          didLeave = -> userLeft
-          waitsFor didLeave, defaultTimeout, 'leaveChat was not called'
-
+        $('.leaveButton').click()
         messageDisplayed = ->
-          $('.chat-display-box').children().eq(1)?.text() is 'You have left the chat.'
+          $('.chat-display-box').children().eq(1)?.text() is 'Visitor has left the chat'
 
-        waitsFor messageDisplayed, 500, 'Exit message did not display'
+        waitsFor messageDisplayed, 'Exit message did not display', defaultTimeout
 
       it 'should give the user a button to print in a new window', ->
         waitsFor exists('.printButton'), 'could not find print button', defaultTimeout

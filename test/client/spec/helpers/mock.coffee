@@ -26,7 +26,11 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           login: (params, cb) ->
             mock.loggedIn()
             cb null, {firstName: 'Bob'} #short version of the user object
-          leaveChat: (params, cb) ->
+          leaveChat: ({chatId}, cb) ->
+            pulsar.channel(chatId).emit 'serverMessage',
+              type: 'notification'
+              message:'Visitor has left the chat'
+              timestamp: 777
             cb null, 'foo'
           awsUpload: (params, cb) ->
             cb null, 'foo'
@@ -103,11 +107,13 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               when 'User'
                 record = [{_id: 123, firstName: 'Bob', role: 'Visitor'}]
               else
-                record = [{}]
+                record = [{id: 'Make a new model mock'}]
+                console.log record
             cb null, record
           deleteModel: (params, cb) ->
             cb null, params
           log: (params, cb) ->
+            console.log 'log:', params.message
             console.log params
             cb null, null
           saveModel: ({fields, modelName, sessionId, accountId}, cb) ->

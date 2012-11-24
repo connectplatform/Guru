@@ -70,6 +70,11 @@ user.pre 'save', (next) ->
   next()
 
 user.pre 'save', (next) ->
+  # if new
+  # create/modify recurly account
+  next()
+
+user.pre 'save', (next) ->
   return next new Error "Cannot change #{@oldRole} role." if @oldRole in ['Owner', 'Administrator'] and @isModified 'role'
   if @role in ['Owner', 'Administrator'] and @oldRole in enums.editableRoles and @isModified 'role'
     return next new Error "Cannot make user a #{@oldRole}."

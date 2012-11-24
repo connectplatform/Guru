@@ -27,15 +27,16 @@ module.exports =
     if body
       options.data = '<?xml version="1.0" encoding="UTF-8"?>\n'
       options.data += easyxml.render body, rootName
-      #console.log 'submitting data:', options.data
+      #config.log 'submitting data:', options.data
     else
       options.data = ''
 
     # submit the account details to recurly
     rest[method]("#{config.recurly.apiUrl}#{resource}", options).on 'complete', (data, response) =>
+      config.log "Recurly: #{method.toUpperCase()} #{resource}: #{response.statusCode}"
       #{inspect} = require 'util'
-      #console.log 'response:', inspect response, null, 1
-      #console.log 'data:', data
+      #config.log 'response:', inspect response, null, 1
+      #config.log 'data:', inspect data, null, 4 if method is 'put' and resource.match /subscription/
 
       err = if response.statusCode in acceptableStatus then null else "Could not #{verbs[method]} #{rootName or resource}."
       details = {status: response.statusCode}.merge data

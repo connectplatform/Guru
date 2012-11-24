@@ -7,7 +7,10 @@ module.exports =
 
     getSubscription {accountId: accountId}, (err, result) ->
       return done err if err
+
       subscriptionId = result.subscription.uuid
+      status = result.subscription.status
+      oldQuantity = result.subscription.quantity.value
 
       params =
         method: 'put'

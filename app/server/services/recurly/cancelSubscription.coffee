@@ -6,8 +6,8 @@ module.exports =
     getSubscription = config.service 'recurly/getSubscription'
 
     getSubscription {accountId: accountId}, (err, result) ->
-      return done err if err
-      subscriptionId = result.subscription.uuid
+      return done err if err or not result
+      subscriptionId = result?.subscription?.uuid
 
       params =
         method: 'put'

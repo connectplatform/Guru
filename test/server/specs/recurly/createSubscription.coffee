@@ -20,8 +20,7 @@ boiler 'Recurly - Subscription', ->
     @reactivateRecurlySubscription = config.service 'recurly/reactivateSubscription'
 
     @createRecurlyAccount {accountId: @accountId}, (err, result) =>
-      should.not.exist err, "create account should not return error: #{err}\n#{inspect result.account, false, 10}"
-      should.exist result.account
+      verify 'create', 'account', err, result
 
       billing =
         first_name: 'Bob'

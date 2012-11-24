@@ -26,14 +26,14 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
           mock.loggedOut()
 
       it 'should display a welcome message', ->
-        waitsFor hasText('.chat-display-box p', "Welcome to live chat!  An operator will be with you shortly."), defaultTimeout, 'Welcome message did not display'
+        waitsFor hasText('.chat-display-box p', "Welcome to live chat! An operator will be with you shortly."), defaultTimeout, 'Welcome message did not display'
 
       it 'should display notification messages', ->
         # Emit a server message with type: notification
         pulsar.channel("chat_foo").emit 'serverMessage',
           message: 'Visitor has joined the chat',
           type: 'notification'
-        waitsFor hasText('.chat-display-box p:visible+p', 'Visitor has joined the chat'), defaultTimeout, 'Notification did not display'
+        waitsFor hasText('.chat-display-box p:visible+p', 'Visitor has joined the chat'), 'Notification did not display', defaultTimeout
 
       it 'should receive and display messages', ->
         pulsar.channel("chat_foo").emit 'serverMessage', {username: "Helper Dude", message: "How can I help?", timestamp: 1}

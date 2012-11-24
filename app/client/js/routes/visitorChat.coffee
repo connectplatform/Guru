@@ -38,22 +38,17 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             else
               util.append chatbox, chatMessage message
 
-          displayGreeting = ->
-            appendServerMessage message: "Welcome to live chat!  An operator will be with you shortly."
-
           # display initial chat history
           server.getChatHistory {chatId: chatId}, (err, history) ->
             notify.error "Error loading chat history: #{err}" if err
             appendChatMessage msg for msg in history
-            displayGreeting() if history.length is 0
 
             # display messages when received
             wireUpChatAppender appendChatMessage, self.channel
 
             # when you get to the end, stop
             self.channel.on 'chatEnded', ->
-              self.channel.removeAllListeners 'serverMessage'
-              $(".message-form").hide()
+              self.teardown ->
 
           # display chat logo
           server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
@@ -65,18 +60,16 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             evt.preventDefault()
             server.leaveChat {chatId: chatId}, (err) ->
               notify.error "Error leaving chat: #{err}" if err
-              server.cookie 'session', null
-              $(".message-form").hide()
-              $('.leaveButton').hide()
-              self.channel.removeAllListeners 'serverMessage'
-              self.channel.removeAllListeners 'chatEnded'
+              self.teardown ->
 
           $('.printButton').click chatActions.print chatId
 
           $('.emailButton').click chatActions.email chatId
 
     teardown: (cb) ->
-      ran = true
+      $('.message-form').hide()
+      $('.leaveButton').hide()
+      server.cookie 'session', null
       @channel.removeAllListeners 'serverMessage'
       @channel.removeAllListeners 'chatEnded'
       cb()

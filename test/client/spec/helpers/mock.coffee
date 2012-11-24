@@ -59,7 +59,14 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           visitorCanAccessChannel: (params, cb) ->
             cb null, 'true'
           getChatHistory: (params, cb) ->
-            cb null, []
+            cb null,
+            [
+              {
+                timestamp: 0,
+                type: "notification",
+                message: 'Welcome to live chat! An operator will be with you shortly.'
+              }
+            ]
           getLogoForChat: (params, cb) ->
             cb null, "http://s3.amazonaws.com/guru-dev/website/#{encodeURIComponent 'foo.com'}/logo"
           printChat: (params, cb) ->
@@ -99,7 +106,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
                 record = [{}]
             cb null, record
           deleteModel: (params, cb) ->
-            console.log params
             cb null, params
           log: (params, cb) ->
             console.log params

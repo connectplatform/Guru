@@ -4,4 +4,4 @@ Object.extend()
 define ["load/server", "load/routes", "load/notify"],
   (server, routes, notify) ->
     server.ready (services) ->
-      #server.log 'Vein is ready', {availibleServices: services}
+      #server.log {message: 'Vein is ready', availibleServices: services}, ->

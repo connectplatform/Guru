@@ -17,6 +17,7 @@ boiler 'Recurly - Subscription', ->
     @getRecurlySubscription = config.service 'recurly/getSubscription'
     @editRecurlySubscription = config.service 'recurly/editSubscription'
     @cancelRecurlySubscription = config.service 'recurly/cancelSubscription'
+    @reactivateRecurlySubscription = config.service 'recurly/reactivateSubscription'
 
     @createRecurlyAccount {accountId: @accountId}, (err, result) =>
       should.not.exist err, "create account should not return error: #{err}\n#{inspect result.account, false, 10}"
@@ -59,3 +60,10 @@ boiler 'Recurly - Subscription', ->
       @cancelRecurlySubscription {accountId: @accountId}, (err, result) =>
         verify 'cancel', 'subscription', err, result
         done()
+
+    it 'Reactivate should return success', (done) ->
+      @cancelRecurlySubscription {accountId: @accountId}, (err, result) =>
+        verify 'cancel', 'subscription', err, result
+        @reactivateRecurlySubscription {accountId: @accountId}, (err, result) =>
+          verify 'reactivate', 'subscription', err, result
+          done()

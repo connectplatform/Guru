@@ -32,7 +32,7 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
 
           #[account] = accounts
 
-          #fields = for fieldName, fieldVal of account when fieldName in ['status']
+          #fields = for fieldName, fieldVal of account when fieldName in ['accountType']
             #{
               #label: toTitle fieldName
               #name: fieldName

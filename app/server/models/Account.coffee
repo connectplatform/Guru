@@ -5,7 +5,7 @@ enums = config.require 'load/enums'
 
 account = new Schema
 
-  status:
+  accountType:
     type: String
     enum: enums.accountTypes
 

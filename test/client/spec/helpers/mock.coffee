@@ -94,7 +94,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
                 ]
 
               when 'Account'
-                record = [{status: 'Trial'}]
+                record = [{accountType: 'Paid'}]
 
               when 'Website'
                 record = [

@@ -19,6 +19,18 @@ module.exports = (done) ->
         user.websites = websites.filter((site) -> site.url in user.websites).map '_id'
         User.create user, cb
 
+    createPaidOwner = (websites, accountId, next) ->
+      createUser(websites, accountId)({
+        email: 'owner@bar.com'
+        sentEmail: true
+        registrationKey: 'abcd'
+        password: 'foobar'
+        role: 'Owner'
+        firstName: 'Paid'
+        lastName: 'Owner'
+        websites: []
+      }, next)
+
     createWebsite = (accountId) ->
       (website, cb) ->
         Website.create website.merge(accountId: accountId), (err, data) ->
@@ -26,7 +38,9 @@ module.exports = (done) ->
           cb err, data
 
     accounts = [
-      status: 'Trial'
+        accountType: 'Unlimited'
+      ,
+        accountType: 'Paid'
     ]
 
     operators = [
@@ -110,14 +124,20 @@ module.exports = (done) ->
 
     async.map accounts, createAccount, (err, accounts) ->
       return done err if err
-      [account] = accounts
+      [account, paidAccount] = accounts
 
       async.parallel {
         websites: (cb) -> async.map websites, createWebsite(account._id), cb
         specialties: (cb) -> async.map specialties, createSpecialty(account._id), cb
 
       }, (err, data) ->
-        async.map operators, createUser(data.websites, account._id), (err, opData) ->
+        return done err if err
 
-          # return all data created
-          done err, data.merge {operators: opData, accounts: accounts}
+        async.map operators, createUser(data.websites, account._id), (err, opData) ->
+          return done err if err
+
+          createPaidOwner data.websites, paidAccount._id, (err, paidOwner) ->
+            return done err if err
+
+            # return all data created
+            done err, data.merge {operators: opData, accounts: accounts}

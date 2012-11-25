@@ -19,7 +19,7 @@ module.exports =
         next err, select(userData._doc, '_id', 'email', 'firstName', 'lastName')
 
     createAccount = (cb) ->
-      Account.create {status: 'Trial'}, cb
+      Account.create {accountType: 'Paid'}, cb
 
     createRecurly = (cb, {account, owner}) ->
       createRecurlyAccount {accountId: account._id, owner: owner}, cb

@@ -39,7 +39,7 @@ boiler 'Service - Find Model', ->
         should.not.exist err
         [account] = account
         should.exist account, 'expected account to exist'
-        should.exist account.status, 'expected account status to exist'
-        account.status.should.eql 'Trial'
+        should.exist account.accountType, 'expected Account Type to exist'
+        account.accountType.should.eql 'Paid'
 
         done()

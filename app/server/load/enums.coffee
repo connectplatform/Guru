@@ -3,4 +3,4 @@ module.exports =
   managerRoles: ['Administrator', 'Owner', 'Supervisor'] # can see all data for account
   editableRoles: ['Operator', 'Supervisor'] # can be selected in user management UI
 
-  accountTypes: ['Trial', 'Active', 'Unpaid']
+  accountTypes: ['Paid', 'Unlimited']

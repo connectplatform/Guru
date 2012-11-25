@@ -55,6 +55,7 @@ paths =
   root:       rel '.'
   npmBin:     rel 'node_modules/.bin'
   scripts:    rel 'scripts/sources'
+  data:       rel 'data'
 
   app:        rel 'app'
   client:     rel 'app/client'

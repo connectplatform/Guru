@@ -18,6 +18,7 @@
     "stoic": "*",
     "restler": "git://github.com/bitmage/restler.git",
     "nodemailer": "*",
+    "factory-worker": "*",
     "easyxml": "*",
     "xml2js": "*",
     "markdown": "*",

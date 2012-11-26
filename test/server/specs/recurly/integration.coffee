@@ -27,7 +27,7 @@ boiler 'Recurly - Integration', ->
         done()
 
   describe 'User Sync', ->
-    it 'should sync up subscription', (done) ->
+    it 'Creating a user should create a subscription', (done) ->
       @timeout 4000
 
       # create a new operator
@@ -41,6 +41,21 @@ boiler 'Recurly - Integration', ->
           should.exist quantity, 'expected subscription quantity'
           quantity.should.eql '1'
           done()
+
+    it 'Deleting the only user should cancel the subscription', (done) ->
+      @timeout 4000
+
+      # create a new operator
+      Factory.create 'operator', {accountId: @paidAccountId}, (err, operator) =>
+        operator.remove =>
+
+          # subscription should be up to date
+          @getRecurlySubscription {accountId: @paidAccountId}, (err, data) ->
+            should.not.exist err, "get subscription should succeed: #{err}"
+            state = data?.subscription?.state
+            should.exist state, 'expected subscription state'
+            state.should.eql 'canceled'
+            done()
 
   #describe 'Chat Validation', ->
     #it 'should not allow chat creation when account lapsed', (done) ->

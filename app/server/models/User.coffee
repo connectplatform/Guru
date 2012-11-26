@@ -18,6 +18,20 @@ validateWebsite = (websiteIds, cb) ->
 validateAccountId = (accountId, cb) ->
   cb @role is 'Administrator' or @accountId
 
+# sync recurly subscription on create/delete
+paidSeatsChanged = (num, next) ->
+  if @role not in ['Owner', 'Administrator']
+
+    #config.log "updating paid seats for: #{@email}"
+    updatePaidSeats = config.service 'account/updatePaidSeats'
+    updatePaidSeats {accountId: @accountId.toString(), newSeats: num}, (err, status) =>
+      config.log.warn "Could not update paid seats: #{err}", {status: status, accountId: @accountId.toString()} if err
+
+      next()
+
+  else
+    next()
+
 user = new Schema
 
   accountId:
@@ -68,20 +82,16 @@ user.pre 'save', (next) ->
   @password = digest_s @password if @isModified 'password'
   next()
 
+
+# sync subscriptions on save and delete
 user.pre 'save', (next) ->
-
-  # if new, create/modify recurly account
-  if @isNew and @role not in ['Owner', 'Administrator']
-
-    #config.log "updating paid seats for: #{@email}"
-    updatePaidSeats = config.service 'account/updatePaidSeats'
-    updatePaidSeats {accountId: @accountId.toString(), newSeats: 1}, (err, status) =>
-      config.log.warn "Could not update paid seats: #{err}", {status: status, accountId: @accountId.toString()} if err
-
-      next()
-
+  if @isNew
+    paidSeatsChanged.call @, 1, next
   else
     next()
+
+user.pre 'remove', (next) ->
+  paidSeatsChanged.call @, -1, next
 
 user.pre 'save', (next) ->
   sendRegistrationEmail = config.service 'operator/sendRegistrationEmail'

@@ -9,7 +9,7 @@ Factory.define 'operator', User, {
     sentEmail: true
     password: 'foobar'
     role: 'Operator'
-    websites: ['foo.com']
+    websites: []
   }
 
 module.exports = Factory

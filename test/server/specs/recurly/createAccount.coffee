@@ -20,7 +20,7 @@ boiler 'Recurly - Create Account', ->
       @createRecurlyAccount {accountId: @account._id}, =>
         @createRecurlyAccount {accountId: @account._id}, (err, @result) =>
           should.exist err, 'expected error'
-          @result.errors.error._.should.eql 'has already been taken'
+          @result.errors.error.value.should.eql 'has already been taken'
           done()
 
   describe 'with invalid data', ->

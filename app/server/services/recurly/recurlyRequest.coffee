@@ -31,12 +31,14 @@ module.exports =
     else
       options.data = ''
 
+    {inspect} = require 'util'
+    #config.log "about to submit request: #{method.toUpperCase()} #{resource}, data:\n#{inspect options}" if method is 'post' and resource.match /subscription/
+
     # submit the account details to recurly
     rest[method]("#{config.recurly.apiUrl}#{resource}", options).on 'complete', (data, response) =>
-      config.log "Recurly: #{method.toUpperCase()} #{resource}: #{response.statusCode}"
-      #{inspect} = require 'util'
-      #config.log 'response:', inspect response, null, 1
-      #config.log 'data:', inspect data, null, 4 if method is 'put' and resource.match /subscription/
+      #config.log "Recurly: #{method.toUpperCase()} #{resource}: #{response.statusCode}"
+      #config.log 'recurly response:', inspect response, null, 1
+      #config.log 'recurly data:', inspect data, null, 4 if method is 'post' and resource.match /subscription/
 
       err = if response.statusCode in acceptableStatus then null else "Could not #{verbs[method]} #{rootName or resource}."
       details = {status: response.statusCode}.merge data

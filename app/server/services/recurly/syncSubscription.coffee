@@ -7,8 +7,9 @@ module.exports =
       status: result?.subscription?.state
       seatCount: parseInt result?.subscription?.quantity?.value or 0
 
-    finished = (err, result) ->
-      done err, processResult result
+    finished = (actionTaken) ->
+      (err, result) ->
+        done err, processResult(result).merge actionTaken: actionTaken
 
     args = {accountId: accountId, quantity: seatCount}
 
@@ -26,19 +27,19 @@ module.exports =
 
       if seatCount is 0
         if not subscription
-          done null, subscription
+          finished('Nothing to do.')(null, subscription)
         else
-          cancelSubscription args, finished
+          cancelSubscription args, finished('Canceling subscription.')
 
       else
 
         # if there's no subscription, create one
         if not subscription.status
-          createSubscription args, finished
+          createSubscription args, finished('Creating a new subscription.')
 
         # otherwise edit it
         else if seatCount isnt subscription.seatCount
-          editSubscription args, finished
+          editSubscription args, finished('Editing existing subscription.')
 
         else
-          done null, subscription
+          finished('Nothing to do.')(null, subscription)

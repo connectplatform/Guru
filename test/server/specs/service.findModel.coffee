@@ -40,6 +40,6 @@ boiler 'Service - Find Model', ->
         [account] = account
         should.exist account, 'expected account to exist'
         should.exist account.accountType, 'expected Account Type to exist'
-        account.accountType.should.eql 'Paid'
+        account.accountType.should.eql 'Unlimited'
 
         done()

@@ -5,7 +5,6 @@ db = require 'mongoose'
 {ObjectId} = Schema.Types
 
 enums = config.require 'load/enums'
-sendRegistrationEmail = config.require 'services/operator/sendRegistrationEmail'
 
 validateWebsite = (websiteIds, cb) ->
   mongo = config.require 'load/mongo'
@@ -70,11 +69,23 @@ user.pre 'save', (next) ->
   next()
 
 user.pre 'save', (next) ->
-  # if new
-  # create/modify recurly account
-  next()
+
+  # if new, create/modify recurly account
+  if @isNew and @role not in ['Owner', 'Administrator']
+
+    #config.log "updating paid seats for: #{@email}"
+    updatePaidSeats = config.service 'account/updatePaidSeats'
+    updatePaidSeats {accountId: @accountId.toString(), newSeats: 1}, (err, status) =>
+      config.log.warn "Could not update paid seats: #{err}", {status: status, accountId: @accountId.toString()} if err
+
+      next()
+
+  else
+    next()
 
 user.pre 'save', (next) ->
+  sendRegistrationEmail = config.service 'operator/sendRegistrationEmail'
+
   return next new Error "Cannot change #{@oldRole} role." if @oldRole in ['Owner', 'Administrator'] and @isModified 'role'
   if @role in ['Owner', 'Administrator'] and @oldRole in enums.editableRoles and @isModified 'role'
     return next new Error "Cannot make user a #{@oldRole}."

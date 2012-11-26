@@ -21,6 +21,7 @@ initApp = (cb) ->
   @app cb
 
 # globals
+global.Factory = config.require 'data/factory'
 module.exports = global.boiler = (testName, tests) ->
   describe testName, (done)->
     before (done) ->
@@ -37,6 +38,9 @@ module.exports = global.boiler = (testName, tests) ->
         sampleData (err, data) =>
           throw new Error "when creating sample data: #{err}" if err?
           @account = data.accounts[0]
+          @accountId = @account._id
+          @paidAccountId = data.accounts[1]._id
+
           @website = data.websites[0]
           @ownerUser = data.operators[1]
           done()

@@ -1,7 +1,6 @@
-seed = config.require 'policy/sampleData'
-config.require('load/initServices')()
-
 module.exports = ->
+  config.require('load/initServices')()
+  seed = config.require 'policy/sampleData'
 
   # run seed data
   seed (err, data) ->

@@ -1,4 +1,4 @@
-app/client/js/routes/operatorChat.coffeedefine ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "helpers/embedImageIfExists", "helpers/chatActions"],
+define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "helpers/embedImageIfExists", "helpers/chatActions"],
   (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions) ->
     channels: []
     setup:

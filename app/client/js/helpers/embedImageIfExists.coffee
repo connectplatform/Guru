@@ -9,5 +9,7 @@ define ['templates/imageTemplate', 'load/server'], (image, server) ->
       url: url
       success: embedImage
       error: ->
-        server.log {message: 'Error getting image in embedImageIfExists', severity: 'info', imageUrl: url}, ->
+        server.log
+          message: 'Error getting image in embedImageIfExists'
+          context: {severity: 'info', imageUrl: url}
     }

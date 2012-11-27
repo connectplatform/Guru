@@ -5,7 +5,10 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
         updateDashboard = ->
           return unless window.location.hash is "#/dashboard"
           server.getActiveChats {}, (err, chats) ->
-            server.log 'Error retrieving chats on dashboard', {error: err, severity: 'error'} if err
+            if err
+              server.log
+                message: 'Error retrieving chats on dashboard'
+                context: {error: err, severity: 'error'}
 
             # calculate some status fields
             statusLevels =
@@ -26,7 +29,11 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
             dashboardAction 'acceptTransfer'
 
             dashboardAction 'acceptChat', (err, result) ->
-              return server.log 'Error accepting chat', {error: err, severity: 'error'} if err
+              if err
+                server.log
+                  message: 'Error accepting chat'
+                  context: {error: err, severity: 'error'}
+
               if result.status is 'OK'
                 window.location.hash = '/operatorChat'
               else

@@ -6,10 +6,16 @@ define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUse
       server.ready ->
 
         server.findModel {modelName: 'Website', queryObject: {}}, (err, websites) ->
-          server.log(message: err, ->) if err
+          if err
+            server.log
+              message: 'Error finding website'
+              context: {error: err}
 
           server.findModel {modelName: 'Specialty', queryObject: {}}, (err, specialties) ->
-            server.log(message: err , ->) if err
+            if err
+              server.log
+                message: 'Error finding specialty'
+                context: {error: err}
 
             allowedWebsites = websites.map (site) -> {url: site.url, id: site.id}
             validSpecialtyNames = specialties.map (specialty) -> specialty.name
@@ -48,7 +54,10 @@ define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUse
 
               # find all users and populate listing
               server.findModel {modelName: 'User', queryObject: {}}, (err, users) ->
-                server.log(message: err, ->) if err
+                if err
+                  server.log
+                    message: 'Error finding user'
+                    context: {error: err}
 
                 siteUrls = {}
                 for site in websites

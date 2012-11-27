@@ -8,12 +8,12 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
 
       # spit out an error if there's no fields
       unless fields and fields.length > 0
-        server.log {
-          message: "Called renderForm with no fields."
+        server.log
+          message: 'Called renderForm with no fields.'
           context:
             fields: fields
             options: options
-        }, ->
+
         $(options.placement).html "Oops! There's no data for this form. The support team has been notified."
         return
 

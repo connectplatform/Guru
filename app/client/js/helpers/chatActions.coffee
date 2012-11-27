@@ -21,9 +21,11 @@ define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, serv
             if err
               server.log
                 message: 'Error sending email',
-                error: err,
-                severity: 'warn',
-                email: email, ->
+                context:
+                  error: err,
+                  severity: 'warn',
+                  email: email
+
               notify.error 'Error sending email: ', err
             else
               notify.success 'Email sent'

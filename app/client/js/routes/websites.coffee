@@ -34,7 +34,10 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
 
           # find all websites and populate listing
           server.findModel {modelName: 'Website', queryObject:{}}, (err, websites) ->
-            server.log 'Error retrieving websites on websites crud page', {error: err, severity: error} if err
+            if err
+              server.log
+                message: 'Error retrieving websites on websites crud page'
+                context: {error: err, severity: error}
 
             # TODO: use async.parallel
             beforeRender = (element, cb) ->

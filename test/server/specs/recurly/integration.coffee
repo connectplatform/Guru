@@ -58,13 +58,5 @@ boiler 'Recurly - Integration', ->
             done()
 
   #describe 'Chat Validation', ->
-    #it 'should not allow chat creation when account lapsed', (done) ->
-      #done()
-
-  #describe 'Login Validation', ->
-    #it 'should not allow operator login when account lapsed', (done) ->
-      #done()
-
-  #describe 'User Validation', ->
-    #it 'should not allow adding users when account lapsed', (done) ->
+    #it 'should not allow chat routing when account lapsed', (done) ->
       #done()

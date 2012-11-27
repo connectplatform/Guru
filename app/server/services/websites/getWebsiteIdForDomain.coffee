@@ -1,9 +1,10 @@
-mongo = config.require 'server/load/mongo'
-{Website} = mongo.models
+db = config.require 'load/mongo'
+{Website} = db.models
 
-module.exports = (websiteDomain, cb) ->
+{getString} = config.require 'load/util'
 
-  siteIds = {}
-  Website.find {}, (err, websites) ->
-    siteIds[website.url] = website._id for website in websites
-    cb err, siteIds[websiteDomain]
+module.exports =
+  required: ['domain']
+  service: ({domain}, cb) ->
+    Website.findOne {url: domain}, {_id: true}, (err, site) ->
+      cb err, getString site?._id

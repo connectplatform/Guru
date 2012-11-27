@@ -22,8 +22,8 @@ module.exports = [
   ,
     typeName: 'WebsiteId'
     lookup: (args, found) ->
-      Website.findOne {websiteUrl: args.websiteUrl}, {_id: true}, (err, site) ->
-        found err, getString(site?._id)
+      config.service('websites/getWebsiteIdForDomain') {domain: args.websiteUrl}, (err, siteId) ->
+        found err, siteId
     defaultArgs: ['websiteId']
   ,
     typeName: 'WebsiteUrl'

@@ -5,9 +5,9 @@ boiler 'Service - Get Available Operators', ->
 
   beforeEach (done) ->
     @getAvailableOperators = config.require 'services/operator/getAvailableOperators'
-    websiteFromDomain = config.require 'services/websites/getWebsiteIdForDomain'
-    websiteFromDomain 'foo.com', (err, @fooSiteId) =>
-      websiteFromDomain 'bar.com', (err, @barSiteId) =>
+    websiteFromDomain = config.service 'websites/getWebsiteIdForDomain'
+    websiteFromDomain {domain: 'foo.com'}, (err, @fooSiteId) =>
+      websiteFromDomain {domain: 'bar.com'}, (err, @barSiteId) =>
         done()
 
   describe 'with no operators', ->

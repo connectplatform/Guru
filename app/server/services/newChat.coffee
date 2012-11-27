@@ -4,14 +4,15 @@ stoic = require 'stoic'
 createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 getAvailableOperators = config.require 'services/operator/getAvailableOperators'
-getWebsiteIdForDomain = config.require 'services/websites/getWebsiteIdForDomain'
 
 module.exports = (params, done) ->
   {Chat, Session, ChatSession} = stoic.models
 
+  getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
+
   return done "Field required: websiteUrl" unless params?.websiteUrl
 
-  getWebsiteIdForDomain params.websiteUrl, (err, websiteId) ->
+  getWebsiteIdForDomain {domain: params.websiteUrl}, (err, websiteId) ->
     return done "Could not find website: #{params.websiteUrl}" if err or not websiteId
 
     department = params.department

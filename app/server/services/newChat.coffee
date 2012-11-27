@@ -3,12 +3,12 @@ stoic = require 'stoic'
 
 createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
-getAvailableOperators = config.require 'services/operator/getAvailableOperators'
 
 module.exports = (params, done) ->
   {Chat, Session, ChatSession} = stoic.models
 
   getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
+  getAvailableOperators = config.service 'operator/getAvailableOperators'
 
   return done "Field required: websiteUrl" unless params?.websiteUrl
 
@@ -21,9 +21,11 @@ module.exports = (params, done) ->
       username: username
       referrerData: params || null
 
-    getAvailableOperators websiteId, department, (err, accountId, operators) ->
+    getAvailableOperators {websiteId: websiteId, specialty: department}, (err, result) ->
+      operators = result?.operators
+      accountId = result?.accountId
       if err
-        errData = {error: err, websiteId: websiteId, department: department, operators: operators}
+        errData = {error: err, websiteId: websiteId, department: department}
         config.log.error 'Error getting availible operators in newChat', errData
 
       return done err, {noOperators: true} if err or operators.length is 0

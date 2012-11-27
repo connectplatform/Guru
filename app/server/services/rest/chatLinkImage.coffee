@@ -1,11 +1,12 @@
 async = require 'async'
 db = config.require 'load/mongo'
-getAvailableOperators = config.require 'services/operator/getAvailableOperators'
 
 cache = {}
 
 module.exports = ({pathParts}, response) ->
   [_, websiteId] = pathParts
+
+  getAvailableOperators = config.service 'operator/getAvailableOperators'
 
   handleError = (err) ->
     if err
@@ -40,7 +41,7 @@ module.exports = ({pathParts}, response) ->
   else
 
     # is anyone online?
-    getAvailableOperators websiteId, null, (err, accountId, operators) ->
+    getAvailableOperators {websiteId: websiteId, specialty: null}, (err, {accountId, operators}) ->
       return if handleError err
       isOnline = (operators.length > 0)
       cache[websiteId] = [isOnline, Date.now()]

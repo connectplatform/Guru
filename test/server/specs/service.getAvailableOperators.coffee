@@ -4,7 +4,7 @@ stoic = require 'stoic'
 boiler 'Service - Get Available Operators', ->
 
   beforeEach (done) ->
-    @getAvailableOperators = config.require 'services/operator/getAvailableOperators'
+    @getAvailableOperators = config.service 'operator/getAvailableOperators'
     websiteFromDomain = config.service 'websites/getWebsiteIdForDomain'
     websiteFromDomain {domain: 'foo.com'}, (err, @fooSiteId) =>
       websiteFromDomain {domain: 'bar.com'}, (err, @barSiteId) =>
@@ -12,28 +12,28 @@ boiler 'Service - Get Available Operators', ->
 
   describe 'with no operators', ->
     it 'should return no results', (done) ->
-      @getAvailableOperators @fooSiteId, 'sales', (err, accountId, ops) ->
+      @getAvailableOperators {websiteId: @fooSiteId, specialty: 'sales'}, (err, {accountId, operators}) ->
         should.not.exist err
-        should.exist ops
-        ops.length.should.eql 0
+        should.exist operators
+        operators.length.should.eql 0
         done()
 
   describe 'with one operator', ->
     it 'should return one result', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators @fooSiteId, 'Sales', (err, accountId, ops) ->
+        @getAvailableOperators {websiteId: @fooSiteId, specialty: 'Sales'}, (err, {accountId, operators}) ->
           should.not.exist err
           should.exist accountId
-          should.exist ops
-          ops.length.should.eql 1, 'Expected one operator.'
+          should.exist operators
+          operators.length.should.eql 1, 'Expected one operator.'
           done()
 
   describe 'if website does not match', ->
     it 'should return no results', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators @barSiteId, 'Sales', (err, accountId, ops) ->
+        @getAvailableOperators {websiteId: @barSiteId, specialty: 'Sales'}, (err, {accountId, operators}) ->
           should.not.exist err
           should.exist accountId
-          should.exist ops
-          ops.length.should.eql 0, 'Expected no operators.'
+          should.exist operators
+          operators.length.should.eql 0, 'Expected no operators.'
           done()

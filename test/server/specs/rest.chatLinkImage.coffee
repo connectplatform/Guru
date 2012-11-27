@@ -1,5 +1,6 @@
 rest = require 'restler'
 should = require 'should'
+{inspect} = require 'util'
 
 boiler 'REST - Chat Link Image', ->
   describe 'Chat link image', ->
@@ -7,7 +8,7 @@ boiler 'REST - Chat Link Image', ->
     beforeEach ->
       statusShouldBe = (status,  cb) =>
         rest.get("http://localhost:#{@testPort}/chatLinkImage/#{@website._id}").on 'complete', (data, response) =>
-          response.statusCode.should.eql 307
+          response.statusCode.should.eql 307, "Status: #{response.status}. Response failed:\n#{response.rawEncoded}"
           response.headers.location.should.match new RegExp "#{@website._id}\/#{status}$"
           cb()
 

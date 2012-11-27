@@ -47,7 +47,7 @@ helpers =
     visitor = @getClient()
     visitor.ready =>
       visitor.newChat data, (err, data) =>
-        throw err if err
+        throw new Error err if err
         @visitorSession = visitor.cookie 'session'
         @chatId = data.chatId
         cb null, visitor, data

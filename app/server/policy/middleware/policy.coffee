@@ -62,12 +62,12 @@ module.exports =
     }
 
     {
-      filters: ['isNotVisibleChatMember']
+      filters: ['isNotVisibleChatMember', 'accountInGoodStanding']
       only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']
     }
 
     {
-      filters: ['isNotChatMember']
+      filters: ['isNotChatMember', 'accountInGoodStanding']
       only: ['watchChat']
     }
 

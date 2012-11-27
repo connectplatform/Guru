@@ -57,6 +57,54 @@ boiler 'Recurly - Integration', ->
             state.should.eql 'canceled'
             done()
 
-  #describe 'Chat Validation', ->
-    #it 'should not allow chat routing when account lapsed', (done) ->
+  #describe 'when Subscription Past Due', ->
+    #it 'should not allow User creation', (done) ->
       #done()
+
+  describe 'when Subscription Terminated', ->
+    beforeEach (done) ->
+      terminateSubscription = config.service 'recurly/terminateSubscription'
+
+      # terminate simulates recurly's automated process after no payment
+      @terminate = (next) =>
+        terminateSubscription {accountId: @paidAccountId}, (err, result) ->
+          should.not.exist err
+          next()
+
+      # create an operator and log in
+      Factory.create 'website', {accountId: @paidAccountId, url: 'bazango.com'}, (err, website) =>
+        should.not.exist err, "expected a new website: #{err}"
+        @websiteId = website._id
+
+        Factory.create 'operator', {accountId: @paidAccountId, websites: [website._id]}, (err, operator) =>
+          should.not.exist err, "expected a new operator: #{err}"
+
+          @getAuthedWith {email: operator.email, password: 'foobar'}, (err, @client) =>
+            should.not.exist err
+
+            done()
+
+    it 'should not route chats', (done) ->
+      getAvailableOperators = config.service 'operator/getAvailableOperators'
+
+      @terminate =>
+        getAvailableOperators {websiteId: @websiteId, specialty: 'Sales'}, (err, results) ->
+          should.not.exist err
+          {accountId, operators} = results
+          should.exist accountId, 'expected accountId'
+          should.exist operators, 'expected operator list'
+          operators.length.should.eql 0, 'Expected operator list to be empty.'
+          done()
+
+    it 'should not allow accepting chats', (done) ->
+      @timeout 4000
+
+      @newChatWith {username: 'Frank', websiteUrl: 'bazango.com'}, (err) =>
+        should.not.exist err, "expected create chat to succeed: #{err}"
+        should.exist @chatId, 'expected chatId to exist'
+
+        @terminate =>
+          @client.acceptChat {chatId: @chatId}, (err, result) =>
+            should.exist err, 'expected validation error'
+            err.should.eql 'This feature is not available as your account is not in good standing.'
+            done()

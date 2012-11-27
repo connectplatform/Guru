@@ -1,4 +1,4 @@
-define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "helpers/embedImageIfExists", "helpers/chatActions"],
+app/client/js/routes/operatorChat.coffeedefine ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "helpers/embedImageIfExists", "helpers/chatActions"],
   (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions) ->
     channels: []
     setup:
@@ -17,12 +17,13 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
           server.getMyChats {}, (err, chats) ->
             if err
-              server.log 'Error getting chats in operatorChat', {
-                error: err
-                severity: 'error'
-                ids:
-                  sessionId: sessionId
-              }
+              server.log
+                message: 'Error getting chats in operatorChat'
+                context:
+                  error: err
+                  severity: 'error'
+                  ids:
+                    sessionId: sessionId
 
             for chat in chats
               chat.renderedId = renderId chat.id

@@ -19,7 +19,10 @@ define ['load/server', 'load/notify', 'templates/editSpecialty', 'templates/dele
 
         # find all specialties and populate listing
         server.findModel {modelName: 'Specialty', queryObject:{}}, (err, specialties) ->
-          server.log 'Error retrieving specialties on specialties crud page', {error: err, severity: 'error'} if err
+          if err
+            server.log
+              message: 'Error retrieving specialties on specialties crud page'
+              context: {error: err, severity: 'error'}
 
           formBuild = formBuilder getFormFields, editSpecialty, deleteSpecialty, extraDataPacker, specialtyRow, specialties, 'specialty'
           #Done with edit/delete handlers, now render page

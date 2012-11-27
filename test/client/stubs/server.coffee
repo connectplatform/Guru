@@ -8,6 +8,8 @@ define [], ->
   addService: (serviceName, serviceDef) ->
     #Service signature validation
     this[serviceName] = (params, done) ->
+      done ||= (err) ->
+        throw new Error err if err
       unless typeof params is 'object' and typeof done is 'function'
         console.log "Service [#{serviceName}] got invalid params: ", params
         return done "Unexpected Argument Format in #{serviceName}"

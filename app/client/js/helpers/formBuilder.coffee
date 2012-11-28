@@ -1,5 +1,5 @@
 define ['load/server', 'load/notify', 'helpers/util'], (server, notify, {toTitle}) ->
-  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) ->
+  (getFormFields, editingTemplate, deletingTemplate, embedLinkTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) ->
 
     unless beforeRender?
       beforeRender = (_, cb) -> cb {}
@@ -16,6 +16,15 @@ define ['load/server', 'load/notify', 'helpers/util'], (server, notify, {toTitle
         if element.id is id
           return extraDataPacker element
 
+    generateLink = (website) ->
+      website.embedLink = "<a href=\"JavaScript:void(0);\"
+ onclick=\"window.open('https://livechathost.com/#/newChat?websiteUrl=#{website.url}'
+, 'Live Support', 'width=620,height=660, menubar=no,location=no,resizable=yes,scrollbars=yes,status=yes'); 
+return false;\" rel=\"nofollow\">
+<img border='0' title='Click for Live Support' alt='Click for Live Support' 
+src='https://livechathost.com/chatLinkImage/#{website.accountId}'></a>"
+      return website
+
     formBuilder =
       elementForm: (template, element, onComplete) ->
         (evt) ->
@@ -30,7 +39,6 @@ define ['load/server', 'load/notify', 'helpers/util'], (server, notify, {toTitle
 
             $("#edit#{modelName} .saveButton").click (evt) ->
               evt.preventDefault()
-              console.log 'ping'
 
               beforeSubmit element, beforeData, ->
 
@@ -54,6 +62,15 @@ define ['load/server', 'load/notify', 'helpers/util'], (server, notify, {toTitle
 
       wireUpRow: (id) =>
         currentElement = getElementById id
+
+        #Generate link for subscribers to copy and paste onto their sites
+        currentElement = generateLink(currentElement)
+
+        # Event listeners/firing for embed link generator modal
+        $('#editWebsite').live 'shown', ->
+          $('input.linkGenerator').focus()
+        $('input.linkGenerator').live 'focus', ->
+          $('input.linkGenerator').select()
 
         editElementClicked = formBuilder.elementForm editingTemplate, currentElement, (err, savedElement) ->
           #return notify.error "Error saving element: #{err}" if err?
@@ -82,8 +99,12 @@ define ['load/server', 'load/notify', 'helpers/util'], (server, notify, {toTitle
           $("#delete#{modelName} .cancelButton").click ->
             $("#delete#{modelName}").modal 'hide'
 
+        embedLinkElementClicked = formBuilder.elementForm embedLinkTemplate, currentElement, (err, data) ->
+          evt.preventDefault()
+
         $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .edit#{modelName}").click editElementClicked
         $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .delete#{modelName}").click deleteElementClicked
+        $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .embedLink#{modelName}").click embedLinkElementClicked
 
       addElement: (newElement, cb) ->
         (evt) ->

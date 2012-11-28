@@ -62,5 +62,5 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       expect(websiteCount2).toEqual(websiteCount - 1)
 
     it 'should display embed link modal', ->
-      $('a.embedLink').eq(0).click()
+      $('a.embedLinkWebsite').eq(0).click()
       waitsFor hasText('h3:visible', 'Embed Link'), 'Did not see embed link modal', defaultTimeout

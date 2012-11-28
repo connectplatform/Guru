@@ -1,5 +1,5 @@
-define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws'],
-  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws) ->
+define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/embedLink', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws'],
+  (server, notify, editWebsite, deleteWebsite, embedLink, websiteRow, formBuilder, submitToAws) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 
@@ -70,7 +70,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
             #Done with edit/delete handlers, now render page
             $('#content').html templ websites: websites
 
-            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, extraDataPacker, websiteRow, websites, 'website', beforeRender, beforeSubmit
+            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, embedLink, extraDataPacker, websiteRow, websites, 'website', beforeRender, beforeSubmit
 
             $('#addWebsite').click formBuild.elementForm editWebsite, getNewWebsite(), (err, savedWebsite) ->
               return notify.error "Error saving website: #{err}" if err?

@@ -1,6 +1,7 @@
 define ["templates/treeviewParentNode", "templates/li", "templates/treeview"], (treeviewParentNode, li, treeview) ->
   getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
-  toTitle: (word) -> word[0].toUpperCase() + word.slice(1)
+  toTitle: (word) ->
+    word[0].toUpperCase() + word.slice(1)
 
   append: (selector, message) ->
     $(selector).append message

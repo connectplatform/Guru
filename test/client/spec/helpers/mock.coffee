@@ -38,6 +38,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             cb null, 'None'
           getMyChats: (params, cb) ->
             cb null, []
+          getRecurlyToken: (params, cb) ->
+            cb null, {token: 'foo'}
           getChatStats: (params, cb) ->
             cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
           getActiveChats: (params, cb) ->
@@ -94,7 +96,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
                 ]
 
               when 'Account'
-                record = [{accountType: 'Paid'}]
+                record = [{accountType: 'Unlimited'}]
 
               when 'Website'
                 record = [

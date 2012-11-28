@@ -12,7 +12,7 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
 
       server.ready ->
         async.parallel {
-          recurlyData: server.getRecurlyToken
+          recurlyData: (done) -> server.getRecurlyToken {}, done
           accounts: (done) -> server.findModel {modelName: 'Account'}, done
 
         }, (err, data) ->
@@ -20,7 +20,7 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
           {recurlyData, accounts} = data
 
           if accounts?[0]?.accountType is 'Unlimited'
-            $('#recurlyDetails').html "Unlimited Account - no payment details"
+            $('#recurlyDetails').html "<b>Unlimited Account</b> - No payment details."
 
           else
             $('#recurlyDetails').html "<iframe height='840' width='620'

@@ -8,5 +8,4 @@ define ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasTe
       waitsFor hasText('.page-header h1', 'Account Details'), "account details didn't load", defaultTimeout
 
     it 'should load account page', ->
-      expect($ '.form-area [name=status]').toExist()
-
+      expect($ '#content p').toHaveText /You can update/

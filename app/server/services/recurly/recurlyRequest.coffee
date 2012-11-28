@@ -11,9 +11,15 @@ acceptableStatus = [200, 201]
 module.exports =
   optional: ['body', 'rootName']
   required: ['method', 'resource']
-  service: ({method, body, resource, rootName}, done) ->
+  service: ({method, body, resource, rootName, modifies}, done) ->
+
+    getErr = (details) ->
+      err = if details.status in acceptableStatus then null else "Could not #{verbs[method]} #{rootName or resource}."
+      config.log.error err, details if err
+      err
 
     xmlParser = config.require 'load/xmlParser'
+    cache = config.require 'load/cache'
 
     method ||= 'get'
     options =
@@ -31,17 +37,17 @@ module.exports =
     else
       options.data = ''
 
-    {inspect} = require 'util'
-    #config.log "about to submit request: #{method.toUpperCase()} #{resource}, data:\n#{inspect options}" if method is 'post' and resource.match /subscription/
+    cached = cache.retrieve resource
+    return done getErr(cached), cached if cached
 
     # submit the account details to recurly
     rest[method]("#{config.recurly.apiUrl}#{resource}", options).on 'complete', (data, response) =>
-      #config.log "Recurly: #{method.toUpperCase()} #{resource}: #{response.statusCode}"
-      #config.log 'recurly response:', inspect response, null, 1
-      #config.log 'recurly data:', inspect data, null, 4 if method is 'post' and resource.match /subscription/
 
-      err = if response.statusCode in acceptableStatus then null else "Could not #{verbs[method]} #{rootName or resource}."
       details = {status: response.statusCode}.merge data
+      error = getErr(details)
 
-      config.log.error err, details if err
-      done err, details
+      unless error
+        cache.store modifies, details if modifies
+        cache.store resource, details if method is 'get'
+
+      done error, details

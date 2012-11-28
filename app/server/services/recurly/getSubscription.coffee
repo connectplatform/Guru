@@ -11,8 +11,9 @@ module.exports =
       resource: "accounts/#{accountId}/subscriptions"
 
     recurlyRequest params, (err, result) ->
-      subscription = result?.subscriptions?.subscription
+      subscription = result?.subscriptions?.subscription || result?.subscription
       if getType(subscription) is 'Array'
         subscription = subscription.find (s) -> s.plan.plan_code is 'standard'
 
-      done err, {status: result.status, subscription: subscription}
+      details = {status: result.status, subscription: subscription}
+      done err, details

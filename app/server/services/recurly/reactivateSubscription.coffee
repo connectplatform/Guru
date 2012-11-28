@@ -12,5 +12,6 @@ module.exports =
       params =
         method: 'put'
         resource: "subscriptions/#{subscriptionId}/reactivate"
+        modifies: "accounts/#{accountId}/subscriptions"
 
       recurlyRequest params, done

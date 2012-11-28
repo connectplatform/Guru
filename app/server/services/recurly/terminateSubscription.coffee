@@ -13,5 +13,6 @@ module.exports =
       params =
         method: 'put'
         resource: "subscriptions/#{subscriptionId}/terminate"
+        modifies: "accounts/#{accountId}/subscriptions"
 
       recurlyRequest params, done

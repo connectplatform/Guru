@@ -15,6 +15,7 @@ module.exports =
       params =
         method: 'put'
         resource: "subscriptions/#{subscriptionId}"
+        modifies: "accounts/#{accountId}/subscriptions"
         rootName: 'subscription'
         body:
           timeframe: 'now'

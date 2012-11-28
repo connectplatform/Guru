@@ -7,7 +7,7 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       window.location.hash = '/websites'
       waitsFor hasText('h1', 'Websites'), 'Website route not displaying', defaultTimeout
 
-    it 'should not display anything "undefined"', ->
+    it 'edit modal should not display anything "undefined"', ->
       $('#addWebsite').click()
 
       waitsFor hasText('button.saveButton', 'Save'), 'Did not see edit website form', defaultTimeout
@@ -60,3 +60,7 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {defaultTimeout, hasT
       waitsFor notExists('button.deleteButton:visible'), 'Delete confirmation did not exit', defaultTimeout
       websiteCount2 = $('a.deleteWebsite').length
       expect(websiteCount2).toEqual(websiteCount - 1)
+
+    it 'should display embed link modal', ->
+      $('a.embedLink').eq(0).click()
+      waitsFor hasText('h3:visible', 'Embed Link'), 'Did not see embed link modal', defaultTimeout

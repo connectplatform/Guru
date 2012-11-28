@@ -13,37 +13,15 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
       server.ready ->
         async.parallel {
           recurlyData: server.getRecurlyToken
+          accounts: (done) -> server.findModel {modelName: 'Account'}, done
 
         }, (err, data) ->
           return if handleErr err
-          {recurlyData} = data
+          {recurlyData, accounts} = data
 
-          $('#recurlyDetails').html "<iframe height='840' width='620'
-            src='https://chatpro.recurly.com/account/#{recurlyData.token}'></iframe>"
+          if accounts?[0]?.accountType is 'Unlimited'
+            $('#recurlyDetails').html "Unlimited Account - no payment details"
 
-      # if we decide to present more info in the future
-
-      #options =
-        #title: 'Account Details'
-        #placement: '.form-area'
-        #submit: 'disabled'
-
-          #accounts: (done) -> server.findModel {modelName: 'Account'}, done
-
-          #[account] = accounts
-
-          #fields = for fieldName, fieldVal of account when fieldName in ['accountType']
-            #{
-              #label: toTitle fieldName
-              #name: fieldName
-              #value: fieldVal
-              #inputType: 'static'
-            #}
-
-          #fields.add
-            #inputType: 'button'
-            #value: 'Edit Billing Info'
-            #btnStyle: 'primary'
-            #href: ""
-
-          #renderForm options, fields
+          else
+            $('#recurlyDetails').html "<iframe height='840' width='620'
+              src='https://chatpro.recurly.com/account/#{recurlyData.token}'></iframe>"

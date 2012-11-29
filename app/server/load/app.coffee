@@ -27,6 +27,7 @@ module.exports = (cb) ->
     app.use connect.favicon()
     app.use connect.staticCache()
     app.use connect.static config.paths.public
+    app.use connect.static config.paths.static if config.paths.static
     app.use loadRest config.paths.rest
 
     server = createServer port, app

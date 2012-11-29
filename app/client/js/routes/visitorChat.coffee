@@ -12,8 +12,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
         sendChatMessage = ->
           unless $(".message").val() is ""
             lines = $(".message").val().split(/\r\n|\r|\n/g)
-            #message = $(".message").val()
-            console.log lines
 
             self.channel.emit 'clientMessage', {message: lines, session: server.cookie 'session'}
 
@@ -32,12 +30,8 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             sendChatMessage()
             return false
 
-          # Chat send and other keyboard shortcuts
-          #$(".message").bind 'keydown', jwerty.event 'shift+enter', ->
-          #  console.log 'Shift+Enter!!!'
           $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
             evt.preventDefault()
-            console.log 'Enter!!!'
             sendChatMessage()
 
           chatbox = $(".chat-display-box")

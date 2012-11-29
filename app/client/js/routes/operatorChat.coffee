@@ -54,16 +54,25 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               self.sessionUpdates.emit 'viewedMessages', currentChat
 
             # on page load click the first tab
+            # TODO: Display accepted/last chat instead of first tab
             $('#chatTabs a:first').click()
+
+            sendChatMessage = (renderedId, channel) ->
+              message = $("##{renderedId} .message-form .message").val()
+              unless message is ""
+
+                # Array of lines in message
+                lines = message.split(/\r\n|\r|\n/g)
+
+                channel.emit 'clientMessage', {message: lines, session: server.cookie('session')}
+
+                $("##{renderedId} .message-form .message").val("")
+                $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
 
             createSubmitHandler = (renderedId, channel) ->
               (evt) ->
                 evt.preventDefault()
-                message = $("##{renderedId} .message-form .message").val()
-                unless message is ""
-                  channel.emit 'clientMessage', {message: message, session: server.cookie('session')}
-
-                  $("##{renderedId} .message-form .message").val("")
+                sendChatMessage(renderedId, channel)
 
             createChatAppender = (renderedId) ->
               (message) ->
@@ -101,6 +110,11 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                 $("##{chat.renderedId} .message-form").hide()
               else
                 $("##{chat.renderedId} .message-form").submit createSubmitHandler chat.renderedId, channel
+
+                # Multi-line support (enter sends, shift+enter creates newline)
+                $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
+                  evt.preventDefault()
+                  sendChatMessage(chat.renderedId, channel)
 
               #display incoming messages
               wireUpChatAppender createChatAppender(chat.renderedId), channel

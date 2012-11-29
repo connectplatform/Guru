@@ -1,5 +1,3 @@
-#TODO: implement as required param
-#filters: ['firstArgumentIsObject']
 module.exports =
   required: ['chatId', 'sessionId', 'message']
   service: (params, done) ->

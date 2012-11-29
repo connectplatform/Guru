@@ -26,7 +26,7 @@ generateValidations = (name, types, required) ->
 
     # validate existence
     if not args[name]? and required
-      return next "Argument Required: #{name}"
+      return next "Argument Required: #{name}", {}
     else
       return next null, args
 
@@ -40,7 +40,7 @@ generateValidations = (name, types, required) ->
 
         # run type validation
         t.validation args[name], (passed) ->
-          return next "Argument Validation: '#{name}' must be a valid #{t.typeName}." unless passed
+          return next "Argument Validation: '#{name}' must be a valid #{t.typeName}.", {} unless passed
           next null, args
 
   # remove any lookups/validations that weren't defined

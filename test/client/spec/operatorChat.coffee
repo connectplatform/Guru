@@ -18,10 +18,10 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
         window.location.hash = '/test'
 
       it 'should receive and display messages', ->
-        pulsar.channel("chat_1").emit 'serverMessage', {username: "Bob", message: "aMessage"}
+        pulsar.channel("chat_1").emit 'serverMessage', {username: "Bob", message: ["aMessage"]}
 
                                           # this crazy selector gets the second p tag
-        waitsFor hasText(".chat-display-box p:visible+p", 'Bob: aMessage'), 'Message sent did not display', defaultTimeout
+        waitsFor hasText(".chat-display-box p:visible+p .displayed-message :first-child", 'aMessage'), 'Message sent did not display', defaultTimeout
 
         expect( $(".chat-display-box p:visible").length).toEqual 2
 
@@ -49,10 +49,10 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar'],
         # Emit a server message (to chat_2 because I guess a test changes chat windows)
         # with type: notification
         pulsar.channel("chat_2").emit 'serverMessage',
-          message: 'Operator has joined the chat',
+          message: ['Operator has joined the chat'],
           type: 'notification'
 
-        waitsFor hasText('.chat-display-box .bold', 'Operator has joined the chat'), defaultTimeout
+        waitsFor hasText('p.bold', 'Operator has joined the chat'), defaultTimeout
 
 
       describe 'Sidebar', ->

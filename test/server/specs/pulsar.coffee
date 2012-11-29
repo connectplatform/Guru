@@ -3,7 +3,7 @@ http = require 'http'
 Pulsar = require 'pulsar'
 
 port = 8092
-serv = Pulsar.createServer server: http.createServer().listen port
+serv = Pulsar.createServer http.createServer().listen port
 client = Pulsar.createClient port: port
 
 describe 'pulsar', ->

@@ -32,6 +32,7 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
 
     # Test route
     dermis.route '/uploadTest' # TODO: remove when file uploads are working
+    dermis.route '/testPulsar'
 
     # chat actions
 

@@ -4,7 +4,8 @@ createServer = require './createServer'
 port = process.env.GURU_PULSAR_PORT or config.app.pulsarPort
 
 unless port is 'DISABLED'
-  pulsar = Pulsar.createServer server: createServer port
+  server = createServer port
+  pulsar = Pulsar.createServer server
 
   ops = pulsar.channel 'notify:operators'
 

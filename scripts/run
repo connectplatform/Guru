@@ -1,7 +1,4 @@
 #!/usr/local/bin/node
-
-process.env.GURU_PULSAR_PORT = 'DISABLED';
-
 require('coffee-script');
 join = require('path').join;
 require(join(__dirname, '../app/config'));
@@ -9,14 +6,14 @@ require(join(__dirname, '../app/config'));
 // TODO: Exercise for the reader. Add a requireDir function to config which
 // will grab all files in a directory and load them into an object
 tasks = {
-  seed: config.require('scripts/seed'),
-  start: config.require('scripts/server'),
-  sendRegistration: config.require('scripts/sendRegistration'),
-  clearOldChats: config.require('scripts/clearOldChats'),
-  printMiddleware: config.require('scripts/printMiddleware'),
-  testEmail: config.require('scripts/testEmail'),
-  testLogging: config.require('scripts/testLogging'),
-  jasmine: config.require('scripts/SpecServer')
+  seed: 'scripts/seed',
+  start: 'scripts/server',
+  sendRegistration: 'scripts/sendRegistration',
+  clearOldChats: 'scripts/clearOldChats',
+  printMiddleware: 'scripts/printMiddleware',
+  testEmail: 'scripts/testEmail',
+  testLogging: 'scripts/testLogging',
+  jasmine: 'scripts/SpecServer'
 };
 
 task = process.argv[2]
@@ -27,5 +24,5 @@ if (!task || !tasks[task]) {
   process.exit(0);
 }
 else {
-  tasks[task].apply(null, args);
+  config.require(tasks[task]).apply(null, args);
 }

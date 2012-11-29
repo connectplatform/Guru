@@ -1,4 +1,7 @@
+process.env.GURU_PULSAR_PORT = 'DISABLED'
+
 module.exports = ->
+  config.require 'load/mongo'
   config.require('load/initServices')()
   seed = config.require 'policy/sampleData'
 

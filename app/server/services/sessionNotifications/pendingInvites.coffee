@@ -1,10 +1,11 @@
 stoic = require 'stoic'
-{Session, ChatSession} = stoic.models
+{ChatSession} = stoic.models
 
 filterChats = config.require 'services/operator/filterChats'
 
-module.exports = (sessionId, done) ->
-  Session.accountLookup.get sessionId, (err, accountId) ->
+module.exports =
+  required: ['sessionId', 'accountId']
+  service: ({sessionId, accountId}, done) ->
     ChatSession(accountId).getBySession sessionId, (err, chats) ->
       filterChats chats, ['invite', 'transfer'], (err, chats) ->
         message = chats

@@ -1,11 +1,12 @@
 pulsar = config.require 'load/pulsar'
 
-# require data getters
-unansweredChats = config.require 'services/sessionNotifications/unansweredChats'
-pendingInvites = config.require 'services/sessionNotifications/pendingInvites'
-unreadMessages = config.require 'services/sessionNotifications/unreadMessages'
 
 module.exports = (sessionId, {type}, chime) ->
+
+  # require data getters
+  unansweredChats = config.service 'sessionNotifications/unansweredChats'
+  pendingInvites = config.service 'sessionNotifications/pendingInvites'
+  unreadMessages = config.service 'sessionNotifications/unreadMessages'
 
   # look up data getter
   getMessage = switch type
@@ -16,7 +17,7 @@ module.exports = (sessionId, {type}, chime) ->
 
   # call the getter and trigger the notification
   if getMessage?
-    getMessage sessionId, (err, event, message) ->
+    getMessage {sessionId}, (err, event, message) ->
       config.log.warn 'Error getting message in notifySession', {error: err, sessionId: sessionId, notificationType: type} if err
 
       channel = "notify:session:#{sessionId}"

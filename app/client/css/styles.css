@@ -55,6 +55,17 @@ blockquote {
   overflow-y: scroll;
 }
 
+.displayed-message :not(:first-child) {
+  padding-left: 25px;
+}
+
+textarea.message {
+  resize: none;
+  width: 82%;
+  height: 40px;
+  margin-right: 10px;
+}
+
 .message-form {
   position: relative;
   width: 100%;

@@ -1,12 +1,25 @@
 playSound = (type) ->
   $("##{type}Sound")[0].play()
 
-define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists' ],
+define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
   (server, pulsar, notify, util, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     channel: {}
     setup: ({chatId}, templ) ->
       self = this
       server.ready ->
+
+        # Sends chat message
+        sendChatMessage = ->
+          unless $(".message").val() is ""
+            lines = $(".message").val().split(/\r\n|\r|\n/g)
+            #message = $(".message").val()
+            console.log lines
+
+            self.channel.emit 'clientMessage', {message: lines, session: server.cookie 'session'}
+
+            $(".message").val("")
+            $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
+
         server.visitorCanAccessChannel {chatId: chatId}, (err, canAccess) ->
           return window.location.hash = '/newChat' unless canAccess
 
@@ -16,15 +29,16 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
           $(".message-form").submit (evt) ->
             evt.preventDefault()
-            unless $(".message").val() is ""
-              message = $(".message").val()
-
-              self.channel.emit 'clientMessage', {message: message, session: server.cookie 'session'}
-
-              $(".message").val("")
-              $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
-
+            sendChatMessage()
             return false
+
+          # Chat send and other keyboard shortcuts
+          #$(".message").bind 'keydown', jwerty.event 'shift+enter', ->
+          #  console.log 'Shift+Enter!!!'
+          $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
+            evt.preventDefault()
+            console.log 'Enter!!!'
+            sendChatMessage()
 
           chatbox = $(".chat-display-box")
 
@@ -63,7 +77,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               self.teardown ->
 
           $('.printButton').click chatActions.print chatId
-
           $('.emailButton').click chatActions.email chatId
 
     teardown: (cb) ->

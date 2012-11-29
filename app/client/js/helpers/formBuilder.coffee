@@ -68,9 +68,11 @@ src='https://livechathost.com/chatLinkImage/#{website.accountId}'></a>"
 
         # Event listeners/firing for embed link generator modal
         $('#editWebsite').live 'shown', ->
-          $('input.linkGenerator').focus()
-        $('input.linkGenerator').live 'focus', ->
-          $('input.linkGenerator').select()
+          $('input.linkGenerator').mouseup()
+        $('input.linkGenerator').live 'mouseup', ->
+          setTimeout ->
+            $('input.linkGenerator').select()
+          , 100
 
         editElementClicked = formBuilder.elementForm editingTemplate, currentElement, (err, savedElement) ->
           #return notify.error "Error saving element: #{err}" if err?

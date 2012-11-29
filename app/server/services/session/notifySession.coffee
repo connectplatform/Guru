@@ -17,8 +17,8 @@ module.exports = (sessionId, {type}, chime) ->
 
   # call the getter and trigger the notification
   if getMessage?
-    getMessage {sessionId}, (err, event, message) ->
-      config.log.warn 'Error getting message in notifySession', {error: err, sessionId: sessionId, notificationType: type} if err
+    getMessage {sessionId}, (err, {event, message}) ->
+      config.log.warn 'Error getting message in notifySession', {error: err, sessionId: sessionId, notificationType: type} if err or not message
 
       channel = "notify:session:#{sessionId}"
       notify = pulsar.channel channel

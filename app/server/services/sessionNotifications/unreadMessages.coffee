@@ -7,4 +7,4 @@ module.exports =
     Session(accountId).get(sessionId).unreadMessages.getall (err, chats={}) ->
       message = chats
       event = 'unreadMessages'
-      done err, event, message
+      done err, {event: event, message: message}

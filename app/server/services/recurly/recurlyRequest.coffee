@@ -38,7 +38,7 @@ module.exports =
       options.data = ''
 
     cached = cache.retrieve resource
-    return done getErr(cached), cached if cached
+    return done getErr(cached), cached if cached and method is 'get'
 
     # submit the account details to recurly
     rest[method]("#{config.recurly.apiUrl}#{resource}", options).on 'complete', (data, response) =>

@@ -115,9 +115,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           deleteModel: (params, cb) ->
             cb null, params
           log: (params, cb) ->
-            console.log 'log:', params.message
-            console.log params
-            cb null, null
+            console.log 'server log:', params.message, params
+            cb()
           saveModel: ({fields, modelName, sessionId, accountId}, cb) ->
             savedModel = fields
             cb null, fields

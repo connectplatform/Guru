@@ -5,7 +5,7 @@
 define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
   (server, notify, util, renderForm) ->
 
-    ({params}) ->
+    (params) ->
 
       fsm =
         transition: (err, data) ->
@@ -19,7 +19,7 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
             fsm.states.gotChat data.chatId
 
           else if data.fields
-            fsm.states.needParams err, data.fields
+            fsm.states.needParams err, data
 
           else if data.noOperators
             fsm.states.noOperators()
@@ -44,7 +44,7 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
             server.createChatOrGetForm params, fsm.transition
 
           # ask the user for additional params
-          needParams: (err, fields) ->
+          needParams: (err, data) ->
             notify.error "Problem connecting to chat: #{err}" if err
 
             options =
@@ -52,7 +52,8 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
               submitText: 'Enter Chat'
               placement: '#content .form-area'
 
-            renderForm options, fields, (params) ->
+            renderForm options, data.fields, (params) ->
+              #NOTE: Callback does not get called from renderForm
               fsm.transition null, {params: params}
 
           # redirect if we have a chat for this session

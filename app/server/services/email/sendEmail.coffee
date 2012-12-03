@@ -12,4 +12,5 @@ module.exports = (body, vars, done) ->
 
     # vein chokes on an Error object
     err = err.toString() if err
+    config.log.warn "Failed to send email: #{err}", vars if err
     done err, args...

@@ -1,7 +1,4 @@
 sendEmail = config.require 'services/email/sendEmail'
-{random} = config.require 'load/util'
-{getActivationLink} = config.app.mail
-
 renderTemplate = config.require 'services/templates/renderTemplate'
 
 module.exports = (user, next) ->
@@ -9,20 +6,16 @@ module.exports = (user, next) ->
   if user.sentEmail
     return next()
 
-  regkey = random()
-
   renderOptions =
-    userName: user.firstName
-    activationLink: getActivationLink user._id, regkey
     serviceName: config.app.name
+    url: config.app.url
 
-  body = renderTemplate 'registration', renderOptions
+  body = renderTemplate 'welcome', renderOptions
 
   sendingOptions =
     to: user.email
     subject: "Welcome to #{config.app.name}"
 
   sendEmail body, sendingOptions, ->
-    user.registrationKey = regkey
     user.sentEmail = true
     next()

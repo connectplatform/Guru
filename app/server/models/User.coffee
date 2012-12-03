@@ -95,11 +95,19 @@ user.pre 'remove', (next) ->
 
 user.pre 'save', (next) ->
   sendRegistrationEmail = config.service 'operator/sendRegistrationEmail'
+  sendWelcomeEmail = config.service 'owner/sendWelcomeEmail'
 
   return next new Error "Cannot change #{@oldRole} role." if @oldRole in ['Owner', 'Administrator'] and @isModified 'role'
   if @role in ['Owner', 'Administrator'] and @oldRole in enums.editableRoles and @isModified 'role'
     return next new Error "Cannot make user a #{@oldRole}."
-  sendRegistrationEmail @, next
+
+  if @isNew
+    if @role is 'Owner'
+      return sendWelcomeEmail @, next
+    else if @role isnt 'Administrator'
+      return sendRegistrationEmail @, next
+
+  next()
 
 user.methods.comparePassword = (password) ->
   @password is digest_s password

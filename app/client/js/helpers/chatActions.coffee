@@ -1,6 +1,6 @@
 define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, server, notify) ->
   sendChatMessage: (channel, renderedId=null) ->
-    msgSelector = if renderId then $("##{renderedId} .message-form .message") else $(".message")
+    msgSelector = if renderedId then $("##{renderedId} .message") else $(".message")
     message = msgSelector.val()
 
     unless message is ""

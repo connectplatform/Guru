@@ -100,7 +100,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                 $("##{chat.renderedId} .message-form").submit createSubmitHandler chat.renderedId, channel
 
                 # Multi-line support (enter sends, shift+enter creates newline)
-                $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
+                $(".message").bind 'keydown', jwerty.event 'enter', (evt) ->
                   evt.preventDefault()
                   chatActions.sendChatMessage(channel, chat.renderedId)
 

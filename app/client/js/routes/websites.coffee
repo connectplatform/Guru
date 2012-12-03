@@ -1,5 +1,5 @@
-define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/embedLink', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws'],
-  (server, notify, editWebsite, deleteWebsite, embedLink, websiteRow, formBuilder, submitToAws) ->
+define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws', 'templates/embedLink'],
+  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws, embedLink) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 

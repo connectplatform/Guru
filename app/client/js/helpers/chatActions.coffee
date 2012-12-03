@@ -1,4 +1,16 @@
 define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, server, notify) ->
+  sendChatMessage: (channel, renderedId=null) ->
+    msgSelector = if renderId then $("##{renderedId} .message-form .message") else $(".message")
+    message = msgSelector.val()
+
+    unless message is ""
+      lines = message.split(/\r\n|\r|\n/g)
+
+      channel.emit 'clientMessage', {message: lines, session: server.cookie 'session'}
+
+      msgSelector.val("")
+      $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
+
   print: (chatId) ->
     (evt) ->
       evt.preventDefault()

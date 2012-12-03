@@ -1,1 +1,6 @@
-p #{unescape(username)}: #{message}
+p 
+  span.bold #{unescape(username)}: 
+  span.displayed-message
+    each line in message
+      span #{line}
+      br

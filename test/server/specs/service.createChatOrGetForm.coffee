@@ -7,6 +7,20 @@ boiler 'Service - Create Chat or Get Form', ->
       @ownerLogin =>
         done()
 
+  describe 'with two operators of different specialties', ->
+    it 'should have two online departments', (done) ->
+
+      # Authenticate 2 operators with different specialties
+      @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
+        @getAuthedWith {email: 'guru2@foo.com', password: 'foobar'}, =>
+          @params =
+            websiteUrl: 'foo.com'
+
+          @client.createChatOrGetForm @params, (err, data) =>
+            should.not.exist err
+            data.onlineDepartments.length.should.equal 2
+            done()
+
   describe 'with sufficient paramaters', ->
     before ->
       @params =

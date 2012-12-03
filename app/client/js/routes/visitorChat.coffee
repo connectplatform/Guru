@@ -1,7 +1,7 @@
 playSound = (type) ->
   $("##{type}Sound")[0].play()
 
-define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists' ],
+define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
   (server, pulsar, notify, util, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     channel: {}
     setup: ({chatId}, templ) ->
@@ -16,15 +16,12 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
           $(".message-form").submit (evt) ->
             evt.preventDefault()
-            unless $(".message").val() is ""
-              message = $(".message").val()
-
-              self.channel.emit 'clientMessage', {message: message, session: server.cookie 'session'}
-
-              $(".message").val("")
-              $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
-
+            chatActions.sendChatMessage(self.channel)
             return false
+
+          $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
+            evt.preventDefault()
+            chatActions.sendChatMessage(self.channel)
 
           chatbox = $(".chat-display-box")
 
@@ -63,7 +60,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               self.teardown ->
 
           $('.printButton').click chatActions.print chatId
-
           $('.emailButton').click chatActions.email chatId
 
     teardown: (cb) ->

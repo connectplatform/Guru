@@ -76,6 +76,7 @@ module.exports = (done) ->
         firstName: 'Second'
         lastName: 'Guru'
         websites: ['foo.com']
+        specialties: ['Billing']
       ,
         email: 'guru3@foo.com'
         sentEmail: true

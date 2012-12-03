@@ -11,23 +11,22 @@ module.exports =
   required: ['websiteId']
   optional: ['specialty']
   service: ({websiteId, specialty}, done) ->
-
     accountInGoodStanding = config.service 'recurly/accountInGoodStanding'
 
     # get accountId.  TODO: refactor this to use required arg
     Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
       config.log.warn 'website err:', {error: err} if err
-      return done null, {operators: []} unless website # No relevant operators
+      return done null, {operators: [], onlineDepartments: []} unless website # No relevant operators
       {accountId} = website
 
       accountInGoodStanding {accountId: accountId}, (err, goodStanding) ->
-        return done null, {accountId: accountId, operators: []} if err or not goodStanding
+        return done null, {accountId: accountId, operators: [], onlineDepartments: []} if err or not goodStanding
 
         # get a list of operator sessions
         Session(accountId).onlineOperators.all (err, sessions) ->
 
           # go no further if we can't find any sessions
-          return done err, {accountId: accountId, operators: []} if err or sessions.length is 0
+          return done err, {accountId: accountId, operators: [], onlineDepartments: []} if err or sessions.length is 0
 
           # get required data from each session
           getSessionData = (sess, next) ->
@@ -54,4 +53,14 @@ module.exports =
               return done err if err?
               uids = users.map (u) -> u._id.toString()
               available = opSessions.filter (o) -> o.operatorId in uids
-              done null, {accountId: accountId, operators: available} # [{sessionId, operatorId}]
+
+              operators =
+                accountId: accountId
+                operators: available # [{sessionId, operatorId}]
+                onlineDepartments: []
+
+              if available.length > 0 and not specialty
+                departments = users.map (u) -> u.specialties
+                operators.onlineDepartments = departments.flatten()
+
+              done null, operators

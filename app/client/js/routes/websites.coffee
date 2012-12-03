@@ -70,9 +70,9 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
             #Done with edit/delete handlers, now render page
             $('#content').html templ websites: websites
 
-            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, embedLink, extraDataPacker, websiteRow, websites, 'website', beforeRender, beforeSubmit
+            formBuild = formBuilder getFormFields, editWebsite, deleteWebsite, extraDataPacker, websiteRow, websites, 'website', beforeRender, beforeSubmit, embedLink
 
-            $('#addWebsite').click formBuild.elementForm editWebsite, getNewWebsite(), (err, savedWebsite) ->
+            $('#addWebsite').click formBuild.elementForm editWebsite, getNewWebsite(), 'edit', (err, savedWebsite) ->
               return notify.error "Error saving website: #{err}" if err?
               formBuild.setElement savedWebsite
               $('#websiteTableBody').append websiteRow website: savedWebsite

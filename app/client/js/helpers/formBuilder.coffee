@@ -1,5 +1,5 @@
 define ['load/server', 'load/notify', 'helpers/util'], (server, notify, {toTitle}) ->
-  (getFormFields, editingTemplate, deletingTemplate, embedLinkTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit) ->
+  (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit, embedLinkTemplate) ->
 
     unless beforeRender?
       beforeRender = (_, cb) -> cb {}
@@ -26,7 +26,7 @@ src='https://livechathost.com/chatLinkImage/#{website.accountId}'></a>"
       return website
 
     formBuilder =
-      elementForm: (template, element, onComplete) ->
+      elementForm: (template, element, action, onComplete) ->
         (evt) ->
           evt.preventDefault()
           beforeRender element, (beforeData) ->
@@ -35,9 +35,9 @@ src='https://livechathost.com/chatLinkImage/#{website.accountId}'></a>"
             templateObject[elementName] = element
 
             $("##{elementName}ModalBox").html template templateObject
-            $("#edit#{modelName}").modal()
+            $("##{action}#{modelName}").modal()
 
-            $("#edit#{modelName} .saveButton").click (evt) ->
+            $("##{action}#{modelName} .saveButton").click (evt) ->
               evt.preventDefault()
 
               beforeSubmit element, beforeData, ->
@@ -54,11 +54,11 @@ src='https://livechathost.com/chatLinkImage/#{website.accountId}'></a>"
                   return if err?
 
                   formBuilder.wireUpRow(savedElement.id)
-                  $("#edit#{modelName}").modal 'hide'
+                  $("##{action}#{modelName}").modal 'hide'
 
-            $("#edit#{modelName} .cancelButton").click (evt) ->
+            $("##{action}#{modelName} .cancelButton").click (evt) ->
               evt.preventDefault()
-              $("#edit#{modelName}").modal 'hide'
+              $("##{action}#{modelName}").modal 'hide'
 
       wireUpRow: (id) =>
         currentElement = getElementById id
@@ -74,7 +74,7 @@ src='https://livechathost.com/chatLinkImage/#{website.accountId}'></a>"
             $('input.linkGenerator').select()
           , 100
 
-        editElementClicked = formBuilder.elementForm editingTemplate, currentElement, (err, savedElement) ->
+        editElementClicked = formBuilder.elementForm editingTemplate, currentElement, 'edit', (err, savedElement) ->
           #return notify.error "Error saving element: #{err}" if err?
 
           templateObject = {}
@@ -101,18 +101,12 @@ src='https://livechathost.com/chatLinkImage/#{website.accountId}'></a>"
           $("#delete#{modelName} .cancelButton").click ->
             $("#delete#{modelName}").modal 'hide'
 
-        embedLinkElementClicked = formBuilder.elementForm embedLinkTemplate, currentElement, (err, data) ->
+        embedLinkElementClicked = formBuilder.elementForm embedLinkTemplate, currentElement, 'embedLink', (err, data) ->
           evt.preventDefault()
 
         $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .edit#{modelName}").click editElementClicked
         $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .delete#{modelName}").click deleteElementClicked
         $("##{elementName}TableBody .#{elementName}Row[#{elementName}Id=#{id}] .embedLink#{modelName}").click embedLinkElementClicked
-
-      addElement: (newElement, cb) ->
-        (evt) ->
-          formBuilder.elementForm editingTemplate, newElement, (err, savedElement) ->
-            initialElements.push savedElement unless err
-            cb err, savedElement
 
       setElement: (newElement) ->
         for element in elements

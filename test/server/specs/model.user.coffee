@@ -8,6 +8,34 @@ boiler 'Model - User', ->
       @accountId = account._id
       done err
 
+  it 'should let you save an Owner', (done) ->
+    user =
+      accountId: @accountId
+      email: 'owner2@foo.com'
+      password: 'foobar'
+      role: 'Owner'
+      firstName: 'First'
+      lastName: 'Owner'
+
+    User.create user, (err, data) ->
+      should.not.exist err
+      data.email.should.eql 'owner2@foo.com'
+      done()
+
+  it 'should let you save a valid user', (done) ->
+    user =
+      accountId: @accountId
+      email: 'operator1@foo.com'
+      password: 'foobar'
+      role: 'Operator'
+      firstName: 'First'
+      lastName: 'Operator'
+
+    User.create user, (err, data) ->
+      should.not.exist err
+      data.email.should.eql 'operator1@foo.com'
+      done()
+
   it 'should not let you save an invalid role', (done) ->
     user =
       accountId: @accountId

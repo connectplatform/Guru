@@ -18,6 +18,7 @@ module.exports = (cb) ->
   pulsar = require './pulsar'
 
   port = (process.env.GURU_PORT or config.app.port)
+  pulsarPort = (process.env.GURU_PULSAR_PORT or config.app.pulsarPort)
 
   initStoic ->
 
@@ -45,7 +46,7 @@ module.exports = (cb) ->
 
     # Good job, we made it!
     config.log.info "Server started on #{port}"
-    config.log.info "Pulsar started on #{config.app.pulsarPort}"
+    config.log.info "Pulsar started on #{pulsarPort}"
 
     # Don't put connection strings in our logs
     if config.env is 'development'

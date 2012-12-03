@@ -1,15 +1,11 @@
+# pick a port that server and client will run on
+process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
+process.env.GURU_PULSAR_PORT = Math.floor(Math.random() * 1000) + 8000
+
 db = config.require 'server/load/mongo'
 flushCache = config.require 'load/flushCache'
 sampleData = config.require 'policy/sampleData'
 stoic = require 'stoic'
-
-# pick a port that server and client will run on
-testPort = process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
-pulsarPort = process.env.GURU_PULSAR_PORT = Math.floor(Math.random() * 1000) + 8000
-
-# initialize vein client
-Vein = require 'vein'
-Pulsar = require 'pulsar'
 
 #Helper functions
 helpers = require './helpers'

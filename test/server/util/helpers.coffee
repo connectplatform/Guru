@@ -2,6 +2,7 @@ db = config.require 'server/load/mongo'
 stoic = require 'stoic'
 async = require 'async'
 should = require 'should'
+
 Vein = require 'vein'
 Pulsar = require 'pulsar'
 

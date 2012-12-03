@@ -10,30 +10,12 @@ boiler 'Service - Get Available Operators', ->
       websiteFromDomain {domain: 'bar.com'}, (err, @barSiteId) =>
         done()
 
-  describe 'without specifying a specialty, with 2 operators', ->
-    it 'should return two online departments', (done) ->
-
-      @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAuthedWith {email: 'guru2@foo.com', password: 'foobar'}, =>
-
-          @getAvailableOperators {websiteId: @fooSiteId}, (err, data) ->
-            should.not.exist err
-            data.onlineDepartments.indexOf('Billing').should.not.equal -1
-            data.onlineDepartments.indexOf('Sales').should.not.equal -1
-            done()
-
   describe 'with no operators', ->
     it 'should return no results', (done) ->
       @getAvailableOperators {websiteId: @fooSiteId, specialty: 'sales'}, (err, {accountId, operators}) ->
         should.not.exist err
         should.exist operators
         operators.length.should.eql 0
-        done()
-
-    it 'should return an empty "onlineDepartments" array', (done) ->
-      @getAvailableOperators {websiteId: @fooSiteId}, (err, data) ->
-        should.not.exist err
-        data.onlineDepartments.length.should.equal 0
         done()
 
   describe 'with one operator', ->

@@ -12,4 +12,4 @@ define ["load/server", "load/notify", 'helpers/util', 'routes/newChat.fsm'],
 
       # fire off chat creation process
       server.ready ->
-        fsm(queryParams)
+        fsm(params: queryParams)

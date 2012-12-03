@@ -7,17 +7,6 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
     setup: ({chatId}, templ) ->
       self = this
       server.ready ->
-
-        # Sends chat message
-        sendChatMessage = ->
-          unless $(".message").val() is ""
-            lines = $(".message").val().split(/\r\n|\r|\n/g)
-
-            self.channel.emit 'clientMessage', {message: lines, session: server.cookie 'session'}
-
-            $(".message").val("")
-            $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
-
         server.visitorCanAccessChannel {chatId: chatId}, (err, canAccess) ->
           return window.location.hash = '/newChat' unless canAccess
 
@@ -27,12 +16,12 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
           $(".message-form").submit (evt) ->
             evt.preventDefault()
-            sendChatMessage()
+            chatActions.sendChatMessage(self.channel)
             return false
 
           $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
             evt.preventDefault()
-            sendChatMessage()
+            chatActions.sendChatMessage(self.channel)
 
           chatbox = $(".chat-display-box")
 

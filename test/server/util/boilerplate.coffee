@@ -22,6 +22,7 @@ initApp = (cb) ->
 
 # globals
 global.Factory = config.require 'data/factory'
+global.Sample = config.require 'data/sample'
 module.exports = global.boiler = (testName, tests) ->
   describe testName, (done)->
     before (done) ->

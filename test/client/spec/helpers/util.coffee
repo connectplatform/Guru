@@ -6,6 +6,9 @@ define ->
   hasText: (selector, value) ->
     -> ($(selector).text() is value)
 
+  doesNotHaveText: (selector, value) ->
+    -> ($(selector).text() isnt value)
+
   exists: (selector) ->
     -> $(selector).length > 0
 

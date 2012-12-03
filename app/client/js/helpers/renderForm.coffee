@@ -38,7 +38,7 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
         {name} = field
 
         # trigger validation on linked fields
-        if linked and getType(linked) is 'Array'
+        if field.linked and getType(field.linked) is 'Array'
           for linked in field.linked
             $("#{options.placement} .controls [name=#{linked}]").change ->
               $("#{options.placement} .controls [name=#{name}]").change()

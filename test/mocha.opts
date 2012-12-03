@@ -7,3 +7,4 @@
 --ui bdd
 --globals app,config,boiler,___eio
 --ignore-leaks
+-t 4000

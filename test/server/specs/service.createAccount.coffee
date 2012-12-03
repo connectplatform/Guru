@@ -17,3 +17,11 @@ boiler 'Service - Save Account', ->
           should.not.exist err
           should.exist @client.cookie('session'), 'expected to be logged in'
           done()
+
+    it 'should not allow duplicate emails', (done) ->
+      @client = @getClient()
+      @client.ready =>
+        @client.createAccount Sample.owner, (err, status) =>
+          should.exist err
+          err.should.eql 'A user with that email already exists.'
+          done()

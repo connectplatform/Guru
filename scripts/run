@@ -13,6 +13,7 @@ tasks = {
   printMiddleware: 'scripts/printMiddleware',
   testEmail: 'scripts/testEmail',
   testLogging: 'scripts/testLogging',
+  printTemplate: 'scripts/printTemplate',
   jasmine: 'scripts/SpecServer'
 };
 

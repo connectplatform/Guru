@@ -13,6 +13,7 @@ config =
   development:
     app:
       name: 'Guru'
+      url: 'localhost:4000'
       port: 4000
       pulsarPort: 4001
       ssl: false
@@ -23,7 +24,7 @@ config =
         options:
           AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
           AWSSecretKey: '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'
-          from: 'info@livechathost.com'
+          from: 'info@chatpro.com'
           support: 'success@simulator.amazonses.com'
         getActivationLink: (uid, regkey) ->
           "http://localhost:4000/#/resetPassword?uid=#{uid}&regkey=#{regkey}"

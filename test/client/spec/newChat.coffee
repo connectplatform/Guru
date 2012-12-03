@@ -20,7 +20,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             $('#newChat input[name=username]').val 'Bob'
             $('#newChat button[type=submit]').click()
 
-          waitsFor exists('.chatPage textarea.message'), 'chat window did not load', defaultTimeout
+          waitsFor exists('.chatPage input.message'), 'chat window did not load', defaultTimeout
 
       describe 'when no params needed', ->
         it 'should redirect to chat', (done) ->
@@ -29,7 +29,7 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/server'],
             mock.returnChat()
             window.location.hash = '/newChat?websiteUrl=foo.com'
 
-          waitsFor exists('.chatPage textarea.message'), 'chat window did not load', defaultTimeout
+          waitsFor exists('.chatPage input.message'), 'chat window did not load', defaultTimeout
 
       describe 'when no operators exist', ->
         it 'should redirect to email', (done) ->

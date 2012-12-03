@@ -31,14 +31,14 @@ require ['spec/helpers/mock', 'spec/helpers/util', 'load/pulsar', 'load/server']
       it 'should display notification messages', ->
         # Emit a server message with type: notification
         pulsar.channel("chat_foo").emit 'serverMessage',
-          message: ['Operator has joined the chat'],
+          message: 'Visitor has joined the chat',
           type: 'notification'
-        waitsFor hasText('p.bold:visible+p', 'Operator has joined the chat'), 'Notification did not display', defaultTimeout
+        waitsFor hasText('.chat-display-box p:visible+p', 'Visitor has joined the chat'), 'Notification did not display', defaultTimeout
 
       it 'should receive and display messages', ->
-        pulsar.channel("chat_foo").emit 'serverMessage', {username: "Helper Dude", message: ["How can I help?"], timestamp: 1}
+        pulsar.channel("chat_foo").emit 'serverMessage', {username: "Helper Dude", message: "How can I help?", timestamp: 1}
                                           # this crazy selector gets the second p tag
-        waitsFor hasText(".chat-display-box p:visible+p .displayed-message :first-child", 'How can I help?'), 'Message sent did not display', defaultTimeout
+        waitsFor hasText(".chat-display-box p:visible+p", 'Helper Dude: How can I help?'), 'Message sent did not display', defaultTimeout
 
         expect( $(".chat-display-box p:visible").length).toEqual 2
 

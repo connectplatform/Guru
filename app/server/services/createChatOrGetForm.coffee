@@ -4,7 +4,6 @@ db = config.require 'load/mongo'
 newChat = config.require 'services/newChat'
 
 module.exports = (params, done) ->
-  getAvailableOperators = config.service 'operator/getAvailableOperators'
 
   # get required params
   Website.findOne {url: params.websiteUrl}, (err, website) ->
@@ -20,18 +19,9 @@ module.exports = (params, done) ->
 
     # if we have everything needed, create the chat
     if remaining.isEmpty()
-
       #NOTE: this would seem to get around middleware, which is probably not a good thing
       return newChat params, done
 
     # otherwise return additional fields required
     else
-
-      # Check if departments are available
-      getAvailableOperators websiteId: website._id, (err, {onlineDepartments}) ->
-        config.log.warn 'Could not get available operators', {error: err, params: params} if err
-        requestFields =
-          onlineDepartments: onlineDepartments
-          fields: remaining
-        console.log 'reqFields', requestFields
-        done err, requestFields
+      done null, {fields: remaining}

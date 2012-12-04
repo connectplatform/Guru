@@ -1,16 +1,12 @@
 module.exports =
   createFields: (inModel, next) ->
-    inModel.requiredFields = [
-        name: 'username'
-        inputType: 'text'
-        default: ''
-        label: 'Your Name'
-      ,
-        name: 'department'
-        inputType: 'selection'
-        selections: ['Sales', 'Billing']
-        label: 'Department'
-    ]
+    if inModel.isNew and inModel.requiredFields.isEmpty()
+      inModel.requiredFields = [
+          name: 'username'
+          inputType: 'text'
+          default: ''
+          label: 'Your Name'
+      ]
     next null, inModel
 
   filterOutput: (inModel, next) ->

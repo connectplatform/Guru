@@ -28,7 +28,8 @@ module.exports =
     getRecord = (fields, cb) ->
       if fields.id
         Model.findOne {_id: fields.id}, (err, foundModel) ->
-          cb err, foundModel
+          cb err if err
+          createFields foundModel, cb
       else
         createFields new Model, cb
 

@@ -1,7 +1,7 @@
 module.exports =
   createFields: (inModel, next) ->
     unless inModel.specialties.isEmpty()
-      inModel.specialties
+      inModel.specialties #async.map
     next null, inModel
 
   filterOutput: (inModel, next) ->

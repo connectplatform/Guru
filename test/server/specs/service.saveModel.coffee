@@ -29,6 +29,22 @@ boiler 'Service - Save Model', ->
         foundUsers[0].email.should.eql userFields.email
         done()
 
+  describe 'creating a website', ->
+    beforeEach (done) ->
+      website =
+        url: 'five.com'
+        contactEmail: 'six@five.com'
+
+      @getAuthed =>
+        @client.saveModel {fields: website, modelName: 'Website'}, (err, @website) =>
+          should.not.exist err
+          done()
+
+    it 'should store fields', (done) ->
+      should.exist @website.requiredFields
+      @website.requiredFields.length.should.eql 1, 'expected a required field on website'
+      done()
+
   it 'should edit an existing user', (done) ->
     @getAuthed =>
 

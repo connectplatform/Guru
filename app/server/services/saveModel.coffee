@@ -30,7 +30,7 @@ module.exports =
         Model.findOne {_id: fields.id}, (err, foundModel) ->
           cb err, foundModel
       else
-        cb null, createFields new Model
+        createFields new Model, cb
 
     # update field data
     getRecord fields, (err, foundModel) ->
@@ -38,5 +38,5 @@ module.exports =
       foundModel[key] = value for key, value of fields when key isnt 'id'
 
       foundModel.save (err, savedModel) ->
-        savedModel = filterOutput savedModel unless err?
-        done parseMongooseError(err), savedModel
+        return done parseMongooseError(err), savedModel if err
+        filterOutput savedModel, done

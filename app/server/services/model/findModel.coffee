@@ -1,4 +1,5 @@
 db = config.require 'load/mongo'
+async = require 'async'
 
 module.exports =
   required: ['accountId', 'modelName', 'queryObject']
@@ -12,5 +13,6 @@ module.exports =
     {filterOutput} = config.require "models/#{modelName}Filters"
 
     Model.find queryObject, (err, models) ->
-      filteredModels = (filterOutput model for model in models)
-      done err, filteredModels
+      return done err if err
+
+      async.map models, filterOutput, done

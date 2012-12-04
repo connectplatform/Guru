@@ -1,5 +1,5 @@
 module.exports =
-  createFields: (inModel) ->
+  createFields: (inModel, next) ->
     inModel.requiredFields = [
         name: 'username'
         inputType: 'text'
@@ -11,9 +11,9 @@ module.exports =
         selections: ['Sales', 'Billing']
         label: 'Department'
     ]
-    inModel
+    next null, inModel
 
-  filterOutput: (inModel) ->
+  filterOutput: (inModel, next) ->
     outModel = {id: inModel['_id']}
     outModel[key] = value for key, value of inModel._doc when key isnt '_id'
-    outModel
+    next null, outModel

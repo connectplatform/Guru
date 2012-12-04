@@ -1,27 +1,54 @@
+async = require 'async'
+
 db = config.require 'load/mongo'
 {Website} = db.models
 
-newChat = config.require 'services/newChat'
+module.exports =
+  service: (params, done) ->
 
-module.exports = (params, done) ->
+    newChat = config.service 'newChat'
+    getAvailableOperators = config.service 'operator/getAvailableOperators'
 
-  # get required params
-  Website.findOne {url: params.websiteUrl}, (err, website) ->
+    respond = (requiredFields) ->
 
-    # if there's no website, present a selection from available websites
-    if err or not website
-      config.log.warn 'Could not route chat due to missing website.', {error: err, params: params}
-      return done 'Could not route chat due to missing website.'
+      # check supplied params vs. required
+      remaining = requiredFields.exclude (f) ->
+        f.name in params.keys()
 
-    # check supplied params vs. required
-    remaining = website.requiredFields.exclude (f) ->
-      f.name in params.keys()
+      # if we have everything needed, create the chat
+      if remaining.isEmpty()
+        return newChat params, done
 
-    # if we have everything needed, create the chat
-    if remaining.isEmpty()
-      #NOTE: this would seem to get around middleware, which is probably not a good thing
-      return newChat params, done
+      # otherwise return additional fields required
+      else
+        done null, {fields: remaining}
 
-    # otherwise return additional fields required
-    else
-      done null, {fields: remaining}
+    # get required params
+    Website.findOne {url: params.websiteUrl}, (err, website) ->
+
+      # if there's no website, present a selection from available websites
+      if err or not website
+        config.log.warn 'Could not route chat due to missing website.', {error: err, params: params}
+        return done 'Could not route chat due to missing website.'
+
+      # get available specialties
+      if website.specialties and website.specialties.length > 0
+
+        getLabelStatus = (department, next) ->
+          getAvailableOperators {websiteId: website._id, specialty: department}, (err, result) ->
+            return next err if err
+            status = (if result.operators.length > 0 then 'chat' else 'email')
+            next null, "#{department} (#{status})"
+
+        async.map website.specialties, getLabelStatus, (err, labels) ->
+
+          website.requiredFields.add
+            name: 'department'
+            inputType: 'selection'
+            selections: website.specialties
+            label: 'Department'
+
+          respond website.requiredFields
+
+      else
+        respond website.requiredFields

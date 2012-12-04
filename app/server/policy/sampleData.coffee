@@ -101,16 +101,12 @@ module.exports = (done) ->
         contactEmail: 'success@simulator.amazonses.com'
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
+        specialties: ['Sales', 'Billing']
         requiredFields: [
             name: 'username'
             inputType: 'text'
             default: ''
             label: 'Your Name'
-          ,
-            name: 'department'
-            inputType: 'selection'
-            selections: ['Sales', 'Billing']
-            label: 'Department'
         ]
       ,
         url: "baz.com"

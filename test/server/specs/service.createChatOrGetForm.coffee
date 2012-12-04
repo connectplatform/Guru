@@ -44,6 +44,7 @@ boiler 'Service - Create Chat or Get Form', ->
         should.not.exist err
         should.exist data?.fields
         data.fields[0].name.should.eql 'department'
+        data.fields[0].selections.should.include 'Sales (chat)'
         done()
 
   describe 'with no website', ->

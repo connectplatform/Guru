@@ -9,6 +9,7 @@ module.exports =
     newChat = config.service 'newChat'
     getAvailableOperators = config.service 'operator/getAvailableOperators'
 
+    # set up continuation to be called at the end
     respond = (requiredFields) ->
 
       # check supplied params vs. required
@@ -23,15 +24,13 @@ module.exports =
       else
         done null, {fields: remaining}
 
-    # get required params
     Website.findOne {url: params.websiteUrl}, (err, website) ->
 
-      # if there's no website, present a selection from available websites
       if err or not website
         config.log.warn 'Could not route chat due to missing website.', {error: err, params: params}
         return done 'Could not route chat due to missing website.'
 
-      # get available specialties
+      # get online status for each of the website's specialties
       if website.specialties and website.specialties.length > 0
 
         getLabelStatus = (department, next) ->
@@ -45,9 +44,10 @@ module.exports =
           website.requiredFields.add
             name: 'department'
             inputType: 'selection'
-            selections: website.specialties
+            selections: labels
             label: 'Department'
 
+          #console.log 'required:', website.requiredFields
           respond website.requiredFields
 
       else

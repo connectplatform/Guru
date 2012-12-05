@@ -1,8 +1,8 @@
+mapSpecialties = config.service 'specialties/mapSpecialties'
+
 module.exports =
   createFields: (inModel, next) ->
-    unless inModel.specialties.isEmpty()
-      inModel.specialties #async.map
-    next null, inModel
+    mapSpecialties {model: inModel, getter: 'getSpecialtyIds'}, next
 
   filterOutput: (inModel, next) ->
     # TODO: take this out, it will cause a mismatch if the data is obtained without this filter
@@ -10,4 +10,4 @@ module.exports =
     for key, value of inModel._doc when (key isnt 'password' and key isnt '_id')
       user[key] = value
 
-    next null, user
+    mapSpecialties {model: user, getter: 'getSpecialtyNames'}, next

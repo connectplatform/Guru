@@ -1,3 +1,5 @@
+mapSpecialties = config.service 'specialties/mapSpecialties'
+
 module.exports =
   createFields: (inModel, next) ->
     if inModel.isNew and inModel.requiredFields.isEmpty()
@@ -7,9 +9,9 @@ module.exports =
           default: ''
           label: 'Your Name'
       ]
-    next null, inModel
+    mapSpecialties {model: inModel, getter: 'getSpecialtyNames'}, next
 
   filterOutput: (inModel, next) ->
     outModel = {id: inModel['_id']}
     outModel[key] = value for key, value of inModel._doc when key isnt '_id'
-    next null, outModel
+    mapSpecialties {model: outModel, getter: 'getSpecialtyNames'}, next

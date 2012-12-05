@@ -54,12 +54,12 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             # display messages when received
             wireUpChatAppender appendChatMessage, self.channel
 
-            # when you get to the end, stop
+            # event for being kicked by operator
             self.channel.on 'chatEnded', ->
-              @channel.removeAllListeners 'serverMessage'
-              @channel.removeAllListeners 'chatEnded'
               $('.message-form').hide()
               $('.leaveButton').hide()
+              self.channel.removeAllListeners 'serverMessage'
+              self.channel.removeAllListeners 'chatEnded'
 
           # display chat logo
           server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
@@ -74,8 +74,8 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               server.cookie 'session', null
               $('.message-form').hide()
               $('.leaveButton').hide()
-              @channel.removeAllListeners 'serverMessage'
-              @channel.removeAllListeners 'chatEnded'
+              self.channel.removeAllListeners 'serverMessage'
+              self.channel.removeAllListeners 'chatEnded'
 
           $('.printButton').click chatActions.print chatId
           $('.emailButton').click chatActions.email chatId

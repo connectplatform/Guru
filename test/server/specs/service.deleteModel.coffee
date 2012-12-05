@@ -17,6 +17,8 @@ boiler 'Service - Delete Model', ->
 
           #check whether it worked
           @client.findModel {queryObject: {}, modelName: 'User'}, (err, users) =>
+            should.not.exist err
+
             for user in users
               user.id.should.not.eql targetUser.id
               user.firstName.should.not.eql targetUser.firstName

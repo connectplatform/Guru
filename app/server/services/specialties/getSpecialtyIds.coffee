@@ -1,4 +1,4 @@
 {Specialty} = require('mongoose').models
 
-module.exports = (specialtyNames, done) ->
-  Specialty.find {name: specialtyNames}, {_id: true}, done
+module.exports = (accountId, specialtyNames, done) ->
+  Specialty.find {accountId: accountId, name: specialtyNames}, {_id: true}, done

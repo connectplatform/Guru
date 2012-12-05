@@ -30,7 +30,6 @@ boiler 'Service - Save Model', ->
         foundUsers[0].email.should.eql userFields.email
         should.exist foundUsers[0].specialties
         foundUsers[0].specialties.length.should.eql 1
-        console.log 'specialties:', foundUsers[0].specialties[0]
 
         done()
 

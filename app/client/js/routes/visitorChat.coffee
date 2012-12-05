@@ -24,6 +24,16 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             evt.preventDefault()
             chatActions.sendChatMessage(self.channel)
 
+          # Confrim and leave chat on window close
+          window.onbeforeunload = ->
+            closeWarn = confirm "Leave chat?"
+            if closeWarn is true
+              server.leaveChat {chatId: chatId}, (err) ->
+            else
+              return 'stay on page'
+
+            evt.preventDefault()
+
           chatbox = $(".chat-display-box")
 
           appendServerMessage = (message) ->

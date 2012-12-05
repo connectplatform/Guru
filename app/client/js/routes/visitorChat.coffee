@@ -19,6 +19,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             chatActions.sendChatMessage(self.channel)
             return false
 
+          # Enter/Shift+Enter key binding
           $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
             evt.preventDefault()
             chatActions.sendChatMessage(self.channel)
@@ -45,7 +46,10 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
             # when you get to the end, stop
             self.channel.on 'chatEnded', ->
-              self.teardown ->
+              @channel.removeAllListeners 'serverMessage'
+              @channel.removeAllListeners 'chatEnded'
+              $('.message-form').hide()
+              $('.leaveButton').hide()
 
           # display chat logo
           server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
@@ -57,15 +61,17 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             evt.preventDefault()
             server.leaveChat {chatId: chatId}, (err) ->
               notify.error "Error leaving chat: #{err}" if err
-              self.teardown ->
+              server.cookie 'session', null
+              $('.message-form').hide()
+              $('.leaveButton').hide()
+              @channel.removeAllListeners 'serverMessage'
+              @channel.removeAllListeners 'chatEnded'
 
           $('.printButton').click chatActions.print chatId
           $('.emailButton').click chatActions.email chatId
 
     teardown: (cb) ->
-      $('.message-form').hide()
-      $('.leaveButton').hide()
-      server.cookie 'session', null
+      ran = true #Not sure what this does
       @channel.removeAllListeners 'serverMessage'
       @channel.removeAllListeners 'chatEnded'
       cb()

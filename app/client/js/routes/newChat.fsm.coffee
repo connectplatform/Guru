@@ -31,10 +31,9 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
         states:
           error: (err) ->
             $("#content .form-area").html "Oops, a problem occurred!  We've been notified, thank you for your patience."
-            if err
-              server.log
-                message: 'Problem connecting to chat.',
-                context: {error: err}
+            server.log
+              message: 'Problem connecting to chat.'
+              context: {error: err}
 
           initial: ->
             server.getExistingChat {}, fsm.transition

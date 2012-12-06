@@ -8,7 +8,7 @@ module.exports = ->
   # run seed data
   seed (err, data) ->
     return console.log 'Error: ', err if err?
-    console.log "Created #{(records.length for coll, records of data).reduce((l, r)->l+r)} records."
+    console.log "Created #{(records.length or 1 for coll, records of data).reduce((l, r)->l+r)} records."
 
     #{inspect} = require 'util'
     #console.log "Full data: #{inspect data, null, 1}"

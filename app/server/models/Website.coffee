@@ -23,6 +23,7 @@ website = new Schema
       selections: [String]
 
       default: String
+      label: String
     ]
 
   url:

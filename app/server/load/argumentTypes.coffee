@@ -48,6 +48,6 @@ module.exports = [
     typeName: 'MongoId'
     validation: (arg, assert) ->
       assert arg.toString().match mongoId
-    defaultArgs: ['accountId', 'websiteId']
+    defaultArgs: ['accountId', 'websiteId', 'specialtyId']
 
 ]

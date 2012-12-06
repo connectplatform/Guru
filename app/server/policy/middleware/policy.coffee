@@ -19,6 +19,7 @@ module.exports =
         'leaveChat'
         'printChat'
         'emailChat'
+        'log'
 
         # visitor
         'newChat'

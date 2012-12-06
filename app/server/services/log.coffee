@@ -18,11 +18,14 @@ getData = (accountId, modelName, item) ->
       cb null, result
 
 module.exports =
-  required: ['sessionId', 'accountId', 'message', 'context']
+  optional: ['sessionId', 'accountId']
+  required: ['message', 'context']
   service: ({sessionId, accountId, message, context}, done) ->
     severity = 'info'
     severity = 'warn' if context?.severity is 'warn'
     severity = 'error' if context?.severity is 'error'
+
+    message = "Client error: #{message}"
 
     if (getType context?.ids) is 'Object'
       async.parallel [

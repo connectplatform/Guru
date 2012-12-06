@@ -33,7 +33,8 @@ module.exports = [
   ,
     typeName: 'AccountId'
     lookup: ({sessionId, websiteId}, found) ->
-      return found "Could not look up AccountId. No SessionId or WebsiteId provided." unless sessionId or websiteId
+      #return found "Could not look up AccountId. No SessionId or WebsiteId provided." unless sessionId or websiteId
+      return found() unless sessionId or websiteId
 
       if sessionId
         Session.accountLookup.get sessionId, found

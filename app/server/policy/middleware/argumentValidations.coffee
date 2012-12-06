@@ -11,6 +11,7 @@ module.exports =
 
         # everyone
         'getMyRole'
+        'log'
 
         # visitor
         'newChat'

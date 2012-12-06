@@ -1,6 +1,7 @@
 .DS_Store
 *.log
 *.swp
+*.swo
 node_modules
 dump.rdb
 test/client/public

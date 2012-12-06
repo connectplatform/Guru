@@ -48,7 +48,7 @@ blockquote {
 
 .chat-box {
   position: relative;
-  height: 100%;
+  height: 80%;
   width: 100%;
   top: 10px;
   bottom: 30px;
@@ -59,11 +59,11 @@ blockquote {
   padding-left: 25px;
 }
 
-textarea.message {
+.message {
   resize: none;
-  width: 82%;
+  width: 95%;
   height: 40px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .message-form {
@@ -170,6 +170,11 @@ form input, form .controls button {
   resize: none;
 }
 
+.visitorSidebar {
+  position: relative;
+  top: 11px;
+}
+
 .visitorSidebar button {
   margin-right: 6px;
   margin-top: 6px;
@@ -182,4 +187,28 @@ span.field {
   border-radius: 5px;
   position: relative;
   top: 5px;
+}
+
+/*
+* css media queries
+*/
+
+@media all and (max-width: 768px) {
+  .message-form {
+    position: relative;
+    margin-top: 15px;
+  }
+
+  div.visitorSidebar {
+    position: relative;
+    top: -20px;
+    padding: 0px;
+    background: none;
+    box-shadow: none;
+    border: none;
+  }
+
+  .chatWindow {
+    height: 75%;
+  }
 }

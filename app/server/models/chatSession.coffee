@@ -67,7 +67,10 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
         cs = chatSession.get sessionId, chatId
         cs.session.role.get (err, role) ->
-          notifyChatEvent {chatId: chatId, message: "#{displayedRole role} has joined the chat"}
+          notifyChatEvent
+            chatId: chatId
+            message: "#{displayedRole role} has joined the chat"
+            timestamp: new Date().getTime()
 
         metaInfo ||= {}
         metaInfo.isWatching ||= 'false'
@@ -90,7 +93,10 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
       remove: tandoor (sessionId, chatId, cb) ->
         cs = chatSession.get sessionId, chatId
         cs.session.role.get (err, role) ->
-          notifyChatEvent {chatId: chatId, message: "#{displayedRole role} has left the chat"}
+          notifyChatEvent
+            chatId: chatId
+            message: "#{displayedRole role} has left the chat"
+            timestamp: new Date().getTime()
 
           async.parallel [
             cs.sessionIndex.srem chatId

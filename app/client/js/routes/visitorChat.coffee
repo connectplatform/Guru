@@ -19,9 +19,20 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             chatActions.sendChatMessage(self.channel)
             return false
 
+          # Enter/Shift+Enter key binding
           $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
             evt.preventDefault()
             chatActions.sendChatMessage(self.channel)
+
+          # Confrim and leave chat on window close
+          window.onbeforeunload = ->
+            closeWarn = confirm "Leave chat?"
+            if closeWarn is true
+              server.leaveChat {chatId: chatId}, (err) ->
+            else
+              return 'stay on page'
+
+            evt.preventDefault()
 
           chatbox = $(".chat-display-box")
 
@@ -43,9 +54,12 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             # display messages when received
             wireUpChatAppender appendChatMessage, self.channel
 
-            # when you get to the end, stop
+            # event for being kicked by operator
             self.channel.on 'chatEnded', ->
-              self.teardown ->
+              $('.message-form').hide()
+              $('.leaveButton').hide()
+              self.channel.removeAllListeners 'serverMessage'
+              self.channel.removeAllListeners 'chatEnded'
 
           # display chat logo
           server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
@@ -57,15 +71,17 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
             evt.preventDefault()
             server.leaveChat {chatId: chatId}, (err) ->
               notify.error "Error leaving chat: #{err}" if err
-              self.teardown ->
+              server.cookie 'session', null
+              $('.message-form').hide()
+              $('.leaveButton').hide()
+              self.channel.removeAllListeners 'serverMessage'
+              self.channel.removeAllListeners 'chatEnded'
 
           $('.printButton').click chatActions.print chatId
           $('.emailButton').click chatActions.email chatId
 
     teardown: (cb) ->
-      $('.message-form').hide()
-      $('.leaveButton').hide()
-      server.cookie 'session', null
+      ran = true #Not sure what this does
       @channel.removeAllListeners 'serverMessage'
       @channel.removeAllListeners 'chatEnded'
       cb()

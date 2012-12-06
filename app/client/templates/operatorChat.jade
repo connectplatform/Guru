@@ -8,19 +8,25 @@
           span.chatTab #{chat.visitor.username}
           span.notifyUnread(chatid="#{chat.renderedId}")
 
-
   .tab-content
     for chat in chats
       .tab-pane.row.operatorChat(id="#{chat.renderedId}")
         .chatWindow.span8.row(chatId="#{chat.id}")
           .chat-box.well.chat-display-box.span12
             for msg in chat.history
-              p #{msg.username}: #{msg.message}
+              p 
+                span.bold #{unescape(msg.username)}: 
+                span.displayed-message
+                  each line in msg.message
+                    span #{line}
+                    br
 
           form.message-form.form-inline
-            textarea(value="").message
-
-            button.btn.btn-primary(type="submit").submit-button Send
+            .span12
+              .span10
+                textarea(value="").message
+              .span2
+                button.btn.btn-primary(type="submit").submit-button Send
 
         include operatorChatSidebar
 

@@ -53,8 +53,8 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               # let the server know we read these
               self.sessionUpdates.emit 'viewedMessages', currentChat
 
-            # on page load click the first tab
             # TODO: Display accepted/last chat instead of first tab
+            # on page load click the first tab
             $('#chatTabs a:first').click()
 
             createSubmitHandler = (renderedId, channel) ->

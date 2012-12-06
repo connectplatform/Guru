@@ -9,8 +9,8 @@ enums = config.require 'load/enums'
 
 module.exports =
   required: ['websiteId']
-  optional: ['specialty']
-  service: ({websiteId, specialty}, done) ->
+  optional: ['specialtyId']
+  service: ({websiteId, specialtyId}, done) ->
 
     accountInGoodStanding = config.service 'recurly/accountInGoodStanding'
 
@@ -34,28 +34,24 @@ module.exports =
             sess.operatorId.get (err, opId) ->
               next null, {sessionId: sess.id, operatorId: opId}
 
-          Specialty.findOne {name: specialty}, {_id: true}, (err, result) ->
-            return next err if err
-            specialtyId = result?._id
+          async.map sessions, getSessionData, (err, opSessions) ->
 
-            async.map sessions, getSessionData, (err, opSessions) ->
+            # build query to look for matching operators
+            opIds = opSessions.map (o) -> o.operatorId
+            query =
+              _id: $in: opIds
+              accountId: accountId
+              $or: [role: $in: enums.managerRoles]
 
-              # build query to look for matching operators
-              opIds = opSessions.map (o) -> o.operatorId
-              query =
-                _id: $in: opIds
-                accountId: accountId
-                $or: [role: $in: enums.managerRoles]
+            route =
+              websites: websiteId
+            route.specialties = specialtyId if specialtyId
 
-              route =
-                websites: websiteId
-              route.specialties = specialtyId if specialtyId
+            query['$or'].push route
 
-              query['$or'].push route
-
-              # filter based on operator website/specialty
-              User.find query, (err, users) ->
-                return done err if err?
-                uids = users.map (u) -> u._id.toString()
-                available = opSessions.filter (o) -> o.operatorId in uids
-                done null, {accountId: accountId, operators: available} # [{sessionId, operatorId}]
+            # filter based on operator website/specialty
+            User.find query, (err, users) ->
+              return done err if err?
+              uids = users.map (u) -> u._id.toString()
+              available = opSessions.filter (o) -> o.operatorId in uids
+              done null, {accountId: accountId, operators: available} # [{sessionId, operatorId}]

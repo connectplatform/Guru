@@ -19,6 +19,9 @@ boiler 'Service - Create Chat or Get Form', ->
       @client.createChatOrGetForm @params, (err, data) =>
         should.not.exist err
         should.exist data?.chatId
+
+        session = @client.cookie 'session'
+        should.exist session, 'expected session cookie'
         done()
 
   describe 'with no username', ->
@@ -45,7 +48,7 @@ boiler 'Service - Create Chat or Get Form', ->
         should.not.exist err
         should.exist data?.fields, "expected data.fields:\n#{inspect data}"
         data.fields[0].name.should.eql 'department'
-        data.fields[0].selections.should.include 'Sales (chat)'
+        data.fields[0].selections.map('label').should.include 'Sales (chat)'
         done()
 
   describe 'with no website', ->

@@ -1,16 +1,12 @@
 #editUser.modal.fade.small-modal
-  - console.log(user);
   .modal-header
     h3 User Information
 
   form
     .modal-body
       input.firstName.small-modal-box(type="text", value="#{user.firstName}", placeholder="First Name")
-      .clear
       input.lastName.small-modal-box(type="text", value="#{user.lastName}", placeholder="Last Name")
-      .clear
       input.email.small-modal-box(type="text", value="#{user.email}", placeholder="email")
-      .clear
       select.role.small-modal-box(name="role")
         if user.role == 'Owner' || user.role == 'Administrator'
           option(value="#{user.role}", selected="selected") #{user.role}
@@ -20,8 +16,7 @@
               option(value="#{role}", selected="selected") #{role}
             else
               option(value="#{role}") #{role}
-      .clear
-      |Websites:
+      .bold Websites:
       .websites.small-modal-box.scrolling-checkboxes
         for site in user.allowedWebsites
           if user.websites.indexOf(site.id) == -1
@@ -32,8 +27,7 @@
           |#{site.url}
           br
 
-      .clear
-      |Specialties:
+      .bold Specialties:
       .specialties.small-modal-box.scrolling-checkboxes
         for specialtyName in user.allowedSpecialties
           if user.specialties.indexOf(specialtyName) == -1

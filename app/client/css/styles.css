@@ -150,9 +150,10 @@ form input, form .controls button {
 
 .scrolling-checkboxes {
   position: relative;
-  height: 45px;
+  left: 15px;
+  height: 100px;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #sidebar .badge {

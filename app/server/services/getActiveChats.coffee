@@ -22,6 +22,9 @@ module.exports =
           config.log.error 'Error mapping chat data in getActiveChats', {error: err, sessionId: sessionId, chatIds: chatIds} if err
 
           chat.relation = relations[chat.id] for chat in chats
+
+          #Remove chats that have a vacant status
+          chats = chats.remove (chat) -> chat.status is 'vacant'
           chats = chats.sortBy(chatPriority)
 
           filterRelevant accountId, sessionId, chats, done

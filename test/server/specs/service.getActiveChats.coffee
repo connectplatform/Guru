@@ -96,6 +96,18 @@ boiler 'Service - Get Active Chats', ->
         chats.length.should.eql 1, 'Expected a chat'
         done()
 
+  it 'should not display any chats with vacant status', (done) ->
+    @getAuthed =>
+      @createChats (err, chats) =>
+        should.not.exist err
+
+        @client.getActiveChats {}, (err, chats) =>
+          should.not.exist err
+          vacantChats = chats.findAll (chat) -> chat.status is 'vacant'
+          vacantChats.length.should.eql 0
+          @client.disconnect()
+          done()
+
   it 'should sort the chats', (done) ->
     @getAuthed (_..., accountId) =>
       session = @client.cookie 'session'
@@ -110,10 +122,10 @@ boiler 'Service - Get Active Chats', ->
           @client.getActiveChats {}, (err, chats) =>
             should.not.exist err
             should.exist chats
-            chats.length.should.eql 4
+            chats.length.should.eql 3
 
             visitorNames = chats.map (chat) => chat.visitor.username
-            visitorNames.should.eql ['Ralph', 'Bob', 'Suzie', 'Frank']
+            visitorNames.should.eql ['Ralph', 'Bob', 'Suzie']
 
             @client.disconnect()
             done()

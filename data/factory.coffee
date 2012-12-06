@@ -1,8 +1,15 @@
 Factory = require 'factory-worker'
 {User, Account, Specialty, Website} = config.require('load/mongo').models
 
+getSpecialtyIds = config.require 'services/specialties/getSpecialtyIds'
+
 defaultAccountId = (done) ->
   Account.findOne {accountType: 'unlimited'}, done
+
+getSpecialties = (list) ->
+  (next) ->
+    defaultAccountId (err, accountId) ->
+      getSpecialtyIds accountId, list, next
 
 opcount = 1
 Factory.define 'operator', User, {
@@ -12,7 +19,7 @@ Factory.define 'operator', User, {
     sentEmail: true
     password: 'foobar'
     role: 'Operator'
-    specialties: ['Sales']
+    specialties: getSpecialties ['Sales']
     websites: []
   }
 
@@ -22,16 +29,12 @@ Factory.define 'website', Website, {
     contactEmail: 'success@simulator.amazonses.com'
     acpEndpoint: "http://localhost:8675"
     acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
+    specialties: getSpecialties ['Sales', 'Billing']
     requiredFields: [
         name: 'username'
         inputType: 'text'
         default: ''
         label: 'Your Name'
-      ,
-        name: 'department'
-        inputType: 'selection'
-        selections: ['Sales', 'Billing']
-        label: 'Department'
     ]
   }
 

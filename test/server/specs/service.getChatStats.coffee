@@ -50,7 +50,7 @@ boiler 'Service - Get Chat Stats', ->
             should.not.exist err
             should.exist stats
 
-            stats.unanswered.length.should.eql 1, 'expected 1 chat'
+            stats.unanswered.length.should.eql 1, 'expected 1 unanswered chat'
             done()
 
     it 'should return all chats for owner', (done) ->
@@ -60,7 +60,7 @@ boiler 'Service - Get Chat Stats', ->
             should.not.exist err
             should.exist stats
 
-            stats.unanswered.length.should.eql 3, 'expected 3 chats'
+            stats.unanswered.length.should.eql 3, 'expected 3 unanswered chats'
             done()
 
     it 'should display unanswered chats when I log in', (done) ->
@@ -70,5 +70,5 @@ boiler 'Service - Get Chat Stats', ->
             should.not.exist err
             should.exist stats
 
-            stats.unanswered.length.should.eql 1, 'expected 1 chat'
+            stats.unanswered.length.should.eql 1, 'expected 1 unanswered chat'
             done()

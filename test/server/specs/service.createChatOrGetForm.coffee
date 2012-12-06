@@ -1,4 +1,5 @@
 should = require 'should'
+{inspect} = require 'util'
 
 boiler 'Service - Create Chat or Get Form', ->
   beforeEach (done) ->
@@ -42,7 +43,7 @@ boiler 'Service - Create Chat or Get Form', ->
     it 'should request form data', (done) ->
       @client.createChatOrGetForm @params, (err, data) =>
         should.not.exist err
-        should.exist data?.fields
+        should.exist data?.fields, "expected data.fields:\n#{inspect data}"
         data.fields[0].name.should.eql 'department'
         data.fields[0].selections.should.include 'Sales (chat)'
         done()

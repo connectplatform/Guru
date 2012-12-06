@@ -6,6 +6,8 @@ mongo = config.require 'server/load/mongo'
 module.exports = (done) ->
   mongo.wipe ->
 
+    mapSpecialties = config.service 'specialties/mapSpecialties'
+
     createAccount = (accountId, cb) ->
       Account.create accountId, cb
 
@@ -17,10 +19,11 @@ module.exports = (done) ->
       (user, cb) ->
         user.accountId = accountId unless user.role is 'Administrator'
         user.websites = websites.filter((site) -> site.url in user.websites).map '_id'
-        User.create user, cb
+        mapSpecialties {model: user, getter: 'getSpecialtyIds'}, (err, user) ->
+          User.create user, cb
 
-    createPaidOwner = (websites, accountId, next) ->
-      createUser(websites, accountId)({
+    createPaidOwner = (accountId, next) ->
+      createUser([], accountId)({
         email: 'owner@bar.com'
         sentEmail: true
         registrationKey: 'abcd'
@@ -33,9 +36,12 @@ module.exports = (done) ->
 
     createWebsite = (accountId) ->
       (website, cb) ->
-        Website.create website.merge(accountId: accountId), (err, data) ->
-          config.log.warn 'error creating website: ', err if err
-          cb err, data
+        website.merge(accountId: accountId)
+        mapSpecialties {model: website, getter: 'getSpecialtyIds'}, (err, website) ->
+          config.log.warn 'error finding specialty: ', err if err
+          Website.create website, (err, data) ->
+            config.log.warn 'error creating website: ', err if err
+            cb err, data
 
     accounts = [
         accountType: 'Unlimited'
@@ -118,22 +124,11 @@ module.exports = (done) ->
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
 
-    async.map accounts, createAccount, (err, accounts) ->
-      return done err if err
-      [account, paidAccount] = accounts
-
-      async.parallel {
-        websites: (cb) -> async.map websites, createWebsite(account._id), cb
-        specialties: (cb) -> async.map specialties, createSpecialty(account._id), cb
-
-      }, (err, data) ->
-        return done err if err
-
-        async.map operators, createUser(data.websites, account._id), (err, opData) ->
-          return done err if err
-
-          createPaidOwner data.websites, paidAccount._id, (err, paidOwner) ->
-            return done err if err
-
-            # return all data created
-            done err, data.merge {operators: opData, accounts: accounts}
+    async.auto {
+      accounts: (next) -> async.map accounts, createAccount, next
+      specialties: ['accounts', (next, {accounts}) -> async.map specialties, createSpecialty(accounts[0]._id), next]
+      websites: ['specialties', (next, {accounts}) -> async.map websites, createWebsite(accounts[0]._id), next]
+      operators: ['websites', (next, {websites, accounts}) ->
+        async.map operators, createUser(websites, accounts[0]._id), next]
+      paidOwner: ['accounts', (next, {accounts}) -> createPaidOwner accounts[1]._id, next]
+    }, done

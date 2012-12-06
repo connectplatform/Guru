@@ -4,9 +4,10 @@ async = require 'async'
 module.exports =
   required: ['model', 'getter']
   service: ({model, getter}, next) ->
-    unless model.specialties.isEmpty()
-      getterFn = curry config.service("specialties/#{getter}"), model.accountId
-      async.map model.specialties, getterFn, (err, translated) ->
+    if model.specialties and not model.specialties.isEmpty()
+      getterFn = config.require "services/specialties/#{getter}"
+      getterFn model.accountId, model.specialties, (err, translated) ->
+        return next err if err or not translated
 
         # return an error if we have any non-matches
         for t in translated when not t?

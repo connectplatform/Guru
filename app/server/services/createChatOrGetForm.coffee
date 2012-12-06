@@ -8,6 +8,7 @@ module.exports =
 
     newChat = config.service 'newChat'
     getAvailableOperators = config.service 'operator/getAvailableOperators'
+    mapSpecialties = config.service 'specialties/mapSpecialties'
 
     # set up continuation to be called at the end
     respond = (requiredFields) ->
@@ -33,22 +34,25 @@ module.exports =
       # get online status for each of the website's specialties
       if website.specialties and website.specialties.length > 0
 
-        getLabelStatus = (department, next) ->
-          getAvailableOperators {websiteId: website._id, specialty: department}, (err, result) ->
-            return next err if err
-            status = (if result.operators.length > 0 then 'chat' else 'email')
-            next null, "#{department} (#{status})"
+        mapSpecialties {model: website, getter: 'getSpecialtyNames'}, (err, website) ->
+          return done "Error getting specialty name: #{err}" if err
 
-        async.map website.specialties, getLabelStatus, (err, labels) ->
+          getLabelStatus = (department, next) ->
+            getAvailableOperators {websiteId: website._id, specialty: department}, (err, result) ->
+              return next err if err
+              status = (if result.operators.length > 0 then 'chat' else 'email')
+              next null, "#{department} (#{status})"
 
-          website.requiredFields.add
-            name: 'department'
-            inputType: 'selection'
-            selections: labels
-            label: 'Department'
+          async.map website.specialties, getLabelStatus, (err, labels) ->
 
-          #console.log 'required:', website.requiredFields
-          respond website.requiredFields
+            website.requiredFields.add
+              name: 'department'
+              inputType: 'selection'
+              selections: labels
+              label: 'Department'
+
+            #console.log 'required:', website.requiredFields
+            respond website.requiredFields
 
       else
         respond website.requiredFields

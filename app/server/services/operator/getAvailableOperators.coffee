@@ -3,7 +3,7 @@ stoic = require 'stoic'
 {Session} = stoic.models
 
 db = config.require 'load/mongo'
-{User, Website} = db.models
+{User, Website, Specialty} = db.models
 
 enums = config.require 'load/enums'
 
@@ -34,24 +34,28 @@ module.exports =
             sess.operatorId.get (err, opId) ->
               next null, {sessionId: sess.id, operatorId: opId}
 
-          async.map sessions, getSessionData, (err, opSessions) ->
+          Specialty.findOne {name: specialty}, {_id: true}, (err, result) ->
+            return next err if err
+            specialtyId = result?._id
 
-            # build query to look for matching operators
-            opIds = opSessions.map (o) -> o.operatorId
-            query =
-              _id: $in: opIds
-              accountId: accountId
-              $or: [role: $in: enums.managerRoles]
+            async.map sessions, getSessionData, (err, opSessions) ->
 
-            route =
-              websites: websiteId
-            route.specialties = new RegExp "^#{specialty}$", 'i' if specialty
+              # build query to look for matching operators
+              opIds = opSessions.map (o) -> o.operatorId
+              query =
+                _id: $in: opIds
+                accountId: accountId
+                $or: [role: $in: enums.managerRoles]
 
-            query['$or'].push route
+              route =
+                websites: websiteId
+              route.specialties = specialtyId if specialtyId
 
-            # filter based on operator website/specialty
-            User.find query, (err, users) ->
-              return done err if err?
-              uids = users.map (u) -> u._id.toString()
-              available = opSessions.filter (o) -> o.operatorId in uids
-              done null, {accountId: accountId, operators: available} # [{sessionId, operatorId}]
+              query['$or'].push route
+
+              # filter based on operator website/specialty
+              User.find query, (err, users) ->
+                return done err if err?
+                uids = users.map (u) -> u._id.toString()
+                available = opSessions.filter (o) -> o.operatorId in uids
+                done null, {accountId: accountId, operators: available} # [{sessionId, operatorId}]

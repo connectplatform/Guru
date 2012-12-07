@@ -18,6 +18,10 @@ module.exports = util =
     return {} unless util.getType(hash) is 'Object'
     Object.findAll hash, (k) -> k in keys
 
+  reject: (hash, keys...) ->
+    return {} unless util.getType(hash) is 'Object'
+    Object.findAll hash, (k) -> k not in keys
+
   # given a function, wrap it in naan and curry, then cook it
   # In English: Enables autocurrying, so if you haven't provided the callback
   # yet you'll get a curried function instead of premature execution.

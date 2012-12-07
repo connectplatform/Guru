@@ -21,7 +21,7 @@ module.exports = (params, done) ->
       username: username
       referrerData: params || null
 
-    getAvailableOperators {websiteId: websiteId, specialty: department}, (err, result) ->
+    getAvailableOperators {websiteId: websiteId, specialtyId: department}, (err, result) ->
       operators = result?.operators
       accountId = result?.accountId
       if err

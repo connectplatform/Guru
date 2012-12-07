@@ -1,3 +1,4 @@
+db = require 'mongoose'
 should = require 'should'
 {inspect} = require 'util'
 
@@ -9,16 +10,19 @@ boiler 'Service - Create Chat or Get Form', ->
         done()
 
   describe 'with sufficient paramaters', ->
-    before ->
-      @params =
-        websiteUrl: 'foo.com'
-        department: 'Sales'
-        username: 'George'
+    beforeEach (done) ->
+      {Specialty} = db.models
+      Specialty.findOne {accountId: @account._id, name: 'Sales'}, (err, specialty) =>
+        @params =
+          websiteUrl: 'foo.com'
+          specialtyId: specialty?._id
+          username: 'George'
+        done()
 
     it 'should create a chat', (done) ->
       @client.createChatOrGetForm @params, (err, data) =>
         should.not.exist err
-        should.exist data?.chatId
+        should.exist data?.chatId, 'expected chatId'
 
         session = @client.cookie 'session'
         should.exist session, 'expected session cookie'
@@ -28,7 +32,7 @@ boiler 'Service - Create Chat or Get Form', ->
     before ->
       @params =
         websiteUrl: 'foo.com'
-        department: 'Sales'
+        specialtyId: @salesDeptId
 
     it 'should request form data', (done) ->
       @client.createChatOrGetForm @params, (err, data) =>
@@ -37,7 +41,7 @@ boiler 'Service - Create Chat or Get Form', ->
         data.fields[0].name.should.eql 'username'
         done()
 
-  describe 'with no department', ->
+  describe 'with no specialtyId', ->
     before ->
       @params =
         websiteUrl: 'foo.com'
@@ -47,7 +51,7 @@ boiler 'Service - Create Chat or Get Form', ->
       @client.createChatOrGetForm @params, (err, data) =>
         should.not.exist err
         should.exist data?.fields, "expected data.fields:\n#{inspect data}"
-        data.fields[0].name.should.eql 'department'
+        data.fields[0].name.should.eql 'specialtyId'
         data.fields[0].selections.map('label').should.include 'Sales (chat)'
         done()
 

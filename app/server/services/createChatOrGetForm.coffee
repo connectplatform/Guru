@@ -25,6 +25,7 @@ module.exports =
       else
         done null, {fields: remaining}
 
+    # lookup website for this chat
     Website.findOne {url: params.websiteUrl}, (err, website) ->
 
       if err or not website
@@ -47,7 +48,7 @@ module.exports =
           async.map specialties, getSelections, (err, selections) ->
 
             website.requiredFields.add
-              name: 'department'
+              name: 'specialtyId'
               inputType: 'selection'
               selections: selections
               label: 'Department'

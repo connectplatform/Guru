@@ -51,6 +51,13 @@ module.exports =
 
             # filter based on operator website/specialty
             User.find query, (err, users) ->
+              context =
+                website: websiteId
+                specialty: specialtyId
+                sessions: sessions.length
+                ops: users.length
+              #config.log 'found available operators:', context
+
               return done err if err?
               uids = users.map (u) -> u._id.toString()
               available = opSessions.filter (o) -> o.operatorId in uids

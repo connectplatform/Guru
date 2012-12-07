@@ -45,13 +45,16 @@ helpers =
 
   # create a chat and hang onto visitor client
   newVisitor: (data, cb) ->
+    {Specialty} = db.models
     visitor = @getClient()
     visitor.ready =>
-      visitor.newChat data, (err, data) =>
-        throw new Error err if err
-        @visitorSession = visitor.cookie 'session'
-        @chatId = data.chatId
-        cb null, visitor, data
+      Specialty.findOne {accountId: @account._id, name: data.department}, (err, specialty) =>
+        data.department = specialty?._id
+        visitor.newChat data, (err, data) =>
+          throw new Error err if err
+          @visitorSession = visitor.cookie 'session'
+          @chatId = data.chatId
+          cb null, visitor, data
 
   # create a chat but disconnect the visitor when done
   newChatWith: (data, cb) ->

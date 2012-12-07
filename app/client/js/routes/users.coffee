@@ -71,7 +71,7 @@ define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUse
                 formBuild = formBuilder getFormFields, editUser, deleteUser, extraDataPacker, userRow, users, 'user'
                 #Done with edit/delete handlers, now render page
 
-                $('#addUser').click formBuild.elementForm editUser, getNewUser(), (err, savedUser) ->
+                $('#addUser').click formBuild.elementForm editUser, getNewUser(), 'edit', (err, savedUser) ->
                   return notify.error "Error saving user: #{err}" if err?
                   formBuild.setElement savedUser
                   $('#userTableBody').append userRow user: savedUser

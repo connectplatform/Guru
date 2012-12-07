@@ -37,7 +37,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
             if err
               server.log
                 message: 'Error retrieving websites on websites crud page'
-                context: {error: err, severity: error}
+                context: {error: err, severity: 'error'}
 
             # TODO: use async.parallel
             beforeRender = (element, cb) ->

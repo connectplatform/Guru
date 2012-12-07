@@ -17,7 +17,7 @@ module.exports = (options) ->
       connParts = url.parse config.mongo.host
       loggerOptions.merge
         host: connParts.hostname
-        port: connParts.port || 27017
+        port: parseInt connParts.port || 27017
         db: connParts.pathname.replace '/', ''
 
       if connParts.auth
@@ -25,8 +25,6 @@ module.exports = (options) ->
         loggerOptions.merge
           username: username
           password: password
-
-      #console.log 'options:', loggerOptions
 
     loggers[type].add winston.transports[transport], loggerOptions
 

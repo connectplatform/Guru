@@ -7,4 +7,7 @@ module.exports = ->
   config.log.client.warn 'Test log: client warn'
   config.log.client.error 'Test log: client error'
 
-  throw new Error 'Testing error logging'
+  # NOTE: mongo logs via process.nextTick, so throwing an error here
+  # will prevent any of the above log statements from happening
+  #
+  #throw new Error 'Testing error logging'

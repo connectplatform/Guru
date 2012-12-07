@@ -60,15 +60,25 @@ face = (decorators) ->
             newObj
 
           before ['set'], (context, [key, value], next) ->
-            if (value in ['acpData', 'referrerData'])
+            if (key in ['acpData', 'referrerData']) and getType(value) is 'Object'
               value = JSON.stringify value
             next null, [key, value]
 
           before ['mset'], (context, args, next) ->
             next null, args.map dehydrateJSON
 
-          after ['get', 'retrieve'], (context, data, next) ->
-            next null, JSON.parse(data)
+          after ['getall', 'retrieve'], (context, data, next) ->
+            result = Object.map data, (k, v) ->
+              try
+                v = JSON.parse v
+              return v
+
+            next null, result
+
+          after ['get'], (context, data, next) ->
+            try
+              data = JSON.parse data
+            next null, data
 
         creationDate chat, ({before, after}) ->
           before ['getset', 'set'], (context, [date], next) ->

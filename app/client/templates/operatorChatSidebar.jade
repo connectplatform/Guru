@@ -7,7 +7,15 @@ div.well.chatControls.span4(chatId="#{chat.id}")
     |  #{chat.visitor.username}
     br
     strong Website:
-    |  #{chat.website}
+    |  #{chat.websiteUrl}
+
+    .visitorData
+      strong Visitor Data:
+      if chat.visitor.referrerData
+        ul(id="visitorDataTree#{chat.renderedId}", class="treeview")!= chat.visitor.referrerData
+      else
+        .clear
+        | No data availible
 
     .acp-data
       strong ACP Data:

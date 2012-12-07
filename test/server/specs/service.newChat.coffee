@@ -23,6 +23,7 @@ boiler 'Service - New Chat', ->
   it 'should notify operators of a new chat', (done) ->
     @getAuthed =>
       session = @client.cookie 'session'
+      should.exist session
       notify = @getPulsar().channel "notify:session:#{session}"
       notify.on 'unansweredChats', ({count}) =>
         count.should.eql 1
@@ -38,3 +39,12 @@ boiler 'Service - New Chat', ->
         should.exist data
         data.should.eql {noOperators: true}
         done()
+
+  it 'should create a chatsession', (done) ->
+    {ChatSession} = require('stoic').models
+    @getAuthed =>
+      @newChat =>
+        ChatSession(@account._id).getByChat @chatId, (err, chatSession) ->
+          should.not.exist err
+          should.exist chatSession
+          done()

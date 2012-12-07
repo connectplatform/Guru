@@ -68,22 +68,25 @@ define ["templates/treeviewParentNode", "templates/li", "templates/treeview"], (
       nodeType = $.type node
       switch nodeType
 
-        when 'string'
-          return li input: node
-
-        when 'number', 'boolean', 'date', 'undefined', 'null'
-          return li input: "#{node}"
-
         when 'array'
-          rows = []
+          rows = ['<ul>']
           rows.push self.jsonToUl element for element in node
+          rows.push '</ul>'
           return rows.join ""
 
         when 'object'
-          rows = []
+          rows = ['<ul>']
           for k, v of node
-            rows.push treeviewParentNode input: {parentName:k, childData: self.jsonToUl(v)}
+            rows.push treeviewParentNode parentName:k, childData: self.jsonToUl(v)
+          rows.push '</ul>'
           return rows.join ""
+
+        when 'undefined', 'null'
+          return ''
+
+        else
+          return node.toString()
+
 
     result = walkJSON json
     return result

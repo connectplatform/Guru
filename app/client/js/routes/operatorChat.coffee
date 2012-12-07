@@ -16,6 +16,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
         server.ready (services) ->
 
           server.getMyChats {}, (err, chats) ->
+            console.log 'chat data:', chats
             if err
               server.log
                 message: 'Error getting chats in operatorChat'
@@ -29,6 +30,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               chat.renderedId = renderId chat.id
               chat.visitor.acpData = JSON.parse chat.visitor.acpData if chat?.visitor?.acpData
               chat.visitor.acpData = util.jsonToUl chat.visitor.acpData if chat?.visitor?.acpData
+              chat.visitor.referrerData = util.jsonToUl chat.visitor.referrerData if chat?.visitor?.referrerData
 
             $('#content').html templ chats: chats
 

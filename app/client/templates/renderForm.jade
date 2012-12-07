@@ -15,10 +15,13 @@ form.form-horizontal(id="#{options.name}")
           when 'selection'
             select.small-modal-box(name="#{field.name}")
               each selection in field.selections
+                - var id = selection.id || selection.label
+                - var label = selection.label
+
                 if selection == field.default
-                  option(value="#{selection}", selected="selected") #{selection}
+                  option(value="#{id || label}", selected="selected") #{label}
                 else
-                  option(value="#{selection}") #{selection}
+                  option(value="#{id || label}") #{label}
 
           when 'paragraph'
             textarea(name='#{field.name}')

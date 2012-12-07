@@ -2,6 +2,7 @@ async = require 'async'
 stoic = require 'stoic'
 {ChatSession, Chat} = stoic.models
 query = config.require 'services/queries/query'
+{reject} = config.require 'load/util'
 
 module.exports =
   required: ['accountId', 'sessionId']
@@ -19,6 +20,9 @@ module.exports =
       # get info for a specific chat
       chats = for chatPair in chatPairs
         chatPair.chat.isWatching = chatPair.isWatching
+        if chatPair.chat?.visitor?.referrerData
+          filtered = reject chatPair.chat.visitor.referrerData, 'sessionId', 'websiteUrl', 'username', 'specialtyId', 'accountId'
+          chatPair.chat.visitor.referrerData = filtered
         chatPair.chat
 
       done null, chats

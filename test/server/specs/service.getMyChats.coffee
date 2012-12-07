@@ -7,7 +7,7 @@ boiler 'Service - Get My Chats', ->
       client.ready =>
 
         # Make a chat to join
-        client.newChat {username: 'joinMe', websiteUrl: 'foo.com'}, (err, {chatId}) =>
+        client.newChat {username: 'joinMe', websiteUrl: 'foo.com', arbitrary: 'someValue'}, (err, {chatId}) =>
           should.not.exist err
           client.cookie 'session', null
           client.disconnect()
@@ -26,6 +26,8 @@ boiler 'Service - Get My Chats', ->
                   data.length.should.eql 1
                   chatData = data[0]
                   chatData.visitor.username.should.eql 'joinMe'
+                  should.exist chatData.visitor.referrerData.arbitrary, 'expected referrerData'
+                  chatData.visitor.referrerData.arbitrary.should.eql 'someValue'
                   chatData.status.should.eql 'waiting'
                   new Date chatData.creationDate #just need this to not cause an error
                   done()

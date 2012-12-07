@@ -8,20 +8,12 @@ module.exports = (accountId, sessionId, chats, done) ->
   getOperatorData accountId, sessionId, (err, my) ->
     return done err if err
 
-    # Ball of Mud architecture
-    Specialty.find {accountId: accountId, name: $in: chats.map('department')}, {_id: true, name: true}, (err, results) ->
-      specMap = {}
-      for r in results
-        specMap[r.name] = r._id
+    #console.log 'comparing:', chats, 'to:', my.specialties
+    isRelevant = (chat) ->
+      return true if chat.relation?
+      return true if my.role in enums.managerRoles
+      return false if chat.websiteId not in my.websites
+      return false if chat.department and (chat.department not in my.specialties)
+      return true
 
-      for c in chats
-        c.department = specMap[c.department]
-
-      isRelevant = (chat) ->
-        return true if chat.relation?
-        return true if my.role in enums.managerRoles
-        return false if chat.websiteId not in my.websites
-        return false if chat.department and (chat.department not in my.specialties)
-        return true
-
-      done null, chats.filter isRelevant
+    done null, chats.filter isRelevant

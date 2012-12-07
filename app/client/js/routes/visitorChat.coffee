@@ -1,14 +1,19 @@
 playSound = (type) ->
   $("##{type}Sound")[0].play()
 
-define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/newChat", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
-  (server, pulsar, notify, util, newChat, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
+define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
+  (server, pulsar, notify, util, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     self =
       channel: null
       setup: ({chatId}, templ) ->
         server.ready ->
           server.visitorCanAccessChannel {chatId: chatId}, (err, canAccess) ->
-            return window.location.hash = '/newChat' unless canAccess
+            unless canAccess
+              $("#content").html "Sorry, you are not allowed to access this chat.  Please try again."
+              server.log
+                message: "Attempted to connect to an invalid chat."
+                context: {chatId: chatId}
+              return
 
             $("#content").html templ()
             $(".message-form .message").focus()
@@ -56,7 +61,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
               # event for being kicked by operator
               self.channel.on 'chatEnded', ->
-                teardown ->
+                self.teardown ->
 
             # display chat logo
             server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
@@ -69,7 +74,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               server.leaveChat {chatId: chatId}, (err) ->
                 notify.error "Error leaving chat: #{err}" if err
                 server.cookie 'session', null
-                teardown ->
+                self.teardown ->
 
             $('.printButton').click chatActions.print chatId
             $('.emailButton').click chatActions.email chatId

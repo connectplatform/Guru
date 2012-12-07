@@ -1,7 +1,7 @@
 module.exports =
   [
     {
-      filters: ['enforceServiceSignature']
+      filters: ['enforceServiceSignature', 'lookupAccountId']
       except: []
     }
 

@@ -36,6 +36,7 @@ module.exports =
       if website.specialties and website.specialties.length > 0
 
         Specialty.find {_id: $in: website.specialties}, (err, specialties) ->
+          return done "Invalid specialties: #{website.specialties}\nError: #{err}" if err or not specialties
 
           getSelections = (specialty, next) ->
             getAvailableOperators {websiteId: website._id, specialtyId: specialty._id}, (err, result) ->

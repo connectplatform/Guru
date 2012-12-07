@@ -60,7 +60,7 @@ face = (decorators) ->
             newObj
 
           before ['set'], (context, [key, value], next) ->
-            if (key in ['acpData', 'referrerData'])
+            if (key in ['acpData', 'referrerData']) and getType(value) is 'Object'
               value = JSON.stringify value
             next null, [key, value]
 
@@ -76,7 +76,9 @@ face = (decorators) ->
             next null, result
 
           after ['get'], (context, data, next) ->
-            next null, JSON.parse(data)
+            try
+              data = JSON.parse data
+            next null, data
 
         creationDate chat, ({before, after}) ->
           before ['getset', 'set'], (context, [date], next) ->

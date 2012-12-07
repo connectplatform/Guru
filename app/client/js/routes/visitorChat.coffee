@@ -61,7 +61,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
               # event for being kicked by operator
               self.channel.on 'chatEnded', ->
-                teardown ->
+                self.teardown ->
 
             # display chat logo
             server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
@@ -74,7 +74,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               server.leaveChat {chatId: chatId}, (err) ->
                 notify.error "Error leaving chat: #{err}" if err
                 server.cookie 'session', null
-                teardown ->
+                self.teardown ->
 
             $('.printButton').click chatActions.print chatId
             $('.emailButton').click chatActions.email chatId

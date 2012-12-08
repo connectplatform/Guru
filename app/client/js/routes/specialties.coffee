@@ -28,7 +28,7 @@ define ['load/server', 'load/notify', 'templates/editSpecialty', 'templates/dele
           #Done with edit/delete handlers, now render page
           $('#content').html templ specialties: specialties
 
-          $('#addSpecialty').click formBuild.elementForm editSpecialty, getNewSpecialty(), (err, savedSpecialty) ->
+          $('#addSpecialty').click formBuild.elementForm editSpecialty, getNewSpecialty(), 'edit', (err, savedSpecialty) ->
             return notify.error "Error saving specialty: #{err}" if err?
             formBuild.setElement savedSpecialty
             $('#specialtyTableBody').append specialtyRow specialty: savedSpecialty

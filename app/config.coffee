@@ -13,7 +13,7 @@ config =
   development:
     app:
       name: 'Guru'
-      url: 'localhost:4000'
+      url: 'localhost:4000/chat.html'
       port: 4000
       pulsarPort: 4001
       ssl: false

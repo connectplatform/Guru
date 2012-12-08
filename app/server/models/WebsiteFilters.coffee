@@ -9,7 +9,7 @@ module.exports =
           default: ''
           label: 'Your Name'
       ]
-    mapSpecialties {model: inModel, getter: 'getSpecialtyNames'}, next
+    mapSpecialties {model: inModel, getter: 'getSpecialtyIds'}, next
 
   filterOutput: (inModel, next) ->
     outModel = {id: inModel['_id']}

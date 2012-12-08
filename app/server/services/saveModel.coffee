@@ -28,15 +28,16 @@ module.exports =
     getRecord = (fields, cb) ->
       if fields.id
         Model.findOne {_id: fields.id}, (err, foundModel) ->
-          cb err if err
+          return cb err if err
+          foundModel[key] = value for key, value of fields when key isnt 'id'
           createFields foundModel, cb
+
       else
-        createFields new Model, cb
+        createFields new Model(fields), cb
 
     # update field data
     getRecord fields, (err, foundModel) ->
-      return done err, null if err?
-      foundModel[key] = value for key, value of fields when key isnt 'id'
+      return done err, null if err
 
       foundModel.save (err, savedModel) ->
         return done parseMongooseError(err), savedModel if err

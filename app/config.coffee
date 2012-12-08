@@ -61,6 +61,7 @@ paths =
   app:        rel 'app'
   client:     rel 'app/client'
   public:     rel 'app/public'
+  #static:     rel 'tmp/static'
 
   server:     rel 'app/server'
   load:       rel 'app/server/load'

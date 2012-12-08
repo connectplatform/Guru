@@ -1,6 +1,6 @@
-define ["load/server"], (server) ->
+define ["load/server", 'app/config'], (server, config) ->
   ->
     server.ready ->
       server.setSessionOffline {sessionId: server.cookie('session')}, (err) ->
         server.cookie 'session', null # delete login cookie
-        window.location = '/'
+        window.location = '/chat.html'

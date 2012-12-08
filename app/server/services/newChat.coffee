@@ -24,9 +24,10 @@ module.exports = (params, done) ->
     getAvailableOperators {websiteId: websiteId, specialtyId: department}, (err, result) ->
       operators = result?.operators
       accountId = result?.accountId
-      if err
-        errData = {error: err, websiteId: websiteId, department: department}
-        config.log.error 'Error getting availible operators in newChat', errData
+      reason = result?.reason
+      if err or reason
+        errData = {error: err, websiteId: websiteId, department: department, reason: reason}
+        config.log.warn 'Could not get availible operators for new chat.', errData
 
       return done err, {noOperators: true} if err or operators.length is 0
 
@@ -38,7 +39,7 @@ module.exports = (params, done) ->
       }, (err, {chat, session}) ->
         if err
           errData = {error: err, chatId: chat?.id, sessionId: session?.id}
-          config.log.error 'Error creating session and chat in newChat', errData
+          config.log.error 'Error creating session and chat for new chat.', errData
 
         showToOperators = (next) ->
           notify = (op, next) ->
@@ -61,7 +62,7 @@ module.exports = (params, done) ->
               error: err, chatId: chat.id, visitor: visitorMeta, sessionId: session.id,
               websiteId: websiteId, department: department
             }
-            config.log.error 'Error in newChat', errData
+            config.log.error 'Error creating new chat.', errData
 
           # create pulsar channel
           createChannel chat.id

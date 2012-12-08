@@ -17,17 +17,17 @@ module.exports =
     # get accountId.  TODO: refactor this to use required arg
     Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
       config.log.warn 'website err:', {error: err} if err
-      return done null, {operators: []} unless website # No relevant operators
+      return done null, {operators: [], reason: "Can't find website."} unless website
       {accountId} = website
 
       accountInGoodStanding {accountId: accountId}, (err, goodStanding) ->
-        return done null, {accountId: accountId, operators: []} if err or not goodStanding
+        return done null, {accountId: accountId, operators: [], reason: 'Account not in good standing.'} if err or not goodStanding
 
         # get a list of operator sessions
         Session(accountId).onlineOperators.all (err, sessions) ->
 
           # go no further if we can't find any sessions
-          return done err, {accountId: accountId, operators: []} if err or sessions.length is 0
+          return done err, {accountId: accountId, operators: [], reason: 'No relevant operators logged in.'} if err or sessions.length is 0
 
           # get required data from each session
           getSessionData = (sess, next) ->

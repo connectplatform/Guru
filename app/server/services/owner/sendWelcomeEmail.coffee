@@ -18,4 +18,4 @@ module.exports = (user, next) ->
 
   sendEmail body, sendingOptions, ->
     user.sentEmail = true
-    next()
+  next()

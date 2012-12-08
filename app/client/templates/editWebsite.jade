@@ -2,8 +2,8 @@
   .modal-header
     h3 Website Information
 
-  form
-    .modal-body
+  .modal-body
+    form
       input.contactEmail.small-modal-box(type="text", value="#{website.contactEmail}", placeholder="Contact Email")
       input.url.small-modal-box(type="text", value="#{website.url}", placeholder="URL")
 
@@ -22,7 +22,6 @@
 
       input.acpApiKey.small-modal-box(type="text", value="#{website.acpApiKey}", placeholder="ACP API Key (optional)")
 
-  .modal-body
     .bold Logo:
     form
       input.logoUpload(type="file", name="logoUpload")

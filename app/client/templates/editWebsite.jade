@@ -9,13 +9,13 @@
 
       .bold Specialties:
       .specialties.small-modal-box.scrolling-checkboxes
-        for specialtyName in website.allowedSpecialties
-          if specialtyName in website.specialties
-            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}")
+        for allowedSpec in website.allowedSpecialties
+          if website.specialties.indexOf(allowedSpec) > -1
+            input.checkbox(type="checkbox", name="#{allowedSpec}", value="#{allowedSpec}", checked="yes")
           else
-            input.checkbox(type="checkbox", name="#{specialtyName}", value="#{specialtyName}", checked="yes")
+            input.checkbox(type="checkbox", name="#{allowedSpec}", value="#{allowedSpec}")
           &nbsp;
-          |#{specialtyName}
+          |#{allowedSpec}
           br
 
       input.acpEndpoint.small-modal-box(type="text", value="#{website.acpEndpoint}", placeholder="ACP Endpoint (optional)")

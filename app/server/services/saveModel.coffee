@@ -1,16 +1,7 @@
 db = config.require 'load/mongo'
 getAccountId = config.require 'services/account/getAccountId'
 enums = config.require 'load/enums'
-
-parseMongooseError = (err) ->
-  return null unless err?
-  message = ""
-  if err?.errors
-    for field, info of err.errors
-      message += "#{info.message}\n"
-    return message
-  else
-    return "Model error"
+parseMongooseError = config.require 'load/helpers/parseMongooseError'
 
 module.exports =
   required: ['sessionId', 'accountId', 'fields', 'modelName']
@@ -40,5 +31,6 @@ module.exports =
       return done err, null if err
 
       foundModel.save (err, savedModel) ->
-        return done parseMongooseError(err), savedModel if err
+        err = parseMongooseError(err, fields, modelName)
+        return done err, savedModel if err
         filterOutput savedModel, done

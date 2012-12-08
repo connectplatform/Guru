@@ -25,4 +25,5 @@ module.exports = (user, next) ->
   sendEmail body, sendingOptions, ->
     user.registrationKey = regkey
     user.sentEmail = true
-    next()
+
+  next()

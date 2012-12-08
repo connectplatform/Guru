@@ -45,10 +45,15 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
         placement: '#content .form-area'
 
       server.ready ->
-        renderForm options, fields, (params) ->
-          server.createAccount params, (err, args) ->
 
-            if err
-              notify.error err
-            else
-              window.location.hash = '/account'
+        server.getHeaderFooter (err, {header, footer}) ->
+          $("body").prepend header
+          $("body").append footer
+
+          renderForm options, fields, (params) ->
+            server.createAccount params, (err, args) ->
+
+              if err
+                notify.error err
+              else
+                window.location.hash = '/account'

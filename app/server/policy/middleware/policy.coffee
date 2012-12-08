@@ -20,6 +20,7 @@ module.exports =
         'printChat'
         'emailChat'
         'log'
+        'getHeaderFooter'
 
         # visitor
         'newChat'

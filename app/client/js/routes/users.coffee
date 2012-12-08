@@ -55,6 +55,7 @@ define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUse
               # find all users and populate listing
               server.findModel {modelName: 'User', queryObject: {}}, (err, users) ->
                 if err
+                  console.log 'Error finding user:', err
                   server.log
                     message: 'Error finding user'
                     context: {error: err}

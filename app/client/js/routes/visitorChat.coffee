@@ -1,5 +1,5 @@
 playSound = (type) ->
-  $("##{type}Sound")[0].play()
+  $("##{type}Sound")[0].play() unless $.browser.msie
 
 define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
   (server, pulsar, notify, util, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
@@ -30,12 +30,12 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               chatActions.sendChatMessage(self.channel)
 
             # Confrim and leave chat on window close
-            window.onbeforeunload = ->
+            window.onbeforeunload = (evt) ->
               closeWarn = confirm "Leave chat?"
               if closeWarn is true
                 server.leaveChat {chatId: chatId}, (err) ->
               else
-                return 'stay on page'
+                return 'Leave chat?'
 
               evt.preventDefault()
 

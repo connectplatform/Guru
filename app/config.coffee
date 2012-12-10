@@ -13,7 +13,7 @@ config =
   development:
     app:
       name: 'Guru'
-      url: 'localhost:4000'
+      url: 'localhost:4000/chat.html'
       port: 4000
       pulsarPort: 4001
       ssl: false
@@ -61,6 +61,7 @@ paths =
   app:        rel 'app'
   client:     rel 'app/client'
   public:     rel 'app/public'
+  #static:     rel 'tmp/static'
 
   server:     rel 'app/server'
   load:       rel 'app/server/load'

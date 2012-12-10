@@ -12,6 +12,7 @@ module.exports =
         # everyone
         'getMyRole'
         'log'
+        'getHeaderFooter'
 
         # visitor
         'newChat'

@@ -7,7 +7,7 @@ module.exports =
     if model.specialties and not model.specialties.isEmpty()
       getterFn = config.require "services/specialties/#{getter}"
       getterFn model.accountId, model.specialties, (err, translated) ->
-        return next err if err or not translated
+        return next "Could not translate specialties: #{err}" if err or not translated or translated.isEmpty()
 
         # return an error if we have any non-matches
         for t in translated when not t?

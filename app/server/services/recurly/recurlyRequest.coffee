@@ -14,7 +14,7 @@ module.exports =
   service: ({method, body, resource, rootName, modifies}, done) ->
 
     getErr = (details) ->
-      err = if details.status in acceptableStatus then null else "Could not #{verbs[method]} #{rootName or resource}."
+      err = if details.status in acceptableStatus then null else new Error "Could not #{verbs[method]} #{rootName or resource}."
       config.log.error err, details if err
       err
 

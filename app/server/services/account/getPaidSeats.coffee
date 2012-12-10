@@ -6,7 +6,7 @@ module.exports =
 
     # is this a paid account?
     Account.findOne {_id: accountId}, (err, account) ->
-      return done "Could not find account: #{err}" if err or not account
+      return done new Error "Could not find account: #{err}" if err or not account
       return done() if account.accountType isnt 'Paid'
 
       # get number of paid operators

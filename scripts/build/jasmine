@@ -19,5 +19,5 @@ coffee -o $testpub/js/load/ -c $testclient/stubs/
 coffee -o $testpub/js/spec/ -c $testclient/spec/
 
 # run server
-open http://localhost:4003
+open http://localhost:4003/chat.html
 #coffee test/client/SpecServer.coffee

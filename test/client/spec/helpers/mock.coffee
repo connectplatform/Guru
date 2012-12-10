@@ -34,6 +34,8 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             cb null, 'foo'
           awsUpload: (params, cb) ->
             cb null, 'foo'
+          getHeaderFooter: (params, cb) ->
+            cb null, {header: '', footer: ''}
           getMyRole: (params, cb) ->
             cb null, 'None'
           getMyChats: (params, cb) ->

@@ -46,7 +46,7 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
 
       server.ready ->
 
-        server.getHeaderFooter (err, {header, footer}) ->
+        server.getHeaderFooter {}, (err, {header, footer}) ->
           $("body").prepend header
           $("body").append footer
 

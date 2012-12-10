@@ -15,7 +15,7 @@
           .chat-box.well.chat-display-box.span12
             for msg in chat.history
               p
-                span.bold #{unescape(msg.username)}:
+                span.bold #{unescape(msg.username)}: 
                 span.displayed-message
                   each line in msg.message
                     span #{line}

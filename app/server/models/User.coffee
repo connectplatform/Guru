@@ -5,6 +5,7 @@ db = require 'mongoose'
 {ObjectId} = Schema.Types
 
 enums = config.require 'load/enums'
+{getType} = config.require 'load/util'
 
 validateWebsite = (websiteIds, cb) ->
   mongo = config.require 'load/mongo'
@@ -25,9 +26,13 @@ paidSeatsChanged = (num, next) ->
     #config.log "updating paid seats for: #{@email}"
     updatePaidSeats = config.service 'account/updatePaidSeats'
     updatePaidSeats {accountId: @accountId.toString(), newSeats: num}, (err, status) =>
-      config.log.warn "Could not update paid seats: #{err}", {status: status, accountId: @accountId.toString()} if err
+      if err
+        config.log.warn "Could not update paid seats: #{err}", {status: status, accountId: @accountId.toString()}
 
-      next()
+        # Watch out! Any non-errors will cause the callback to never execute!
+        err = new Error "Could not update paid seats, please check your billing information."
+
+      next err
 
   else
     next()

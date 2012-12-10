@@ -56,10 +56,10 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
           sessionUpdates.on 'pendingInvites', updateDashboard
 
     teardown:
-      (cb) ->
+      (done) ->
         util.cleartimers()
         sessionUpdates = pulsar.channel "notify:session:#{server.cookie 'session'}"
 
         sessionUpdates.removeAllListeners 'pendingInvites'
         sessionUpdates.removeAllListeners 'unansweredChats'
-        cb()
+        done()

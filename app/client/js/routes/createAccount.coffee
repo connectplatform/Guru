@@ -1,6 +1,6 @@
 define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
   (server, notify, util, renderForm) ->
-    (args, templ) ->
+    setup: (args, templ) ->
 
       $("#content").html templ()
 
@@ -47,8 +47,8 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
       server.ready ->
 
         server.getHeaderFooter (err, {header, footer}) ->
-          $("body").prepend header
-          $("body").append footer
+          $('.header').html header
+          $('.footer').html footer
 
           renderForm options, fields, (params) ->
             server.createAccount params, (err, args) ->
@@ -57,3 +57,8 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
                 notify.error err
               else
                 window.location.hash = '/account'
+
+    teardown: (done) ->
+      $('.header').html ''
+      $('.footer').html ''
+      done()

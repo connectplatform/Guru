@@ -1,5 +1,8 @@
 playSound = (type) ->
-  $("##{type}Sound")[0].play() unless $.browser.msie
+  try
+    $("##{type}Sound")[0].play()
+  catch error
+    "Error playing sound: #{error}"
 
 define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
   (server, pulsar, notify, util, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->

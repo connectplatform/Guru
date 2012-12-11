@@ -27,6 +27,8 @@ module.exports = (cb) ->
     app.use connect.responseTime()
     app.use connect.favicon()
     app.use connect.staticCache()
+    app.use connect.query()
+    app.use connect.cookieParser()
     app.use connect.static config.paths.public
     app.use connect.static config.paths.static if config.paths.static
     app.use loadRest config.paths.rest

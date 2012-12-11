@@ -17,7 +17,7 @@ module.exports = (restDir) ->
   return (req, res) ->
 
     # find service to call, or return 404
-    pathParts = req._parsedUrl.path.split('/').remove ''
+    pathParts = req._parsedUrl.pathname.split('/').remove ''
     resourceName = pathParts[0]
     service = resourceMap[resourceName] or ->
       res.writeHead 404
@@ -30,4 +30,5 @@ module.exports = (restDir) ->
         headers: req.headers
         query: req.query || {}
         pathParts: pathParts
+        cookies: req.cookies
       }, res

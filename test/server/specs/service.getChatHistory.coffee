@@ -1,4 +1,5 @@
 should = require 'should'
+async = require 'async'
 
 boiler 'Service - Get Chat History', ->
 
@@ -12,16 +13,15 @@ boiler 'Service - Get Chat History', ->
           sessionId = @client.cookie 'session'
 
           messages = ['first message', 'second message']
-          @client.say {chatId: chatId, message: messages[0]}, =>
-            @client.say {chatId: chatId, message: messages[1]}, =>
+          say = (message, next) => @client.say {chatId: chatId, message: message}, next
+          async.forEach messages, say, =>
 
-              @client.getChatHistory {chatId: chatId}, (err, data) =>
-                @client.disconnect()
-                should.not.exist err
+            @client.getChatHistory {chatId: chatId}, (err, data) =>
+              @client.disconnect()
+              should.not.exist err
 
-                testEntry = (entry, count) ->
-                  entry.username.should.eql username
-                  entry.should.eql messages[count]
+              for entry, count in data
+                entry.username.should.eql username
+                entry.message.should.eql messages[count]
 
-                testEntry for entry, count in data
-                done()
+              done()

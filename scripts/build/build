@@ -35,9 +35,14 @@ cp $root/node_modules/jade/runtime.min.js $client/js/vendor/jade-runtime.js
 
 # Non-built files
 cp $client/*.html $public
+cp -R $client/js/*.js $public/js
 cp -R $client/js/vendor/* $public/js/vendor
 cp -R $client/css/* $public/css
 cp -R $client/img/* $public/img
 cp -R $client/audio/* $public/audio
+
+# Build production compiled files
+#rm -rf   $public/../jsbuild
+#node_modules/.bin/r.js -o app/public/js/app.build.js
 
 echo "Build completed!"

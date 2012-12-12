@@ -1,0 +1,9 @@
+:markdown
+  ###Chat: #{creationDate}  
+  __Username:__ #{visitor.username}  
+  __Website:__ #{visitor.websiteUrl}  
+  __Visitor Data:__ #{visitor.referrerdata}  
+
+for message in history
+  p #{message.username}: #{message.message}
+

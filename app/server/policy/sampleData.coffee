@@ -1,4 +1,5 @@
 async = require 'async'
+Factory = config.require 'data/factory'
 
 mongo = config.require 'server/load/mongo'
 {Account, User, Website, Specialty} = mongo.models
@@ -131,4 +132,5 @@ module.exports = (done) ->
       operators: ['websites', (next, {websites, accounts}) ->
         async.map operators, createUser(websites, accounts[0]._id), next]
       paidOwner: ['accounts', (next, {accounts}) -> createPaidOwner accounts[1]._id, next]
+      chatHistory: ['accounts', (next) -> Factory.create 'chathistory', next]
     }, done

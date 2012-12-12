@@ -10,7 +10,7 @@ boiler 'REST - Chat Link Image', ->
         @getAuthed =>
           sessionId = @client.cookie 'session'
 
-          url = "http://localhost:#{@testPort}/printChatArchive?chatname=sum%20gai"
+          url = "http://localhost:#{@testPort}/printChatArchive?visitor.username=sum%20gai"
           options =
             headers:
               Cookie: "session=#{sessionId}"

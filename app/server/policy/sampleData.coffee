@@ -132,5 +132,5 @@ module.exports = (done) ->
       operators: ['websites', (next, {websites, accounts}) ->
         async.map operators, createUser(websites, accounts[0]._id), next]
       paidOwner: ['accounts', (next, {accounts}) -> createPaidOwner accounts[1]._id, next]
-      chatHistory: ['accounts', (next) -> Factory.create 'chathistory', next]
+      chatHistory: ['accounts', (next, {accounts}) -> Factory.create 'chathistory', {accountId: accounts[0]._id}, next]
     }, done

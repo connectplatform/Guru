@@ -9,7 +9,7 @@ boiler 'Service - Get Chat Archive', ->
         @client.getChatArchive {accountId: @account._id, search: {'visitor.username': 'sum gai'}}, (err, archive) ->
           should.not.exist err
           should.exist archive
-          archive.length.should.eql 1
+          archive.length.should.eql 2
           archive[0].visitor.username.should.eql 'sum gai'
           archive[0].history.length.should.eql 2
           archive[0].operators.length.should.eql 1

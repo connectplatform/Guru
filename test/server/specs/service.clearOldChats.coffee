@@ -156,7 +156,7 @@ boiler 'Service - Clear Old Chats', ->
           ChatHistory.find {accountId: @accountId}, (err, history) =>
             should.not.exist err
             should.exist history
-            history.length.should.eql 2, 'should have 2 history records'
+            history.length.should.eql 3, 'should have 3 history records'
             done()
 
   testWithSessions 'joinChat'

@@ -21,7 +21,7 @@ module.exports =
       chats = for chatPair in chatPairs
         chatPair.chat.isWatching = chatPair.isWatching
         if chatPair.chat?.visitor?.referrerData
-          filtered = reject chatPair.chat.visitor.referrerData, 'sessionId', 'websiteUrl', 'username', 'specialtyId', 'accountId'
+          filtered = reject chatPair.chat.visitor.referrerData, 'sessionId', 'specialtyId', 'accountId'
           chatPair.chat.visitor.referrerData = filtered
         chatPair.chat
 

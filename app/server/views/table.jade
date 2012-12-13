@@ -1,11 +1,13 @@
 table
-  thead
-    tr
-      each h in headers
-        th #{h}
-
-  tbody
-    each row in rows
+  if typeof(headers) != 'undefined'
+    thead
       tr
-        each col in row
-          td #{col}
+        each h in headers
+          th !{h}
+
+  if typeof(rows) != 'undefined'
+    tbody
+      each row in rows
+        tr
+          each col in row
+            td !{col}

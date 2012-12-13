@@ -9,6 +9,9 @@ module.exports = (request, response) ->
   sessionId = request.cookies.session
   search = request.query
 
+  header = "<h2>Chat History</h3>"
+  header += render 'table', {rows: (["<strong>#{f}:</strong>", v] for f, v of search)}
+
   getChatArchive = config.service 'getChatArchive'
 
   getChatArchive {sessionId: sessionId, search: search}, (err, archive) ->
@@ -16,4 +19,6 @@ module.exports = (request, response) ->
       render 'chatSummary', chat
     history = history.join ''
 
-    response.end "<html>#{history}</html>"
+    history = '<h3>No chat records found</h3>' unless history
+
+    response.end "<html>#{header}#{history}</html>"

@@ -7,7 +7,7 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
       fields = [
           name: 'email'
           inputType: 'text'
-          default: 'name@example.com'
+          defaultValue: 'name@example.com'
           label: 'Email'
           validation: (email) ->
             /^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test email
@@ -15,13 +15,13 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
         ,
           name: 'firstName'
           inputType: 'text'
-          default: 'Bob'
+          defaultValue: 'Bob'
           label: 'First Name'
           required: true
         ,
           name: 'lastName'
           inputType: 'text'
-          default: 'Smith'
+          defaultValue: 'Smith'
           label: 'Last Name'
           required: true
         ,

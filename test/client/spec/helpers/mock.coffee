@@ -54,7 +54,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
             cb null, fields: [
                   name: 'username'
                   inputType: 'text'
-                  default: 'Chat Name'
+                  defaultValue: 'Chat Name'
                   label: 'Chat Name'
                 ,
                   name: 'department'

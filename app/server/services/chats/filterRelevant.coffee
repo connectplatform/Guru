@@ -7,6 +7,7 @@ module.exports = (accountId, sessionId, chats, done) ->
 
   getOperatorData accountId, sessionId, (err, my) ->
     return done err if err
+    return done null, [] if not my
 
     #console.log 'comparing:', chats, 'to:', my.specialties
     isRelevant = (chat) ->

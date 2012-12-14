@@ -33,7 +33,7 @@ Factory.define 'website', Website, {
     requiredFields: [
         name: 'username'
         inputType: 'text'
-        default: ''
+        defaultValue: ''
         label: 'Your Name'
     ]
   }

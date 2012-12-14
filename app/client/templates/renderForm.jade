@@ -1,16 +1,15 @@
 form.form-horizontal(id="#{options.name}")
   for field in fields
-
     .control-group(name="#{field.name}")
       .control-label #{field.label}
       .controls
         case field.inputType
 
           when 'text'
-            input(type="text", placeholder="#{field.default}", name="#{field.name}")
+            input(type="text", placeholder="#{field.defaultValue}", name="#{field.name}")
 
           when 'password'
-            input(type="password", placeholder="#{field.default}", name="#{field.name}")
+            input(type="password", placeholder="#{field.defaultValue}", name="#{field.name}")
 
           when 'selection'
             select.small-modal-box(name="#{field.name}")
@@ -18,7 +17,7 @@ form.form-horizontal(id="#{options.name}")
                 - var id = selection.id || selection.label
                 - var label = selection.label
 
-                if selection == field.default
+                if selection == field.defaultValue
                   option(value="#{id || label}", selected="selected") #{label}
                 else
                   option(value="#{id || label}") #{label}

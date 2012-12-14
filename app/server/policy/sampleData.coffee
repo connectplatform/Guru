@@ -111,7 +111,7 @@ module.exports = (done) ->
         requiredFields: [
             name: 'username'
             inputType: 'text'
-            default: ''
+            defaultValue: ''
             label: 'Your Name'
         ]
       ,

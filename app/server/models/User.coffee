@@ -106,11 +106,11 @@ user.pre 'save', (next) ->
   if @role in ['Owner', 'Administrator'] and @oldRole in enums.editableRoles and @isModified 'role'
     return next new Error "Cannot make user a #{@oldRole}."
 
-  if @isNew
-    if @role is 'Owner'
+  if @isNew and @role is 'Owner'
       return sendWelcomeEmail @, next
-    else if @role isnt 'Administrator'
-      return sendRegistrationEmail @, next
+
+  if @role isnt 'Administrator'
+    return sendRegistrationEmail @, next
 
   next()
 

@@ -1,0 +1,142 @@
+Sprints
+
+2012-12-10
+Operators can search for related chats
+Fixes:
+	Fixed 'account in good standing' logic
+	Fixed email issues
+	Remove marketing header/footer once the owner creates account
+
+2012-12-03
+Marketing pages integrated with signup and login
+Don't show vacant chats
+Department selection shows online/offline
+Fixes
+	Removed duplicate chat event messages
+	Fixed visitor chat page when displayed in a small window
+	Fix scroll boxes on website/user forms
+	Fix editing owner/admin users
+	Mixed content bug in IE
+	Update production data to be correct for current schema
+	Fix visitor details display
+
+2012-11-26
+Owner receives welcome email
+Chat input is now a text area (shift + enter to add a line)
+Marketing pages are hosted
+Owner can use link generator
+Chat routing is disabled if recurly subscription terminated
+Operators cannot accept chats if recurly subscription terminated
+
+### Need payment
+
+2012-11-19
+Visitor chat now chimes on message received
+Potential site owners can now create a trial account
+Recurly account created when Owner signs up
+Owner can edit billing information
+Adding users creates/modifies the billing plan
+Removing users removes/modifies the billing plan
+Fixed website edit form
+
+2012-11-16	online/offline chat image now uses same logic as chat routing
+2012-11-14	Added Leave/Join notifications to chat
+2012-11-10	chats scroll to bottom when new text received
+2012-11-10	always chime on message received
+2012-11-07	Adding new users, websites, specialties active
+2012-10-31	Chat status properly updated for chat changes
+2012-10-31	Can create an account
+2012-10-31	can't create Owner/Admin through management UI, can't change role of Owner/Admin
+2012-10-30	Added validations layer which controls access to features and validates incoming data
+2012-10-30	changed usage of 'admin' to be 'owner' instead
+2012-10-29	submitQuestion sends to contactEmail listed in Website record
+2012-10-29	include contactEmail in website
+2012-10-28	Added logging for all uncaught errors
+
+### PAID 2012-10-25
+
+2012-10-18	Visitor is no longer asked for website, it must be included in the link
+2012-10-18	Accounts are looked up by website (for chat routing)
+
+2012-10-10
+2 step deployment process, should make deployment more reliable
+logging all client side errors
+UI formatting for Operator/Visitor chat controls
+Operators/Visitors can email/print a transcript
+Chatting tested in all browsers
+Visitor Name/Website displays separately in operator chat sidebar
+Chat Routing
+Gather Department, any other info from visitor
+New chat requires valid operators to be online, otherwise redirects to send an email
+Only valid operators receive notification for waiting chats
+Upload logo, online/offline
+Visitors see a greeting when they join the chat
+
+### PAID 2012-9-26
+
+Operators see message when visitor leaves/is kicked
+Visitor can end chat
+Fixed bugs with dashboard display
+Operators are marked online/offline (no activity indicator yet)
+Forgot Password
+Email Confirmations on account creation
+Password validation
+
+2012-09-08	archive chat history in mongo
+2012-09-08	clear inactive chats
+2012-09-08	replaced chime sounds
+2012-09-04	manual testing of full system
+2012-08-29	fixed chat duplicate bug
+2012-08-29	unread chats badge goes away when chat tab clicked
+2012-08-28	operator is notified on new chats and unread messages
+2012-08-24	added secondary server to reroute http to https in production
+2012-08-23	added ssl config for production
+2012-08-22	provided operator documentation
+2012-08-21	side bar displays invite/transfer notifications
+2012-08-21	update dashboard on new invite
+2012-08-21	users can now change their passwords
+2012-08-20	dashboard chats are sorted
+2012-08-17	newChat looks at document.referrer if not given website in querystring
+2012-08-17	added authorization key to ACP request
+2012-08-16	ACP data is now showing in tree on operator chat page
+2012-08-15	added ACP configuration
+2012-08-14	sessions (including open chats) are saved between logins
+2012-08-11	added specialties (departments) in relation to websites
+2012-08-11	can select websites associated with an operator
+2012-08-10	can edit websites
+2012-08-10	can edit specialties
+
+### PAID 2012-08-07
+
+2012-07-27	notify operator when invite is sent
+2012-07-27	dashboard events work properly
+2012-07-26	Operators can invite/transfer chats
+2012-07-25	notify operators of new messages
+2012-07-24	dashboard displays invites and transfers
+2012-07-23	operators can accept invites/transfers
+2012-07-19	leaveChat updates chat status
+2012-07-19	kick visitor works
+2012-07-19	operators get notified of new messages via sidebar badge
+2012-07-17	visitors/operators can leave a chat
+2012-07-16	visitor info displays to operator in sidebar
+2012-07-13	Users have roles.  Can be edited.
+2012-07-13	Operators can accept chats
+2012-07-12	Can edit users.
+2012-07-10	update dashboard whenever a new chat comes in
+2012-07-10	sidebar displays unanswered chat badge
+2012-07-06	Operators can watch chats
+2012-07-05	remove session cookie on unauthorized access, redirect to logout
+2012-06-29	Operators can join chats
+2012-06-26	integrated redis more-- chat histories save now
+2012-06-26	chat channels are now using redis
+2012-06-25	added multi-tabbed chat
+2012-06-25	updated chat image
+2012-06-25	dashboard displays current chats and elapsed time
+2012-06-22	formatting dashboard and sidebar
+2012-06-21	added dashboard, changed skin
+2012-06-21	chat message box gets focus when page loads
+2012-06-21	chat is scrolling correctly for all but very long messages
+2012-06-20	visitor chat is working
+2012-06-18	initial commit
+
+### PAID 2012-06-14

@@ -9,7 +9,7 @@ Visitors see a greeting when they join the chat
 Operators see message when visitor leaves/is kicked
 
 
-fixed bug with flushCache (default env to development), added test and fixed getMyRole
+10-10-2012: fixed bug with flushCache (default env to development), added test and fixed getMyRole
 redirect in the case of no role data being returned
 added submitQuestion, ui fixes on operator chat, call removeUnanswered when accepting chat
 requiring stoic rather than initStoic wherever possible.  initStoic sets db number based on config
@@ -63,7 +63,8 @@ filter on getActiveChats working, notifications broken
 fixed dependency loading and moved orphan test into Service - Get Active Chats
 script changes for deploy script
 Redis db now specified in config
-refactored tests to use login helper
+9-26-2012: refactored tests to use login helper
+
 all tests pass, baseline for pivot in routing implementation
 refactored tandoor, added test
 added website to chat model and display it on operator chat sidebar
@@ -108,4 +109,4 @@ fixed tests
 added reset password
 added test files for amazon s3
 added scripts to package.json
-jade templates parse into emails
+9-11-2012: jade templates parse into emails

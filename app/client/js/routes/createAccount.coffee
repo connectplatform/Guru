@@ -46,17 +46,17 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
 
       server.ready ->
 
-        server.getHeaderFooter (err, {header, footer}) ->
+        server.getHeaderFooter {}, (err, {header, footer}) ->
           $('.header').html header
           $('.footer').html footer
 
-          renderForm options, fields, (params) ->
-            server.createAccount params, (err, args) ->
+        renderForm options, fields, (params) ->
+          server.createAccount params, (err, args) ->
 
-              if err
-                notify.error err
-              else
-                window.location.hash = '/account'
+            if err
+              notify.error err
+            else
+              window.location.hash = '/account'
 
     teardown: (done) ->
       $('.header').html ''

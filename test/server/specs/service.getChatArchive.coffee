@@ -14,3 +14,12 @@ boiler 'Service - Get Chat Archive', ->
           archive[0].history.length.should.eql 2
           archive[0].operators.length.should.eql 1
           done()
+
+  it 'should return no results without params', (done) ->
+    Factory.create 'chathistory', (err, history) =>
+      @getAuthed =>
+        @client.getChatArchive {accountId: @account._id, search: null}, (err, archive) ->
+          should.not.exist err
+          should.exist archive
+          archive.length.should.eql 0
+          done()

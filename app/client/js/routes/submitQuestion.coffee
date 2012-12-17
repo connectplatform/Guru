@@ -10,7 +10,7 @@ define ["load/server", "load/notify", 'helpers/renderForm'], (server, notify, re
     fields = [
         name: 'email'
         inputType: 'text'
-        default: 'name@example.com'
+        defaultValue: 'name@example.com'
         label: 'Email'
       ,
         name: 'subject'

@@ -1,6 +1,5 @@
 # I know how to ask the user for information
-
-define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers/notifyInline', 'helpers/util'],
+define ["load/server", "templates/renderForm", "helpers/validateField", "helpers/notifyInline", "helpers/util"],
   (server, renderForm, validateField, notifyInline, {random, getType}) ->
 
     (options={}, fields, receive) ->
@@ -9,7 +8,7 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
       # spit out an error if there's no fields
       unless fields and fields.length > 0
         server.log
-          message: 'Called renderForm with no fields.'
+          message: "Called renderForm with no fields."
           context:
             fields: fields
             options: options
@@ -19,16 +18,17 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
 
       # defaults
       for f in fields
-        f.default ||= ''
+        f.defaultValue ||= ""
 
       options.name ||= random()
-      options.submit ||= 'group'
-      options.submitText ||= 'Send'
-      options.placement ||= '#content'
+      options.submit ||= "group"
+      options.submitText ||= "Send"
+      options.placement ||= "#content"
 
       # render html
       $(options.placement).html renderForm {options: options, fields: fields}
-      $("##{options.name}").find(':input').filter(':visible:first').focus()
+
+      $("##{options.name}").find(":input").filter(":visible:first").focus()
 
       # field validations
       validatedFields = fields.filter (f) -> f.required or f.validation
@@ -38,7 +38,7 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
         {name} = field
 
         # trigger validation on linked fields
-        if field.linked and getType(field.linked) is 'Array'
+        if field.linked and getType(field.linked) is "Array"
           for linked in field.linked
             $("#{options.placement} .controls [name=#{linked}]").change ->
               $("#{options.placement} .controls [name=#{name}]").change()
@@ -56,6 +56,7 @@ define ['load/server', "templates/renderForm", 'helpers/validateField', 'helpers
         toObj = (obj, item) ->
           obj[item.name] = item.value
           return obj
+
         formParams = $(@).serializeArray().reduce toObj, {}
 
         # perform validations

@@ -2171,10 +2171,11 @@ var requirejs, require, define;
     test: function(attemptedHash) {
       var args, destination, getDestination, idx, junk, matches, name, queryString, routeInput, _i, _j, _len, _ref, _ref1;
       getDestination = function() {
-        var destination, matches, url, _ref;
+        var destination, matches, url, _ref, keys;
         _ref = rooter.routes;
-        for (url in _ref) {
-          destination = _ref[url];
+        keys = Object.keys(_ref);
+        for (var i = 0; i < keys.length; i++) {
+          destination = _ref[keys[i]];
           if (matches = destination.pattern.exec(attemptedHash)) {
             return [destination, matches];
           }

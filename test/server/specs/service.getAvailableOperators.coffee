@@ -18,6 +18,16 @@ boiler 'Service - Get Available Operators', ->
         operators.length.should.eql 0
         done()
 
+  describe 'with one owner', ->
+    it 'should return one result', (done) ->
+      @getAuthedWith {email: 'owner@foo.com', password: 'foobar'}, =>
+        @getAvailableOperators {websiteId: @fooSiteId, specialty: 'Sales'}, (err, {accountId, operators}) ->
+          should.not.exist err
+          should.exist accountId
+          should.exist operators
+          operators.length.should.eql 1, 'Expected one operator.'
+          done()
+
   describe 'with one operator', ->
     it 'should return one result', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>

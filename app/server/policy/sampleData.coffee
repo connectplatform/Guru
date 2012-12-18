@@ -66,7 +66,7 @@ module.exports = (done) ->
         role: 'Owner'
         firstName: 'Owner'
         lastName: 'Man'
-        websites: ['foo.com']
+        websites: []
       ,
         email: 'guru1@foo.com'
         sentEmail: true

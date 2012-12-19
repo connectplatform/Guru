@@ -35,7 +35,6 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
             # TODO: use async.parallel
             beforeRender = (element, cb) ->
 
-              console.log 'before render on ID:', element.id
               getAwsForm = (imageName) ->
                 (cb) -> server.awsUpload {siteId: element.id, imageName: imageName}, cb
 
@@ -58,12 +57,14 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
                   submissionData =
                     formFields: beforeData[imageName]
                     file: browser.files[0]
-                    error: (arg) ->
-                      console.log "error submitting #{imageName} image"
-                      notify.error "error submitting #{imageName} image"
+                    error: (response, status, reason) ->
+                      message = "Error submitting #{} image."
+
+                      if response.responseText.match /EntityTooLarge/
+                        message += "  Must be under 1 MB."
+                      notify.error message
                       next null, false
                     success: (args...) ->
-                      console.log 'success!', args
                       next null, true
                   submitToAws submissionData
                 else
@@ -71,9 +72,9 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
 
               # Do in parallel:
               async.parallel {
-                logoUrl: (next) -> uploadFunc 'logo', next
-                onlineUrl: (next) -> uploadFunc 'online', next
-                offlineUrl: (next) -> uploadFunc 'offline', next
+                logoUploaded: (next) -> uploadFunc 'logo', next
+                onlineUploaded: (next) -> uploadFunc 'online', next
+                offlineUploaded: (next) -> uploadFunc 'offline', next
               }, cb
 
             #Done with edit/delete handlers, now render page

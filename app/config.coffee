@@ -33,7 +33,7 @@ config =
         s3:
           bucket: 'guru-dev'
           acl: 'public-read'
-          maxSize: '102400'
+          maxSize: '10485760'
         accessKey: 'AKIAILLS5MBMHVD62AEA'
         secretKey: '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'
     recurly:

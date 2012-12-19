@@ -12,9 +12,10 @@ module.exports = (accountId, chatId, referrerData) ->
   return unless websiteUrl
 
   Website.findOne {accountId: accountId, url: websiteUrl}, {acpEndpoint: true, acpApiKey: true}, (err, site) ->
-    if err
+    if err or not site
       meta = {error: err, website: site, url: websiteUrl}
       config.log.error 'Error retrieving website in populateVisitorAcpData', meta
+      return
 
     {acpEndpoint, acpApiKey} = site
     return unless acpEndpoint

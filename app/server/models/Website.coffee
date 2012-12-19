@@ -33,9 +33,9 @@ website = new Schema
       unique: true
 
   # resources uploaded to AWS
-  logoUrl: Boolean
-  onlineUrl: Boolean
-  offlineUrl: Boolean
+  logoUploaded: Boolean
+  onlineUploaded: Boolean
+  offlineUploaded: Boolean
 
   specialties:
     type: [String]

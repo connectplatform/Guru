@@ -109,9 +109,9 @@ module.exports = (done) ->
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
         specialties: ['Sales', 'Billing']
-        onlineUrl: true
-        offlineUrl: true
-        logoUrl: true
+        onlineUploaded: true
+        offlineUploaded: true
+        logoUploaded: true
         requiredFields: [
             name: 'username'
             inputType: 'text'

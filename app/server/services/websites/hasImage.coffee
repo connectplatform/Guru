@@ -5,7 +5,7 @@ module.exports =
   required: ['websiteId', 'imageName']
   service: ({websiteId, imageName}, done) ->
     cacheLocation = "hasImage/#{websiteId}/#{imageName}"
-    field = "#{imageName}Url"
+    field = "#{imageName}Uploaded"
 
     cached = cache.retrieve cacheLocation
     if cached?
@@ -14,7 +14,7 @@ module.exports =
     fields = {}
     fields[field] = true
 
-    Website.findOne {_id: websiteId}, fields, (err, website) ->
+    Website.findOne {_id: websiteId}, {}, (err, website) ->
       result = website?[field]
       cache.store cacheLocation, result
       done err, result

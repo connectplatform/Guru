@@ -7,7 +7,7 @@ module.exports = ({pathParts}, response) ->
   cacheLocation = "chatLinkImage/#{websiteId}"
 
   getAvailableOperators = config.service 'operator/getAvailableOperators'
-  getImageUrl = config.service 'websites/getImageUrl'
+  getImageUrl = config.service 'getImageUrl'
 
   handleError = (err) ->
     if err

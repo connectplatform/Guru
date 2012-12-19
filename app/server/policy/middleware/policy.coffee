@@ -14,6 +14,7 @@ module.exports =
         'getMyRole'
         'getChatHistory'
         'getLogoForChat'
+        'getImageUrl'
         'setSessionOffline'
         'say'
         'leaveChat'

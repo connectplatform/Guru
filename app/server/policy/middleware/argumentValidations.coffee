@@ -13,6 +13,7 @@ module.exports =
         'getMyRole'
         'log'
         'getHeaderFooter'
+        'getImageUrl'
 
         # visitor
         'newChat'

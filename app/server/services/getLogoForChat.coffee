@@ -5,7 +5,7 @@ module.exports =
   required: ['chatId', 'accountId']
   service: ({chatId, accountId}, done) ->
 
-    getImageUrl = config.service 'websites/getImageUrl'
+    getImageUrl = config.service 'getImageUrl'
 
     Chat(accountId).get(chatId).websiteId.get (err, websiteId) ->
       if err or not websiteId

@@ -1,6 +1,6 @@
 # I know how to ask the user for information
 define ["load/server", "templates/renderForm", "helpers/validateField", "helpers/notifyInline", "helpers/util"],
-  (server, renderForm, validateField, notifyInline, {random, getType}) ->
+  (server, renderForm, validateField, notifyInline, {random, getType, formToHash}) ->
 
     (options={}, fields, receive) ->
       receive ||= ->
@@ -52,12 +52,7 @@ define ["load/server", "templates/renderForm", "helpers/validateField", "helpers
       $("##{options.name}").submit (evt) ->
         evt.preventDefault()
 
-        # gather up form params into key/value object
-        toObj = (obj, item) ->
-          obj[item.name] = item.value
-          return obj
-
-        formParams = $(@).serializeArray().reduce toObj, {}
+        formParams = formToHash @
 
         # perform validations
         valid = true

@@ -1,5 +1,5 @@
-define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws', 'templates/embedLink'],
-  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws, embedLink) ->
+define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws', 'templates/embedLink', 'helpers/util'],
+  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws, embedLink, {formToHash}) ->
     (args, templ) ->
       return window.location.hash = '/' unless server.cookie 'session'
 
@@ -9,13 +9,9 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
           validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
           getFormFields = ->
-            {
-              contactEmail: $('#editWebsite .contactEmail').val()
-              url: $('#editWebsite .url').val()
-              specialties: ($(thing).val() for thing in $('#editWebsite .specialties :checkbox:checked'))
-              acpEndpoint: $('#editWebsite .acpEndpoint').val()
-              acpApiKey: $('#editWebsite .acpApiKey').val()
-            }
+            hash = formToHash $('#editWebsite form')
+            console.log 'hash:', hash
+            return hash
 
           extraDataPacker = (website) ->
             website.allowedSpecialties = validSpecialtyNames
@@ -48,24 +44,28 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
 
             beforeSubmit = (element, beforeData, cb) ->
               uploadFunc = (imageName, next) ->
-                if $(".#{imageName}Upload")[0].files[0]?
+                browser = $(".#{imageName}Upload")[0]
+                if browser.files[0]?
                   submissionData =
                     formFields: beforeData[imageName]
-                    file: $(".#{imageName}Upload")[0].files[0]
+                    file: browser.files[0]
                     error: (arg) ->
+                      console.log "error submitting #{imageName} image"
                       notify.error "error submitting #{imageName} image"
-                      next()
-                    success: next
+                      next null, false
+                    success: (args...) ->
+                      $('#editWebsite form')
+                      next null, true
                   submitToAws submissionData
                 else
                   next()
 
               # Do in parallel:
-              async.parallel [
-                (next) -> uploadFunc 'logo', next
-                (next) -> uploadFunc 'online', next
-                (next) -> uploadFunc 'offline', next
-              ], cb
+              async.parallel {
+                logoUrl: (next) -> uploadFunc 'logo', next
+                onlineUrl: (next) -> uploadFunc 'online', next
+                offlineUrl: (next) -> uploadFunc 'offline', next
+              }, cb
 
             #Done with edit/delete handlers, now render page
             $('#content').html templ websites: websites

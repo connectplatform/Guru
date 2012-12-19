@@ -32,6 +32,11 @@ website = new Schema
     index:
       unique: true
 
+  # resources uploaded to AWS
+  logoUrl: Boolean
+  onlineUrl: Boolean
+  offlineUrl: Boolean
+
   specialties:
     type: [String]
     default: []

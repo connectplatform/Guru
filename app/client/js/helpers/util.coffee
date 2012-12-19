@@ -62,6 +62,26 @@ define ["templates/treeviewParentNode", "templates/li", "templates/treeview", "t
     cleartimers: ->
       clearInterval id for sel, id of @updating
 
+    formToHash: (form) ->
+
+      # extract an object from the form
+      toObj = (obj, item) ->
+        obj[item.name] = item.value
+        return obj
+
+      hash = $(form).serializeArray().reduce toObj, {}
+
+      # group any related fields into arrays
+      for field in hash.keys()
+        m = field.match /([A-z]+)-[0-9]+/
+        if m
+          arrayName = m[1]
+          hash[arrayName] ||= []
+          hash[arrayName].push hash[field]
+          delete hash[field]
+
+      return hash
+
     jsonToUl: (json) ->
       self = this
 

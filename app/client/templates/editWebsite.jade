@@ -1,39 +1,36 @@
 #editWebsite.modal.fade.small-modal
-  .modal-header
-    h3 Website Information
+  form
+    .modal-header
+      h3 Website Information
 
-  .modal-body
-    form
-      input.contactEmail.small-modal-box(type="text", value="#{website.contactEmail}", placeholder="Contact Email")
-      input.url.small-modal-box(type="text", value="#{website.url}", placeholder="URL")
+    .modal-body
+      input.contactEmail.small-modal-box(type="text", name="contactEmail", value="#{website.contactEmail}", placeholder="Contact Email")
+      input.url.small-modal-box(type="text", name="url", value="#{website.url}", placeholder="URL")
 
       .bold Specialties:
       .specialties.small-modal-box.scrolling-checkboxes
-        for allowedSpec in website.allowedSpecialties
+        each allowedSpec, index in website.allowedSpecialties
           if website.specialties.indexOf(allowedSpec) > -1
-            input.checkbox(type="checkbox", name="#{allowedSpec}", value="#{allowedSpec}", checked="yes")
+            input.checkbox(type="checkbox", name="specialties-#{index}", value="#{allowedSpec}", checked="yes")
           else
-            input.checkbox(type="checkbox", name="#{allowedSpec}", value="#{allowedSpec}")
+            input.checkbox(type="checkbox", name="specialties-#{index}", value="#{allowedSpec}")
           &nbsp;
           |#{allowedSpec}
           br
 
-      input.acpEndpoint.small-modal-box(type="text", value="#{website.acpEndpoint}", placeholder="ACP Endpoint (optional)")
+      input.acpEndpoint.small-modal-box(type="text", name="acpEndpoint", value="#{website.acpEndpoint}", placeholder="ACP Endpoint (optional)")
 
-      input.acpApiKey.small-modal-box(type="text", value="#{website.acpApiKey}", placeholder="ACP API Key (optional)")
+      input.acpApiKey.small-modal-box(type="text", name="acpApiKey", value="#{website.acpApiKey}", placeholder="ACP API Key (optional)")
 
-    .bold Logo:
-    form
+      .bold Logo:
       input.logoUpload(type="file", name="logoUpload")
 
-    .bold Online Image:
-    form
+      .bold Online Image:
       input.onlineUpload(type="file", name="onlineUpload")
 
-    .bold Offline:
-    form
+      .bold Offline:
       input.offlineUpload(type="file", name="offlineUpload")
 
-  .modal-footer
-    button.saveButton.btn.btn-primary() Save
-    button.cancelButton.btn Cancel
+    .modal-footer
+      button.saveButton.btn.btn-primary() Save
+      button.cancelButton.btn Cancel

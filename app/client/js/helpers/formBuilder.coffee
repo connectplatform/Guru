@@ -32,10 +32,10 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/generateChatLink'
               $("##{action}#{modelName} .saveButton").click (evt) ->
                 evt.preventDefault()
 
-                beforeSubmit element, beforeData, ->
-
-                  fields = getFormFields()
-
+                # compile fields
+                beforeSubmit element, beforeData, (err, fields) ->
+                  fields ||= {}
+                  fields.merge getFormFields()
                   fields.id = element.id if element.id?
 
                   server.saveModel {modelName: modelName, fields: fields}, (err, savedElement) ->

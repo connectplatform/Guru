@@ -1,4 +1,5 @@
 mapSpecialties = config.service 'specialties/mapSpecialties'
+cache = config.require 'load/cache'
 
 module.exports =
   createFields: (inModel, next) ->
@@ -10,6 +11,11 @@ module.exports =
           label: 'Your Name'
       ]
     mapSpecialties {model: inModel, getter: 'getSpecialtyIds'}, next
+
+    for imageName in ['logo', 'online', 'offline']
+      value = inModel["#{imageName}Uploaded"]
+      if value
+        cache.store "hasImage/#{inModel._id}/#{imageName}", value
 
   filterOutput: (inModel, next) ->
     outModel = {id: inModel['_id']}

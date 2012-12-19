@@ -4,6 +4,7 @@ retainFor = config?.cache?.retainFor || 30000
 
 module.exports =
   store: (resource, data) ->
+    #console.log "storing at #{resource}:", data
     cache[resource] =
       timestamp: Date.now()
       data: data

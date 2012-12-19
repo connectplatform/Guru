@@ -49,5 +49,10 @@ module.exports = [
     validation: (arg, assert) ->
       assert arg.toString().match mongoId
     defaultArgs: ['accountId', 'websiteId', 'specialtyId']
+  ,
+    typeName: 'WebsiteImageName'
+    validation: (imageName, assert) ->
+      assert imageName in ['online', 'offline', 'logo']
+    defaultArgs: ['imageName']
 
 ]

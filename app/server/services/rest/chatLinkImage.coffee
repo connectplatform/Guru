@@ -1,12 +1,13 @@
 async = require 'async'
 db = config.require 'load/mongo'
-
-cache = {}
+cache = config.require 'load/cache'
 
 module.exports = ({pathParts}, response) ->
   [_, websiteId] = pathParts
+  cacheLocation = "chatLinkImage/#{websiteId}"
 
   getAvailableOperators = config.service 'operator/getAvailableOperators'
+  getImageUrl = config.service 'websites/getImageUrl'
 
   handleError = (err) ->
     if err
@@ -17,26 +18,23 @@ module.exports = ({pathParts}, response) ->
     else
       return false
 
-  respond = (isOnline) ->
+  respond = (websiteId, isOnline) ->
     status = if isOnline then 'online' else 'offline'
 
     # determine location of actual image
-    redirectTarget = "https://s3.amazonaws.com/#{config.app.aws.s3.bucket}/website/#{websiteId}/#{status}"
+    getImageUrl {websiteId: websiteId, imageName: status}, (err, url) ->
 
-    # return result
-    response.writeHead 307, {
-      "Location": redirectTarget
-      "Cache-Control": 'no-cache, no-store, max-age=0, must-revalidate'
-    }
-    response.end()
+      # return result
+      response.writeHead 307, {
+        "Location": url
+        "Cache-Control": 'no-cache, no-store, max-age=0, must-revalidate'
+      }
+      response.end()
 
   # check cache
-  # To generalize caching we could support something like this:
-  #   cache.set 'onlineStatus', websiteId, online
-  #   cache.get 'onlineStatus', websiteId
-
-  if cache[websiteId]? and (cache[websiteId][1] + 10000) > Date.now()
-    respond cache[websiteId][0]
+  cached = cache.retrieve cacheLocation
+  if cached?
+    respond websiteId, cached
 
   else
 
@@ -44,5 +42,6 @@ module.exports = ({pathParts}, response) ->
     getAvailableOperators {websiteId: websiteId, specialty: null}, (err, {accountId, operators}) ->
       return if handleError err
       isOnline = (operators.length > 0)
-      cache[websiteId] = [isOnline, Date.now()]
-      respond isOnline
+
+      cache.store cacheLocation, isOnline
+      respond websiteId, isOnline

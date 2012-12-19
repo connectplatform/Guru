@@ -29,13 +29,13 @@ module.exports = (accountId, chatId, referrerData) ->
 
     config.log.info 'sending ACP data:', {url: targetUrl, headers: headers, data: referrerData}
     restler.get(targetUrl, requestOptions).on 'complete', (acpData, response) ->
-      if response.statusCode in [200, 201]
+      if response?.statusCode in [200, 201]
         Chat(accountId).get(chatId).visitor.set 'acpData', acpData, (err) ->
           if err
             meta = {error: err, acpData: acpData, website: site}
             config.log.error 'Error setting visitor acp data in populateVisitorAcpData', meta
       else
-        meta = {data: acpData, status: response.statusCode}
+        meta = {data: acpData, status: response?.statusCode}
         config.log.error 'received error from ACP server:', meta
 
           # no callback, this is fire and forget

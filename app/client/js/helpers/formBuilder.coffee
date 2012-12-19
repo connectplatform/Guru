@@ -3,7 +3,7 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/generateChatLink'
     (getFormFields, editingTemplate, deletingTemplate, extraDataPacker, rowTemplate, initialElements, elementName, beforeRender, beforeSubmit, embedLinkTemplate) ->
 
       unless beforeRender?
-        beforeRender = (_, cb) -> cb {}
+        beforeRender = (_, cb) -> cb null, {}
 
       unless beforeSubmit?
         beforeSubmit = (_, __, cb) -> cb()
@@ -21,9 +21,9 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/generateChatLink'
         elementForm: (template, element, action, onComplete) ->
           (evt) ->
             evt.preventDefault()
-            beforeRender element, (beforeData) ->
+            beforeRender element, (err, beforeData={}) ->
 
-              templateObject = {}
+              templateObject = beforeData
               templateObject[elementName] = element
 
               $("##{elementName}ModalBox").html template templateObject

@@ -8,10 +8,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
         server.findModel {modelName: 'Specialty', queryObject:{}}, (err, specialties) ->
           validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
-          getFormFields = ->
-            hash = formToHash $('#editWebsite form')
-            console.log 'hash:', hash
-            return hash
+          getFormFields = -> formToHash $('#editWebsite form')
 
           extraDataPacker = (website) ->
             website.allowedSpecialties = validSpecialtyNames
@@ -37,10 +34,22 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
 
             # TODO: use async.parallel
             beforeRender = (element, cb) ->
-              server.awsUpload {siteId: element.id, imageName: 'logo'}, (err, logoFields) ->
-                server.awsUpload {siteId: element.id, imageName: 'online'}, (err, onlineFields) ->
-                  server.awsUpload {siteId: element.id, imageName: 'offline'}, (err, offlineFields) ->
-                    cb {logo: logoFields, online: onlineFields, offline: offlineFields}
+
+              console.log 'before render on ID:', element.id
+              getAwsForm = (imageName) ->
+                (cb) -> server.awsUpload {siteId: element.id, imageName: imageName}, cb
+
+              getImageUrl = (imageName) ->
+                (cb) -> server.getImageUrl {websiteId: element.id, imageName: imageName}, cb
+
+              async.parallel {
+                logo: getAwsForm 'logo'
+                online: getAwsForm 'online'
+                offline: getAwsForm 'offline'
+                logoImage: getImageUrl 'logo'
+                onlineImage: getImageUrl 'online'
+                offlineImage: getImageUrl 'offline'
+              }, cb
 
             beforeSubmit = (element, beforeData, cb) ->
               uploadFunc = (imageName, next) ->
@@ -54,7 +63,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
                       notify.error "error submitting #{imageName} image"
                       next null, false
                     success: (args...) ->
-                      $('#editWebsite form')
+                      console.log 'success!', args
                       next null, true
                   submitToAws submissionData
                 else

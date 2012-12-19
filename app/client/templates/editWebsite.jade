@@ -24,12 +24,15 @@
 
       .bold Logo:
       input.logoUpload(type="file", name="logoUpload")
+      img.imagePreview(src="#{logoImage}")
 
       .bold Online Image:
       input.onlineUpload(type="file", name="onlineUpload")
+      img.imagePreview(src="#{onlineImage}")
 
       .bold Offline:
       input.offlineUpload(type="file", name="offlineUpload")
+      img.imagePreview(src="#{offlineImage}")
 
     .modal-footer
       button.saveButton.btn.btn-primary() Save

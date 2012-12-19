@@ -18,6 +18,11 @@ blockquote {
   margin: 0 15px 8px;
 }
 
+.imagePreview {
+  max-width: 70px;
+  max-height: 40px;
+}
+
 .small-modal {
   width: 333px;
 }

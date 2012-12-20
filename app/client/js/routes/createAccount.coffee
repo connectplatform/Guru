@@ -44,7 +44,7 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
       options =
         name: 'createAccount'
         submitText: 'Create Account'
-        placement: '#content .form-area'
+        placement: '#create-account .form-area'
 
       server.ready ->
 

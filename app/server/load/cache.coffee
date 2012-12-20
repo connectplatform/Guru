@@ -1,6 +1,6 @@
 {inspect} = require 'util'
 cache = {}
-retainFor = config?.cache?.retainFor || 30000
+retainFor = config?.cache?.retainFor || 300000
 
 module.exports =
   store: (resource, data) ->

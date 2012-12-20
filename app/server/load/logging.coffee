@@ -34,8 +34,14 @@ module.exports = (options) ->
   unless config.env is 'development'
     process.on 'uncaughtException', (err) ->
       #process.removeAllListeners 'uncaughtException'
-      loggers.server.error 'Uncaught Exception', {exception: err.toString()}, ->
-        throw err
+
+      stack = err?.stack || ''
+      body = "#{err.toString()}<br/>#{stack.replace '\n', '<br/>'}"
+      sendEmail = config.require 'services/email/sendEmail'
+
+      sendEmail body, {to: config.adminNotify, subject: "#{config.env} #{err.toString()}"}
+      loggers.server.error 'Uncaught Exception', {exception: err.toString(), stack: stack}, ->
+        process.exit()
 
   log = loggers.server.info
   log.info = loggers.server.info

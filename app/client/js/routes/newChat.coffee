@@ -6,6 +6,7 @@ define ["load/server", "load/notify", 'helpers/util', 'routes/newChat.fsm'],
 
       # input cleanup
       $("#content").html templ()
+      queryParams.socketId = server.ssocket.id
       delete queryParams["undefined"]
       unless queryParams.websiteUrl
         queryParams.websiteUrl = getDomain document.referrer

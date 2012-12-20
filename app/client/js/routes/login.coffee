@@ -14,6 +14,7 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
         fields =
           email: $('#login-form #email').val()
           password: $('#login-form #password').val()
+          socketId: server.ssocket.id
 
         server.ready ->
           server.login fields, (err, user) ->

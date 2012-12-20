@@ -34,13 +34,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
             # Confrim and leave chat on window close
             window.onbeforeunload = (evt) ->
-              closeWarn = confirm "Leave chat?"
-              if closeWarn is true
-                server.leaveChat {chatId: chatId}, (err) ->
-              else
-                return 'Leave chat?'
-
-              evt.preventDefault()
+              return 'Leave chat?'
 
             chatbox = $(".chat-display-box")
 

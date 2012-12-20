@@ -11,5 +11,6 @@ module.exports = (user, next) ->
   Session(accountId).create {
     role: user.role,
     chatName: username,
-    operatorId: user.id
+    operatorId: user.id,
+    socketId: user.socketId
   }, next

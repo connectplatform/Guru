@@ -1,7 +1,6 @@
-define ['policy/registerSessionUpdates', 'policy/setOfflineOnUnload', 'load/server' ],
-  (registerSessionUpdates, setOfflineOnUnload, server) ->
+define ['policy/registerSessionUpdates', 'load/server' ],
+  (registerSessionUpdates, server) ->
     registerSessionUpdates()
-    setOfflineOnUnload()
     server.ready ->
       #window.onerror = (message, url, linenumber) ->
         #server.log

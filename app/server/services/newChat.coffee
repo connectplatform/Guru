@@ -17,6 +17,7 @@ module.exports = (params, done) ->
 
     department = params.department
     username = params.username or 'anonymous'
+    socketId = params.socketId
     visitorMeta =
       username: username
       referrerData: params || null
@@ -33,7 +34,7 @@ module.exports = (params, done) ->
 
       # create all necessary artifacts
       async.parallel {
-        session: Session(accountId).create { role: 'Visitor', chatName: username }
+        session: Session(accountId).create { role: 'Visitor', chatName: username, socketId: socketId }
         chat: Chat(accountId).create
 
       }, (err, {chat, session}) ->

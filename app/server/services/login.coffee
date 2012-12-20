@@ -3,7 +3,7 @@ db = config.require 'load/mongo'
 
 module.exports =
   required: ['email', 'password']
-  service: ({email, password}, done) ->
+  service: ({email, password, socketId}, done) ->
 
     getOrCreateSession = config.service 'operator/getOrCreateSession'
 
@@ -11,6 +11,8 @@ module.exports =
       if err
         config.log.error 'Error searching for operator in login', {error: err, email: email} if err
         return done err.message
+
+      user.socketId = socketId
 
       return done 'Invalid user.' unless user?
       return done 'Invalid password.' unless user.comparePassword password

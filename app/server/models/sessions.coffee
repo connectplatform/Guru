@@ -6,6 +6,7 @@ face = (decorators) ->
       {session: {role, chatName, unreadMessages, unansweredChats, operatorId, online,
       allSessions, onlineOperators, sessionsByOperator}}
     accountLookup
+    sessionLookup
   } = decorators
 
   accountBucket = (accountId) ->
@@ -17,6 +18,7 @@ face = (decorators) ->
       create: tandoor (fields, cb) ->
         id = random()
         session = faceValue.get id
+        socketId = fields.socketId
 
         addOperatorData = (cb) =>
           return cb() unless fields.operatorId?
@@ -38,6 +40,7 @@ face = (decorators) ->
           faceValue.allSessions.add id
           addOperatorData
           accountBucket.accountLookup.set id, accountId
+          accountBucket.sessionLookup.set socketId, id
 
         ], (err) ->
           config.log.error "Error creating session", {error: err} if err
@@ -149,6 +152,7 @@ face = (decorators) ->
     return faceValue
 
   accountLookup accountBucket
+  sessionLookup accountBucket
 
   return accountBucket
 
@@ -166,5 +170,6 @@ schema =
       onlineOperators: 'Set'
       sessionsByOperator: 'Hash' #k: operatorId, v: sessionId
   accountLookup: 'Hash' #k: sessionId, v: accountId
+  sessionLookup: 'Hash' #k: socketId, v: sessionId
 
 module.exports = ['Session', face, schema]

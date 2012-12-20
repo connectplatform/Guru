@@ -32,15 +32,8 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               evt.preventDefault()
               chatActions.sendChatMessage(self.channel)
 
-            # Confrim and leave chat on window close
-            window.onbeforeunload = (evt) ->
-              closeWarn = confirm "Leave chat?"
-              if closeWarn is true
-                server.leaveChat {chatId: chatId}, (err) ->
-              else
-                return 'Leave chat?'
-
-              evt.preventDefault()
+            # Confirm and leave chat on window close
+            window.onbeforeunload = -> 'Leave chat?'
 
             chatbox = $(".chat-display-box")
 

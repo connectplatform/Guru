@@ -2,7 +2,9 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
   (server, notify, util, renderForm) ->
     setup: (args, templ) ->
 
-      $("#content").html templ()
+      $('#content').html ''
+      $('#sidebar').html ''
+      $(".page-content").prepend templ()
 
       fields = [
           name: 'email'
@@ -59,6 +61,7 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
               window.location.hash = '/account'
 
     teardown: (done) ->
+      $('#create-account').remove()
       $('.header').html ''
       $('.footer').html ''
       done()

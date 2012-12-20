@@ -107,6 +107,11 @@ form input, form .controls button {
   height: 100%;
 }
 
+#create-account {
+  width: 500px;
+  margin: 10px auto;
+}
+
 #dashboard .table .btn-group {
   margin: -4px;
 }

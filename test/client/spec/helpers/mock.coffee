@@ -76,7 +76,9 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               }
             ]
           getLogoForChat: (params, cb) ->
-            cb null, "https://s3.amazonaws.com/guru-dev/website/#{encodeURIComponent 'foo.com'}/logo"
+            cb null, "https://s3.amazonaws.com/guru-dev/website/default/logo"
+          getImageUrl: ({imageName}, cb) ->
+            cb null, "https://s3.amazonaws.com/guru-dev/website/default/#{imageName}"
           printChat: (params, cb) ->
             cb null, null
           setSessionOffline: (params, cb) ->

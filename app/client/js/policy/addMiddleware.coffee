@@ -17,8 +17,8 @@ all = [
 define ['middleware/redirectOperators', 'middleware/redirectVisitors',
   'middleware/redirectGuestsToLogin',
   'routes/sidebar', 'templates/sidebar',
-  'middleware/getRole'],
-  (redirectOperators, redirectVisitors, redirectGuestsToLogin, sidebar, sbTemp, getRole) ->
+  'middleware/getRole', 'middleware/bootstrapVersioning'],
+  (redirectOperators, redirectVisitors, redirectGuestsToLogin, sidebar, sbTemp, getRole, bootstrapVersioning) ->
     (dermis) ->
 
       renderSidebar = (args, next) ->
@@ -59,3 +59,11 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/websites'
         '/specialties'
       ], [redirectGuestsToLogin, renderSidebar]
+
+      # Visitor routes: We're running middleware to replace bootstrap for
+      # IE8 compatibility for the publicly exposed chat.
+      dermis.before [
+        '/newChat'
+        '/visitorChat/:chatId'
+        '/submitQuestion'
+      ], [bootstrapVersioning]

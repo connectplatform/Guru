@@ -122,3 +122,21 @@ define ["templates/treeviewParentNode", "templates/li", "templates/treeview", "t
         buffer.push digit()
 
       return buffer.join ''
+
+    loadResource: ({type, file, className}) ->
+
+      # This takes a hash with type: 'js' or 'css', file: 'path/to/file.js'
+      # and an optional className: 'dom-element-class', not using $ because lowlevel dom stuff
+      if type is 'js'
+        fileref = document.createElement 'script'
+        fileref.setAttribute 'type', 'text/javascript'
+        fileref.setAttribute 'src', file
+        fileref.setAttribute 'class', className if className?
+      else if type is 'css'
+        fileref = document.createElement 'link'
+        fileref.setAttribute 'rel', 'stylesheet'
+        fileref.setAttribute 'type', 'text/css'
+        fileref.setAttribute 'href', file
+        fileref.setAttribute 'class', className if className?
+      if fileref?
+        document.getElementsByTagName('head')[0].appendChild(fileref)

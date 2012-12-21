@@ -12,13 +12,13 @@ module.exports = (serviceName, serviceDef) ->
       {required, optional, params} = serviceDef
 
       if required
-        validations.add generateDefaultValidations required, true
+        validations.add generateDefaultValidations serviceName, required, true
 
       if optional
-        validations.add generateDefaultValidations optional, false
+        validations.add generateDefaultValidations serviceName, optional, false
 
       if params
-        validations.add generateValidationsFromParams params
+        validations.add generateValidationsFromParams serviceName, params
 
       return validations
 

@@ -5,7 +5,7 @@ argumentTypes = config.require 'load/argumentTypes'
 #       won't call Type Validations at all if arg not present and not required
 #
 # generate validations that will be added to the filter stack
-generateValidations = (name, types, required) ->
+generateValidations = (serviceName, name, types, required) ->
   stack = []
 
   # get lookups
@@ -26,7 +26,7 @@ generateValidations = (name, types, required) ->
 
     # validate existence
     if not args[name]? and required
-      return next "Argument Required: #{name}", {}
+      return next "#{serviceName} requires '#{name}' to be defined.", {}
     else
       return next null, args
 
@@ -40,7 +40,7 @@ generateValidations = (name, types, required) ->
 
         # run type validation
         t.validation args[name], (passed) ->
-          return next "Argument Validation: '#{name}' must be a valid #{t.typeName}.", {} unless passed
+          return next "#{serviceName} requires '#{name}' to be a valid #{t.typeName}.", {} unless passed
           next null, args
 
   # remove any lookups/validations that weren't defined
@@ -50,16 +50,16 @@ generateValidations = (name, types, required) ->
 module.exports =
 
   # get a list of filter functions for a set of required/optional fields
-  generateDefaultValidations: (fieldNames, required) ->
+  generateDefaultValidations: (serviceName, fieldNames, required) ->
     validations =
       for name in fieldNames
         types = argumentTypes.findAll (t) -> t.defaultArgs and name in t.defaultArgs
-        generateValidations name, types, required
+        generateValidations serviceName, name, types, required
 
     return validations.flatten()
 
   # get a list of filter functions for a set of detailed param specs
-  generateValidationsFromParams: (paramSpecs) ->
+  generateValidationsFromParams: (serviceName, paramSpecs) ->
     validations =
       for param in paramSpecs
 
@@ -74,6 +74,6 @@ module.exports =
         else
           param.validation = [param.validation] unless getType(param.validation) is 'Array'
           types = argumentTypes.findAll (t) -> t.typeName in param.validation
-          generateValidations param.name, types, param.required
+          generateValidations serviceName, param.name, types, param.required
 
     return validations.flatten()

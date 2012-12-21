@@ -21,8 +21,9 @@ module.exports = [
     defaultArgs: ['sessionId']
   ,
     typeName: 'WebsiteId'
-    lookup: (args, found) ->
-      config.service('websites/getWebsiteIdForDomain') {domain: args.websiteUrl}, (err, siteId) ->
+    lookup: ({websiteUrl}, found) ->
+      return found() unless websiteUrl
+      config.service('websites/getWebsiteIdForDomain') {websiteUrl: websiteUrl}, (err, siteId) ->
         found err, siteId
     defaultArgs: ['websiteId']
   ,

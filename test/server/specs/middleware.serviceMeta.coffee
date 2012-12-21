@@ -17,13 +17,13 @@ boiler 'Middleware - Service Meta', ->
     it 'should err on missing fields', (done) ->
       @client.login {}, (err, user) ->
         should.exist err
-        err.should.eql 'Argument Required: email'
+        err.should.eql "login requires 'email' to be defined."
         done()
 
     it 'should err on invalid type', (done) ->
       @client.login {email: []}, (err, user) ->
         should.exist err
-        err.should.eql "Argument Validation: 'email' must be a valid String."
+        err.should.eql "login requires 'email' to be a valid String."
         done()
 
 

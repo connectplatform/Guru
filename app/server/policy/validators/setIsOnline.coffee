@@ -1,5 +1,4 @@
-setSessionOnlineStatus = config.require 'services/session/setSessionOnlineStatus'
-
 module.exports = (args, next) ->
-  setSessionOnlineStatus args.sessionId, true, ->
+  setSessionOnlineStatus = config.service 'session/setSessionOnlineStatus'
+  setSessionOnlineStatus {sessionId: args.sessionId, isOnline: true}, ->
     next null, args

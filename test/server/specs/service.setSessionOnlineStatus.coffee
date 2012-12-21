@@ -3,18 +3,18 @@ should = require 'should'
 boiler 'Service - Set Session Online Status', ->
 
   it 'should control your online status', (done) ->
-    setSessionOnlineStatus = config.require 'services/session/setSessionOnlineStatus'
+    setSessionOnlineStatus = config.service 'session/setSessionOnlineStatus'
 
     @getAuthed (err, userInfo) =>
       id = @client.cookie 'session'
 
-      setSessionOnlineStatus id, false, =>
+      setSessionOnlineStatus {sessionId: id, isOnline: false}, =>
         @expectSessionIsOnline id, false, =>
 
-        setSessionOnlineStatus id, true, =>
+        setSessionOnlineStatus {sessionId: id, isOnline: true}, =>
           @expectSessionIsOnline id, true, =>
 
-          setSessionOnlineStatus id, false, =>
+          setSessionOnlineStatus {sessionId: id, isOnline: false}, =>
             @expectSessionIsOnline id, false, =>
 
               @client.disconnect()

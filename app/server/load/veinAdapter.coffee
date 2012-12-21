@@ -15,7 +15,7 @@ module.exports = (server) ->
 
         # define a function to process side effects
         processSideEffects = (effects, next) ->
-          if effects?.setCookie?.sessionId
+          if effects?.setCookie
             res.cookie 'session', effects.setCookie.sessionId
           next()
 

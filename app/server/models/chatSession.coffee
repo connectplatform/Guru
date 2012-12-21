@@ -112,6 +112,11 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
               cb err, cs
 
+      removeBySession: tandoor (sessionId, cb) ->
+        chatSession.getBySession sessionId, (err, chatSessions) ->
+          remover = (cs, next) -> chatSession.remove cs.sessionId, cs.chatId, next
+          async.map chatSessions, remover, cb
+
       # just sugar
       getBySession: tandoor (sessionId, cb) ->
         chatSession.get(sessionId).sessionIndex.all cb

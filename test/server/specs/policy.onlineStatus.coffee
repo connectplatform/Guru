@@ -2,7 +2,7 @@ should = require 'should'
 
 boiler 'Policy - Online Status', ->
   it 'should set active operators as online', (done) ->
-    setSessionOnlineStatus = config.require 'services/session/setSessionOnlineStatus'
+    setSessionOnlineStatus = config.service 'session/setSessionOnlineStatus'
 
     @client = @getClient()
     @client.ready =>
@@ -15,7 +15,7 @@ boiler 'Policy - Online Status', ->
           # other actions should set us as online
 
           # pretend we navigated away
-          setSessionOnlineStatus sessionId, false, =>
+          setSessionOnlineStatus {sessionId: sessionId, isOnline: false}, =>
 
             @client.getActiveChats (err, chats) =>
               @expectSessionIsOnline sessionId, true, =>

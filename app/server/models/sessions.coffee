@@ -105,10 +105,10 @@ face = (decorators) ->
             next null, unreadMessages
 
         session.dump = (cb) ->
-          return cb 'Session does not exist' unless id
+          return cb 'No session id provided.' unless id
           faceValue.exists id, (err, exists) ->
             return cb err if err
-            return cb 'Session does not exist' unless exists
+            return cb 'Session does not exist.' unless exists
 
             async.parallel {
               role: session.role.get
@@ -123,15 +123,23 @@ face = (decorators) ->
               cb err, session
 
         session.delete = (cb) =>
-          async.parallel [
-              session.role.del
-              session.chatName.del
-              session.unreadMessages.del
-              session.unansweredChats.del
-              faceValue.allSessions.srem session.id
-              faceValue.onlineOperators.srem session.id
-            ], cb
+          {ChatSession} = require('stoic').models
 
+          session.operatorId.get (err, operatorId) ->
+            return cb err if err
+
+            async.parallel [
+                session.role.del
+                session.chatName.del
+                session.unreadMessages.del
+                session.unansweredChats.del
+                session.operatorId.del
+                session.online.del
+                faceValue.allSessions.srem session.id
+                faceValue.onlineOperators.srem session.id
+                faceValue.sessionsByOperator.hdel operatorId
+                ChatSession(accountId).removeBySession session.id
+              ], cb
 
         return session
 

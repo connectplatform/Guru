@@ -12,7 +12,7 @@ module.exports = (params, done) ->
 
   return done "Field required: websiteUrl" unless params?.websiteUrl
 
-  getWebsiteIdForDomain {domain: params.websiteUrl}, (err, websiteId) ->
+  getWebsiteIdForDomain {websiteUrl: params.websiteUrl}, (err, websiteId) ->
     return done "Could not find website: #{params.websiteUrl}" if err or not websiteId
 
     department = params.department

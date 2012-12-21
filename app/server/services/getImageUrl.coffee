@@ -1,8 +1,10 @@
 getUrl = (ref, imageName) -> "https://s3.amazonaws.com/#{config.app.aws.s3.bucket}/website/#{ref}/#{imageName}"
 
 module.exports =
-  required: ['websiteId', 'imageName']
+  optional: ['websiteId']
+  required: ['imageName']
   service: ({websiteId, imageName}, done) ->
+    done null, getUrl('default', imageName) unless websiteId
 
     hasImage = config.service 'websites/hasImage'
 

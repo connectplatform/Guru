@@ -1,4 +1,4 @@
-define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, server, notify) ->
+define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (enterEmail, server, notify, config) ->
 
   sendChatMessage: (channel, renderedId=null) ->
     msgSelector = if renderedId then $("##{renderedId} .message") else $(".message")
@@ -18,7 +18,7 @@ define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, serv
   print: (chatId) ->
     (evt) ->
       evt.preventDefault()
-      location = "https://#{window.location.host}/#/printChat/#{chatId}"
+      location = "#{config.url}#/printChat/#{chatId}"
       window.open location
 
   email: (chatId) ->

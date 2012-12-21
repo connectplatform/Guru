@@ -58,26 +58,8 @@ archiveChats = (accountId) ->
 
 deleteChats = (accountId) ->
   (chats, next) ->
-    deleteChatSession = (chatSession, cb) ->
-      async.parallel [
-        ChatSession(accountId).remove chatSession.sessionId, chatSession.chatId
-        Session(accountId).get(chatSession.sessionId).unreadMessages.hdel chatSession.chatId
-      ], cb
-
-    removeOldChats = (chat, next) ->
-      # get related chatsessions
-      ChatSession(accountId).getByChat chat.id, (err, chatSessions) ->
-
-          #delete everything
-          async.parallel [
-            (next) -> async.forEach chatSessions, deleteChatSession, next
-            chat.delete
-            Chat(accountId).allChats.srem chat.id
-            Chat(accountId).unansweredChats.srem chat.id
-            removeUnanswered accountId, chat.id
-          ], next
-
-    async.forEach chats, removeOldChats, next
+    removeChat = (chat, next) -> chat.delete next
+    async.forEach chats, removeChat, next
 
 processAccount = (account, next) ->
   accountId = account._id

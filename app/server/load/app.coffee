@@ -7,6 +7,7 @@ initStoic = require './initStoic'
 createServer = require './createServer'
 loadRest = require './loadRest'
 flushCache = config.require 'load/flushCache'
+reconnectChannels = config.require 'load/reconnectChannels'
 
 initServices = config.require 'load/initServices'
 veinAdapter = config.require 'load/veinAdapter'
@@ -21,6 +22,8 @@ module.exports = (cb) ->
   pulsarPort = (process.env.GURU_PULSAR_PORT or config.app.pulsarPort)
 
   initStoic ->
+
+    reconnectChannels()
 
     # Web server
     app = connect()

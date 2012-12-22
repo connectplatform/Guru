@@ -39,8 +39,9 @@ module.exports = ({pathParts}, response) ->
   else
 
     # is anyone online?
-    getAvailableOperators {websiteId: websiteId, specialty: null}, (err, {accountId, operators}) ->
+    getAvailableOperators {websiteId: websiteId, specialty: null}, (err, data) ->
       return if handleError err
+      {accountId, operators} = data
       isOnline = (operators.length > 0)
 
       cache.store cacheLocation, isOnline

@@ -1,4 +1,4 @@
-define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, server, notify) ->
+define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (enterEmail, server, notify, config) ->
 
   sendChatMessage: (channel, renderedId=null) ->
     msgSelector = if renderedId then $("##{renderedId} .message") else $(".message")
@@ -13,12 +13,12 @@ define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, serv
         timestamp: new Date().getTime()
 
       msgSelector.val("")
-      $(".chat-display-box").scrollTop($(".chat-display-box").prop("scrollHeight"))
+      $(".chat-display-box").scrollTop($(".chat-display-box")[0].scrollHeight)
 
   print: (chatId) ->
     (evt) ->
       evt.preventDefault()
-      location = "https://#{window.location.host}/#/printChat/#{chatId}"
+      location = "#{config.url}#/printChat/#{chatId}"
       window.open location
 
   email: (chatId) ->

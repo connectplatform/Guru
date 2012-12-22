@@ -149,8 +149,19 @@ form input, form .controls button {
 }
 
 .websiteLogo {
-  max-width: 275px;
   position: relative;
+  width: 400px;
+  height: 80px;
+  padding: 0px;
+  margin: 0px 14px;
+}
+
+.websiteLogo img {
+  max-width: 400px;
+  max-height: 80px;
+  margin: 0px;
+  padding: 0px;
+  border: none;
 }
 
 .chatControls {
@@ -211,6 +222,18 @@ span.field {
     margin-top: 15px;
   }
 
+  #sidebar {
+    display: none;
+  }
+
+  form.message-form {
+    margin-top: 0px;
+  }
+
+  div.page-content {
+    margin-top: 0px;
+  }
+
   div.visitorSidebar {
     position: relative;
     top: -20px;
@@ -222,5 +245,9 @@ span.field {
 
   .chatWindow {
     height: 75%;
+  }
+
+  .websiteLogo {
+    margin: 0px;
   }
 }

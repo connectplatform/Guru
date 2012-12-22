@@ -6,10 +6,7 @@ define ["templates/treeviewParentNode", "templates/li", "templates/treeview", "t
 
     append: (selector, message) ->
       $(selector).append message
-      @scrollToBottom selector
-
-    scrollToBottom: (selector) ->
-      $(selector).scrollTop($(selector).height())
+      $(selector).scrollTop($(selector)[0].scrollHeight)
 
     readableSize: (size) ->
       units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]

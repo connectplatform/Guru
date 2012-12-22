@@ -3,6 +3,7 @@ define ["load/server", "load/notify", 'helpers/util', 'routes/newChat.fsm'],
     {getDomain} = util
 
     (_, templ, queryParams={}) ->
+      console.log 'server unready'
 
       # input cleanup
       $("#content").html templ()
@@ -10,6 +11,9 @@ define ["load/server", "load/notify", 'helpers/util', 'routes/newChat.fsm'],
       unless queryParams.websiteUrl
         queryParams.websiteUrl = getDomain document.referrer
 
+      console.log 'server unready 2'
+
       # fire off chat creation process
       server.ready ->
+        console.log 'server READY!'
         fsm(params: queryParams)

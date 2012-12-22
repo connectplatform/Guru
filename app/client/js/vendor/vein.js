@@ -2709,6 +2709,7 @@ exports.qs = function (obj) {
       cookie: function(key, val, expires) {
         var all, remove, set,
           _this = this;
+
         if (isBrowser) {
           all = function() {
             var cookie, pair, _i, _len, _ref;

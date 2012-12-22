@@ -1,6 +1,7 @@
 define ["load/pulsar", "load/server"], (pulsar, server) ->
     ->
       session = server.cookie 'session'
+      console.log 'registerSessionUpdates'
       if session?
         sessionUpdates = pulsar.channel "notify:session:#{session}"
         sessionUpdates.use (emit, event, args...) ->

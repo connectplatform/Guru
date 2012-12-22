@@ -24,6 +24,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
             $(".message-form").submit (evt) ->
               evt.preventDefault()
+              console.log('submit')
               chatActions.sendChatMessage(self.channel)
               return false
 

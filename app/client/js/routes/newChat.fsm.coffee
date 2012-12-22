@@ -36,14 +36,17 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
               context: {error: err}
 
           initial: ->
+            console.log 'initial'
             server.getExistingChat {}, fsm.transition
 
           needChat: ->
+            console.log 'needChat'
             $("#content .form-area").html "Connecting to chat..."
             server.createChatOrGetForm params, fsm.transition
 
           # ask the user for additional params
           needParams: (err, fields) ->
+            console.log 'needParams'
             notify.error "Problem connecting to chat: #{err}" if err
 
             options =
@@ -52,10 +55,12 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
               placement: '#content .form-area'
 
             renderForm options, fields, (params) ->
+              console.log('renderform callback')
               fsm.transition null, {params: params}
 
           # redirect if we have a chat for this session
           gotChat: (chatId) ->
+            console.log 'gotChat'
             window.location.hash = "/visitorChat/#{chatId}"
 
           noOperators: () ->

@@ -1,33 +1,36 @@
 .well
 
-  ul#chatTabs.nav.nav-tabs
+  if chats.length > 0
+    ul#chatTabs.nav.nav-tabs
 
-    for chat in chats
-      li
-        a(href="##{chat.renderedId}", chatid="#{chat.renderedId}", data-toggle="tab")
-          span.chatTab #{chat.visitor.username}
-          span.notifyUnread(chatid="#{chat.renderedId}")
+      for chat in chats
+        li
+          a(href="##{chat.renderedId}", chatid="#{chat.renderedId}", data-toggle="tab")
+            span.chatTab #{chat.visitor.username}
+            span.notifyUnread(chatid="#{chat.renderedId}")
 
-  .tab-content
-    for chat in chats
-      .tab-pane.row.operatorChat(id="#{chat.renderedId}")
-        .chatWindow.span8.row(chatId="#{chat.id}")
-          .chat-box.well.chat-display-box.span12
-            for msg in chat.history
-              p
-                span.bold #{unescape(msg.username)}: 
-                span.displayed-message
-                  each line in msg.message
-                    span #{line}
-                    br
+    .tab-content
+      for chat in chats
+        .tab-pane.row.operatorChat(id="#{chat.renderedId}")
+          .chatWindow.span8.row(chatId="#{chat.id}")
+            .chat-box.well.chat-display-box.span12
+              for msg in chat.history
+                p
+                  span.bold #{unescape(msg.username)}: 
+                  span.displayed-message
+                    each line in msg.message
+                      span #{line}
+                      br
 
-          form.message-form.form-inline
-            .span12
-              .span10
-                textarea(value="").message
-              .span2
-                button.btn.btn-primary(type="submit").submit-button Send
+            form.message-form.form-inline
+              .span12
+                .span10
+                  textarea(value="").message
+                .span2
+                  button.btn.btn-primary(type="submit").submit-button Send
 
-        include operatorChatSidebar
+          include operatorChatSidebar
+  else
+    p You have not joined any chats.  Watch the dashboard for new chats!
 
 #selectModal

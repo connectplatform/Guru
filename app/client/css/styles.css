@@ -212,6 +212,16 @@ span.field {
   top: 5px;
 }
 
+#help {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+}
+
+#help img {
+  width: 40px;
+}
+
 /*
 * css media queries
 */

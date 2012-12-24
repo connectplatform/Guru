@@ -30,6 +30,7 @@ getNeededData = (query, cb) ->
 
 packNeededData = (accountId, ids, neededFields, cb) ->
 
+  # transform query into standard format to be parsed internally
   packValues = (values, model) ->
     result = []
     for value in values
@@ -42,6 +43,7 @@ packNeededData = (accountId, ids, neededFields, cb) ->
       result.push wrapped
     return result
 
+  # grab data from the stoic model
   populate = (cb) ->
     element = modelsByName[neededFields.baseModel](accountId).get ids
     if getType(element) is 'Function'
@@ -50,8 +52,11 @@ packNeededData = (accountId, ids, neededFields, cb) ->
     else
       cb null, packValues [element], neededFields.baseModel
 
-  addField = (model, field, rest) ->
-    (dataObject, cb) ->
+  # grab data from a specific field
+  # this function causes side effects on the dataObject, and does not return any data through the callback
+  addField = (dataObject) ->
+    ([model, field, rest], cb) ->
+
       theseIds = dataObject.ids or ids
 
       unless modelsByName[model]
@@ -65,8 +70,8 @@ packNeededData = (accountId, ids, neededFields, cb) ->
       unless field?
         # If we don't have a field specified then we want to dump everything
         instance.dump (err, data) ->
+          dataObject[model] = data if data
           config.log.error "Error dumping data in query", {error: err, model: model, field: field} if err
-          dataObject[model] = data
           return cb err
       else
         # Check whether the field is valid
@@ -90,25 +95,29 @@ packNeededData = (accountId, ids, neededFields, cb) ->
             dataObject[model][field] = data
           cb err
 
-  augment = (baseData) ->
-    (neededField, cb) ->
-      [model, field, rest...] = neededField
-
-      async.forEach baseData, addField(model, field, rest), (err) ->
-        cb err
-
   populate (err, dataToQuery) ->
-    async.forEach neededFields.all, augment(dataToQuery), (err) ->
-      cb null, dataToQuery
+
+    # pack all the needed fields into the data item
+    augment = (dataItem, cb) ->
+      async.forEach neededFields.all, addField(dataItem), (err) ->
+
+        # don't blow up the query if you can't find something, just blank this item
+        # nulls will be removed from the final list
+        if err
+          cb()
+        else
+          cb null, dataItem
+
+    # augment all data items
+    async.map dataToQuery, augment, (err, data) ->
+      cb err, data.compact()
 
 module.exports = ({accountId, queries}, done) ->
   results = {}
   run = (alias, cb) ->
     constraints = queries[alias]
     getNeededData constraints, (err, neededFields) ->
-      #config.log 'neededFields:', neededFields
       packNeededData accountId, constraints.ids, neededFields, (err, dataToQuery) ->
-        #config.log 'dataToQuery:', dataToQuery
         results[alias] = queryArray dataToQuery, constraints
         cb err
 

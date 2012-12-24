@@ -28,7 +28,7 @@ module.exports = (accountId, chatId, referrerData) ->
     headers['Authorization'] = "Basic #{acpApiKey}" if acpApiKey
     requestOptions = {headers: headers}
 
-    config.log.info 'sending ACP data:', {url: targetUrl, headers: headers, data: referrerData}
+    #config.log.info 'sending ACP data:', {url: targetUrl, headers: headers, data: referrerData}
     restler.get(targetUrl, requestOptions).on 'complete', (acpData, response) ->
       if response?.statusCode in [200, 201]
         Chat(accountId).get(chatId).visitor.set 'acpData', acpData, (err) ->

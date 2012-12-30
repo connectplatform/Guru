@@ -3,7 +3,7 @@
 loadValidatorFunctions = (validatorNames) ->
   validators = []
   for name in validatorNames
-    validator = config.require "policy/validators/#{name}"
+    validator = config.service "validators/#{name}"
     throw new Error "validator #{name} not found" unless validator
     validator.filterName = name
     validators.push validator
@@ -42,15 +42,15 @@ loadPolicies = (policies) ->
         onlyFilter rule.filters, rule.only, loaded
       else if rule.except?
         exceptFilter rule.filters, rule.except, loaded
-  { serviceFilters: loaded.validatorsByRoute, defaultFilters: loaded.exceptValidators }
+  { filtersByService: loaded.validatorsByRoute, defaultFilters: loaded.exceptValidators }
 
-loadFunctions = ({serviceFilters, defaultFilters}) ->
-  loadedServiceFilters = {}
+loadFunctions = ({filtersByService, defaultFilters}) ->
+  loadedFiltersByService = {}
   loadedDefaultFilters = []
-  for route, validators of serviceFilters
-    loadedServiceFilters[route] = loadValidatorFunctions validators
+  for route, validators of filtersByService
+    loadedFiltersByService[route] = loadValidatorFunctions validators
   loadedDefaultFilters = loadValidatorFunctions defaultFilters
-  return {serviceFilters: loadedServiceFilters, defaultFilters: loadedDefaultFilters}
+  return {filtersByService: loadedFiltersByService, defaultFilters: loadedDefaultFilters}
 
 policiesToFunctions = (policies) ->
   loadFunctions loadPolicies policies

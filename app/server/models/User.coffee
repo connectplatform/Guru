@@ -107,7 +107,7 @@ user.pre 'save', (next) ->
     return next new Error "Cannot make user a #{@oldRole}."
 
   if @isNew and @role is 'Owner'
-      return sendWelcomeEmail @, next
+    return sendWelcomeEmail @, next
 
   if @role isnt 'Administrator'
     return sendRegistrationEmail @, next

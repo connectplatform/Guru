@@ -29,9 +29,12 @@ exceptFilter = (validators, routes, loaded) ->
     addRouteValidators route, validators, loaded
 
 loadPolicies = (policies) ->
+
+  # store of filters that we have already accumulated
   loaded =
     validatorsByRoute: {}
     exceptValidators: []
+
   for policy in policies
     for rule in policy
       throw new Error "Error loading policy: Validations must contain array of filters" unless rule.filters?

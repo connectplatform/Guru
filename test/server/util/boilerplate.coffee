@@ -33,7 +33,7 @@ module.exports = global.boiler = (testName, tests) ->
     beforeEach (done) ->
       flushCache config.redis.database, config.redis.database, =>
         sampleData (err, data) =>
-          throw new Error "when creating sample data: #{err}" if err?
+          throw new Error "when creating sample data:\n#{err.stack}" if err?
           @account = data.accounts[0]
           @accountId = @account._id
           @paidAccountId = data.accounts[1]._id

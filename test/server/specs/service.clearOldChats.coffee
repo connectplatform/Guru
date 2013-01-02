@@ -61,13 +61,21 @@ boiler 'Service - Clear Old Chats', ->
   it 'should delete old chats', (done) ->
     {Chat} = stoic.models
 
-    async.map getOldChats(halfHourAgo, almostHalfHourAgo), createChat(@accountId), =>
+    async.map getOldChats(halfHourAgo, almostHalfHourAgo), createChat(@accountId), (err, chats) =>
+      [chat1, chat2] = chats.map 'id'
       @clearOldChats (err) =>
         should.not.exist err, "clearOldChats threw an error:#{err}"
         Chat(@accountId).allChats.members (err, allChats) ->
           should.not.exist err, "allChats threw an error:#{err}"
           allChats.length.should.eql 0, 'expected old chats to be deleted'
-          done()
+
+          # check redis keys directly
+          redis = stoic.client
+          redis.keys "*#{chat1}*", (err, keys) ->
+            keys.should.be.empty
+            redis.keys "*#{chat2}*", (err, keys) ->
+              keys.should.be.empty
+              done()
 
   it 'should not delete new chats', (done) ->
     {Chat} = stoic.models

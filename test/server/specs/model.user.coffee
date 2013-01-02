@@ -36,6 +36,24 @@ boiler 'Model - User', ->
       data.email.should.eql 'operator1@foo.com'
       done()
 
+  it 'should let you update a valid user', (done) ->
+    user =
+      accountId: @accountId
+      email: 'operator1@foo.com'
+      password: 'foobar'
+      role: 'Operator'
+      firstName: 'First'
+      lastName: 'Operator'
+
+    User.create user, (err, data) ->
+      should.not.exist err
+
+      User.update {_id: user._id}, {firstName: 'John'}, (err, data) ->
+        should.not.exist err
+        data.should.eql 0
+
+        done()
+
   it 'should not let you save an invalid role', (done) ->
     user =
       accountId: @accountId

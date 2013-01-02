@@ -6,7 +6,7 @@ fields =
   lastName: 'Smith'
   password: 'foobar'
 
-boiler 'Service - Save Account', ->
+boiler 'Service - Create Account', ->
 
   describe 'with valid info', ->
 

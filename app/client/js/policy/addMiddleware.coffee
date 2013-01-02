@@ -4,6 +4,7 @@ all = [
   '/'
   '/login'
   '/createAccount'
+  '/thankYou'
   '/logout'
   '/dashboard'
   '/userProfile'
@@ -17,12 +18,18 @@ all = [
 define ['middleware/redirectOperators', 'middleware/redirectVisitors',
   'middleware/redirectGuestsToLogin',
   'routes/sidebar', 'templates/sidebar',
+  'routes/help', 'templates/help',
   'middleware/getRole', 'middleware/bootstrapVersioning'],
-  (redirectOperators, redirectVisitors, redirectGuestsToLogin, sidebar, sbTemp, getRole, bootstrapVersioning) ->
+  (redirectOperators, redirectVisitors, redirectGuestsToLogin, sidebar, sbTemp, help, helpTemp, getRole, bootstrapVersioning) ->
+
     (dermis) ->
 
       renderSidebar = (args, next) ->
         sidebar args, sbTemp
+        next null, args
+
+      renderHelp = (args, next) ->
+        help args, helpTemp
         next null, args
 
       dermis.before all, [getRole]
@@ -32,12 +39,15 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/newChat'
         '/visitorChat/:chatId'
         '/users'
+        '/createAccount'
+        '/thankYou'
         '/account'
         '/websites'
         '/specialties'
       ], [redirectOperators]
 
       dermis.before [
+        '/thankYou'
         '/'
         '/login'
         '/createAccount'
@@ -51,6 +61,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
       ], [redirectVisitors]
 
       dermis.before [
+        '/thankYou'
         '/dashboard'
         '/userProfile'
         '/operatorChat'
@@ -58,7 +69,7 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/account'
         '/websites'
         '/specialties'
-      ], [redirectGuestsToLogin, renderSidebar]
+      ], [redirectGuestsToLogin, renderSidebar, renderHelp]
 
       # Visitor routes: We're running middleware to replace bootstrap for
       # IE8 compatibility for the publicly exposed chat.

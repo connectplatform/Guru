@@ -13,6 +13,8 @@ module.exports =
   required: ['method', 'resource']
   service: ({method, body, resource, rootName, modifies}, done) ->
 
+    done "Cannot use recurly in #{config.env} mode." if config.env isnt 'production'
+
     getErr = (details) ->
       err = if details.status in acceptableStatus then null else new Error "Could not #{verbs[method]} #{rootName or resource}."
       config.log.error err, details if err

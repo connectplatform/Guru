@@ -8,6 +8,7 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
 
     # account creation for new owners
     dermis.route '/createAccount'
+    dermis.route '/thankYou'
 
     # login for backend users
     dermis.route '/', 'routes/index'

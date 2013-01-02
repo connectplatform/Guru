@@ -58,7 +58,7 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
             if err
               notify.error err
             else
-              window.location.hash = '/account'
+              window.location.hash = '/thankYou'
 
     teardown: (done) ->
       $('#create-account').remove()

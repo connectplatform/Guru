@@ -91,6 +91,8 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           cb err, cs
 
       remove: tandoor (sessionId, chatId, cb) ->
+        {Session} = require('stoic').models
+
         cs = chatSession.get sessionId, chatId
         cs.session.role.get (err, role) ->
           notifyChatEvent
@@ -102,6 +104,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
             cs.sessionIndex.srem chatId
             cs.chatIndex.srem sessionId
             cs.relationMeta.del
+            Session(accountId).get(cs.sessionId).unreadMessages.hdel chatId
 
           ], (err) ->
             config.log.error 'Error removing chatSession', {error: err} if err
@@ -114,6 +117,11 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
       removeBySession: tandoor (sessionId, cb) ->
         chatSession.getBySession sessionId, (err, chatSessions) ->
+          remover = (cs, next) -> chatSession.remove cs.sessionId, cs.chatId, next
+          async.map chatSessions, remover, cb
+
+      removeByChat: tandoor (chatId, cb) ->
+        chatSession.getByChat chatId, (err, chatSessions) ->
           remover = (cs, next) -> chatSession.remove cs.sessionId, cs.chatId, next
           async.map chatSessions, remover, cb
 

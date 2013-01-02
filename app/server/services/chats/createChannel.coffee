@@ -6,6 +6,3 @@ module.exports = (chatId) ->
 
   channel.on 'clientMessage', (contents) ->
     messageReceived {chatId: chatId, sessionId: contents.session, message: contents.message}, ->
-
-  channel.on 'serverMessage', (contents) ->
-    console.log 'serverMessage', contents.message

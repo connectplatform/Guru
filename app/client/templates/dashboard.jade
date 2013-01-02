@@ -1,49 +1,52 @@
 #dashboard.well
   .page-header: h1 Dashboard
 
-  p.description Currently active chats.
+  if chats.length > 0
+    p.description Currently active chats:
 
-  table.table.table-striped
-    thead: tr
-      th Visitor
-      th Operators
-      th Status
-      th Duration
-      th Website
-      th Department
-      th Actions
+    table.table.table-striped
+      thead: tr
+        th Visitor
+        th Operators
+        th Status
+        th Duration
+        th Website
+        th Department
+        th Actions
 
-    tbody
-      each chat in chats
-        tr
-          td= chat.visitor.username
-          td= chat.operators
-          td
-            if chat.relation == 'invite'
-              span(class="label label-warning") Invite
-            else if chat.relation == 'transfer'
-              span(class="label label-warning") Transfer
-            else
-              span(class="label label-#{chat.statusLevel}") #{chat.status}
-          td.counter(started='#{chat.creationDate}')
-          td.websiteDomain= chat.websiteUrl
-          td.departmentName= chat.department
-          th
-
-            // different options depending on chat status or pending invites
-            .btn-group
-              if chat.relation == 'member'
-                button.btn.btn-danger.leaveChat(chatId="#{chat.id}") Leave
+      tbody
+        each chat in chats
+          tr
+            td= chat.visitor.username
+            td= chat.operators
+            td
+              if chat.relation == 'invite'
+                span(class="label label-warning") Invite
+              else if chat.relation == 'transfer'
+                span(class="label label-warning") Transfer
               else
+                span(class="label label-#{chat.statusLevel}") #{chat.status}
+            td.counter(started='#{chat.creationDate}')
+            td.websiteDomain= chat.websiteUrl
+            td.departmentName= chat.department
+            th
 
-                if chat.relation == 'invite'
-                  button.btn.btn-success.acceptInvite(chatId="#{chat.id}") Accept
-                else if chat.relation == 'transfer'
-                  button.btn.btn-success.acceptTransfer(chatId="#{chat.id}") Assume
-
-                else if chat.status == 'waiting'
-                  button.btn.btn-success.acceptChat(chatId="#{chat.id}") Accept
+              // different options depending on chat status or pending invites
+              .btn-group
+                if chat.relation == 'member'
+                  button.btn.btn-danger.leaveChat(chatId="#{chat.id}") Leave
                 else
-                  button.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
 
-                button.btn.watchChat(chatId="#{chat.id}", watch="true") Watch
+                  if chat.relation == 'invite'
+                    button.btn.btn-success.acceptInvite(chatId="#{chat.id}") Accept
+                  else if chat.relation == 'transfer'
+                    button.btn.btn-success.acceptTransfer(chatId="#{chat.id}") Assume
+
+                  else if chat.status == 'waiting'
+                    button.btn.btn-success.acceptChat(chatId="#{chat.id}") Accept
+                  else
+                    button.btn.btn-dark.joinChat(chatId="#{chat.id}") Join
+
+                  button.btn.watchChat(chatId="#{chat.id}", watch="true") Watch
+  else
+    p There are currently no active chats.

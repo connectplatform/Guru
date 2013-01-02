@@ -1,33 +1,39 @@
 should = require 'should'
 
 boiler 'Service - Get My Chats', ->
+
   it "should return data on all of a particular operator's chats", (done) ->
     @getAuthed =>
-      client = @getClient()
-      client.ready =>
 
-        # Make a chat to join
-        client.newChat {username: 'joinMe', websiteUrl: 'foo.com', arbitrary: 'someValue'}, (err, {chatId}) =>
-          should.not.exist err
-          client.cookie 'session', null
-          client.disconnect()
+      # Given a chat to join
+      @newChatWith {websiteUrl: 'foo.com', username: 'joinMe', arbitrary: 'someValue'}, (err, {data: {chatId}}) =>
+        console.log 'chatId:', chatId
 
-          # Make a chat that we're not joining
-          client2 = @getClient()
-          client2.ready =>
-            client2.newChat {username: 'butNotMe', websiteUrl: 'foo.com'}, (err, data) =>
+        # And a chat that we're not joining
+        @newChatWith {websiteUrl: 'foo.com', username: 'butNotMe'}, =>
+
+          # When we join the chat
+          @client.joinChat {chatId: chatId}, (err, data) =>
+
+            # Then the data should be correct
+            @client.getMyChats (err, data) =>
               should.not.exist err
-              client2.disconnect()
+              data.length.should.eql 1
+              [chatData] = data
+              chatData.visitor.username.should.eql 'joinMe'
+              should.exist chatData.visitor.referrerData.arbitrary, 'expected referrerData'
+              chatData.visitor.referrerData.arbitrary.should.eql 'someValue'
+              chatData.status.should.eql 'waiting'
+              new Date chatData.creationDate #just need this to not cause an error
+              done()
 
-              @client.joinChat {chatId: chatId}, (err, data) =>
+  it "orphan chatSession should not shit the bed", (done) ->
+    {ChatSession} = require('stoic').models
+    @getAuthed (err, @client, accountId) =>
 
-                @client.getMyChats (err, data) =>
-                  should.not.exist err
-                  data.length.should.eql 1
-                  chatData = data[0]
-                  chatData.visitor.username.should.eql 'joinMe'
-                  should.exist chatData.visitor.referrerData.arbitrary, 'expected referrerData'
-                  chatData.visitor.referrerData.arbitrary.should.eql 'someValue'
-                  chatData.status.should.eql 'waiting'
-                  new Date chatData.creationDate #just need this to not cause an error
-                  done()
+      # Given an orphan ChatSession
+      ChatSession(accountId).add @client.cookie('session'), 'chat_bar', {}, (err, chatSession) =>
+        @client.getMyChats (err, data) =>
+          should.not.exist err
+          data.length.should.eql 0
+          done()

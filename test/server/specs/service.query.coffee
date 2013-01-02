@@ -102,7 +102,7 @@ boiler 'Service - Query', ->
           history[0].message.should.eql 'wheee'
           done()
 
-  it 'should let you get all the visible staff for a chat', (done) ->
+  it 'should let you get the visitor for a chat', (done) ->
     @prep =>
       query = config.require 'services/queries/query'
       query {

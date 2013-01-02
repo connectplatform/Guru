@@ -1,4 +1,4 @@
-define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, server, notify) ->
+define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (enterEmail, server, notify, config) ->
 
   sendChatMessage: (channel, renderedId=null) ->
     msgSelector = if renderedId then $("##{renderedId} .message") else $(".message")
@@ -13,17 +13,12 @@ define ['templates/enterEmail', 'load/server', 'load/notify'], (enterEmail, serv
         timestamp: new Date().getTime()
 
       msgSelector.val("")
-
-      # this timeout allows the broken scroll to occur, wherever it's happening,
-      # I cant find it, and then we correct it to the scrollHeight. Terrible hack.
-      setTimeout ->
-        $(".chat-display-box").scrollTop($(".chat-display-box")[0].scrollHeight)
-      , 66
+      $(".chat-display-box").scrollTop($(".chat-display-box")[0].scrollHeight)
 
   print: (chatId) ->
     (evt) ->
       evt.preventDefault()
-      location = "https://#{window.location.host}/#/printChat/#{chatId}"
+      location = "#{config.url}#/printChat/#{chatId}"
       window.open location
 
   email: (chatId) ->

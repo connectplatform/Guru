@@ -1,5 +1,11 @@
 define ["templates/treeviewParentNode", "templates/li", "templates/treeview", "templates/relatedChatLink", "app/config"],
   (treeviewParentNode, li, treeview, relatedChatLink, config) ->
+    preventDefault: (evt) ->
+      if evt.preventDefault
+        evt.preventDefault()
+      else
+        evt.returnValue = false #IE compatibility
+
     getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
     toTitle: (word) ->
       word[0].toUpperCase() + word.slice(1)

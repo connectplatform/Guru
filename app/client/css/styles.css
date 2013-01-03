@@ -148,6 +148,10 @@ form input, form .controls button {
   bottom: 90px;
 }
 
+.welcome-well {
+  width: 500px;
+}
+
 .websiteLogo {
   position: relative;
   width: 400px;
@@ -224,7 +228,6 @@ span.field {
 
 /*
 * css media queries
-*/
 
 @media all and (max-width: 768px) {
   .message-form {
@@ -261,3 +264,5 @@ span.field {
     margin: 0px;
   }
 }
+
+*/

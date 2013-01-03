@@ -1,4 +1,4 @@
-define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (enterEmail, server, notify, config) ->
+define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config', 'helpers/util'], (enterEmail, server, notify, config, util) ->
 
   sendChatMessage: (channel, renderedId=null) ->
     msgSelector = if renderedId then $("##{renderedId} .message") else $(".message")
@@ -17,18 +17,18 @@ define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (en
 
   print: (chatId) ->
     (evt) ->
-      evt.preventDefault()
+      util.preventDefault(evt)
       location = "#{config.url}#/printChat/#{chatId}"
       window.open location
 
   email: (chatId) ->
     (evt) ->
-      evt.preventDefault()
+      util.preventDefault(evt)
       $("#selectModal").html enterEmail()
       $("#enterEmail").modal()
 
       $(".enterEmailForm").submit (evt) ->
-        evt.preventDefault()
+        util.preventDefault(evt)
         email = $('#enterEmail .email').val()
 
         $("#enterEmail").modal "hide"

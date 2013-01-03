@@ -1,3 +1,13 @@
+# watch for shift key events, use jwerty if we want to drop IE8 support
+shiftUp = true
+$("body").keyup (evt) ->
+  if evt.which is 16  # Release shift key
+    shiftUp = true
+
+$("body").keydown (evt) ->
+  if evt.which is 16  # Shift pressed
+    shiftUp = false
+
 define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "helpers/embedImageIfExists", "helpers/chatActions"],
   (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions) ->
     channels: []
@@ -101,9 +111,10 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                   $("##{chat.renderedId} .message-form").submit createSubmitHandler chat.renderedId, channel
 
                   # Multi-line support (enter sends, shift+enter creates newline)
-                  $("##{chat.renderedId} .message").bind 'keydown', jwerty.event 'enter', (evt) ->
-                    evt.preventDefault()
-                    chatActions.sendChatMessage(channel, chat.renderedId)
+                  $("##{chat.renderedId} .message").keydown (evt) ->
+                    if evt.which is 13 and shiftUp
+                      evt.preventDefault()
+                      chatActions.sendChatMessage(channel, chat.renderedId)
 
               #display incoming messages
               wireUpChatAppender createChatAppender(chat.renderedId), channel

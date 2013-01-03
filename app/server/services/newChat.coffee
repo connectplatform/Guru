@@ -7,8 +7,6 @@ populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 module.exports = (params, done) ->
   {Chat, Session, ChatSession} = stoic.models
 
-  console.log('IN new Chat')
-
   getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
   getAvailableOperators = config.service 'operator/getAvailableOperators'
 
@@ -39,7 +37,6 @@ module.exports = (params, done) ->
         chat: Chat(accountId).create
 
       }, (err, {chat, session}) ->
-        console.log('chat:', chat)
         if err
           errData = {error: err, chatId: chat?.id, sessionId: session?.id}
           config.log.error 'Error creating session and chat for new chat.', errData

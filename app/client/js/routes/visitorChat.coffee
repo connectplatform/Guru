@@ -4,6 +4,16 @@ playSound = (type) ->
   catch error
     "Error playing sound: #{error}"
 
+# watch for shift key events, use jwerty if we want to drop IE8 support
+shiftUp = true
+$("body").keyup (evt) ->
+  if evt.which is 16  # Release shift key
+    shiftUp = true
+
+$("body").keydown (evt) ->
+  if evt.which is 16  # Shift pressed
+    shiftUp = false
+
 define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
   (server, pulsar, notify, util, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     self =
@@ -19,19 +29,25 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
               return
 
             $("#content").html templ()
-            $(".message-form .message").focus()
+
+            # Try/Catch IE8 compatability
+            try
+              $(".message-form .message").focus()
+            catch error
+              "Can't focus, IE8: #{error}"
+
             self.channel = pulsar.channel chatId
 
             $(".message-form").submit (evt) ->
-              evt.preventDefault()
-              console.log('submit')
+              util.preventDefault(evt)
               chatActions.sendChatMessage(self.channel)
               return false
 
-            # Enter/Shift+Enter key binding
-            $(".message").bind 'keydown', jwerty.event 'enter',(evt) ->
-              evt.preventDefault()
-              chatActions.sendChatMessage(self.channel)
+            # Enter/Shift+Enter key binding, shiftUp defined in main.coffee
+            $(".message").keydown (evt) ->
+              if evt.which is 13 and shiftUp
+                util.preventDefault(evt)
+                chatActions.sendChatMessage(self.channel)
 
             # Confirm and leave chat on window close
             window.onbeforeunload = -> 'Leave chat?'
@@ -67,7 +83,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
             # wire up leave button
             $('.leaveButton').click (evt) ->
-              evt.preventDefault()
+              util.preventDefault(evt)
               server.leaveChat {chatId: chatId}, (err) ->
                 notify.error "Error leaving chat: #{err}" if err
                 server.cookie 'session', null

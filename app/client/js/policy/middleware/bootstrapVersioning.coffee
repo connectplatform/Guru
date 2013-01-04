@@ -8,6 +8,10 @@ define ["helpers/util"], (util) ->
     # We want to remove versionA no matter what
     versionA.remove()
 
+    # We also want to hide the sidebar to
+    # style the visitor chat nicely
+    $('#sidebar').css 'display', 'none'
+
     if versionB.length > 0
       
       # If it has already been loaded, next

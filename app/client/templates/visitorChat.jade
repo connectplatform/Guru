@@ -1,16 +1,12 @@
-.chatPage.span12.row
+.chatPage
   .websiteLogo
-  .chatWindow.span8
-    .chat-box.well.chat-display-box.span12
+  .chat-box.well.chat-display-box
 
-    form.message-form.form-inline
-      .span12
-        .span10
-          textarea(value="").message
-        .span2
-          button.btn.btn-primary(type="submit") Send
+  form.message-form.form-inline
+    textarea(value="").message
+    button.btn.btn-primary(type="submit") Send
 
-  div.well.visitorSidebar.span3.row
+  .visitorControls
     button.btn.btn-warning.leaveButton Leave
     button.btn.btn-primary.printButton Print
     button.btn.btn-primary.emailButton Email

@@ -8,11 +8,13 @@ define ["load/pulsar", "load/server"], (pulsar, server) ->
           if event is 'unreadMessages'
             unreadMessages = args[0]
 
-            # Try/Catch IE8 compatability
-            try
+            # Only assign current chat if .chatWindow exists
+            # prevents this jQuery selector from being run unnecessarily
+            if $('.chatWindow')
+
+              # For some reason (maybe attempting to get an undefined attr)
+              # this selector broke IE8
               currentChat = $('.chatWindow:visible').attr('chatid')
-            catch error
-              currentChat = $('.chatWindow').attr('chatid')
 
             unreadCount = unreadMessages[currentChat]
 

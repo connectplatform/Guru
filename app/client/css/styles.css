@@ -8,6 +8,10 @@ blockquote {
   border-left: none;
 }
 
+embed {
+  display: none;
+}
+
 .reflink a {
   color: inherit;
   text-decoration: none;
@@ -40,21 +44,15 @@ blockquote {
 }
 
 .chatPage {
+  position: relative;
+  padding: 0px;
+  left: 10px;
   width: 550px;
-  height: 600px;
-}
-
-.chatWindow {
-  padding: 0;
-  margin: 0;
-  width: 95%;
-  height: 80%;
 }
 
 .chat-box {
   position: relative;
-  height: 80%;
-  width: 100%;
+  height: 300px;
   top: 10px;
   bottom: 30px;
   overflow-y: scroll;
@@ -66,16 +64,16 @@ blockquote {
 
 .message {
   resize: none;
-  width: 95%;
+  width: 470px;
   height: 40px;
   margin-right: 5px;
 }
 
 .message-form {
   position: relative;
+  margin-top: 15px;
   width: 100%;
   height: 30px;
-  bottom: 0;
 }
 
 .message-form input {
@@ -149,23 +147,24 @@ form input, form .controls button {
 }
 
 .welcome-well {
+  position: absolute;
+  top: 40px;
+  left: 42px;
   width: 500px;
 }
 
 .websiteLogo {
-  position: relative;
-  width: 400px;
+  width: 550px;
   height: 80px;
   padding: 0px;
-  margin: 0px 14px;
+  margin: 0px;
 }
 
 .websiteLogo img {
-  max-width: 400px;
+  max-width: 550px;
   max-height: 80px;
   margin: 0px;
   padding: 0px;
-  border: none;
 }
 
 .chatControls {
@@ -197,12 +196,13 @@ form input, form .controls button {
   resize: none;
 }
 
-.visitorSidebar {
+div.visitorControls {
   position: relative;
-  top: 11px;
+  top: 5px;
+  padding: 0px;
 }
 
-.visitorSidebar button {
+.visitorControls button {
   margin-right: 6px;
   margin-top: 6px;
 }
@@ -225,44 +225,3 @@ span.field {
 #help img {
   width: 40px;
 }
-
-/*
-* css media queries
-
-@media all and (max-width: 768px) {
-  .message-form {
-    position: relative;
-    margin-top: 15px;
-  }
-
-  #sidebar {
-    display: none;
-  }
-
-  form.message-form {
-    margin-top: 0px;
-  }
-
-  div.page-content {
-    margin-top: 0px;
-  }
-
-  div.visitorSidebar {
-    position: relative;
-    top: -20px;
-    padding: 0px;
-    background: none;
-    box-shadow: none;
-    border: none;
-  }
-
-  .chatWindow {
-    height: 75%;
-  }
-
-  .websiteLogo {
-    margin: 0px;
-  }
-}
-
-*/

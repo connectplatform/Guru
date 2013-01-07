@@ -1,22 +1,34 @@
-{readFileSync, existsSync} = require 'fs'
+async = require 'async'
+{readFile, exists} = require 'fs'
 cache = config.require 'load/cache'
 
-refreshFiles = ->
-  if config.paths.static
-    for part in ['header', 'footer']
-      filename = config.path "static/#{part}.html"
-      if existsSync filename
-        html = readFileSync filename, 'utf8'
-        cache.store "static.#{part}", html
+refreshFiles = (done) ->
+  if config.paths.static and not cache.retrieve 'static.header'
 
-refreshFiles()
+    loadPartial = (partialName, next) ->
+      filename = config.path "static/#{partialName}.html"
+
+      exists filename, (exists) ->
+        if exists
+          readFile filename, 'utf8', (err, html) ->
+            cache.store "static.#{partialName}", html
+            next()
+
+        else
+          next()
+
+    async.forEach ['header', 'footer'], loadPartial, done
+
+  else
+    done()
+
+refreshFiles -> # empty callback, just fire and forget on server startup
 
 module.exports =
   service: (args, done) ->
-    unless cache.retrieve 'static.header'
-      refreshFiles()
+    refreshFiles ->
 
-    header = cache.retrieve('static.header') or ''
-    footer = cache.retrieve('static.footer') or ''
+      header = cache.retrieve('static.header') or ''
+      footer = cache.retrieve('static.footer') or ''
 
-    done null, {header: header, footer: footer}
+      done null, {header: header, footer: footer}

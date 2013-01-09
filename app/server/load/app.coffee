@@ -27,6 +27,7 @@ module.exports = (cb) ->
 
     # Web server
     app = connect()
+    app.use connect.compress()
     app.use connect.responseTime()
     app.use connect.favicon()
     app.use connect.staticCache()

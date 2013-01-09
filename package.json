@@ -15,6 +15,7 @@
     "pulsar": "*",
     "vein": "git://github.com/bitmage/vein.git",
     "sugar": "*",
+    "law": "*",
     "stoic": "*",
     "restler": "git://github.com/bitmage/restler.git",
     "nodemailer": "*",

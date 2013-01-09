@@ -9,9 +9,9 @@ loadRest = require './loadRest'
 flushCache = config.require 'load/flushCache'
 reconnectChannels = config.require 'load/reconnectChannels'
 
+# service init, connect to interfaces
 initServices = config.require 'load/initServices'
 veinAdapter = config.require 'load/veinAdapter'
-attachFilters = config.require 'load/attachFilters'
 
 module.exports = (cb) ->
 
@@ -42,8 +42,7 @@ module.exports = (cb) ->
     initServices()
 
     # Wire up vein
-    topLevelServices = Object.findAll config.services, (name) -> not name.has /\//
-    attachFilters topLevelServices
+    topLevelServices = Object.findAll config.services, (name) -> not name.has(/\//)
     veinAdapter(server) topLevelServices
 
     #restServices = Object.findAll config.services, (name) -> name.has /^rest\//

@@ -1,8 +1,8 @@
-getServices = config.require 'load/getServices'
-wrapServicesInMiddleware = config.require 'policy/wrapServicesInMiddleware'
+{create} = require 'law'
+argumentTypes = config.require 'load/argumentTypes'
+policy = config.require 'policy/policy'
 
 module.exports = ->
 
   # Wire up services
-  services = getServices config.paths.services
-  config.services = wrapServicesInMiddleware services
+  config.services = create config.paths.services, argumentTypes, policy

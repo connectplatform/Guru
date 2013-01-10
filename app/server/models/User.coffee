@@ -24,8 +24,7 @@ paidSeatsChanged = (num, next) ->
   if @role not in ['Owner', 'Administrator']
 
     #config.log "updating paid seats for: #{@email}"
-    updatePaidSeats = config.service 'account/updatePaidSeats'
-    updatePaidSeats {accountId: @accountId.toString(), newSeats: num}, (err, status) =>
+    config.service['account/updatePaidSeats'] {accountId: @accountId.toString(), newSeats: num}, (err, status) =>
       if err
         config.log.warn "Could not update paid seats: #{err}", {status: status, accountId: @accountId.toString()}
 

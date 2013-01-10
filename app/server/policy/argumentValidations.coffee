@@ -1,12 +1,12 @@
 module.exports =
   [
     {
-      filters: ['enforceServiceSignature', 'lookupAccountId']
+      filters: ['enforceServiceSignature']
       except: []
     }
 
     {
-      filters: ['sessionIdIsValid']
+      filters: ['lookupAccountId']
       except: [
 
         # everyone
@@ -56,7 +56,7 @@ module.exports =
     }
 
     {
-      filters: ['chatIdIsValid', 'sessionIdIsValid', 'objectMessageExists' ]
+      filters: ['chatIdIsValid', 'objectMessageExists' ]
       only: ['say']
     }
   ]

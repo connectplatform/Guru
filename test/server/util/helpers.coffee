@@ -33,15 +33,15 @@ helpers =
     {Session} = stoic.models
     client = @getClient()
     client.ready =>
-      client.login data, (err) =>
-        console.log 'error on test login:', err if err
-        Session.accountLookup.get client.cookie('session'), (_, accountId) ->
-          cb err, client, accountId
+      client.login data, (err, {sessionId}) =>
+        console.log 'error on test login:', err if err or not sessionId
+        Session.accountLookup.get sessionId, (_, accountId) ->
+          cb err, client, {sessionId: sessionId, accountId: accountId}
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
-    @ownerLogin (err, @client, accountId) =>
-      cb err, @client, accountId
+    @ownerLogin (err, @client, vars) =>
+      cb err, @client, vars
 
   # create a chat and hang onto visitor client
   newVisitor: (data, cb) ->

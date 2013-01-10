@@ -16,9 +16,9 @@ module.exports =
             meta = {error: err, sessionId: sessionId}
             config.log.error 'Error setting operator online status.', meta
 
-          done err, sessionId
+          done err, {sessionId: sessionId}
 
       else
         createUserSession user, (err, session) ->
           config.log.warn 'Error creating user session.', {error: err, userId: user._id} if err
-          done err, session.id
+          done err, {sessionId: session.id}

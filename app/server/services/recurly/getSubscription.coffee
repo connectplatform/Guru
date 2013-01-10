@@ -15,5 +15,5 @@ module.exports =
       if getType(subscription) is 'Array'
         subscription = subscription.find (s) -> s.plan.plan_code is 'standard'
 
-      details = {status: result.status, subscription: subscription}
+      details = {status: result?.status, subscription: subscription}
       done err, details

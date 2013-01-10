@@ -128,12 +128,16 @@ module.exports = (done) ->
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
 
-    async.auto {
+    tasks = {
       accounts: (next) -> async.map accounts, createAccount, next
       specialties: ['accounts', (next, {accounts}) -> async.map specialties, createSpecialty(accounts[0]._id), next]
       websites: ['specialties', (next, {accounts}) -> async.map websites, createWebsite(accounts[0]._id), next]
       operators: ['websites', (next, {websites, accounts}) ->
         async.map operators, createUser(websites, accounts[0]._id), next]
-      paidOwner: ['accounts', (next, {accounts}) -> createPaidOwner accounts[1]._id, next]
       chatHistory: ['accounts', (next, {accounts}) -> Factory.create 'chathistory', {accountId: accounts[0]._id}, next]
-    }, done
+    }
+
+    if (recurlyEnabled=false)
+      tasks[paidOwner] = ['accounts', (next, {accounts}) -> createPaidOwner accounts[1]._id, next]
+
+    async.auto tasks, done

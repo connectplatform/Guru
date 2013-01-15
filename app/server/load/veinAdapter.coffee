@@ -4,7 +4,7 @@ Vein = require 'vein'
 module.exports = (server) ->
   vein = Vein.createServer server: server
 
-  # TODO:When vein connection is lost remove user session
+  # TODO: When vein connection is lost remove user session
 
   # accept a set of services
   (services) ->

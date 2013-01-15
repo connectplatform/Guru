@@ -5,7 +5,7 @@ boiler 'Service - Login', ->
 
   it 'should log you in', (done) ->
     @ownerLogin (err, client, {sessionId, accountId}) =>
-      should.not.exist err
+      should.not.exist err, err.stack if err
 
       {Session} = stoic.models
       Session(accountId).get(sessionId).chatName.get (err, chatName) =>
@@ -14,30 +14,30 @@ boiler 'Service - Login', ->
         done()
 
   it 'should not accept invalid email', (done) ->
-    @invalidLogin (err, client, accountId) =>
+    @invalidLogin (err, client, {sessionId, accountId}) =>
       should.exist err
       err.should.eql 'Invalid user.'
       client.disconnect()
       done()
 
   it 'should not accept invalid password', (done) ->
-    @wrongpasswordLogin (err, client, accountId) =>
+    @wrongpasswordLogin (err, client, {sessionId, accountId}) =>
       should.exist err
       err.should.eql 'Invalid password.'
       client.disconnect()
       done()
 
-  it 'should reattatch you to an existing session', (done) ->
-    @ownerLogin (err, client) =>
-      sessionId = client.cookie 'session'
+  it 'should reattach you to an existing session', (done) ->
+    @ownerLogin (err, client, {sessionId}) =>
+      firstSessionId = sessionId
 
-      client.setSessionOffline {sessionId: client.cookie('session')}, (err) =>
-        should.not.exist err
+      client.setSessionOffline {sessionId: sessionId}, (err) =>
+        should.not.exist err, err.stack if err
         client.disconnect()
 
-        @ownerLogin (err, client, accountId) =>
+        @ownerLogin (err, client, {sessionId, accountId}) =>
           should.not.exist err
-          sessionId.should.eql client.cookie 'session'
+          firstSessionId.should.eql sessionId
 
           {Session} = stoic.models
           Session(accountId).get(sessionId).online.get (err, online) =>
@@ -47,7 +47,7 @@ boiler 'Service - Login', ->
             done()
 
   it 'Admin login should not crash the server', (done) ->
-    @adminLogin (err, client, accountId) =>
+    @adminLogin (err, client, {sessionId, accountId}) =>
       should.exist err
       err.should.eql 'User not associated with accountId.'
       done()

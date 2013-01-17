@@ -58,9 +58,9 @@ module.exports = (options) ->
       body = "#{err.toString()}<br/>#{stack.replace '\n', '<br/>'}"
       sendEmail = config.require 'services/email/sendEmail'
 
-      sendEmail body, {to: config.adminNotify, subject: "#{config.env} #{err.toString()}"}
-      loggers.server.error 'Uncaught Exception', {exception: err.toString(), stack: stack}, ->
-        process.exit()
+      sendEmail body, {to: config.adminNotify, subject: "#{config.env} #{err.toString()}"}, ->
+        loggers.server.error 'Uncaught Exception', {exception: err.toString(), stack: stack}, ->
+          process.exit()
 
   log = wrap loggers.server.info
   log.info = wrap loggers.server.info

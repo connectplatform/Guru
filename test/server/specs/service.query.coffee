@@ -8,17 +8,21 @@ boiler 'Service - Query', ->
     @visibleSessions = []
 
     @prep = (next) =>
+
+      # Given an operator is logged in
       @guru1Login (err, @guru1Client, @accountId) =>
 
+        # And a visitor creates a chat
         @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @visitor, data) =>
           @sessions.push @visitor.cookie 'session'
           @visibleSessions.push @visitor.cookie 'session'
 
-          # Add some operators
+          # And the operator accepts the chat
           @guru1Client.acceptChat {chatId: @chatId}, =>
             @sessions.push @guru1Client.cookie 'session'
             @visibleSessions.push @guru1Client.cookie 'session'
 
+            # And another operator logs in
             @guru2Login (err, @guru2Client) =>
               @guru2Client.watchChat {chatId: @chatId}, =>
                 @sessions.push @guru2Client.cookie 'session'
@@ -119,3 +123,22 @@ boiler 'Service - Query', ->
         visitors.length.should.eql 1
 
         done()
+
+  describe 'with invalid params', ->
+
+    it 'should display an error and return no results', (done) ->
+      @prep =>
+        query = config.require 'services/queries/query'
+        query {
+          accountId: @accountId
+          queries:
+            visitors:
+              select:
+                sessionId: 'chatSession.sessionId'
+              where:
+                'session.role': 'Visitor'
+        }, (err, {visitors}) =>
+          should.not.exist err
+          visitors.length.should.eql 0
+
+          done()

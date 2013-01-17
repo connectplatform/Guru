@@ -29,6 +29,10 @@ getNeededData = (query, cb) ->
   cb null, neededFields
 
 packNeededData = (accountId, ids, neededFields, cb) ->
+  input =
+    accountId: accountId
+    ids: ids
+    neededFields: neededFields
 
   # transform query into standard format to be parsed internally
   packValues = (values, model) ->
@@ -60,39 +64,41 @@ packNeededData = (accountId, ids, neededFields, cb) ->
       theseIds = dataObject.ids or ids
 
       unless modelsByName[model]
-        config.log.error 'Query for invalid model', model: model
-        return cb "Invalid model #{model}"
+        return cb "Invalid model '#{model}'."
+
       instance = modelsByName[model](accountId).get theseIds
 
       # Make sure the model entry exists
       dataObject[model] = {} unless dataObject[model]?
 
       unless field?
+
         # If we don't have a field specified then we want to dump everything
         instance.dump (err, data) ->
           dataObject[model] = data if data
-          config.log.error "Error dumping data in query", {error: err, model: model, field: field} if err
           return cb err
+
       else
+
         # Check whether the field is valid
         unless instance[field]
-          config.log.error 'Query for invalid field', {model: model, field: field}
-          return cb "Invalid field #{field}"
+          return cb new Error "Model '#{model}' does not have field '#{field}'."
 
         # We're done if the field isn't something that can be queried
         unless instance[field].retrieve
-          #config.log "no data for #{field}"
+          #config.log "no retrieve method for #{field}"
           return cb()
 
         # field or field contents don't exist, get them
         instance[field].retrieve (err, data) ->
           {inspect} = require 'util'
-          config.log.error "Error retrieving data in query", {error: err, model: model, field: field} if err
+
           if getType(data) is 'Object'
             dataObject[model][field] ?= {}
             dataObject[model][field][key] = value for key, value of data
           else
             dataObject[model][field] = data
+
           cb err
 
   populate (err, dataToQuery) ->
@@ -100,6 +106,7 @@ packNeededData = (accountId, ids, neededFields, cb) ->
     # pack all the needed fields into the data item
     augment = (dataItem, cb) ->
       async.forEach neededFields.all, addField(dataItem), (err) ->
+        config.log.error err, {input: input} if err
 
         # don't blow up the query if you can't find something, just blank this item
         # nulls will be removed from the final list

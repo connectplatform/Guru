@@ -24,7 +24,7 @@ boiler 'Service - Logout', ->
         # session model should not be found
         Session(accountId).get(sessionId).dump (err, data) =>
           should.exist err
-          err.should.eql 'Session does not exist.'
+          err.toString().should.eql 'Error: Session does not exist.'
 
           ChatSession(accountId).getBySession sessionId, (err, chatSessions) =>
             should.not.exist err

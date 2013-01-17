@@ -2,6 +2,25 @@ winston = require 'winston'
 {MongoDB} = require 'winston-mongodb'
 url = require 'url'
 
+processError = (err) ->
+  result = {}
+  result.error = err.message || err
+  result.stack = err.stack || undefined
+  return result
+
+wrap = (logger) ->
+  (message, meta, args...) ->
+    meta ||= {}
+    {error, stack} = processError message
+
+    if meta.error
+      meta.merge processError(meta.error)
+    else if stack
+      meta.stack = stack
+
+    logger error, meta, args...
+
+
 module.exports = (options) ->
   loggers = {}
 
@@ -43,14 +62,14 @@ module.exports = (options) ->
       loggers.server.error 'Uncaught Exception', {exception: err.toString(), stack: stack}, ->
         process.exit()
 
-  log = loggers.server.info
-  log.info = loggers.server.info
-  log.warn = loggers.server.warn
-  log.error = loggers.server.error
+  log = wrap loggers.server.info
+  log.info = wrap loggers.server.info
+  log.warn = wrap loggers.server.warn
+  log.error = wrap loggers.server.error
 
   log.client =
-    info: loggers.client.info
-    warn: loggers.client.warn
-    error: loggers.client.error
+    info: wrap loggers.client.info
+    warn: wrap loggers.client.warn
+    error: wrap loggers.client.error
 
   return log

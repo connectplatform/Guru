@@ -18,6 +18,9 @@ module.exports =
       async.map chatSessions, getRole, (err, chatSessions) ->
         [visitorChatSession] = chatSessions.filter (s) -> s.role is 'Visitor'
 
+        unless visitorChatSession
+          return done()
+
         # remove the visitor from the chat
         visitorChatSession.session.delete (err) ->
           config.log.error 'Error deleting session in kickUser', {error: err, chatId: chatId} if err
@@ -31,4 +34,4 @@ module.exports =
             notify = pulsar.channel chatId
             notify.emit 'chatEnded'
 
-            done null, null
+            done()

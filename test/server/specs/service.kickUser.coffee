@@ -20,3 +20,24 @@ boiler 'Service - Kick User', ->
               should.not.exist err
               status.should.eql 'vacant'
               done()
+
+  it "should should not puke if the visitor has already left", (done) ->
+    # Setup
+    @getAuthed (_..., accountId) =>
+
+      # When a visitor creates a chat
+      @newVisitor {websiteUrl: 'foo.com'}, (err, visitor) =>
+
+        # And leaves the chat
+        visitor.leaveChat {chatId: @chatId}, (err) =>
+
+          # And an Operator joins the chat
+          @client.joinChat {chatId: @chatId}, (err) =>
+            should.not.exist err
+
+            # When he kicks the user
+            @client.kickUser {chatId: @chatId}, (err) =>
+
+              # Then we should get an error
+              should.not.exist err
+              done()

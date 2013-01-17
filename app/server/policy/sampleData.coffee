@@ -106,8 +106,6 @@ module.exports = (done) ->
     websites = [
         url: "foo.com"
         contactEmail: 'success@simulator.amazonses.com'
-        acpEndpoint: "http://localhost:8675"
-        acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
         specialties: ['Sales', 'Billing']
         onlineUploaded: true
         offlineUploaded: true

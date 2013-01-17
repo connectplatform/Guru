@@ -1,6 +1,10 @@
 Factory = require 'factory-worker'
 {User, Account, Specialty, Website, ChatHistory} = config.require('load/mongo').models
+{Chat, ChatSession, Session} = require('stoic').models
 
+# ================================================================
+# helpers
+# ================================================================
 getSpecialtyIds = config.require 'services/specialties/getSpecialtyIds'
 
 getArray = (fn) ->
@@ -17,6 +21,9 @@ getSpecialties = (list) ->
     defaultAccountId (err, accountId) ->
       getSpecialtyIds accountId, list, next
 
+# ================================================================
+# mongo factories
+# ================================================================
 opcount = 1
 Factory.define 'operator', User, {
   accountId: defaultAccountId
@@ -65,5 +72,11 @@ Factory.define 'chathistory', ChatHistory, {
       timestamp: -> new Date
   ]
 }
+
+# ================================================================
+# redis factories
+# ================================================================
+#
+# Can't do... need constructor implementation.
 
 module.exports = Factory

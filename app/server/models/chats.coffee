@@ -113,7 +113,12 @@ face = (decorators) ->
           return cb new Error "Called chat.dump with no chatId." unless id
           faceValue.exists id, (err, exists) ->
             return cb err if err
-            return cb new Error "Chat '#{id}' does not exist." unless exists
+            unless exists
+
+              # Remove orphan chats... This can be removed once the production issue is solved.
+              ChatSession(account).removeByChat id, ->
+
+              return cb new Error "Chat '#{id}' does not exist."
 
             async.parallel {
               visitor: chat.visitor.getall

@@ -29,10 +29,13 @@ getNeededData = (query, cb) ->
   cb null, neededFields
 
 packNeededData = (accountId, ids, neededFields, cb) ->
+
+  # for logging; stupid winston bubbles up values if we don't serialize them
   input =
     accountId: accountId
     ids: ids
     neededFields: neededFields
+  input = JSON.stringify input
 
   # transform query into standard format to be parsed internally
   packValues = (values, model) ->
@@ -106,7 +109,7 @@ packNeededData = (accountId, ids, neededFields, cb) ->
     # pack all the needed fields into the data item
     augment = (dataItem, cb) ->
       async.forEach neededFields.all, addField(dataItem), (err) ->
-        config.log.error err, {input: input} if err
+        config.log.error 'Query received error.', {error: err, input: input} if err
 
         # don't blow up the query if you can't find something, just blank this item
         # nulls will be removed from the final list

@@ -110,10 +110,10 @@ face = (decorators) ->
             next null, parsed
 
         chat.dump = (cb) ->
-          return cb new Error 'Chat does not exist' unless id
+          return cb new Error "Called chat.dump with no chatId." unless id
           faceValue.exists id, (err, exists) ->
             return cb err if err
-            return cb new Error 'Chat does not exist' unless exists
+            return cb new Error "Chat '#{id}' does not exist." unless exists
 
             async.parallel {
               visitor: chat.visitor.getall

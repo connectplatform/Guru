@@ -17,5 +17,6 @@ module.exports =
           chatId: chatId
           relationMeta: relationMeta
         config.log.error 'Error adding ChatSession in joinChat', meta
+        return done 'Error joining chat.'
 
       done null, true

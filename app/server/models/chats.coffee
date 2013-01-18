@@ -114,6 +114,7 @@ face = (decorators) ->
           faceValue.exists id, (err, exists) ->
             return cb err if err
             unless exists
+              {ChatSession} = require('stoic').models
 
               # Remove orphan chats... This can be removed once the production issue is solved.
               ChatSession(accountId).removeByChat id, ->

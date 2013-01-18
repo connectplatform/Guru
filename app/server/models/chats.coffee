@@ -116,7 +116,7 @@ face = (decorators) ->
             unless exists
 
               # Remove orphan chats... This can be removed once the production issue is solved.
-              ChatSession(account).removeByChat id, ->
+              ChatSession(accountId).removeByChat id, ->
 
               return cb new Error "Chat '#{id}' does not exist.  Removing orphan chatSessions."
 

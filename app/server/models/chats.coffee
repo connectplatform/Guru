@@ -118,7 +118,7 @@ face = (decorators) ->
               # Remove orphan chats... This can be removed once the production issue is solved.
               ChatSession(account).removeByChat id, ->
 
-              return cb new Error "Chat '#{id}' does not exist."
+              return cb new Error "Chat '#{id}' does not exist.  Removing orphan chatSessions."
 
             async.parallel {
               visitor: chat.visitor.getall

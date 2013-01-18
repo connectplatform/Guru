@@ -109,7 +109,7 @@ packNeededData = (accountId, ids, neededFields, cb) ->
     # pack all the needed fields into the data item
     augment = (dataItem, cb) ->
       async.forEach neededFields.all, addField(dataItem), (err) ->
-        config.log.error 'Query received error.', {error: err, input: input} if err
+        config.log.warn 'Query received error.', {error: err, input: input} if err
 
         # don't blow up the query if you can't find something, just blank this item
         # nulls will be removed from the final list

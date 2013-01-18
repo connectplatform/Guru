@@ -19,7 +19,7 @@ boiler 'Service - Accept Chat', ->
           client = @getPulsar()
           chan = client.channel @chatId
 
-          chan.on 'serverMessage', (data) ->
+          chan.once 'serverMessage', (data) ->
             data.message.should.eql outgoing.message
             done()
 

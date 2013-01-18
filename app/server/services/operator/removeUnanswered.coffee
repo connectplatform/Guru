@@ -10,4 +10,4 @@ module.exports = tandoor (accountId, chatId, done) ->
     remove = (session, next) ->
       Session(accountId).get(session.id).unansweredChats.srem chatId, next
 
-    async.forEach sessions, remove, done
+    async.map sessions, remove, done

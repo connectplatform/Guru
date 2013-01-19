@@ -13,14 +13,12 @@ module.exports = (server) ->
       # wrap each service in a vein signature and attach it to vein
       vein.add name, (res, args) ->
 
-        # define a function to process side effects
-        processSideEffects = (effects, next) ->
-          if effects?.setCookie
-            res.cookie 'session', effects.setCookie.sessionId
-          next()
-
-        # merge cookies into args
-        params = {sessionId: res.cookie 'session'}.merge args
-
         # run the service
-        service params, res.reply, processSideEffects
+        service args, (err, result...) ->
+
+          # Log the error and convert it to a string.  Vein doesn't serialize errors correctly.
+          if err
+            config.log.info "#{name} service returned an error: '#{err.message || err}'.", {error: err}
+            err = err.message || err
+
+          res.reply err, result...

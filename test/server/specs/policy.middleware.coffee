@@ -5,5 +5,5 @@ boiler 'Policy - Middleware', ->
     @client = @getClient()
     @client.ready =>
       @client.deleteModel {modelId: 'some_id', modelName: 'Website'}, (err) ->
-        err.should.eql 'You must be logged in to access this feature.'
+        err.should.eql "filters/lookupAccountId requires 'accountId' to be defined."
         done()

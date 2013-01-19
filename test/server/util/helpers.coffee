@@ -41,6 +41,7 @@ helpers =
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
     @ownerLogin (err, @client, vars) =>
+      {@accountId, @sessionId} = vars
       cb err, @client, vars
 
   # create a chat and hang onto visitor client

@@ -9,14 +9,14 @@ boiler 'Policy - Online Status', ->
 
       # logging in should set us as online
       @getAuthed =>
-        sessionId = @client.cookie 'session'
-        @expectSessionIsOnline sessionId, true, =>
-
-          # other actions should set us as online
+        @expectSessionIsOnline @sessionId, true, =>
 
           # pretend we navigated away
-          setSessionOnlineStatus {sessionId: sessionId, isOnline: false}, =>
+          setSessionOnlineStatus {sessionId: @sessionId, isOnline: false}, (err) =>
+            should.not.exist err, 'expected setSessionOnlineStatus to work'
 
-            @client.getActiveChats (err, chats) =>
-              @expectSessionIsOnline sessionId, true, =>
+            # other actions should set us as online
+            @client.getActiveChats {sessionId: @sessionId}, (err, chats) =>
+              should.not.exist err, 'expected getActiveChats to work'
+              @expectSessionIsOnline @sessionId, true, =>
                 done()

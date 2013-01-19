@@ -17,7 +17,7 @@ boiler 'Middleware - Service Meta', ->
     it 'should err on missing fields', (done) ->
       @client.login {}, (err, user) ->
         should.exist err
-        err.should.eql "login requires 'email' to be defined."
+        err.toString().should.eql "login requires 'email' to be defined."
         done()
 
     it 'should err on invalid type', (done) ->
@@ -33,12 +33,12 @@ boiler 'Middleware - Service Meta', ->
       @client.ready =>
         @client.getChatStats {}, (err, stats) =>
           should.exist err
-          err.should.eql 'You must be logged in to access this feature.'
+          err.should.eql "filters/lookupAccountId requires 'accountId' to be defined."
           done()
 
     it 'should work with sessionId', (done) ->
-      @ownerLogin (err, @client) =>
-        @client.getChatStats {}, (err, stats) =>
+      @ownerLogin (err, @client, {sessionId}) =>
+        @client.getChatStats {sessionId: sessionId}, (err, stats) =>
           should.not.exist err
           should.exist stats
           done()

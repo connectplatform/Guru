@@ -1,5 +1,6 @@
 module.exports = ->
   process.env.GURU_PULSAR_PORT = 'DISABLED'
+  config.require('load/initServices')()
   initStoic = config.require 'load/initStoic'
   initStoic ->
     clear = config.require 'services/clearOldChats'

@@ -39,7 +39,8 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
                 (next) -> server.awsUpload {siteId: element.id, imageName: imageName}, next
 
               getImageUrl = (imageName) ->
-                (next) -> server.getImageUrl {websiteId: element.id, imageName: imageName}, next
+                (next) -> server.getImageUrl {websiteId: element.id, imageName: imageName}, (err, {url}) ->
+                  next err, url
 
               async.parallel {
                 logo: getAwsForm 'logo'

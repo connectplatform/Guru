@@ -4,6 +4,7 @@ retainFor = config?.cache?.retainFor || 300000
 
 module.exports =
   store: (resource, data) ->
+    #config.log new Error "storing #{resource} with: #{data}" if resource.match /hasImage/
     #console.log "storing at #{resource}:", data
     cache[resource] =
       timestamp: Date.now()

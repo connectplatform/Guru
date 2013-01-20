@@ -32,10 +32,10 @@ boiler 'Recurly - Sync Subscription', ->
 
   describe 'with unlimited account', ->
     it 'should return true', (done) ->
-      @accountInGoodStanding {accountId: @accountId}, (err, result) ->
+      @accountInGoodStanding {accountId: @accountId}, (err, {goodStanding}) ->
         should.not.exist err
-        should.exist result
-        result.should.eql true
+        should.exist goodStanding
+        goodStanding.should.eql true
         done()
 
   describe 'with paid account', ->
@@ -43,10 +43,10 @@ boiler 'Recurly - Sync Subscription', ->
       @createRecurlyAccount {accountId: @paidAccountId}, done
 
     it 'and one user should return true', (done) ->
-      @accountInGoodStanding {accountId: @paidAccountId}, (err, result) ->
+      @accountInGoodStanding {accountId: @paidAccountId}, (err, {goodStanding}) ->
         should.not.exist err
-        should.exist result
-        result.should.eql true
+        should.exist goodStanding
+        goodStanding.should.eql true
         done()
 
     it 'and two users with active subscription should return true', (done) ->
@@ -57,10 +57,10 @@ boiler 'Recurly - Sync Subscription', ->
           should.not.exist err
           should.exist op
 
-          @accountInGoodStanding {accountId: @paidAccountId}, (err, result) ->
+          @accountInGoodStanding {accountId: @paidAccountId}, (err, {goodStanding}) ->
             should.not.exist err
-            should.exist result
-            result.should.eql true
+            should.exist goodStanding
+            goodStanding.should.eql true
             done()
 
     it 'and two users with canceled subscription should return true', (done) ->
@@ -73,10 +73,10 @@ boiler 'Recurly - Sync Subscription', ->
 
           @cancelSubscription {accountId: @paidAccountId}, (err) =>
 
-            @accountInGoodStanding {accountId: @paidAccountId}, (err, result) ->
+            @accountInGoodStanding {accountId: @paidAccountId}, (err, {goodStanding}) ->
               should.not.exist err
-              should.exist result
-              result.should.eql true
+              should.exist goodStanding
+              goodStanding.should.eql true
               done()
 
     it 'and two users with expired subscription should return false', (done) ->
@@ -89,8 +89,8 @@ boiler 'Recurly - Sync Subscription', ->
 
           @terminateSubscription {accountId: @paidAccountId}, (err) =>
 
-            @accountInGoodStanding {accountId: @paidAccountId}, (err, result) ->
+            @accountInGoodStanding {accountId: @paidAccountId}, (err, {goodStanding}) ->
               should.not.exist err
-              should.exist result
-              result.should.eql false
+              should.exist goodStanding
+              goodStanding.should.eql false
               done()

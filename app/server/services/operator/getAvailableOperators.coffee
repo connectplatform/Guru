@@ -20,7 +20,7 @@ module.exports =
       return done null, {operators: [], reason: "Can't find website."} unless website
       {accountId} = website
 
-      accountInGoodStanding {accountId: accountId}, (err, goodStanding) ->
+      accountInGoodStanding {accountId: accountId}, (err, {goodStanding}) ->
         return done null, {accountId: accountId, operators: [], reason: 'Account not in good standing.'} if err or not goodStanding
 
         # get a list of operator sessions

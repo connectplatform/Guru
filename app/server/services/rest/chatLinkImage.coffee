@@ -2,7 +2,7 @@ async = require 'async'
 db = config.require 'load/mongo'
 cache = config.require 'load/cache'
 
-module.exports = ({pathParts}, response) ->
+module.exports = ({pathParts, url}, response) ->
   [_, websiteId] = pathParts
   cacheLocation = "chatLinkImage/#{websiteId}"
 
@@ -11,7 +11,7 @@ module.exports = ({pathParts}, response) ->
 
   handleError = (err) ->
     if err
-      config.log.warn "Request for chat link image received for invalid website", {domain: domain}
+      config.log.warn "Failed to find chatLinkImage.", {websiteId: websiteId, url: url, error: err}
       response.writeHead 404
       response.end()
       return true
@@ -22,7 +22,8 @@ module.exports = ({pathParts}, response) ->
     status = if isOnline then 'online' else 'offline'
 
     # determine location of actual image
-    getImageUrl {websiteId: websiteId, imageName: status}, (err, url) ->
+    getImageUrl {websiteId: websiteId, imageName: status}, (err, {url}) ->
+      return if handleError err
 
       # return result
       response.writeHead 307, {
@@ -39,7 +40,7 @@ module.exports = ({pathParts}, response) ->
   else
 
     # is anyone online?
-    getAvailableOperators {websiteId: websiteId, specialty: null}, (err, data) ->
+    getAvailableOperators {websiteId: websiteId}, (err, data) ->
       return if handleError err
       {accountId, operators} = data
       isOnline = (operators.length > 0)

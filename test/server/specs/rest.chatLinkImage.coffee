@@ -6,9 +6,10 @@ boiler 'REST - Chat Link Image', ->
   describe 'Chat link image', ->
 
     beforeEach ->
-      statusShouldBe = (status,  cb) =>
-        rest.get("http://localhost:#{@testPort}/chatLinkImage/#{@website._id}").on 'complete', (data, response) =>
-          response.statusCode.should.eql 307, "Status: #{response.status}. Response failed:\n#{response.rawEncoded}"
+      statusShouldBe = (status, cb) =>
+        link = "http://localhost:#{@testPort}/chatLinkImage/#{@website._id}"
+        rest.get(link).on 'complete', (data, response) =>
+          response.statusCode.should.eql 307, "Status: #{response.statusCode}. Response failed:\n#{response.rawEncoded}"
           response.headers.location.should.match new RegExp "#{@website._id}\/#{status}$"
           cb()
 
@@ -24,13 +25,13 @@ boiler 'REST - Chat Link Image', ->
 
         # set online/back offline
         @getAuthed =>
-          @client.setSessionOffline @client.cookie('session'), (err) =>
+          @client.setSessionOffline {sessionId: @sessionId}, (err) =>
             should.not.exist err
 
             @expectOffline done
 
     it 'should cache results', (done) ->
-      @timeout 20
+      @timeout 40
       @expectOffline =>
         @expectOffline =>
           @expectOffline done

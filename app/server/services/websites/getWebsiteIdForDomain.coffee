@@ -7,4 +7,4 @@ module.exports =
   required: ['websiteUrl']
   service: ({websiteUrl}, cb) ->
     Website.findOne {url: websiteUrl}, {_id: true}, (err, site) ->
-      cb err, getString site?._id
+      cb err, {websiteId: getString site?._id}

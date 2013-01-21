@@ -6,56 +6,50 @@ boiler 'Service - Accept Chat', ->
   it 'should join the operator into the chat', (done) ->
     @getAuthed =>
       @newChat =>
-        @client.acceptChat {chatId: @chatId}, (err, result) =>
+        @client.acceptChat {sessionId: @sessionId, chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
           result.chatId.should.eql @chatId
 
-          #Try to post in channel
-          outgoing =
-            session: @client.cookie 'session'
-            message: 'accept chat worked'
-
-          client = @getPulsar()
-          chan = client.channel @chatId
+          chan = @getPulsar().channel @chatId
 
           chan.on 'serverMessage', (data) ->
-            data.message.should.eql outgoing.message
+            data.message.should.eql 'accept chat worked'
             done()
 
           # send test data
-          chan.emit 'clientMessage', outgoing
+          @client.say {sessionId: @sessionId, chatId: @chatId, message: 'accept chat worked'}, ->
 
   it 'should only let one operator accept the chat', (done) ->
-    @guru1Login (err, client) =>
+    @guru1Login (err, client, {sessionId}) =>
 
       @newChat (err, data) =>
         should.not.exist err
         should.exist data
 
-        client.acceptChat {chatId: @chatId}, (err, result) =>
+        client.acceptChat {sessionId: sessionId, chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
           client.disconnect()
 
           @getAuthed =>
-            @client.acceptChat {chatId: @chatId}, (err, result) =>
+            @client.acceptChat {sessionId: @sessionId, chatId: @chatId}, (err, result) =>
               false.should.eql err?
               result.status.should.eql "ALREADY ACCEPTED"
               done()
 
   it 'should decrement my waiting chats count', (done) ->
-    @guru1Login (err, client) =>
+    @guru1Login (err, client, {sessionId}) =>
 
       @newChat (err, data) =>
         should.not.exist err
         should.exist data
 
-        client.acceptChat {chatId: @chatId}, (err, result) =>
+        client.acceptChat {sessionId: sessionId, chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
 
-          client.getChatStats {}, (err, {unanswered}) ->
+          client.getChatStats {sessionId: sessionId}, (err, {unanswered}) ->
             should.not.exist err
             should.exist unanswered
             unanswered.length.should.eql 0, 'expected no unanswered chats'
@@ -67,10 +61,10 @@ boiler 'Service - Accept Chat', ->
     {ChatSession} = stoic.models
     getVisibleOperators = config.require 'services/chats/getVisibleOperators'
 
-    @getAuthed (_..., accountId) =>
+    @getAuthed =>
       @newChat =>
-        @client.acceptChat {chatId: @chatId}, (err, result) =>
-          ChatSession(accountId).getByChat @chatId, (err, chatSessions) =>
+        @client.acceptChat {sessionId: @sessionId, chatId: @chatId}, (err, result) =>
+          ChatSession(@accountId).getByChat @chatId, (err, chatSessions) =>
             getVisibleOperators chatSessions, (err, [me]) =>
               should.exist me
               me.should.eql 'Owner Man'

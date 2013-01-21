@@ -2,13 +2,14 @@ rest = require 'restler'
 should = require 'should'
 {inspect} = require 'util'
 
-boiler 'REST - Chat Link Image', ->
+boiler 'REST - Print Chat Archive', ->
   describe 'Chat link image', ->
 
     it 'should print a chat history', (done) ->
       Factory.create 'chathistory', (err, history) =>
-        @getAuthed =>
-          sessionId = @client.cookie 'session'
+        should.not.exist err
+
+        @getAuthed (_..., {sessionId}) =>
 
           url = "http://localhost:#{@testPort}/printChatArchive?visitor.username=sum%20gai"
           options =

@@ -10,10 +10,11 @@ module.exports = (params, done) ->
   getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
   getAvailableOperators = config.service 'operator/getAvailableOperators'
 
-  return done "Field required: websiteUrl" unless params?.websiteUrl
+  return done new Error "Field required: websiteUrl" unless params?.websiteUrl
 
-  getWebsiteIdForDomain {websiteUrl: params.websiteUrl}, (err, websiteId) ->
-    return done "Could not find website: #{params.websiteUrl}" if err or not websiteId
+  getWebsiteIdForDomain {websiteUrl: params.websiteUrl}, (err, {websiteId}) ->
+    err ||= new Error "Could not find website: #{params.websiteUrl}" if not websiteId
+    return done err if err or not websiteId
 
     department = params.department
     username = params.username or 'anonymous'

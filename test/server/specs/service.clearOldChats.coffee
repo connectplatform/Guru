@@ -129,7 +129,7 @@ boiler 'Service - Clear Old Chats', ->
 
           # make sure user has properly joined chat
           @getAuthed =>
-            @client[method] {chatId: chatId}, (err) =>
+            @client[method] {sessionId: @sessionId, chatId: chatId}, (err) =>
               should.not.exist err
               done()
 

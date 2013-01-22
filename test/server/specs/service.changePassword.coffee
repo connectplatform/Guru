@@ -7,7 +7,7 @@ boiler 'Service - Change Password', ->
         should.not.exist err, 'initial login failed'
 
         # change password
-        client.changePassword {oldPassword: "foobar", newPassword: "newPassword"}, (err) =>
+        client.changePassword {sessionId: @sessionId, oldPassword: "foobar", newPassword: "newPassword"}, (err) =>
           should.not.exist err, 'change password failed'
 
           # log out
@@ -22,11 +22,11 @@ boiler 'Service - Change Password', ->
         email: 'owner@foo.com'
         password: "newPassword"
 
-      @getAuthedWith newLogin, (err, client) =>
+      @getAuthedWith newLogin, (err, client, {sessionId}) =>
         should.not.exist err, 'login with new password failed'
 
         # verify that login worked
-        should.exist client.cookie 'session'
+        should.exist sessionId
 
         client.disconnect()
         done()
@@ -35,10 +35,10 @@ boiler 'Service - Change Password', ->
     @changePassword =>
 
       # try to log in with old password
-      @ownerLogin (err, client) =>
+      @ownerLogin (err, client, {sessionId}) =>
 
         # verify that login failed
         err.should.eql "Invalid password."
-        should.not.exist client.cookie 'session'
+        should.not.exist sessionId
         client.disconnect()
         done()

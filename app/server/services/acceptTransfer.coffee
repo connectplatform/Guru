@@ -1,3 +1,4 @@
+async = require 'async'
 stoic = require 'stoic'
 {ChatSession} = stoic.models
 
@@ -6,26 +7,22 @@ pulsar = config.require 'load/pulsar'
 module.exports =
   required: ['chatId', 'accountId', 'sessionId']
   service: ({chatId, accountId, sessionId}, done) ->
-    newMeta =
-      type: 'member'
-      isWatching: 'false'
 
+    # find the requestor's sessionId
     chatSession = ChatSession(accountId).get sessionId, chatId
     chatSession.relationMeta.get 'requestor', (err, requestor) ->
-      if err
-        config.log.error 'Error getting relationMeta in acceptTransfer', {error: err, chatId: chatId, sessionId: sessionId}
-        return done err
-      chatSession.relationMeta.mset newMeta, (err) ->
-        if err
-          config.log.error 'Error setting relationMeta in acceptTransfer', {error: err, chatId: chatId, sessionId: sessionId, relationMeta: newMeta} if err
-          return done err
-        ChatSession(accountId).remove requestor, chatId, (err) ->
-          if err
-            config.log.error 'Error removing requestor in acceptTransfer', {error: err, chatId: chatId, requestor: requestor, relationMeta: newMeta}
-            return done err
+      return done err if err
 
-          #notify the old operator that they've been kicked
-          notifySession = pulsar.channel "notify:session:#{requestor}"
-          notifySession.emit 'kickedFromChat', chatId
+      # switch out the operators
+      async.parallel [
+        chatSession.relationMeta.mset {type: 'member', isWatching: 'false'}
+        ChatSession(accountId).remove requestor, chatId
 
-          done null, chatId
+      ], (err) ->
+        return done err if err
+
+        # send notifications and return
+        notifySession = pulsar.channel "notify:session:#{requestor}"
+        notifySession.emit 'kickedFromChat', chatId
+
+        done null, {chatId: chatId}

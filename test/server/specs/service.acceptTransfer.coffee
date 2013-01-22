@@ -16,7 +16,7 @@ boiler 'Service - Accept Transfer', ->
               should.not.exist err
 
               # Do test
-              transferee.acceptTransfer {chatId: @chatId}, (err, chatId) =>
+              transferee.acceptTransfer {chatId: @chatId}, (err, {chatId}) =>
                 should.not.exist err
                 chatId.should.eql @chatId
 

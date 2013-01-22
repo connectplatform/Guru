@@ -69,7 +69,7 @@ module.exports = (params, done) ->
           createChannel chat.id
 
           # respond to visitor browser
-          done err, {chatId: chat.id}, {setCookie: sessionId: session.id}
+          done err, {chatId: chat.id, sessionId: session.id}
 
           # query for ACP data and store it in redis
           populateVisitorAcpData accountId, chat.id, params

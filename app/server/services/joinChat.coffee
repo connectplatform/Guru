@@ -10,12 +10,6 @@ module.exports =
       type: 'member'
 
     ChatSession(accountId).add sessionId, chatId, relationMeta, (err) ->
-      if err
-        meta =
-          error: err
-          sessionId: sessionId
-          chatId: chatId
-          relationMeta: relationMeta
-        config.log.error 'Error adding ChatSession in joinChat', meta
+      status = if err then 'ERROR' else 'OK'
 
-      done null, true
+      done err, {status: status}

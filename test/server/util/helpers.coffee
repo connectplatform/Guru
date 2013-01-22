@@ -11,6 +11,22 @@ pulsarPort = process.env.GURU_PULSAR_PORT
 
 #Exported object of helper functions
 helpers =
+  wrapVeinClient: (client, localStorage) ->
+    utility = ['disconnect', 'cookie']
+
+    wrapped = {}
+    # proxy services, merging any local data (e.g. sessionId)
+    for serviceName, serviceDef of client when serviceName not in utility
+      do (serviceName, serviceDef) ->
+        wrapped[serviceName] = (args, done) ->
+          serviceDef args.merge(localStorage), done
+
+    # bind utility functions
+    for serviceName, serviceDef of client when serviceName in utility
+      wrapped[serviceName] = serviceDef.bind client
+
+    return wrapped
+
   getClient: (receive) ->
     client = Vein.createClient port: testPort
     if receive
@@ -36,7 +52,10 @@ helpers =
       client.login data, (err, {sessionId}) =>
         console.log 'error on test login:', err if err or not sessionId
         Session.accountLookup.get sessionId, (_, accountId) ->
-          cb err, client, {sessionId: sessionId, accountId: accountId}
+
+          # vein doesn't handle cookies, but we want client side middleware to do it
+          wrappedClient = helpers.wrapVeinClient client, {sessionId: sessionId}
+          cb err, wrappedClient, {sessionId: sessionId, accountId: accountId}
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
@@ -61,7 +80,7 @@ helpers =
   newChatWith: (data, cb) ->
     @newVisitor data, (err, visitor, chatData) ->
       visitor.disconnect()
-      cb err, Object.merge data, {data: chatData}
+      cb err, data.merge({data: chatData})
 
   # shorthand for default use case
   newChat: (cb) ->
@@ -76,10 +95,10 @@ helpers =
         cb()
 
   loginOperator: (cb) ->
-    @guru1Login (err, client) =>
+    @guru1Login (err, client, args) =>
       throw new Error err if err
-      @targetSession = client.cookie 'session'
-      cb null, client
+      @targetSession = args?.sessionId
+      cb null, client, args
 
   createChats: (cb) ->
     {Chat} = stoic.models

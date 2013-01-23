@@ -8,25 +8,26 @@ boiler 'Service - Query', ->
     @visibleSessions = []
 
     @prep = (next) =>
-      @guru1Login (err, @guru1Client, @accountId) =>
+      @guru1Login (err, @guru1Client, {@accountId, sessionId}) =>
+        @guru1Session = sessionId
 
         @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @visitor, data) =>
-          @sessions.push @visitor.cookie 'session'
-          @visibleSessions.push @visitor.cookie 'session'
+          @sessions.push @visitorSession
+          @visibleSessions.push @visitorSession
 
           # Add some operators
           @guru1Client.acceptChat {chatId: @chatId}, =>
-            @sessions.push @guru1Client.cookie 'session'
-            @visibleSessions.push @guru1Client.cookie 'session'
+            @sessions.push @guru1Session
+            @visibleSessions.push @guru1Session
 
-            @guru2Login (err, @guru2Client) =>
+            @guru2Login (err, @guru2Client, {sessionId}) =>
               @guru2Client.watchChat {chatId: @chatId}, =>
-                @sessions.push @guru2Client.cookie 'session'
+                @sessions.push sessionId
 
                 # Provide the tests a way to access the chat
                 stoic = require 'stoic'
                 {ChatSession} = stoic.models
-                @chatSessionHandle = ChatSession(accountId)
+                @chatSessionHandle = ChatSession(@accountId)
 
                 next()
 

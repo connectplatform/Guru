@@ -24,9 +24,8 @@ boiler 'Service - New Chat', ->
 
   it 'should notify operators of a new chat', (done) ->
     @getAuthed =>
-      session = @client.cookie 'session'
-      should.exist session
-      notify = @getPulsar().channel "notify:session:#{session}"
+      should.exist @sessionId
+      notify = @getPulsar().channel "notify:session:#{@sessionId}"
       notify.on 'unansweredChats', ({count}) =>
         count.should.eql 1
         notify.removeAllListeners 'unansweredChats'
@@ -36,10 +35,10 @@ boiler 'Service - New Chat', ->
 
   it 'should return {noOperators: true} if no operators are available', (done) ->
     @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-      @newChatWith {username: 'visitor', websiteUrl: 'bar.com'}, (err, {data}) ->
+      @newChatWith {username: 'visitor', websiteUrl: 'bar.com'}, (err, {noOperators}) ->
         should.not.exist err
-        should.exist data
-        data.should.eql {noOperators: true}
+        should.exist noOperators
+        noOperators.should.eql true
         done()
 
   it 'should create a chatsession', (done) ->

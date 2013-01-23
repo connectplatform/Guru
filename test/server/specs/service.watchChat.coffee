@@ -8,25 +8,22 @@ boiler 'Service - Watch Chat', ->
 
     # given
     @getAuthed =>
-      visitorClient = @getClient()
-      visitorClient.ready =>
-        visitorClient.newChat {username: 'foo', websiteUrl: 'foo.com'}, (err, {chatId}) =>
-          should.not.exist err
+      @newVisitor {username: 'foo', websiteUrl: 'foo.com'}, (err, visitorClient, {chatId}) =>
+        clientMessage = "hello, world!"
 
-          visitorClient.ready =>
-            clientMessage = "hello, world!"
+        visitorClient.say {message: clientMessage, chatId: chatId}, =>
+          visitorClient.disconnect()
 
-            visitorClient.say {message: clientMessage, chatId: chatId}, =>
-              visitorClient.disconnect()
+          # when
+          @client.watchChat {chatId: chatId}, (err, data) =>
 
-              # when
-              @client.watchChat {chatId: chatId}, (err, data) =>
+            # expect
+            should.not.exist err
+            @client.getChatHistory {chatId: chatId}, (err, {history}) =>
+              should.not.exist err
 
-                # expect
-                should.not.exist err
-                @client.getChatHistory {chatId: chatId}, (err, [entry]) =>
-                  should.not.exist err
-
-                  entry.username.should.eql 'foo'
-                  entry.message.should.eql clientMessage
-                  done()
+              [entry] = history
+              should.exist entry.username
+              entry.username.should.eql 'foo'
+              entry.message.should.eql clientMessage
+              done()

@@ -81,24 +81,25 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
             return cb err
 
           # Update chat status
-          updateChatStatus = config.service 'chats/updateChatStatus'
-          updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
-            config.log.error 'Error updating chat status.', {error: err, chatId: chatId, accountId: accountId} if err
+          # TODO: centralize logic for updating chat status, figure out why this isn't working
+          #updateChatStatus = config.service 'chats/updateChatStatus'
+          #updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
+            #config.log.error 'Error updating chat status.', {error: err, chatId: chatId, accountId: accountId} if err
 
-            # send pulsar notifications
-            notifySession = config.service 'session/notifySession'
-            meta = {sessionId: sessionId, type: metaInfo.type, chime: 'true'}
-            notifySession meta, (err) ->
-              if err
-                config.log "Notification for '#{metaInfo.type}' failed.", meta.merge {error: err}
+          # send pulsar notifications
+          notifySession = config.service 'session/notifySession'
+          meta = {sessionId: sessionId, type: metaInfo.type, chime: 'true'}
+          notifySession meta, (err) ->
+            if err
+              config.log "Notification for '#{metaInfo.type}' failed.", meta.merge {error: err}
 
-            cs.session.role.get (err, role) ->
-              notifyChatEvent
-                chatId: chatId
-                message: "#{displayedRole role} has joined the chat"
-                timestamp: new Date().getTime()
+          cs.session.role.get (err, role) ->
+            notifyChatEvent
+              chatId: chatId
+              message: "#{displayedRole role} has joined the chat"
+              timestamp: new Date().getTime()
 
-            cb null, cs
+          cb null, cs
 
       remove: tandoor (sessionId, chatId, cb) ->
         {Session} = require('stoic').models

@@ -18,8 +18,8 @@ module.exports = (server) ->
 
           # Log the error and convert it to a string.  Vein doesn't serialize errors correctly.
           if err
-            err = err.message || err
             #if config.env is 'production'
+            err = err.message || err
             config.log.info "#{name} service returned an error: '#{err.message || err}'.", {error: err, args: args}
 
           res.reply err, result...

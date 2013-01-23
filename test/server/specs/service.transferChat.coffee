@@ -6,7 +6,7 @@ boiler 'Service - Transfer Chat', ->
     # Setup
     @loginOperator (err, client) =>
       client.disconnect()
-      @getAuthed (_..., accountId) =>
+      @getAuthed (_..., {accountId}) =>
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
@@ -29,6 +29,6 @@ boiler 'Service - Transfer Chat', ->
                 chatSession.relationMeta.get 'type', (err, type) =>
                   type.should.eql 'transfer'
                   chatSession.relationMeta.get 'requestor', (err, requestor) =>
-                    requestor.should.eql @client.cookie 'session'
+                    requestor.should.eql @sessionId
                     @client.disconnect()
                     done()

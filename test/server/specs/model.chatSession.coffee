@@ -6,7 +6,7 @@ boiler 'Model - Chat Session', ->
 
   it 'should associate an operator and chat', (done)->
     {ChatSession} = stoic.models
-    cs = ChatSession('account_foo')
+    cs = ChatSession('ab1234567890ab1234567890')
 
     async.series [
       # add and get chat/operator pairs

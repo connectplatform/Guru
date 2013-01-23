@@ -1,4 +1,5 @@
 should = require 'should'
+async = require 'async'
 
 boiler 'Service - Set Session Online Status', ->
 
@@ -6,16 +7,13 @@ boiler 'Service - Set Session Online Status', ->
     setSessionOnlineStatus = config.service 'session/setSessionOnlineStatus'
 
     @getAuthed (err, userInfo) =>
-      id = @client.cookie 'session'
 
-      setSessionOnlineStatus {sessionId: id, isOnline: false}, =>
-        @expectSessionIsOnline id, false, =>
+      check = (status) =>
+        (cb) => setSessionOnlineStatus {sessionId: @sessionId, isOnline: status}, =>
+          @expectSessionIsOnline @sessionId, status, cb
 
-        setSessionOnlineStatus {sessionId: id, isOnline: true}, =>
-          @expectSessionIsOnline id, true, =>
-
-          setSessionOnlineStatus {sessionId: id, isOnline: false}, =>
-            @expectSessionIsOnline id, false, =>
-
-              @client.disconnect()
-              done()
+      async.series [
+        check false
+        check true
+        check false
+      ], done

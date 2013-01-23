@@ -18,4 +18,4 @@ module.exports =
           type: 'notification'
           message: 'Welcome to live chat! An operator will be with you shortly.'
 
-      done null, history
+      done null, {history: history}

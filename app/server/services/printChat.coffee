@@ -7,5 +7,6 @@ module.exports =
   required: ['chatId', 'accountId', 'sessionId']
   service: ({chatId, accountId, sessionId}, done) ->
     Chat(accountId).get(chatId).history.all (err, history) ->
-      return done err if err?
-      done null, render 'chatHistory', history: history
+      return done err if err
+      html = render 'chatHistory', {history: history}
+      done null, {html: html}

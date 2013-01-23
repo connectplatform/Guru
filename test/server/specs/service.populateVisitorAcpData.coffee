@@ -47,14 +47,14 @@ boiler 'Service - Populate Visitor ACP Data', ->
     @client.ready =>
 
       # Set up chat info
-      @client.newChat clientData, (err, {chatId}) =>
+      @client.newChat clientData, (err, {chatId, sessionId}) =>
         should.not.exist err
 
         # check that data is in stoic
         {Session, Chat} = stoic.models
 
         verifyResult = =>
-          Session.accountLookup.get @client.cookie('session'), (err, accountId) ->
+          Session.accountLookup.get sessionId, (err, accountId) ->
             visitor = Chat(accountId).get(chatId).visitor
             visitor.get 'referrerData', (err, refData) ->
               should.not.exist err

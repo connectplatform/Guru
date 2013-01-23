@@ -8,7 +8,7 @@ boiler 'Service - Print Chat', ->
         client.say {chatId: @chatId, message: 'Hello'}, =>
           client.say {chatId: @chatId, message: 'How are you?'}, =>
 
-            client.printChat {chatId: @chatId}, (err, html) =>
+            client.printChat {chatId: @chatId}, (err, {html}) =>
               should.not.exist err
               html.should.eql "<p>visitor: Hello</p><p>visitor: How are you?</p>"
               client.disconnect()

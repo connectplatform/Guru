@@ -65,5 +65,7 @@ boiler 'Service - Save Model', ->
           #check that save was successful
           @client.findModel {queryObject: {_id: user.id}, modelName: 'User'}, (err, foundUsers) =>
             should.not.exist err
-            foundUsers[0].should.eql target
+            foundUsers[0].firstName.should.eql target.firstName
+            foundUsers[0].lastName.should.eql target.lastName
+            foundUsers[0].email.should.eql target.email
             done()

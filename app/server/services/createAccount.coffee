@@ -24,7 +24,7 @@ module.exports =
     saveOwner = (next, {account}) ->
       owner.accountId = account._id
       owner.save (err, userData) ->
-        next err, select(userData?._doc, '_id', 'email', 'firstName', 'lastName')
+        next err, select(userData?.toObject(getters: true), '_id', 'email', 'firstName', 'lastName')
 
     createAccount = (cb) ->
       Account.create {accountType: 'Paid'}, cb

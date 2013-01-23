@@ -3,10 +3,10 @@ process.env.GURU_PULSAR_PORT = 'DISABLED'
 module.exports = ->
   config.require 'load/mongo'
   config.require('load/initServices')()
-  seed = config.require 'policy/sampleData'
+  sampleData = config.require 'policy/sampleData'
 
-  # run seed data
-  seed (err, data) ->
+  # run sampleData
+  sampleData (err, data) ->
     return console.log 'Error: ', err if err?
     console.log "Created #{(records.length or 1 for coll, records of data).reduce((l, r)->l+r)} records."
 

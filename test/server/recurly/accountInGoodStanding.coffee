@@ -6,7 +6,7 @@ verify = (operation, resource, err, result) ->
      status code: #{result?.status}\n#{inspect result?[resource], false, 10}"
   should.exist result[resource], "Expected #{resource} to exist."
 
-boiler 'Recurly - Sync Subscription', ->
+recurlyBoiler 'Recurly - Sync Subscription', ->
   beforeEach ->
     @createRecurlyAccount = config.service 'recurly/createAccount'
     @createRecurlyBilling = config.service 'recurly/createBilling'

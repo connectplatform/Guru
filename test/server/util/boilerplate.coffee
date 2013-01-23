@@ -16,10 +16,28 @@ initApp = (cb) ->
   @app = config.require 'load/app'
   @app cb
 
-# globals
+# data creation
 global.Factory = config.require 'data/factory'
 global.Sample = config.require 'data/sample'
-module.exports = global.boiler = (testName, tests) ->
+
+# prepare data for standard tests
+standardDataPrep = (done) ->
+  sampleData (err, data) =>
+    throw new Error "when creating sample data:\n#{err.stack}" if err?
+    @account = data.accounts[0]
+    @accountId = @account._id
+    @paidAccountId = data.accounts[1]._id
+
+    @website = data.websites[0]
+    @ownerUser = data.operators[1]
+    done()
+
+# prepare data for recurly tests
+recurlyDataPrep = (done) ->
+  standardDataPrep.call @, =>
+    Factory.create 'paidOwner', done
+
+setup = (testName, dataPrep, tests) ->
   describe testName, (done)->
     before (done) ->
 
@@ -31,16 +49,9 @@ module.exports = global.boiler = (testName, tests) ->
         done()
 
     beforeEach (done) ->
+      @foo = 'hey'
       flushCache config.redis.database, config.redis.database, =>
-        sampleData (err, data) =>
-          throw new Error "when creating sample data:\n#{err.stack}" if err?
-          @account = data.accounts[0]
-          @accountId = @account._id
-          @paidAccountId = data.accounts[1]._id
-
-          @website = data.websites[0]
-          @ownerUser = data.operators[1]
-          done()
+        dataPrep.call @, done
 
     after (done) ->
       flushCache config.redis.database, config.redis.database, ->
@@ -50,3 +61,9 @@ module.exports = global.boiler = (testName, tests) ->
       @client.disconnect() if @client?.connected
 
     tests()
+
+module.exports = global.boiler = (testName, tests) ->
+  setup testName, standardDataPrep, tests
+
+global.recurlyBoiler = (testName, tests) ->
+  setup testName, recurlyDataPrep, tests

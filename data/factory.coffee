@@ -1,7 +1,6 @@
 Factory = require 'factory-worker'
 {User, Account, Specialty, Website, ChatHistory} = config.require('load/mongo').models
-
-getSpecialtyIds = config.require 'services/specialties/getSpecialtyIds'
+{getString} = config.require 'load/util'
 
 getArray = (fn) ->
   (done) ->
@@ -10,12 +9,12 @@ getArray = (fn) ->
 
 defaultAccountId = (done) ->
   Account.findOne {accountType: 'Unlimited'}, (err, account) ->
-    done err, account._id
+    done err, getString(account._id)
 
 getSpecialties = (list) ->
   (next) ->
     defaultAccountId (err, accountId) ->
-      getSpecialtyIds accountId, list, next
+      config.services['specialties/getSpecialtyIds'] {accountId: accountId, specialties: list}, next
 
 opcount = 1
 Factory.define 'operator', User, {
@@ -27,6 +26,18 @@ Factory.define 'operator', User, {
   password: 'foobar'
   role: 'Operator'
   specialties: getSpecialties ['Sales']
+  websites: []
+}
+
+# need: {accountId}
+Factory.define 'paidOwner', User, {
+  email: 'owner@bar.com'
+  sentEmail: true
+  registrationKey: 'abcd'
+  password: 'foobar'
+  role: 'Owner'
+  firstName: 'Paid'
+  lastName: 'Owner'
   websites: []
 }
 

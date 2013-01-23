@@ -23,18 +23,6 @@ module.exports = (done) ->
         mapSpecialties {model: user, getter: 'getSpecialtyIds'}, (err, user) ->
           User.create user, cb
 
-    createPaidOwner = (accountId, next) ->
-      createUser([], accountId)({
-        email: 'owner@bar.com'
-        sentEmail: true
-        registrationKey: 'abcd'
-        password: 'foobar'
-        role: 'Owner'
-        firstName: 'Paid'
-        lastName: 'Owner'
-        websites: []
-      }, next)
-
     createWebsite = (accountId) ->
       (website, cb) ->
         website.merge(accountId: accountId)
@@ -134,8 +122,5 @@ module.exports = (done) ->
         async.map operators, createUser(websites, accounts[0]._id), next]
       chatHistory: ['accounts', (next, {accounts}) -> Factory.create 'chathistory', {accountId: accounts[0]._id}, next]
     }
-
-    if (recurlyEnabled=false)
-      tasks[paidOwner] = ['accounts', (next, {accounts}) -> createPaidOwner accounts[1]._id, next]
 
     async.auto tasks, done

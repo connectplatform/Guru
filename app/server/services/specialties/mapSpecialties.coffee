@@ -5,8 +5,8 @@ module.exports =
   required: ['model', 'getter']
   service: ({model, getter}, next) ->
     if model.specialties and not model.specialties.isEmpty()
-      getterFn = config.require "services/specialties/#{getter}"
-      getterFn model.accountId, model.specialties, (err, translated) ->
+      getterFn = config.service "specialties/#{getter}"
+      getterFn {accountId: model.accountId, specialties: model.specialties}, (err, {translated}) ->
         return next "Could not translate specialties: #{err}" if err or not translated or translated.isEmpty()
 
         # return an error if we have any non-matches

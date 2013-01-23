@@ -6,14 +6,15 @@ boiler 'Service - Get My Chats', ->
     @getAuthed =>
 
       # Given a chat to join
-      @newChatWith {websiteUrl: 'foo.com', username: 'joinMe', arbitrary: 'someValue'}, (err, {data: {chatId}}) =>
-        console.log 'chatId:', chatId
+      @newChatWith {websiteUrl: 'foo.com', username: 'joinMe', arbitrary: 'someValue'}, (err, {chatId}) =>
 
         # And a chat that we're not joining
         @newChatWith {websiteUrl: 'foo.com', username: 'butNotMe'}, =>
 
           # When we join the chat
           @client.joinChat {chatId: chatId}, (err, data) =>
+            should.not.exist err
+            should.exist data
 
             # Then the data should be correct
             @client.getMyChats (err, data) =>
@@ -29,10 +30,12 @@ boiler 'Service - Get My Chats', ->
 
   it "orphan chatSession should not shit the bed", (done) ->
     {ChatSession} = require('stoic').models
-    @getAuthed (err, @client, accountId) =>
+    @getAuthed (err, @client, {sessionId, accountId}) =>
 
       # Given an orphan ChatSession
-      ChatSession(accountId).add @client.cookie('session'), 'chat_bar', {}, (err, chatSession) =>
+      ChatSession(accountId).add sessionId, 'chat_bar', {}, (err, chatSession) =>
+        should.not.exist err
+
         @client.getMyChats (err, data) =>
           should.not.exist err
           data.length.should.eql 0

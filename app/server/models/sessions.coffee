@@ -9,7 +9,8 @@ face = (decorators) ->
   } = decorators
 
   accountBucket = (accountId) ->
-    throw new Error "Session called without accountId: #{accountId}" unless accountId and accountId isnt 'undefined'
+    unless accountId and (typeof accountId) is 'string' and accountId isnt 'undefined'
+      throw new Error "Session called with invalid accountId: '#{accountId}'"
 
     faceValue =
       accountId: accountId
@@ -52,7 +53,7 @@ face = (decorators) ->
           id: id
           accountId: accountId
 
-        notifySession = config.require 'services/session/notifySession'
+        notifySession = config.service 'session/notifySession'
 
         chnl = pulsar.channel "notify:session:#{id}"
         chnl.on 'viewedMessages', (chatId) ->
@@ -85,17 +86,18 @@ face = (decorators) ->
 
         unansweredChats session, ({after}) ->
           after ['srem'], (context, data, next) ->
-            notifySession session.id, {type: 'new'}
+            # must provide accountId - cannot look up after it's been removed
+            notifySession {accountId: accountId, sessionId: session.id, type: 'new'}, (err) -> throw new Error 'srem' if err
             next null, data
 
           after ['add'], (context, data, next) ->
-            notifySession session.id, {type: 'new'}, 'true'
+            notifySession {sessionId: session.id, type: 'new', chime: 'true'}, (err) -> throw new Error 'add' if err
             next null, data
 
         unreadMessages session, ({after}) ->
 
           after ['incrby'], (context, data, next) ->
-            notifySession session.id, {type: 'unread'}, 'true'
+            notifySession {sessionId: session.id, type: 'unread', chime: 'true'}, (err) -> throw new Error 'incrby' if err
             next null, data
 
           # filter retreived values with a parseInt

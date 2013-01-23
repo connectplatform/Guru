@@ -15,11 +15,13 @@ helpers =
     utility = ['disconnect', 'cookie']
 
     wrapped = {}
+    wrapped.localStorage = localStorage
     # proxy services, merging any local data (e.g. sessionId)
     for serviceName, serviceDef of client when serviceName not in utility
       do (serviceName, serviceDef) ->
-        wrapped[serviceName] = (args, done) ->
-          serviceDef args.merge(localStorage), done
+        wrapped[serviceName] = (args..., done) ->
+          args = args[0] || {}
+          serviceDef args.merge(wrapped.localStorage), done
 
     # bind utility functions
     for serviceName, serviceDef of client when serviceName in utility
@@ -70,17 +72,20 @@ helpers =
     visitor.ready =>
       Specialty.findOne {accountId: @account._id, name: data.department}, (err, specialty) =>
         data.department = specialty?._id
-        visitor.newChat data, (err, data) =>
+        visitor.newChat data, (err, chatData) =>
           throw new Error err if err
-          @visitorSession = visitor.cookie 'session'
-          @chatId = data.chatId
-          cb null, visitor, data
+          @visitorSession = chatData.sessionId
+          @chatId = chatData.chatId
+
+          # vein doesn't handle cookies, but we want client side middleware to do it
+          wrappedClient = helpers.wrapVeinClient visitor, {sessionId: chatData.sessionId}
+          cb null, wrappedClient, data.merge(chatData)
 
   # create a chat but disconnect the visitor when done
   newChatWith: (data, cb) ->
     @newVisitor data, (err, visitor, chatData) ->
       visitor.disconnect()
-      cb err, data.merge({data: chatData})
+      cb err, chatData
 
   # shorthand for default use case
   newChat: (cb) ->

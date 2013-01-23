@@ -17,29 +17,27 @@ boiler 'Service - Join Chat', ->
 
   describe 'after joining', ->
     beforeEach (done) ->
-      @getAuthed (_..., @accountId) =>
+      @getAuthed (_..., {@accountId}) =>
         @newChat =>
           @client.joinChat {chatId: @chatId}, done
 
 
     it 'should associate an operator with a chat', (done) ->
 
-      session = @client.cookie('session')
-
       #TODO refactor this to check at a higher level than cache contents
       {ChatSession} = stoic.models
-      ChatSession(@accountId).getBySession session, (err, [chatSesson]) =>
+      ChatSession(@accountId).getBySession @sessionId, (err, data) =>
         should.not.exist err
+        [chatSesson] = data
         chatSesson.chatId.should.eql @chatId
         done()
 
     it 'should notify operator of an unread message', (done) ->
 
       pulsar = @getPulsar()
-      session = @client.cookie('session')
 
       # set up session listener
-      sessionNotifications = pulsar.channel "notify:session:#{session}"
+      sessionNotifications = pulsar.channel "notify:session:#{@sessionId}"
       sessionNotifications.on 'unreadMessages', (counts) =>
         count = counts[@chatId]
         should.exist count

@@ -22,13 +22,8 @@ module.exports =
         visitorChatSession.session.delete (err) ->
           config.log.error 'Error deleting session in kickUser', {error: err, chatId: chatId} if err
 
-          ChatSession(accountId).remove visitorChatSession.sessionId, chatId, (err) ->
-            if err
-              meta = {error: err, sessionId: visitorChatSession.sessionId, chatId: chatId}
-              config.log.error 'Error removing chat session in kickUser', meta
+          #Trigger callbacks on visitor's page
+          notify = pulsar.channel chatId
+          notify.emit 'chatEnded'
 
-            #Trigger callbacks on visitor's page
-            notify = pulsar.channel chatId
-            notify.emit 'chatEnded'
-
-            done null, null
+          done null, null

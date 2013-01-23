@@ -2,6 +2,8 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 
+{getString} = config.require 'load/util'
+
 website = new Schema
 
   accountId:
@@ -53,5 +55,8 @@ website = new Schema
   acpApiKey:
     type: String
     default: ''
+
+website.path('_id').get getString
+website.path('accountId').get getString
 
 module.exports = website

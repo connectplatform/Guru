@@ -10,10 +10,9 @@ boiler 'Service - Forgot Password', ->
     client = @getClient()
     client.ready ->
 
-      client.forgotPassword {email: email}, (err, status) ->
+      client.forgotPassword {email: email}, (err, {status}) ->
         should.not.exist err
-        should.exist status
-        status.should.eql 'Success! Please check your email for reset instructions.'
+        status.should.eql 'OK'
         client.disconnect()
         done()
 

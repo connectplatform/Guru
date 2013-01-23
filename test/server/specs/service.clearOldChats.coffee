@@ -96,9 +96,9 @@ boiler 'Service - Clear Old Chats', ->
       visitor = @getClient()
       visitor.ready =>
         newChatData = {username: 'visitor', websiteUrl: 'foo.com'}
-        visitor.newChat newChatData, (err, {chatId}) =>
+        visitor.newChat newChatData, (err, {chatId, sessionId}) =>
           should.not.exist err
-          visitorSession = visitor.cookie 'session'
+          visitorSession = sessionId
 
           # modify the chat's creation date
           Chat(@accountId).get(chatId).creationDate.set halfHourAgo, (err) =>

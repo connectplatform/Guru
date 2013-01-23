@@ -12,7 +12,6 @@ boiler 'Service - Leave Chat', ->
           # Try to leave
           @client.leaveChat {chatId: @chatId}, (err, channelName) =>
             should.not.exist err
-            channelName.should.eql @chatId
 
             # Check whether we're still in channel
             @client.getMyChats {}, (err, chats) =>
@@ -41,7 +40,6 @@ boiler 'Service - Leave Chat', ->
               # Try to leave
               @client.leaveChat {chatId: @chatId}, (err, channelName) =>
                 should.not.exist err
-                channelName.should.eql @chatId
 
                 # Check whether we're still in channel
                 @client.getMyChats {}, (err, chats) =>

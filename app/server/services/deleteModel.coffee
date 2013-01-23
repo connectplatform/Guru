@@ -9,4 +9,4 @@ module.exports =
 
       model.remove (err) ->
         return done err if err
-        return done err, "#{modelName} removed"
+        return done null, {status: "#{modelName} removed"}

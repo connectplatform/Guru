@@ -8,7 +8,7 @@ boiler 'Service - Get My Role', ->
         done()
 
     it "should say None", (done) ->
-      @client.getMyRole {}, (err, role) ->
+      @client.getMyRole {}, (err, {role}) ->
         role.should.eql 'None'
         done()
 
@@ -20,7 +20,7 @@ boiler 'Service - Get My Role', ->
         done()
 
     it "should say None", (done) ->
-      @client.getMyRole {}, (err, role) ->
+      @client.getMyRole {}, (err, {role}) ->
         role.should.eql 'None'
         done()
 
@@ -30,7 +30,7 @@ boiler 'Service - Get My Role', ->
         done()
 
     it "should say Owner", (done) ->
-      @client.getMyRole {}, (err, role) ->
+      @client.getMyRole {}, (err, {role}) ->
         role.should.eql 'Owner'
         done()
 
@@ -40,18 +40,21 @@ boiler 'Service - Get My Role', ->
         done()
 
     it "should say Operator", (done) ->
-      @client.getMyRole {}, (err, role) ->
+      @client.getMyRole {}, (err, {role}) ->
         role.should.eql 'Operator'
         done()
 
   describe 'when Visitor session exists', ->
     beforeEach (done) ->
-      @guru1Login =>
+      @guru1Login (err, @guru) =>
         @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @client) =>
           done()
 
+    afterEach ->
+      @guru.disconnect()
+
     it "should say Visitor", (done) ->
-      should.exist @client.cookie 'session'
-      @client.getMyRole {}, (err, role) ->
+      should.exist @visitorSession
+      @client.getMyRole {}, (err, {role}) ->
         role.should.eql 'Visitor'
         done()

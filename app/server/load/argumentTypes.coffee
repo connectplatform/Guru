@@ -23,8 +23,8 @@ module.exports = [
     typeName: 'WebsiteId'
     lookup: ({websiteUrl}, found) ->
       return found() unless websiteUrl
-      config.service('websites/getWebsiteIdForDomain') {websiteUrl: websiteUrl}, (err, siteId) ->
-        found err, siteId
+      config.service('websites/getWebsiteIdForDomain') {websiteUrl: websiteUrl}, (err, {websiteId}) ->
+        found err, websiteId
     defaultArgs: ['websiteId']
   ,
     typeName: 'WebsiteUrl'
@@ -48,7 +48,7 @@ module.exports = [
   ,
     typeName: 'MongoId'
     validation: (arg, assert) ->
-      assert arg.toString().match mongoId
+      assert (typeof arg) is 'string' and arg.match mongoId
     defaultArgs: ['accountId', 'websiteId', 'specialtyId']
   ,
     typeName: 'WebsiteImageName'

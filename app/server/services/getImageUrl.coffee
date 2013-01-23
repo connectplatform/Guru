@@ -4,7 +4,7 @@ module.exports =
   optional: ['websiteId']
   required: ['imageName']
   service: ({websiteId, imageName}, done) ->
-    done null, getUrl('default', imageName) unless websiteId
+    done null, {url: getUrl('default', imageName)} unless websiteId
 
     config.services['websites/hasImage'] {websiteId: websiteId, imageName: imageName}, (err, {hasImage}) ->
       ref = if hasImage then websiteId else 'default'

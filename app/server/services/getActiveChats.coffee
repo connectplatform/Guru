@@ -14,17 +14,19 @@ module.exports =
       getFullChatData accountId, chatId, next
 
     Chat(accountId).allChats.all (err, chatIds) ->
+      return done err if err
 
-      getChatRelations accountId, sessionId, (err, relations) ->
-        config.log.error 'Error getting chat relations in getActiveChats', {error: err, sessionId: sessionId} if err
+      async.parallel {
+        relations: (next) -> getChatRelations accountId, sessionId, next
+        chats: (next) -> async.map chatIds, chatDataForAccount, next
 
-        async.map chatIds, chatDataForAccount, (err, chats) ->
-          config.log.error 'Error mapping chat data in getActiveChats', {error: err, sessionId: sessionId, chatIds: chatIds} if err
+      }, (err, {chats, relations}) ->
+        return done err if err
 
-          chat.relation = relations[chat.id] for chat in chats
+        chat.relation = relations[chat.id] for chat in chats
 
-          #Remove chats that have a vacant status
-          chats = chats.remove (chat) -> chat.status is 'vacant'
-          chats = chats.sortBy(chatPriority)
+        #Remove chats that have a vacant status
+        chats = chats.remove (chat) -> chat.status is 'vacant'
+        chats = chats.sortBy(chatPriority)
 
-          filterRelevant accountId, sessionId, chats, done
+        filterRelevant accountId, sessionId, chats, done

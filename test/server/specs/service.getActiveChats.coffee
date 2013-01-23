@@ -109,26 +109,33 @@ boiler 'Service - Get Active Chats', ->
           done()
 
   it 'should sort the chats', (done) ->
-    @getAuthed (_..., accountId) =>
-      session = @client.cookie 'session'
+    @getAuthed (_..., {accountId}) =>
       @createChats (err, chats) =>
 
         # add an invite for the present operator
         inviteChat = chats[2]
         {ChatSession} = stoic.models
-        ChatSession(accountId).add session, inviteChat.id, {type: 'invite'}, =>
+        ChatSession(accountId).add @sessionId, inviteChat.id, {type: 'invite'}, (err) =>
+          should.not.exist err
 
-          # get active chats
-          @client.getActiveChats {}, (err, chats) =>
+          ChatSession(accountId).get(@sessionId, inviteChat.id).relationMeta.getall (err, chatSession) =>
             should.not.exist err
-            should.exist chats
-            chats.length.should.eql 3
+            should.exist chatSession, 'expected chatsession'
 
-            visitorNames = chats.map (chat) => chat.visitor.username
-            visitorNames.should.eql ['Ralph', 'Bob', 'Suzie']
+            ChatSession(accountId).getBySession @sessionId, (err, chatSessions) =>
+              should.not.exist err
 
-            @client.disconnect()
-            done()
+              # get active chats
+              @client.getActiveChats {}, (err, chats) =>
+                should.not.exist err
+                should.exist chats
+                chats.length.should.eql 3
+
+                visitorNames = chats.map (chat) => chat.visitor.username
+                visitorNames.should.eql ['Ralph', 'Bob', 'Suzie']
+
+                @client.disconnect()
+                done()
 
   it "should have a chat relation if an operator is invited", (done) ->
 

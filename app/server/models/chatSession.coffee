@@ -66,11 +66,6 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
       add: tandoor (sessionId, chatId, metaInfo, cb) ->
         cs = chatSession.get sessionId, chatId
-        cs.session.role.get (err, role) ->
-          notifyChatEvent
-            chatId: chatId
-            message: "#{displayedRole role} has joined the chat"
-            timestamp: new Date().getTime()
 
         metaInfo ||= {}
         metaInfo.isWatching ||= 'false'
@@ -85,33 +80,51 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
             config.log.error 'Error adding chatSession', {error: err, chatId: chatId, sessionId: sessionId, relationMeta: metaInfo}
             return cb err
 
-          # send pulsar notifications
-          notifySession = config.require 'services/session/notifySession'
-          notifySession sessionId, metaInfo, 'true'
-          cb err, cs
+          # Update chat status
+          updateChatStatus = config.service 'chats/updateChatStatus'
+          updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
+            config.log.error 'Error updating chat status.', {error: err, chatId: chatId, accountId: accountId} if err
+
+            # send pulsar notifications
+            notifySession = config.service 'session/notifySession'
+            meta = {sessionId: sessionId, type: metaInfo.type, chime: 'true'}
+            notifySession meta, (err) ->
+              if err
+                config.log "Notification for '#{metaInfo.type}' failed.", meta.merge {error: err}
+
+            cs.session.role.get (err, role) ->
+              notifyChatEvent
+                chatId: chatId
+                message: "#{displayedRole role} has joined the chat"
+                timestamp: new Date().getTime()
+
+            cb null, cs
 
       remove: tandoor (sessionId, chatId, cb) ->
         {Session} = require('stoic').models
 
         cs = chatSession.get sessionId, chatId
-        cs.session.role.get (err, role) ->
-          notifyChatEvent
-            chatId: chatId
-            message: "#{displayedRole role} has left the chat"
-            timestamp: new Date().getTime()
 
-          async.parallel [
-            cs.sessionIndex.srem chatId
-            cs.chatIndex.srem sessionId
-            cs.relationMeta.del
-            Session(accountId).get(cs.sessionId).unreadMessages.hdel chatId
+        async.parallel [
+          cs.sessionIndex.srem chatId
+          cs.chatIndex.srem sessionId
+          cs.relationMeta.del
+          Session(accountId).get(cs.sessionId).unreadMessages.hdel chatId
 
-          ], (err) ->
-            config.log.error 'Error removing chatSession', {error: err} if err
-            # We have a circular dependency if we load this immediately
-            updateChatStatus = config.require 'services/chats/updateChatStatus'
-            updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
-              config.log.error 'Error updating chat status when removing chat session', {error: err, chatId: chatId, accountId: accountId} if err
+        ], (err) ->
+          config.log.error 'Error removing chatSession', {error: err} if err
+
+          # Update chat status
+          updateChatStatus = config.service 'chats/updateChatStatus'
+          updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
+            config.log.error 'Error removing chat session.', {error: err, chatId: chatId, accountId: accountId} if err
+
+            # send notification to chat
+            cs.session.role.get (err, role) ->
+              notifyChatEvent
+                chatId: chatId
+                message: "#{displayedRole role} has left the chat"
+                timestamp: new Date().getTime()
 
               cb err, cs
 

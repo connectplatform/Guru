@@ -5,7 +5,7 @@ boiler 'Service - Kick User', ->
 
   it 'should remove visitor from chat', (done) ->
     # Setup
-    @getAuthed (_..., accountId) =>
+    @getAuthed (_..., {accountId}) =>
       @newChat =>
         @client.joinChat {chatId: @chatId}, (err) =>
           should.not.exist err

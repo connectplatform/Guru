@@ -35,7 +35,7 @@ module.exports =
       ], (err, results) ->
 
         config.log.client[severity] message, {clientData: context, retrievedData: results}
-        done null, 'Success'
+        done()
     else
       config.log.client[severity] message, {clientData: context}
-      done null, 'Success'
+      done()

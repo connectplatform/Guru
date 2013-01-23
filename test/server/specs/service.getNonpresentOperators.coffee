@@ -4,7 +4,7 @@ stoic = require 'stoic'
 boiler 'Service - Get Nonpresent Operators', ->
   it 'should return a list of operators not currently visible in chat', (done) ->
     # Setup
-    @getAuthed (_..., accountId) =>
+    @getAuthed (_..., {accountId}) =>
       @newChat =>
         @client.watchChat {chatId: @chatId}, (err) =>
 

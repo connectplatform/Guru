@@ -10,6 +10,6 @@ module.exports = (accountId, sessionId, next) ->
       cb err
 
   ChatSession(accountId).getBySession sessionId, (err, chatSessions) ->
-    return next err, {} if err?
+    return next err, {} if err
     async.forEach chatSessions, lookUpRelation, (err) ->
       next err, relationsByChat

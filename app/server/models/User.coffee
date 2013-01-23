@@ -5,7 +5,7 @@ db = require 'mongoose'
 {ObjectId} = Schema.Types
 
 enums = config.require 'load/enums'
-{getType} = config.require 'load/util'
+{getType, getString} = config.require 'load/util'
 
 validateWebsite = (websiteIds, cb) ->
   mongo = config.require 'load/mongo'
@@ -81,6 +81,9 @@ user = new Schema
 user.path('role').set (newVal) ->
   @oldRole = @role
   newVal
+
+user.path('_id').get getString
+user.path('accountId').get getString
 
 user.pre 'save', (next) ->
   @password = digest_s @password if @isModified 'password'

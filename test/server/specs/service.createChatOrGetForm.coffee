@@ -20,12 +20,10 @@ boiler 'Service - Create Chat or Get Form', ->
         done()
 
     it 'should create a chat', (done) ->
-      @client.createChatOrGetForm @params, (err, data) =>
+      @client.createChatOrGetForm @params, (err, {chatId, sessionId}) =>
         should.not.exist err
-        should.exist data?.chatId, 'expected chatId'
-
-        session = @client.cookie 'session'
-        should.exist session, 'expected session cookie'
+        should.exist chatId, 'expected chatId'
+        should.exist sessionId, 'expected sessionId'
         done()
 
   describe 'with no username', ->

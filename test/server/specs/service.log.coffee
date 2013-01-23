@@ -10,16 +10,14 @@ boiler 'Service - Log', ->
           sessionId: @client.cookie 'session'
           chatId: 'Invalid LOL'
         }
-      }, (err, ack) =>
+      }, (err) =>
         @client.disconnect()
         should.not.exist err
-        ack.should.eql 'Success'
         done()
 
   it 'should work when no extra data is given', (done) ->
     @getAuthed =>
-      @client.log {message: 'vague happening', context: {}}, (err, ack) =>
+      @client.log {message: 'vague happening', context: {}}, (err) =>
         @client.disconnect()
         should.not.exist err
-        ack.should.eql 'Success'
         done()

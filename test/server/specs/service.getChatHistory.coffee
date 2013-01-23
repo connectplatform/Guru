@@ -9,14 +9,13 @@ boiler 'Service - Get Chat History', ->
       @client.ready =>
         username = 'historyVisitor'
         data = {username: username, websiteUrl: 'foo.com'}
-        @client.newChat data, (err, {chatId}) =>
-          sessionId = @client.cookie 'session'
+        @client.newChat data, (err, {chatId, sessionId}) =>
 
           messages = ['first message', 'second message']
-          say = (message, next) => @client.say {chatId: chatId, message: message}, next
+          say = (message, next) => @client.say {sessionId: sessionId, chatId: chatId, message: message}, next
           async.forEach messages, say, =>
 
-            @client.getChatHistory {chatId: chatId}, (err, data) =>
+            @client.getChatHistory {sessionId: sessionId, chatId: chatId}, (err, data) =>
               @client.disconnect()
               should.not.exist err
 

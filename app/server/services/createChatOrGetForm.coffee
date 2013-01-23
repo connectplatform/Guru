@@ -4,7 +4,7 @@ db = config.require 'load/mongo'
 {Website, Specialty} = db.models
 
 module.exports =
-  service: (params, done, sideEffects) ->
+  service: (params, done) ->
 
     newChat = config.service 'newChat'
     getAvailableOperators = config.service 'operator/getAvailableOperators'
@@ -19,7 +19,7 @@ module.exports =
 
       # if we have everything needed, create the chat
       if remaining.isEmpty()
-        return newChat params, done, sideEffects
+        return newChat params, done
 
       # otherwise return additional fields required
       else

@@ -21,7 +21,7 @@ module.exports =
       {accountId} = website
 
       accountInGoodStanding {accountId: accountId}, (err, {goodStanding}) ->
-        return done null, {accountId: accountId, operators: [], reason: 'Account not in good standing.'} if err or not goodStanding
+        return done err, {accountId: accountId, operators: [], reason: 'Account not in good standing.'} if err or not goodStanding
 
         # get a list of operator sessions
         Session(accountId).onlineOperators.all (err, sessions) ->

@@ -4,7 +4,7 @@ stoic = require 'stoic'
 boiler 'Service - Update Chat Status', ->
   beforeEach (done) ->
     {Chat} = stoic.models
-    @getAuthed (err, _, @accountId) =>
+    @getAuthed (err, _, {@accountId}) =>
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @visitor) =>
         @chatHandle = Chat(@accountId).get(@chatId)
         done()
@@ -39,7 +39,7 @@ boiler 'Service - Update Chat Status', ->
     {Session} = stoic.models
     @visitor.leaveChat {chatId: @chatId}, (err) =>
       should.not.exist err
-      Session(@accountId).get(@client.cookie 'session').unansweredChats.all (err, unanswered) ->
+      Session(@accountId).get(@sessionId).unansweredChats.all (err, unanswered) ->
         should.not.exist err
         unanswered.length.should.eql 0
 

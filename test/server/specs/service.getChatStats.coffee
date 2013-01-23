@@ -7,13 +7,12 @@ boiler 'Service - Get Chat Stats', ->
   it 'should return chat statistics', (done) ->
     {ChatSession} = stoic.models
 
-    @getAuthed (_..., accountId) =>
-      session = @client.cookie 'session'
+    @getAuthed =>
 
       @createChats (err, chats) =>
         targetChat = chats[0].id
 
-        ChatSession(accountId).add session, targetChat, {type: 'invite'}, =>
+        ChatSession(@accountId).add @sessionId, targetChat, {type: 'invite'}, =>
           @client.getChatStats {}, (err, stats) =>
             should.not.exist err
 

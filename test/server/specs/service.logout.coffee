@@ -15,7 +15,7 @@ boiler 'Service - Logout', ->
     redis = stoic.client
 
     @getAuthed =>
-      sessionId = @client.cookie 'session'
+      sessionId = @sessionId
       operatorId = @ownerUser._id
       accountId = @account.id
 

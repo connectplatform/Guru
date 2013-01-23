@@ -19,5 +19,5 @@ module.exports =
 
   filterOutput: (inModel, next) ->
     outModel = {id: inModel['_id']}
-    outModel[key] = value for key, value of inModel._doc when key isnt '_id'
+    outModel[key] = value for key, value of inModel.toObject(getters: true) when key isnt '_id'
     mapSpecialties {model: outModel, getter: 'getSpecialtyNames'}, next

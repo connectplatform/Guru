@@ -1,6 +1,7 @@
 db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
+{getString} = config.require 'load/util'
 
 specialty = new Schema
 
@@ -13,5 +14,8 @@ specialty = new Schema
     required: true
     index:
       unique: true
+
+specialty.path('_id').get getString
+specialty.path('accountId').get getString
 
 module.exports = specialty

@@ -10,14 +10,13 @@ getVisibleOperators = config.require 'services/chats/getVisibleOperators'
 
 module.exports = (accountId, chatId, next) ->
 
-  async.parallel [
-    Chat(accountId).get(chatId).dump
-    ChatSession(accountId).getByChat chatId
+  async.parallel {
+    chat: Chat(accountId).get(chatId).dump
+    chatSessions: ChatSession(accountId).getByChat chatId
 
-  ], (err, [chat, chatSessions]) ->
-    if err
-      meta = {error: err, chatId: chatId, chat: chat, chatSessions: chatSessions}
-      config.log.error 'Error getting chat and chatSession in getFullChatData', meta
+  }, (err, results) ->
+    return next err if err
+    {chat, chatSessions} = results
 
     Website.findOne {_id: chat.website}, {url: true}, (err, website) ->
       chat.website = website

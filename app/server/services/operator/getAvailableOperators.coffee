@@ -8,7 +8,7 @@ db = config.require 'load/mongo'
 enums = config.require 'load/enums'
 
 module.exports =
-  required: ['websiteId']
+  required: ['websiteId', 'accountId']
   optional: ['specialtyId']
   service: ({websiteId, specialtyId}, done) ->
 

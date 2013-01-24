@@ -58,11 +58,11 @@ boiler 'Service - Populate Visitor ACP Data', ->
             visitor = Chat(accountId).get(chatId).visitor
             visitor.get 'referrerData', (err, refData) ->
               should.not.exist err
-              refData.should.eql clientData
+              refData.should.include clientData
 
               visitor.get 'acpData', (err, acpData) ->
                 should.not.exist err
-                acpData.should.eql expectedAcpData
+                acpData.should.include expectedAcpData
                 done()
 
         # The unfortunate part of making the acp lookup run async in the background...

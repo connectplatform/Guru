@@ -11,7 +11,7 @@ face = (decorators) ->
     creationDate,
     websiteId,
     websiteUrl,
-    department,
+    specialtyId,
 
     allChats,
     unansweredChats}}} = decorators
@@ -45,7 +45,7 @@ face = (decorators) ->
 
         websiteId chat
         websiteUrl chat
-        department chat
+        specialtyId chat
 
         visitor chat, ({before, after}) ->
           # JSON serialize/deserialize
@@ -120,7 +120,7 @@ face = (decorators) ->
               status: chat.status.get
               websiteId: chat.websiteId.get
               websiteUrl: chat.websiteUrl.get
-              department: chat.department.get
+              specialtyId: chat.specialtyId.get
               history: chat.history.all
               creationDate: chat.creationDate.get
 
@@ -137,7 +137,7 @@ face = (decorators) ->
             chat.status.del
             chat.websiteId.del
             chat.websiteUrl.del
-            chat.department.del
+            chat.specialtyId.del
             chat.creationDate.del
             chat.history.del
             faceValue.allChats.srem chat.id
@@ -164,7 +164,7 @@ schema =
       status: 'String' # transfer, invite, waiting, active, vacant
       websiteId: 'String'
       websiteUrl: 'String'
-      department: 'String'
+      specialtyId: 'String'
       creationDate: 'String'
       history: 'List' # message, username, timestamp
     chat:

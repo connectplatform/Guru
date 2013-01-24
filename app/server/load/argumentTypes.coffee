@@ -1,5 +1,5 @@
 db = require 'mongoose'
-{Website} = db.models
+{Website, Specialty} = db.models
 
 stoic = require 'stoic'
 {Session} = stoic.models
@@ -19,6 +19,14 @@ module.exports = [
     validation: (arg, assert) ->
       assert (typeof arg is 'string') and arg.match redisId
     defaultArgs: ['sessionId']
+  ,
+    typeName: 'SpecialtyId'
+    lookup: ({accountId, specialtyName}, found) ->
+      return found() unless accountId and specialtyName
+      Specialty.findOne {accountId: accountId, name: specialtyName}, {_id: true}, (err, results) ->
+        return found err if err or not results
+        found err, results._id
+    defaultArgs: ['specialtyId']
   ,
     typeName: 'WebsiteId'
     lookup: ({websiteUrl}, found) ->
@@ -41,8 +49,8 @@ module.exports = [
         Session.accountLookup.get sessionId, found
 
       else if websiteId
-        Website.findOne {_id: websiteId}, {accountId: true}, (err, account) ->
-          found err, getString(account?._id)
+        Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
+          found err, website?.accountId
 
     defaultArgs: ['accountId']
   ,

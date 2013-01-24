@@ -70,16 +70,15 @@ helpers =
     {Specialty} = db.models
     visitor = @getClient()
     visitor.ready =>
-      Specialty.findOne {accountId: @account._id, name: data.department}, (err, specialty) =>
-        data.department = specialty?._id
-        visitor.newChat data, (err, chatData) =>
-          throw new Error err if err
-          @visitorSession = chatData.sessionId
-          @chatId = chatData.chatId
+      #TODO: map specialties to IDs
+      visitor.newChat data, (err, chatData) =>
+        throw new Error err if err
+        @visitorSession = chatData.sessionId
+        @chatId = chatData.chatId
 
-          # vein doesn't handle cookies, but we want client side middleware to do it
-          wrappedClient = helpers.wrapVeinClient visitor, {sessionId: chatData.sessionId}
-          cb null, wrappedClient, data.merge(chatData)
+        # vein doesn't handle cookies, but we want client side middleware to do it
+        wrappedClient = helpers.wrapVeinClient visitor, {sessionId: chatData.sessionId}
+        cb null, wrappedClient, data.merge(chatData)
 
   # create a chat but disconnect the visitor when done
   newChatWith: (data, cb) ->
@@ -121,7 +120,7 @@ helpers =
             username: 'Bob'
           websiteUrl: websiteUrl
           websiteId: website._id
-          department: 'Sales'
+          specialtyName: 'Sales'
           status: 'waiting'
           creationDate: now
           history: []
@@ -161,7 +160,7 @@ helpers =
             ]
             chatData.push c.websiteId.set chat.websiteId if chat.websiteId?
             chatData.push c.websiteUrl.set chat.websiteUrl if chat.websiteUrl?
-            chatData.push c.department.set chat.department if chat.department?
+            chatData.push c.specialtyId.set chat.specialtyId if chat.specialtyId? #TODO: map specialtyIDs
 
             async.parallel chatData, (err) -> cb err, c
 

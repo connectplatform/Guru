@@ -9,8 +9,8 @@ module.exports = (done) ->
 
     mapSpecialties = config.service 'specialties/mapSpecialties'
 
-    createAccount = (accountId, cb) ->
-      Account.create accountId, cb
+    createAccount = (account, cb) ->
+      Account.create account, cb
 
     createSpecialty = (accountId) ->
       (specialty, cb) ->

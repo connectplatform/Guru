@@ -14,7 +14,7 @@ module.exports = (accountId, sessionId, chats, done) ->
       return true if chat.relation?
       return true if my.role in enums.managerRoles
       return false if chat.websiteId not in my.websites
-      return false if chat.department and (chat.department not in my.specialties)
+      return false if chat.specialtyId and (chat.specialtyId not in my.specialties)
       return true
 
     done null, chats.filter isRelevant

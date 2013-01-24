@@ -31,14 +31,14 @@ boiler 'Service - Get Chat Stats', ->
         chats = [
             username: 'should show'
             websiteUrl: 'foo.com'
-            department: 'Sales'
+            specialtyName: 'Sales'
           ,
             username: 'should not show'
             websiteUrl: 'baz.com'
           ,
             username: 'should not show'
             websiteUrl: 'foo.com'
-            department: 'Billing'
+            specialtyName: 'Billing'
         ]
         async.forEach chats, @newChatWith.bind(@), done
 

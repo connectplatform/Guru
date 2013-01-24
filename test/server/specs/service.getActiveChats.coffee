@@ -70,27 +70,27 @@ boiler 'Service - Get Active Chats', ->
       chatData =
         username: 'visitor'
         websiteUrl: 'foo.com'
-        department: 'Billing'
+        specialtyName: 'Billing'
 
       @generate chatData, (err, chats) ->
-        chats.length.should.eql 0, 'Expected a chat'
+        chats.length.should.eql 0, 'Expected no chats'
         done()
 
     it 'should show me chats for my specialty', (done) ->
       chatData =
         username: 'visitor'
         websiteUrl: 'foo.com'
-        department: 'Sales'
+        specialtyName: 'Sales'
 
       @generate chatData, (err, chats) ->
         chats.length.should.eql 1, 'Expected a chat'
         done()
 
-    it 'department should not be case sensitive', (done) ->
+    it 'specialtyName should not be case sensitive', (done) ->
       chatData =
         username: 'visitor'
         websiteUrl: 'foo.com'
-        department: 'sales'
+        specialtyName: 'sales'
 
       @generate chatData, (err, chats) ->
         chats.length.should.eql 1, 'Expected a chat'
@@ -111,6 +111,7 @@ boiler 'Service - Get Active Chats', ->
   it 'should sort the chats', (done) ->
     @getAuthed (_..., {accountId}) =>
       @createChats (err, chats) =>
+        should.not.exist err
 
         # add an invite for the present operator
         inviteChat = chats[2]

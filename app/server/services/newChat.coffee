@@ -4,30 +4,28 @@ stoic = require 'stoic'
 createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 
-module.exports = (params, done) ->
-  {Chat, Session, ChatSession} = stoic.models
+module.exports =
+  required: ['websiteUrl', 'websiteId', 'accountId']
+  optional: ['specialtyName', 'specialtyId']
+  service: (params, done) ->
+    {websiteId, specialtyId, username} = params
+    username ||= 'anonymous'
 
-  getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
-  getAvailableOperators = config.service 'operator/getAvailableOperators'
+    {Chat, Session, ChatSession} = stoic.models
 
-  return done new Error "Field required: websiteUrl" unless params?.websiteUrl
+    getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
+    getAvailableOperators = config.service 'operator/getAvailableOperators'
 
-  getWebsiteIdForDomain {websiteUrl: params.websiteUrl}, (err, {websiteId}) ->
-    err ||= new Error "Could not find website: #{params.websiteUrl}" if not websiteId
-    return done err if err or not websiteId
-
-    department = params.department
-    username = params.username or 'anonymous'
     visitorMeta =
       username: username
       referrerData: params || null
 
-    getAvailableOperators {websiteId: websiteId, specialtyId: department}, (err, result) ->
+    getAvailableOperators {websiteId: websiteId, specialtyId: specialtyId}, (err, result) ->
       operators = result?.operators
       accountId = result?.accountId
       reason = result?.reason
       if err or reason
-        errData = {error: err, websiteId: websiteId, department: department, reason: reason}
+        errData = {error: err, websiteId: websiteId, specialtyId: specialtyId, reason: reason}
         config.log.warn 'Could not get availible operators for new chat.', errData
 
       return done err, {noOperators: true} if err or operators.length is 0
@@ -38,9 +36,7 @@ module.exports = (params, done) ->
         chat: Chat(accountId).create
 
       }, (err, {chat, session}) ->
-        if err
-          errData = {error: err, chatId: chat?.id, sessionId: session?.id}
-          config.log.error 'Error creating session and chat for new chat.', errData
+        return done err if err
 
         showToOperators = (next) ->
           notify = (op, next) ->
@@ -55,15 +51,9 @@ module.exports = (params, done) ->
         ]
         tasks.push chat.websiteId.set websiteId
         tasks.push chat.websiteUrl.set params.websiteUrl
-        tasks.push chat.department.set department if department
+        tasks.push chat.specialtyId.set specialtyId if specialtyId
 
         async.parallel tasks, (err) ->
-          if err
-            errData = {
-              error: err, chatId: chat.id, visitor: visitorMeta, sessionId: session.id,
-              websiteId: websiteId, department: department
-            }
-            config.log.error 'Error creating new chat.', errData
 
           # create pulsar channel
           createChannel chat.id

@@ -14,7 +14,7 @@ boiler 'Service - Get Available Operators', ->
 
   describe 'with no operators', ->
     it 'should return no results', (done) ->
-      @getAvailableOperators {websiteId: @fooSiteId, specialty: 'sales'}, (err, {accountId, operators}) ->
+      @getAvailableOperators {websiteId: @fooSiteId, specialtyName: 'sales'}, (err, {accountId, operators}) ->
         should.not.exist err
         should.exist operators
         operators.length.should.eql 0
@@ -23,7 +23,7 @@ boiler 'Service - Get Available Operators', ->
   describe 'with one owner', ->
     it 'should return one result', (done) ->
       @getAuthedWith {email: 'owner@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators {websiteId: @fooSiteId, specialty: 'Sales'}, (err, {accountId, operators}) ->
+        @getAvailableOperators {websiteId: @fooSiteId, specialtyName: 'Sales'}, (err, {accountId, operators}) ->
           should.not.exist err
           should.exist accountId
           should.exist operators
@@ -33,7 +33,7 @@ boiler 'Service - Get Available Operators', ->
   describe 'with one operator', ->
     it 'should return one result', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators {websiteId: @fooSiteId, specialty: 'Sales'}, (err, {accountId, operators}) ->
+        @getAvailableOperators {websiteId: @fooSiteId, specialtyName: 'Sales'}, (err, {accountId, operators}) ->
           should.not.exist err
           should.exist accountId
           should.exist operators
@@ -43,7 +43,7 @@ boiler 'Service - Get Available Operators', ->
   describe 'if website does not match', ->
     it 'should return no results', (done) ->
       @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-        @getAvailableOperators {websiteId: @barSiteId, specialty: 'Sales'}, (err, {accountId, operators}) ->
+        @getAvailableOperators {websiteId: @barSiteId, specialtyName: 'Sales'}, (err, {accountId, operators}) ->
           should.not.exist err
           should.exist accountId
           should.exist operators

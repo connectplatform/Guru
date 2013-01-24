@@ -36,27 +36,7 @@ module.exports =
     }
 
     {
-      filters: ['chatIdIsValid']
-      only: [
-        'acceptChat'
-        'acceptInvite'
-        'acceptTransfer'
-        'emailChat'
-        'getChatHistory'
-        'getNonpresentOperators'
-        'inviteOperator'
-        'joinChat'
-        'kickUser'
-        'leaveChat'
-        'printChat'
-        'transferChat'
-        'visitorCanAccessChannel'
-        'watchChat'
-      ]
-    }
-
-    {
-      filters: ['chatIdIsValid', 'objectMessageExists' ]
+      filters: ['objectMessageExists' ]
       only: ['say']
     }
   ]

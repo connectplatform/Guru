@@ -15,10 +15,24 @@ module.exports = [
       assert typeof arg is 'string'
     defaultArgs: ['email', 'password', 'isWatching']
   ,
-    typeName: 'SessionId'
+    typeName: 'MongoId'
     validation: (arg, assert) ->
-      assert (typeof arg is 'string') and arg.match redisId
+      assert (typeof arg) is 'string' and arg.match mongoId
+    defaultArgs: ['userId', 'accountId', 'websiteId', 'specialtyId']
+  ,
+    typeName: 'RedisId'
+    validation: (arg, assert) ->
+      assert (typeof arg) is 'string' and arg.match redisId
+    defaultArgs: ['chatId', 'sessionId']
+  ,
+    typeName: 'SessionId'
+    validation: (sessionId, assert) ->
+      Session.accountLookup.get sessionId, (err, accountId) ->
+        assert not err and accountId
     defaultArgs: ['sessionId']
+
+  #TODO: validate chatId when we have all args available in validation
+
   ,
     typeName: 'SpecialtyId'
     lookup: ({accountId, specialtyName}, found) ->
@@ -54,14 +68,8 @@ module.exports = [
 
     defaultArgs: ['accountId']
   ,
-    typeName: 'MongoId'
-    validation: (arg, assert) ->
-      assert (typeof arg) is 'string' and arg.match mongoId
-    defaultArgs: ['accountId', 'websiteId', 'specialtyId']
-  ,
     typeName: 'WebsiteImageName'
     validation: (imageName, assert) ->
       assert imageName in ['online', 'offline', 'logo']
     defaultArgs: ['imageName']
-
 ]

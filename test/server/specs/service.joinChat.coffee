@@ -38,7 +38,7 @@ boiler 'Service - Join Chat', ->
 
       # set up session listener
       sessionNotifications = pulsar.channel "notify:session:#{@sessionId}"
-      sessionNotifications.on 'unreadMessages', (counts) =>
+      sessionNotifications.once 'unreadMessages', (counts) =>
         count = counts[@chatId]
         should.exist count
         count.should.eql 1

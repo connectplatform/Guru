@@ -1,4 +1,4 @@
-require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {delay, hasText, doesNotHaveText, defaultTimeout}) ->
+require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {delay, hasText, exists, doesNotHaveText, defaultTimeout}) ->
 
   fill = (field, value) ->
     $("form#createAccount input[name=#{field}]").val(value).change()
@@ -24,12 +24,12 @@ require ['spec/helpers/mock', 'spec/helpers/util'], (mock, {delay, hasText, does
       mock.services()
       window.location.hash = '/createAccount'
       waitsFor hasText('.page-header h1', 'Create a new account'), 'no login prompt', defaultTimeout
-      mock.loggedIn 'Owner'
 
     it 'should accept valid input', ->
+      mock.loggedIn 'Owner'
       submitForm()
 
-      waitsFor hasText('#content h1', 'Account Details'), 'Did not see account details.', defaultTimeout
+      waitsFor hasText('#content h1', 'Thank you for registering your free account!'), 'Did not see thank you page.', defaultTimeout
 
     it 'should validate email', ->
       submitForm {email: null}

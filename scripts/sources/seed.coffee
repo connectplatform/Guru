@@ -7,7 +7,7 @@ module.exports = ->
 
   # run sampleData
   sampleData (err, data) ->
-    return console.log 'Error: ', err if err?
+    console.log 'Error: ', err if err?
     console.log "Created #{(records.length or 1 for coll, records of data).reduce((l, r)->l+r)} records."
 
     #{inspect} = require 'util'
@@ -20,7 +20,7 @@ module.exports = ->
     createRecurly = config.service "recurly/createAccount"
 
     createRecurly {accountId: accountId}, (err, status) ->
-      return console.log "Error creating Recurly account: #{err}" if err
+      console.log "Error creating Recurly account: #{err}" if err
       console.log 'Recurly token:', status.account.hosted_login_token
 
       process.exit()

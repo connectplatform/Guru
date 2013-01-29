@@ -114,11 +114,10 @@ boiler 'Service - Clear Old Chats', ->
                 allChats.length.should.eql 0
 
                 # Create a new chat and make sure it's different than the one we had
-                visitor.newChat newChatData, (err, newChatResponse) ->
+                visitor.newChat newChatData, (err, newChat) ->
                   should.not.exist err
-                  newChatId = newChatResponse.chatId
-                  visitorSession.should.not.eql visitor.cookie 'session'
-                  chatId.should.not.eql newChatId
+                  visitorSession.should.not.eql newChat.sessionId
+                  chatId.should.not.eql newChat.chatId
                   done()
 
   testWithSessions = (method) ->

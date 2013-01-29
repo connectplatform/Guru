@@ -7,7 +7,6 @@ boiler 'Model - Session', ->
   it 'should reattatch a user to their session if they log out and back in', (done) ->
     @getAuthed (err, client, {sessionId}) =>
       firstSessionId = sessionId
-      @client.cookie 'session', null
       @getAuthed (err, client, {sessionId}) =>
         secondSessionId = sessionId
         firstSessionId.should.eql secondSessionId

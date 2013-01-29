@@ -10,7 +10,6 @@ boiler 'Service - Get Existing Chat', ->
       client.getExistingChat {}, (err, {chatId}) ->
         should.not.exist err, 'expected no error from getExistingChat'
         should.not.exist chatId, 'expected no existingChat'
-        client.disconnect()
         done()
 
   it 'should say to reconnect you if you already have a session', (done) ->
@@ -25,5 +24,4 @@ boiler 'Service - Get Existing Chat', ->
           should.not.exist reason
           should.exist chatId, 'expected to find an existing chat'
           oldChatId.should.eql chatId
-          client2.disconnect()
           done()

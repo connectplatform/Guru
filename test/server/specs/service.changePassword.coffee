@@ -9,9 +9,6 @@ boiler 'Service - Change Password', ->
         # change password
         client.changePassword {sessionId: @sessionId, oldPassword: "foobar", newPassword: "newPassword"}, (err) =>
           should.not.exist err, 'change password failed'
-
-          # log out
-          client.disconnect()
           cb()
 
   it 'should let a user log in with a changed password', (done) ->
@@ -27,8 +24,6 @@ boiler 'Service - Change Password', ->
 
         # verify that login worked
         should.exist sessionId
-
-        client.disconnect()
         done()
 
   it 'should not let you log in with an old password once its been changed', (done) ->
@@ -40,5 +35,4 @@ boiler 'Service - Change Password', ->
         # verify that login failed
         err.should.eql "Invalid password."
         should.not.exist sessionId
-        client.disconnect()
         done()

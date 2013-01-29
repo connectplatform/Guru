@@ -13,7 +13,6 @@ boiler 'Service - Forgot Password', ->
       client.forgotPassword {email: email}, (err, {status}) ->
         should.not.exist err
         status.should.eql 'OK'
-        client.disconnect()
         done()
 
   it 'should fail gracefully when email not found', (done) ->
@@ -23,5 +22,4 @@ boiler 'Service - Forgot Password', ->
       client.forgotPassword {email: badEmail}, (err, status) ->
         should.exist err
         err.should.eql 'Could not find user.'
-        client.disconnect()
         done()

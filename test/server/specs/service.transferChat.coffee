@@ -5,7 +5,6 @@ boiler 'Service - Transfer Chat', ->
   it "should let you transfer a chat to another operator", (done) ->
     # Setup
     @loginOperator (err, client) =>
-      client.disconnect()
       @getAuthed (_..., {accountId}) =>
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
@@ -30,5 +29,4 @@ boiler 'Service - Transfer Chat', ->
                   type.should.eql 'transfer'
                   chatSession.relationMeta.get 'requestor', (err, requestor) =>
                     requestor.should.eql @sessionId
-                    @client.disconnect()
                     done()

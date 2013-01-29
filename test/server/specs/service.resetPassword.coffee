@@ -20,5 +20,4 @@ boiler 'Service - Reset Password', ->
         client.login loginData, (err, {sessionId}) =>
           should.not.exist err, "expected login to work: #{err}"
           should.exist sessionId, "expected sessionId"
-          client.disconnect()
           done()

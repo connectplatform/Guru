@@ -11,6 +11,13 @@ pulsarPort = process.env.GURU_PULSAR_PORT
 
 #Exported object of helper functions
 helpers =
+
+  # keep track of how many tests we've run
+  count: 0
+
+  # keep track of vein clients so we can disconnect them in cleanup
+  clients: []
+
   wrapVeinClient: (client, localStorage) ->
     utility = ['disconnect', 'cookie', 'ready']
 
@@ -31,6 +38,8 @@ helpers =
 
   getClient: (receive) ->
     client = Vein.createClient port: testPort
+    helpers.clients.push client
+
     if receive
       client.ready ->
         receive client

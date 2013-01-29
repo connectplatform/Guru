@@ -23,7 +23,6 @@ boiler 'Service - Accept Transfer', ->
                 # after the tranfer, target operator should be in the chat
                 transferee.getMyChats {sessionId: @targetSession}, (err, chats) =>
                   should.not.exist err
-                  transferee.disconnect()
                   chats.length.should.eql 1
                   chats[0].id.should.eql @chatId
 

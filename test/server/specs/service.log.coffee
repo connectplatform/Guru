@@ -7,17 +7,15 @@ boiler 'Service - Log', ->
         service: 'Some service'
         error: 'An error'
         ids:
-          sessionId: @client.cookie 'session'
+          sessionId: @sessionId
           chatId: 'Invalid LOL'
         }
       }, (err) =>
-        @client.disconnect()
         should.not.exist err
         done()
 
   it 'should work when no extra data is given', (done) ->
     @getAuthed =>
       @client.log {message: 'vague happening', context: {}}, (err) =>
-        @client.disconnect()
         should.not.exist err
         done()

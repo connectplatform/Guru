@@ -16,7 +16,6 @@ boiler 'Service - Accept Invite', ->
 
                 client.getMyChats {}, (err, chats) =>
                   should.not.exist err
-                  client.disconnect()
                   chats.length.should.eql 1
                   chats[0].id.should.eql @chatId
                   done()

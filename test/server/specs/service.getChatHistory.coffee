@@ -16,7 +16,6 @@ boiler 'Service - Get Chat History', ->
           async.forEach messages, say, =>
 
             @client.getChatHistory {sessionId: sessionId, chatId: chatId}, (err, data) =>
-              @client.disconnect()
               should.not.exist err
 
               for entry, count in data

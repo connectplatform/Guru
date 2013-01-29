@@ -20,5 +20,4 @@ boiler 'Service - Get Logo For Chat', ->
           Chat(accountId).get(@chatId).websiteId.get (err, websiteId) =>
             should.not.exist err
             url.should.eql "https://s3.amazonaws.com/#{config.app.aws.s3.bucket}/website/#{websiteId}/logo"
-            @client.disconnect()
             done()

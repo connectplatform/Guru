@@ -14,8 +14,6 @@ boiler 'Service - Get Active Chats', ->
           chatData.visitor.username.should.eql 'visitor'
           chatData.status.should.eql 'waiting'
           should.exist new Date chatData.creationDate
-
-          @client.disconnect()
           done()
 
   it 'should return operators for chats', (done) ->
@@ -30,8 +28,6 @@ boiler 'Service - Get Active Chats', ->
             should.not.exist err
             should.exist chatData.operators
             chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
-
-            @client.disconnect()
             done()
 
   describe 'filter:', ->
@@ -44,8 +40,6 @@ boiler 'Service - Get Active Chats', ->
             @client.getActiveChats {}, (err, chats) =>
               should.not.exist err
               should.exist chats
-
-              @client.disconnect()
               done err, chats
 
     it 'should not show me chats for another website', (done) ->
@@ -105,7 +99,6 @@ boiler 'Service - Get Active Chats', ->
           should.not.exist err
           vacantChats = chats.findAll (chat) -> chat.status is 'vacant'
           vacantChats.length.should.eql 0
-          @client.disconnect()
           done()
 
   it 'should sort the chats', (done) ->
@@ -134,8 +127,6 @@ boiler 'Service - Get Active Chats', ->
 
                 visitorNames = chats.map (chat) => chat.visitor.username
                 visitorNames.should.eql ['Ralph', 'Bob', 'Suzie']
-
-                @client.disconnect()
                 done()
 
   it "should have a chat relation if an operator is invited", (done) ->
@@ -151,7 +142,6 @@ boiler 'Service - Get Active Chats', ->
 
               invitee.getActiveChats {sessionId: @targetSession}, (err, chats) =>
                 should.not.exist err
-                invitee.disconnect()
                 chats.length.should.eql 1
                 chats[0].id.should.eql @chatId
                 chats[0].relation.should.eql 'invite'

@@ -2,7 +2,7 @@ Vein = require 'vein'
 
 # accept an http server which we will attach to
 module.exports = (server) ->
-  vein = Vein.createServer server: server
+  vein = Vein.createServer server
 
   # TODO: When vein connection is lost remove user session
 

@@ -2,13 +2,6 @@ should = require 'should'
 
 boiler 'Service - Logout', ->
 
-  it 'should log you out', (done) ->
-    @getAuthed =>
-      @client.logout (err) =>
-        should.not.exist err
-        should.not.exist @client.cookie('session'), 'expected session cookie to be removed'
-        done()
-
   it 'should remove your session', (done) ->
     stoic = require('stoic')
     {Session, ChatSession} = stoic.models
@@ -20,6 +13,7 @@ boiler 'Service - Logout', ->
       accountId = @account.id
 
       @client.logout (err) =>
+        should.not.exist err, 'expected no errors from logout'
 
         # session model should not be found
         Session(accountId).get(sessionId).dump (err, data) =>

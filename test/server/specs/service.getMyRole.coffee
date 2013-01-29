@@ -12,17 +12,12 @@ boiler 'Service - Get My Role', ->
         role.should.eql 'None'
         done()
 
-  describe 'when invalid session exists', ->
+  describe 'when invalid session exists should say None', ->
     beforeEach (done) ->
-      @client = @getClient()
-      @client.cookie 'session', 'bar'
-      @client.ready ->
-        done()
-
-    it "should say None", (done) ->
-      @client.getMyRole {}, (err, {role}) ->
-        role.should.eql 'None'
-        done()
+      @getClient (err, @client) =>
+        @client.getMyRole {sessionId: 'bar'}, (err, {role}) ->
+          role.should.eql 'None'
+          done()
 
   describe 'when Owner session exists', ->
     beforeEach (done) ->
@@ -49,9 +44,6 @@ boiler 'Service - Get My Role', ->
       @guru1Login (err, @guru) =>
         @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @client) =>
           done()
-
-    afterEach ->
-      @guru.disconnect()
 
     it "should say Visitor", (done) ->
       should.exist @visitorSession

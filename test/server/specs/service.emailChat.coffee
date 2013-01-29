@@ -16,5 +16,4 @@ boiler 'Service - Email Chat', ->
               should.not.exist err
               should.exist exitStatus
               exitStatus.message.should.match /MessageId/
-              client.disconnect()
               done()

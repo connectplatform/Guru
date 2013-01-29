@@ -20,7 +20,6 @@ boiler 'Service - New Chat', ->
         # When I send a message
         visitor.say {message: 'hello!', chatId: @chatId}, (err) =>
           should.not.exist err
-          visitor.disconnect()
 
   it 'should notify operators of a new chat', (done) ->
     @getAuthed =>

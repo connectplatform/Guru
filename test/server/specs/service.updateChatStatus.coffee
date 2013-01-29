@@ -9,9 +9,6 @@ boiler 'Service - Update Chat Status', ->
         @chatHandle = Chat(@accountId).get(@chatId)
         done()
 
-  afterEach ->
-    @visitor.disconnect()
-
   it "should set a chat's status to 'waiting' when there is a visitor and no operator", (done) ->
     @chatHandle.status.get (err, status) =>
       should.not.exist err
@@ -24,7 +21,6 @@ boiler 'Service - Update Chat Status', ->
         @chatHandle.status.get (err, status) =>
           should.not.exist err
           status.should.eql 'active'
-          client.disconnect()
           done()
 
   it "should set a chat's status to 'vacant' when there's no visitor", (done) ->

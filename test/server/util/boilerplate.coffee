@@ -58,7 +58,10 @@ setup = (testName, dataPrep, tests) ->
         db.wipe done
 
     afterEach ->
-      @client.disconnect() if @client?.connected
+      #console.log "We've run #{++ helpers.count} tests."
+      while helpers.clients.length
+        client = helpers.clients.pop()
+        client.disconnect() if client?.connected
 
     tests()
 

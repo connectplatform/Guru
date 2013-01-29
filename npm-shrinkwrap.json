@@ -3,68 +3,88 @@
   "version": "0.0.1-14",
   "dependencies": {
     "coffee-script": {
-      "version": "1.3.3"
+      "version": "1.3.3",
+      "from": "coffee-script@1.3.3"
     },
     "md5": {
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "from": "md5@1.0.0"
     },
     "mongoose": {
       "version": "3.4.0",
+      "from": "mongoose@3.4.0",
       "dependencies": {
         "hooks": {
-          "version": "0.2.1"
+          "version": "0.2.1",
+          "from": "hooks@0.2.1"
         },
         "mongodb": {
           "version": "1.1.11",
+          "from": "mongodb@1.1.11",
           "dependencies": {
             "bson": {
-              "version": "0.1.5"
+              "version": "0.1.5",
+              "from": "bson@0.1.5"
             }
           }
         },
         "ms": {
-          "version": "0.1.0"
+          "version": "0.1.0",
+          "from": "ms@0.1.0"
         },
         "sliced": {
-          "version": "0.0.3"
+          "version": "0.0.3",
+          "from": "sliced@0.0.3"
         }
       }
     },
     "async": {
-      "version": "0.1.22"
+      "version": "0.1.22",
+      "from": "async@0.1.22"
     },
     "should": {
-      "version": "0.6.3"
+      "version": "1.2.1",
+      "from": "should@1.2.1"
     },
     "connect": {
       "version": "2.3.4",
+      "from": "connect@2.3.4",
       "dependencies": {
         "qs": {
-          "version": "0.4.2"
+          "version": "0.4.2",
+          "from": "qs@0.4.2"
         },
         "mime": {
-          "version": "1.2.4"
+          "version": "1.2.4",
+          "from": "mime@1.2.4"
         },
         "formidable": {
-          "version": "1.0.11"
+          "version": "1.0.11",
+          "from": "formidable@1.0.11"
         },
         "crc": {
-          "version": "0.2.0"
+          "version": "0.2.0",
+          "from": "crc@0.2.0"
         },
         "cookie": {
-          "version": "0.0.4"
+          "version": "0.0.4",
+          "from": "cookie@0.0.4"
         },
         "fresh": {
-          "version": "0.0.1"
+          "version": "0.0.1",
+          "from": "fresh@0.0.1"
         },
         "bytes": {
-          "version": "0.0.1"
+          "version": "0.0.1",
+          "from": "bytes@0.0.1"
         },
         "range-parser": {
-          "version": "0.0.4"
+          "version": "0.0.4",
+          "from": "range-parser@0.0.4"
         },
         "debug": {
-          "version": "0.7.0"
+          "version": "0.7.0",
+          "from": "debug@0.7.0"
         }
       }
     },
@@ -74,54 +94,69 @@
       "dependencies": {
         "protosock": {
           "version": "0.1.2",
+          "from": "protosock@*",
           "dependencies": {
             "engine.io": {
               "version": "0.3.10",
+              "from": "engine.io@0.3.10",
               "dependencies": {
                 "debug": {
-                  "version": "0.6.0"
+                  "version": "0.6.0",
+                  "from": "debug@0.6.0"
                 },
                 "ws": {
                   "version": "0.4.25",
+                  "from": "ws@~0.4.21",
                   "dependencies": {
                     "commander": {
-                      "version": "0.6.1"
+                      "version": "0.6.1",
+                      "from": "commander@~0.6.1"
                     },
                     "tinycolor": {
-                      "version": "0.0.1"
+                      "version": "0.0.1",
+                      "from": "tinycolor@0.x"
                     },
                     "options": {
-                      "version": "0.0.3"
+                      "version": "0.0.3",
+                      "from": "options@latest"
                     }
                   }
                 },
                 "base64id": {
-                  "version": "0.1.0"
+                  "version": "0.1.0",
+                  "from": "base64id@0.1.0"
                 }
               }
             },
             "engine.io-client": {
               "version": "0.3.10",
+              "from": "engine.io-client@0.3.10",
               "dependencies": {
                 "ws": {
                   "version": "0.4.20",
+                  "from": "ws@0.4.20",
                   "dependencies": {
                     "commander": {
-                      "version": "0.6.1"
+                      "version": "0.6.1",
+                      "from": "commander@~0.6.1"
                     },
                     "tinycolor": {
-                      "version": "0.0.1"
+                      "version": "0.0.1",
+                      "from": "tinycolor@0.x"
                     },
                     "options": {
-                      "version": "0.0.3"
+                      "version": "0.0.3",
+                      "from": "options@latest"
                     }
                   }
                 },
                 "xmlhttprequest": {
-                  "version": "1.5.0"
+                  "version": "1.5.0",
+                  "from": "xmlhttprequest@1.5.0"
                 },
                 "debug": {
-                  "version": "0.6.0"
+                  "version": "0.6.0",
+                  "from": "debug@0.6.0"
                 }
               }
             }
@@ -130,152 +165,100 @@
       }
     },
     "vein": {
-      "version": "0.4.2",
-      "from": "git://github.com/bitmage/vein.git",
+      "version": "0.5.1",
+      "from": "vein@0.5.1",
       "dependencies": {
         "protosock": {
-          "version": "0.0.6",
-          "from": "git://github.com/bitmage/protosock.git",
+          "version": "0.1.2",
+          "from": "protosock@*",
           "dependencies": {
             "engine.io": {
-              "version": "0.2.2",
+              "version": "0.3.10",
+              "from": "engine.io@0.3.10",
               "dependencies": {
                 "debug": {
-                  "version": "0.6.0"
+                  "version": "0.6.0",
+                  "from": "debug@0.6.0"
                 },
                 "ws": {
-                  "version": "0.4.21",
+                  "version": "0.4.25",
+                  "from": "ws@~0.4.21",
                   "dependencies": {
                     "commander": {
-                      "version": "0.6.1"
+                      "version": "0.6.1",
+                      "from": "commander@~0.6.1"
                     },
                     "tinycolor": {
-                      "version": "0.0.1"
+                      "version": "0.0.1",
+                      "from": "tinycolor@0.x"
                     },
                     "options": {
-                      "version": "0.0.3"
+                      "version": "0.0.3",
+                      "from": "options@latest"
                     }
                   }
+                },
+                "base64id": {
+                  "version": "0.1.0",
+                  "from": "base64id@0.1.0"
                 }
               }
             },
             "engine.io-client": {
-              "version": "0.2.2",
+              "version": "0.3.10",
+              "from": "engine.io-client@0.3.10",
               "dependencies": {
                 "ws": {
                   "version": "0.4.20",
+                  "from": "ws@0.4.20",
                   "dependencies": {
                     "commander": {
-                      "version": "0.6.1"
+                      "version": "0.6.1",
+                      "from": "commander@~0.6.1"
                     },
                     "tinycolor": {
-                      "version": "0.0.1"
+                      "version": "0.0.1",
+                      "from": "tinycolor@0.x"
                     },
                     "options": {
-                      "version": "0.0.3"
+                      "version": "0.0.3",
+                      "from": "options@latest"
                     }
                   }
                 },
                 "xmlhttprequest": {
-                  "version": "1.4.2"
+                  "version": "1.5.0",
+                  "from": "xmlhttprequest@1.5.0"
                 },
                 "debug": {
-                  "version": "0.6.0"
+                  "version": "0.6.0",
+                  "from": "debug@0.6.0"
                 }
               }
-            }
-          }
-        },
-        "should": {
-          "version": "1.1.1"
-        },
-        "uglify-js": {
-          "version": "1.3.3"
-        },
-        "connect": {
-          "version": "2.4.6",
-          "dependencies": {
-            "qs": {
-              "version": "0.5.1"
-            },
-            "formidable": {
-              "version": "1.0.11"
-            },
-            "crc": {
-              "version": "0.2.0"
-            },
-            "cookie": {
-              "version": "0.0.4"
-            },
-            "bytes": {
-              "version": "0.1.0"
-            },
-            "send": {
-              "version": "0.0.4",
-              "dependencies": {
-                "mime": {
-                  "version": "1.2.6"
-                },
-                "range-parser": {
-                  "version": "0.0.4"
-                }
-              }
-            },
-            "fresh": {
-              "version": "0.1.0"
-            },
-            "pause": {
-              "version": "0.0.1"
-            },
-            "debug": {
-              "version": "0.7.0"
-            }
-          }
-        },
-        "mocha": {
-          "version": "1.4.2",
-          "dependencies": {
-            "commander": {
-              "version": "0.6.1"
-            },
-            "growl": {
-              "version": "1.5.1"
-            },
-            "jade": {
-              "version": "0.26.3",
-              "dependencies": {
-                "mkdirp": {
-                  "version": "0.3.0"
-                }
-              }
-            },
-            "diff": {
-              "version": "1.0.2"
-            },
-            "debug": {
-              "version": "0.7.0"
-            },
-            "mkdirp": {
-              "version": "0.3.3"
             }
           }
         }
       }
     },
     "sugar": {
-      "version": "1.3.0"
+      "version": "1.3.0",
+      "from": "sugar@1.3.0"
     },
     "law": {
-      "version": "0.0.10"
+      "version": "0.0.10",
+      "from": "law@0.0.10"
     },
     "stoic": {
       "version": "0.0.4",
+      "from": "stoic@0.0.4",
       "dependencies": {
         "hiredis": {
-          "version": "0.1.14"
+          "version": "0.1.14",
+          "from": "hiredis@*"
         },
         "redis": {
-          "version": "0.8.2"
+          "version": "0.8.2",
+          "from": "redis@*"
         }
       }
     },
@@ -285,26 +268,33 @@
     },
     "nodemailer": {
       "version": "0.3.27",
+      "from": "nodemailer",
       "dependencies": {
         "mailcomposer": {
           "version": "0.1.19",
+          "from": "mailcomposer@>= 0.1.19",
           "dependencies": {
             "mimelib": {
               "version": "0.2.4",
+              "from": "mimelib@>= 0.2.0",
               "dependencies": {
                 "encoding": {
                   "version": "0.1.3",
+                  "from": "encoding@*",
                   "dependencies": {
                     "iconv-lite": {
-                      "version": "0.2.5"
+                      "version": "0.2.5",
+                      "from": "iconv-lite@*"
                     },
                     "iconv": {
-                      "version": "1.2.3"
+                      "version": "1.2.3",
+                      "from": "iconv@*"
                     }
                   }
                 },
                 "addressparser": {
-                  "version": "0.1.2"
+                  "version": "0.1.2",
+                  "from": "addressparser@*"
                 }
               }
             }
@@ -312,34 +302,43 @@
         },
         "simplesmtp": {
           "version": "0.1.24",
+          "from": "simplesmtp@>= 0.1.22",
           "dependencies": {
             "rai": {
-              "version": "0.1.6"
+              "version": "0.1.6",
+              "from": "rai@*"
             },
             "xoauth2": {
               "version": "0.1.1",
+              "from": "xoauth2@>= 0.1.1",
               "dependencies": {
                 "request": {
                   "version": "2.11.1",
+                  "from": "request@*",
                   "dependencies": {
                     "form-data": {
                       "version": "0.0.3",
+                      "from": "form-data",
                       "dependencies": {
                         "combined-stream": {
                           "version": "0.0.3",
+                          "from": "combined-stream@0.0.3",
                           "dependencies": {
                             "delayed-stream": {
-                              "version": "0.0.5"
+                              "version": "0.0.5",
+                              "from": "delayed-stream@0.0.5"
                             }
                           }
                         },
                         "async": {
-                          "version": "0.1.9"
+                          "version": "0.1.9",
+                          "from": "async@0.1.9"
                         }
                       }
                     },
                     "mime": {
-                      "version": "1.2.7"
+                      "version": "1.2.7",
+                      "from": "mime"
                     }
                   }
                 }
@@ -349,9 +348,11 @@
         },
         "optimist": {
           "version": "0.3.4",
+          "from": "optimist@*",
           "dependencies": {
             "wordwrap": {
-              "version": "0.0.2"
+              "version": "0.0.2",
+              "from": "wordwrap@~0.0.2"
             }
           }
         }
@@ -359,23 +360,29 @@
     },
     "factory-worker": {
       "version": "0.6.0",
+      "from": "factory-worker",
       "dependencies": {
         "hashish": {
           "version": "0.0.4",
+          "from": "hashish@>=0.0.3",
           "dependencies": {
             "traverse": {
-              "version": "0.6.3"
+              "version": "0.6.3",
+              "from": "traverse@>=0.2.4"
             }
           }
         },
         "seq": {
           "version": "0.3.5",
+          "from": "seq@>= 0.3.5",
           "dependencies": {
             "chainsaw": {
               "version": "0.0.9",
+              "from": "chainsaw@>=0.0.7 <0.1",
               "dependencies": {
                 "traverse": {
-                  "version": "0.3.9"
+                  "version": "0.3.9",
+                  "from": "traverse@>=0.3.0 <0.4"
                 }
               }
             }
@@ -385,36 +392,45 @@
     },
     "easyxml": {
       "version": "0.0.2",
+      "from": "easyxml@0.0.2",
       "dependencies": {
         "elementtree": {
           "version": "0.1.5",
+          "from": "elementtree@",
           "dependencies": {
             "sax": {
-              "version": "0.3.5"
+              "version": "0.3.5",
+              "from": "sax@0.3.5"
             }
           }
         },
         "inflector": {
-          "version": "0.0.1"
+          "version": "0.0.1",
+          "from": "inflector@"
         }
       }
     },
     "xml2js": {
       "version": "0.2.1",
+      "from": "xml2js",
       "dependencies": {
         "sax": {
-          "version": "0.4.2"
+          "version": "0.4.2",
+          "from": "sax@>=0.1.1"
         }
       }
     },
     "markdown": {
       "version": "0.4.0",
+      "from": "markdown",
       "dependencies": {
         "nopt": {
           "version": "1.0.10",
+          "from": "nopt@1",
           "dependencies": {
             "abbrev": {
-              "version": "1.0.3"
+              "version": "1.0.3",
+              "from": "abbrev@1"
             }
           }
         }
@@ -422,35 +438,45 @@
     },
     "winston": {
       "version": "0.6.2",
+      "from": "winston",
       "dependencies": {
         "colors": {
-          "version": "0.6.0-1"
+          "version": "0.6.0-1",
+          "from": "colors@0.x.x"
         },
         "cycle": {
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "from": "cycle@1.0.x"
         },
         "eyes": {
-          "version": "0.1.8"
+          "version": "0.1.8",
+          "from": "eyes@0.1.x"
         },
         "pkginfo": {
-          "version": "0.2.3"
+          "version": "0.2.3",
+          "from": "pkginfo@0.2.x"
         },
         "request": {
-          "version": "2.9.203"
+          "version": "2.9.203",
+          "from": "request@2.9.x"
         },
         "stack-trace": {
-          "version": "0.0.6"
+          "version": "0.0.6",
+          "from": "stack-trace@0.0.x"
         }
       }
     },
     "winston-mongodb": {
       "version": "0.4.0",
+      "from": "winston-mongodb",
       "dependencies": {
         "mongodb": {
           "version": "0.9.9-8",
+          "from": "mongodb@0.9.x",
           "dependencies": {
             "bson": {
-              "version": "0.0.4"
+              "version": "0.0.4",
+              "from": "bson@0.0.4"
             }
           }
         }
@@ -458,45 +484,57 @@
     },
     "jade": {
       "version": "0.27.2",
+      "from": "jade",
       "dependencies": {
         "commander": {
-          "version": "0.6.1"
+          "version": "0.6.1",
+          "from": "commander@0.6.1"
         },
         "mkdirp": {
-          "version": "0.3.0"
+          "version": "0.3.0",
+          "from": "mkdirp@0.3.0"
         }
       }
     },
     "node-log": {
       "version": "0.0.3",
+      "from": "node-log@0.0.3",
       "dependencies": {
         "colors": {
-          "version": "0.6.0-1"
+          "version": "0.6.0-1",
+          "from": "colors@0.6.0-1"
         }
       }
     },
     "jaded": {
       "version": "0.0.6",
+      "from": "jaded@0.0.6",
       "dependencies": {
         "jade": {
           "version": "0.27.2",
+          "from": "jade@0.27.2",
           "dependencies": {
             "commander": {
-              "version": "0.6.1"
+              "version": "0.6.1",
+              "from": "commander@0.6.1"
             },
             "mkdirp": {
-              "version": "0.3.0"
+              "version": "0.3.0",
+              "from": "mkdirp@0.3.0"
             }
           }
         },
         "uglify-js": {
-          "version": "1.3.3"
+          "version": "1.3.3",
+          "from": "uglify-js@1.3.3"
         },
         "commander": {
-          "version": "1.0.1"
+          "version": "1.0.1",
+          "from": "commander@1.0.1"
         },
         "mkdirp": {
-          "version": "0.3.3"
+          "version": "0.3.3",
+          "from": "mkdirp@0.3.3"
         }
       }
     }

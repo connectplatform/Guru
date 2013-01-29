@@ -6,9 +6,6 @@ boiler 'Service - Visitor Can Access Channel', ->
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @client) =>
         @owner.joinChat {chatId: @chatId}, done
 
-  afterEach ->
-    @owner.disconnect()
-
   it 'should say a visitor can connect to a chat that they created', (done) ->
     @client.visitorCanAccessChannel {chatId: @chatId}, (err, {accessAllowed}) =>
       should.not.exist err

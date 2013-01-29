@@ -12,7 +12,6 @@ boiler 'Service - Watch Chat', ->
         clientMessage = "hello, world!"
 
         visitorClient.say {message: clientMessage, chatId: chatId}, =>
-          visitorClient.disconnect()
 
           # when
           @client.watchChat {chatId: chatId}, (err, data) =>

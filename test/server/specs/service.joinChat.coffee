@@ -10,6 +10,7 @@ boiler 'Service - Join Chat', ->
         # listen for joinChat
         @channel = @getPulsar().channel @chatId
         @channel.once 'serverMessage', (data) ->
+          console.log 'got serverMessage'
           data.type.should.eql 'notification'
           done()
 

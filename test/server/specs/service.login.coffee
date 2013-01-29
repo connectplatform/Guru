@@ -10,21 +10,18 @@ boiler 'Service - Login', ->
       {Session} = stoic.models
       Session(accountId).get(sessionId).chatName.get (err, chatName) =>
         chatName.should.eql "Owner Man"
-        client.disconnect()
         done()
 
   it 'should not accept invalid email', (done) ->
     @invalidLogin (err, client, {sessionId, accountId}) =>
       should.exist err
       err.should.eql 'Invalid user.'
-      client.disconnect()
       done()
 
   it 'should not accept invalid password', (done) ->
     @wrongpasswordLogin (err, client, {sessionId, accountId}) =>
       should.exist err
       err.should.eql 'Invalid password.'
-      client.disconnect()
       done()
 
   it 'should reattach you to an existing session', (done) ->
@@ -33,7 +30,6 @@ boiler 'Service - Login', ->
 
       client.setSessionOffline {sessionId: sessionId}, (err) =>
         should.not.exist err, err.stack if err
-        client.disconnect()
 
         @ownerLogin (err, client, {sessionId, accountId}) =>
           should.not.exist err
@@ -43,7 +39,6 @@ boiler 'Service - Login', ->
           Session(accountId).get(sessionId).online.get (err, online) =>
             should.not.exist err
             online.should.eql true
-            client.disconnect()
             done()
 
   it 'Admin login should not crash the server', (done) ->

@@ -26,9 +26,6 @@ boiler 'Service - Invite Operator', ->
               should.not.exist err, 'expected acceptChat to not error'
               next()
 
-  afterEach ->
-    @guru1.disconnect()
-
   it "should let you invite an operator to the chat", (done) ->
     @prep =>
 
@@ -60,12 +57,11 @@ boiler 'Service - Invite Operator', ->
 
       # Should receive notification
       recipient = @getPulsar().channel sessionUpdates
-      recipient.on 'pendingInvites', ([chat]) ->
+      recipient.once 'pendingInvites', ([chat]) ->
         should.exist chat
         done()
 
       recipient.ready =>
 
         # Try to invite other operator
-        @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
-          should.not.exist err
+        @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, ->

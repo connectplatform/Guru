@@ -35,10 +35,6 @@ boiler 'Service - Populate Visitor ACP Data', ->
       @owner.findModel {queryObject: {url: 'foo.com'}, modelName: 'Website'}, (err, [target]) =>
         @owner.saveModel {fields: target.merge(websiteFields), modelName: 'Website'}, done
 
-  afterEach (done) ->
-    @owner.disconnect()
-    done()
-
   # note: this is not a service proper, but a subservice located in server/domain that is called by newChat
   it 'should hit the ACP server and dump data into redis', (done) ->
     testServer = connect().use(response).listen 8675

@@ -13,7 +13,7 @@
     "connect": "2.3.4",
     "async": "*",
     "pulsar": "*",
-    "vein": "git://github.com/bitmage/vein.git",
+    "vein": "*",
     "sugar": "*",
     "law": "*",
     "stoic": "*",

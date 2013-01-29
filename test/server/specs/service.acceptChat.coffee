@@ -13,7 +13,7 @@ boiler 'Service - Accept Chat', ->
 
           chan = @getPulsar().channel @chatId
 
-          chan.on 'serverMessage', (data) ->
+          chan.once 'serverMessage', (data) ->
             data.message.should.eql 'accept chat worked'
             done()
 
@@ -30,7 +30,6 @@ boiler 'Service - Accept Chat', ->
         client.acceptChat {sessionId: sessionId, chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
-          client.disconnect()
 
           @getAuthed =>
             @client.acceptChat {sessionId: @sessionId, chatId: @chatId}, (err, result) =>
@@ -54,7 +53,6 @@ boiler 'Service - Accept Chat', ->
             should.exist unanswered
             unanswered.length.should.eql 0, 'expected no unanswered chats'
 
-            client.disconnect()
             done()
 
   it 'should set my visible status to true', (done) ->

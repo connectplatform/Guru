@@ -3,12 +3,11 @@ stoic = require 'stoic'
 
 enums = config.require 'load/enums'
 
-module.exports = (args, next) ->
-  {sessionId} = args
-  return next 'Argument Required: sessionId' unless sessionId?
+module.exports =
+  service: (args, next) ->
+    config.services['getMyRole'] args, (err, {role}) ->
 
-  Session.accountLookup.get sessionId, (err, accountId) ->
-    Session(accountId).get(sessionId).role.get (err, role) ->
       unless role in enums.staffRoles
-        return next "You must login to access this feature."
+        return next new Error "You must login to access this feature."
+
       next null, args

@@ -32,7 +32,6 @@ boiler 'Service - Leave Chat', ->
         @guru1Login (err, firstClient) =>
           firstClient.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            firstClient.disconnect()
 
             @client.joinChat {chatId: @chatId}, (err) =>
               should.not.exist err

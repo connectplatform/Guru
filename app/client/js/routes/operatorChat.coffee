@@ -7,7 +7,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
         self.channels = []
 
         # get notified of new messages
-        sessionId = server.cookie "session"
+        sessionId = $.cookies.get "session"
         self.sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
 
         # helper function
@@ -33,9 +33,9 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
             $('#content').html templ chats: chats
 
             renderLogo = (chat) ->
-              server.getLogoForChat {chatId: chat.id}, (err, logoUrl) ->
+              server.getLogoForChat {chatId: chat.id}, (err, {url}) ->
                 notify.error "Error getting logo for chat ", err if err?
-                embedImage logoUrl, "##{chat.renderedId} .websiteLogo"
+                embedImage url, "##{chat.renderedId} .websiteLogo"
 
             for chat in chats
               renderLogo chat

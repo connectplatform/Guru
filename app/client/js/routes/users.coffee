@@ -1,7 +1,7 @@
 define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUser', 'templates/userRow', 'helpers/formBuilder'],
   (server, notify, editUser, deleteUser, userRow, formBuilder) ->
     (args, templ) ->
-      return window.location.hash = '/' unless server.cookie 'session'
+      return window.location.hash = '/' unless $.cookies.get 'session'
 
       server.ready ->
 

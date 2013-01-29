@@ -9,7 +9,7 @@ define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (en
 
       channel.emit 'clientMessage',
         message: lines
-        session: server.cookie 'session'
+        session: $.cookies.get 'session'
         timestamp: new Date().getTime()
 
       msgSelector.val("")
@@ -44,4 +44,4 @@ define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (en
 
               notify.error 'Error sending email: ', err
             else
-              notify.success 'Email sent'
+              notify.success "Email sent to #{email}."

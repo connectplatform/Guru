@@ -60,16 +60,16 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
                 self.teardown ->
 
             # display chat logo
-            server.getLogoForChat {chatId: chatId}, (err, logoUrl) ->
+            server.getLogoForChat {chatId: chatId}, (err, {url}) ->
               notify.error "Error getting logo url: #{err}" if err
-              embedImage logoUrl, '.websiteLogo'
+              embedImage url, '.websiteLogo'
 
             # wire up leave button
             $('.leaveButton').click (evt) ->
               evt.preventDefault()
               server.leaveChat {chatId: chatId}, (err) ->
                 notify.error "Error leaving chat: #{err}" if err
-                server.cookie 'session', null
+                $.cookies.del 'session'
                 self.teardown ->
 
             $('.printButton').click chatActions.print chatId

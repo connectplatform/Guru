@@ -50,7 +50,7 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
           updateDashboard()
 
           # automatically update when unansweredChats changes
-          sessionUpdates = pulsar.channel "notify:session:#{server.cookie 'session'}"
+          sessionUpdates = pulsar.channel "notify:session:#{$.cookies.get 'session'}"
 
           sessionUpdates.on 'unansweredChats', updateDashboard
           sessionUpdates.on 'pendingInvites', updateDashboard
@@ -58,7 +58,7 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
     teardown:
       (done) ->
         util.cleartimers()
-        sessionUpdates = pulsar.channel "notify:session:#{server.cookie 'session'}"
+        sessionUpdates = pulsar.channel "notify:session:#{$.cookies.get 'session'}"
 
         sessionUpdates.removeAllListeners 'pendingInvites'
         sessionUpdates.removeAllListeners 'unansweredChats'

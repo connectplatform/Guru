@@ -20,12 +20,13 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
       $('#sidebar').html templ role: args.role
 
       server.getChatStats {}, (err, stats) ->
-        updateBadge "#sidebar .notifyUnanswered", stats.unanswered.length
-        updateBadge "#sidebar .notifyInvites", stats.invites.length
+        updateBadge "#sidebar .notifyUnanswered", stats.unanswered?.length
+        updateBadge "#sidebar .notifyInvites", stats.invites?.length
         updateBadge "#sidebar .notifyUnread", countUnreadMessages stats.unreadMessages
 
-        sessionID = server.cookie 'session'
-        sessionUpdates = pulsar.channel "notify:session:#{sessionID}"
+        sessionId = $.cookies.get 'session'
+        sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
+        console.log "sidebar listening to: 'notify:session:#{sessionId}'"
 
         sessionUpdates.on 'unansweredChats', ({count}, chime) ->
           updateBadge "#sidebar .notifyUnanswered", count
@@ -37,6 +38,7 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
           playSound "newInvite" if (pendingInvites > 0) and chime is 'true'
 
         sessionUpdates.on 'unreadMessages', (args...) ->
+          console.log 'received unreadMessages:', args
           [unread, chime] = args
           newMessages = countUnreadMessages unread
           updateBadge "#sidebar .notifyUnread", newMessages

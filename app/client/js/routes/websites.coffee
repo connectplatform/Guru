@@ -1,7 +1,7 @@
 define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws', 'templates/embedLink', 'helpers/util'],
   (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws, embedLink, {formToHash}) ->
     (args, templ) ->
-      return window.location.hash = '/' unless server.cookie 'session'
+      return window.location.hash = '/' unless $.cookies.get 'session'
 
       server.ready ->
 

@@ -9,14 +9,11 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
 
       fsm =
         transition: (err, data) ->
-          if err and not data?
+          if err
             fsm.states.error err
 
-          else if not data?
-            fsm.states.needChat()
-
           else if data.chatId
-            fsm.states.gotChat data.chatId
+            fsm.states.gotChat data
 
           else if data.fields
             fsm.states.needParams err, data.fields
@@ -27,6 +24,10 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
           else if data.params
             data.params = params.merge data.params
             fsm.states.needChat()
+
+          else
+            fsm.states.needChat()
+
 
         states:
           error: (err) ->
@@ -55,7 +56,10 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
               fsm.transition null, {params: params}
 
           # redirect if we have a chat for this session
-          gotChat: (chatId) ->
+          gotChat: (args) ->
+            console.log 'got args from chat:', args
+            {sessionId, chatId} = args
+            $.cookies.set 'session', sessionId
             window.location.hash = "/visitorChat/#{chatId}"
 
           noOperators: () ->

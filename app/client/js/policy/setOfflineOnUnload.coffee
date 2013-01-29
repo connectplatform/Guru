@@ -1,4 +1,4 @@
 define ['load/server'], (server) ->
   ->
     $(window).unload ->
-      server.setSessionOffline {sessionId: server.cookie('session')}, ->
+      server.setSessionOffline {sessionId: $.cookies.get('session')}, ->

@@ -12,7 +12,7 @@ pulsarPort = process.env.GURU_PULSAR_PORT
 #Exported object of helper functions
 helpers =
   wrapVeinClient: (client, localStorage) ->
-    utility = ['disconnect', 'cookie']
+    utility = ['disconnect', 'cookie', 'ready']
 
     wrapped = {}
     wrapped.localStorage = localStorage

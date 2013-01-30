@@ -3027,7 +3027,6 @@ exports.qs = function (obj) {
       chan = this.channels[msg.channel];
       switch (msg.type) {
         case 'emit':
-          console.log('received msg:', msg);
           return chan.realEmit.apply(chan, [msg.event].concat(__slice.call(msg.args)));
         case 'joined':
           chan.joined = true;

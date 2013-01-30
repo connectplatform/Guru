@@ -23,7 +23,7 @@ face = (decorators) ->
       accountId: accountId
 
       create: (cb) ->
-        id = "chat_#{random()}"
+        id = "#{random()}"
         chat = faceValue.get id
 
         # initialization

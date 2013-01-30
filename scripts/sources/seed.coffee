@@ -21,6 +21,6 @@ module.exports = ->
 
     createRecurly {accountId: accountId}, (err, status) ->
       console.log "Error creating Recurly account: #{err}" if err
-      console.log 'Recurly token:', status.account.hosted_login_token
+      console.log 'Recurly token:', status.account?.hosted_login_token
 
       process.exit()

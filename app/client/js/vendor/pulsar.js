@@ -2939,7 +2939,6 @@ exports.qs = function (obj) {
         _this = this;
       if (this.stack.length === 0) return cb(args);
       if (event === 'newListener') return cb(args);
-      console.log('stack:', this.stack.map(function(s){return s.toString();}));
       idx = -1;
       emit = function() {
         var argv, next;

@@ -5,15 +5,11 @@ boiler 'Service - Get Nonpresent Operators', ->
   it 'should return a list of operators not currently visible in chat', (done) ->
     # Setup
     @getAuthed (_..., {accountId}) =>
-      console.log 'got authed'
       @newChat =>
-        console.log 'got new chat'
         @client.watchChat {chatId: @chatId}, (err) =>
-          console.log 'watching chat'
 
           # Get a list of operators who are online and not visible in chat
           @client.getNonpresentOperators {chatId: @chatId}, (err, operatorSessions) =>
-            console.log 'got non present operators'
             should.not.exist err
 
             # Validate returned data

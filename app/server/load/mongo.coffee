@@ -7,6 +7,9 @@ loadModel = (name) ->
   db.model name, schema
 
 db.connect config.mongo.host
+db.connection.on 'error', (error) ->
+  config.log.error "Uncaught mongoose error.", {error: error}
+
 loadModel "User"
 loadModel "Specialty"
 loadModel "Website"

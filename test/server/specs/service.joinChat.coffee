@@ -15,12 +15,19 @@ boiler 'Service - Join Chat', ->
 
         @client.joinChat {chatId: @chatId}, ->
 
+  it 'should not join a non-existent chat', (done) ->
+    @getAuthed =>
+      @newChat =>
+        @client.joinChat {chatId: 'chat_abc12301234567890'}, (err, status) ->
+          should.exist err, 'expected error'
+          err.should.eql 'invalid or expired chat Id'
+          done()
+
   describe 'after joining', ->
     beforeEach (done) ->
       @getAuthed (_..., {@accountId}) =>
         @newChat =>
           @client.joinChat {chatId: @chatId}, done
-
 
     it 'should associate an operator with a chat', (done) ->
 

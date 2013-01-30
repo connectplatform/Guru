@@ -1,5 +1,5 @@
 stoic = require 'stoic'
-{Session, ChatSession} = stoic.models
+{ChatSession} = stoic.models
 
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']
@@ -11,5 +11,4 @@ module.exports =
 
     ChatSession(accountId).add sessionId, chatId, relationMeta, (err) ->
       status = if err then 'ERROR' else 'OK'
-
       done err, {status: status}

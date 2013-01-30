@@ -104,10 +104,10 @@ face = (decorators) ->
             next null, unreadMessages
 
         session.dump = (cb) ->
-          return cb 'No session id provided.' unless id
+          return cb new Error 'No session id provided.' unless id
           faceValue.exists id, (err, exists) ->
             return cb err if err
-            return cb 'Session does not exist.' unless exists
+            return cb new Error 'Session does not exist.' unless exists
 
             async.parallel {
               role: session.role.get

@@ -12,13 +12,14 @@ boiler 'Service - Accept Chat', ->
           result.chatId.should.eql @chatId
 
           chan = @getPulsar().channel @chatId
+          message = 'accept chat worked'
 
           chan.once 'serverMessage', (data) ->
-            data.message.should.eql 'accept chat worked'
+            data.message.should.eql message
             done()
 
           # send test data
-          @client.say {sessionId: @sessionId, chatId: @chatId, message: 'accept chat worked'}, ->
+          @client.say {sessionId: @sessionId, chatId: @chatId, message: message}, ->
 
   it 'should only let one operator accept the chat', (done) ->
     @guru1Login (err, client, {sessionId}) =>

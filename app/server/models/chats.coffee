@@ -110,10 +110,16 @@ face = (decorators) ->
             next null, parsed
 
         chat.dump = (cb) ->
-          return cb 'Chat does not exist' unless id
+          return cb new Error "Called chat.dump with no chatId." unless id
           faceValue.exists id, (err, exists) ->
             return cb err if err
-            return cb 'Chat does not exist' unless exists
+            unless exists
+              {ChatSession} = require('stoic').models
+
+              # Remove orphan chats... This can be removed once the production issue is solved.
+              ChatSession(accountId).removeByChat id, ->
+
+              return cb new Error "Chat '#{id}' does not exist.  Removing orphan chatSessions."
 
             async.parallel {
               visitor: chat.visitor.getall

@@ -11,6 +11,10 @@ module.exports = (accountId, sessionId, chats, done) ->
 
     #console.log 'comparing:', chats, 'to:', my.specialties
     isRelevant = (chat) ->
+      unless chat
+        config.warn new Error 'Tried to filter a chat that does not exist.'
+        return false
+
       return true if chat.relation?
       return true if my.role in enums.managerRoles
       return false if chat.websiteId not in my.websites

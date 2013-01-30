@@ -57,10 +57,7 @@ face = (decorators) ->
 
         chnl = pulsar.channel "notify:session:#{id}"
         chnl.on 'viewedMessages', (chatId) ->
-          session.unreadMessages.hdel chatId, ->
-            #TODO: this is a hack to avoid a client side race condition: replace with client side unread chat model
-            session.unreadMessages.getall (err, chats={}) ->
-              chnl.emit 'echoViewed', chats
+          session.unreadMessages.hdel chatId, -> # do nothing
 
         role session
         chatName session

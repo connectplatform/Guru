@@ -1,5 +1,7 @@
-define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage", "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender", "helpers/embedImageIfExists", "helpers/chatActions"],
-  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions) ->
+define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage",
+"templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender",
+"helpers/embedImageIfExists", "helpers/chatActions", 'helpers/sidebarHelpers'],
+  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions, {readChat}) ->
     channels: []
     setup:
       (args, templ) ->
@@ -49,6 +51,9 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               $(this).tab 'show'
               currentChat = $(this).attr 'chatid'
               $(".notifyUnread[chatid=#{currentChat}]").html ''
+
+              # let the sidebar know we read these
+              readChat currentChat
 
               # let the server know we read these
               self.sessionUpdates.emit 'viewedMessages', currentChat

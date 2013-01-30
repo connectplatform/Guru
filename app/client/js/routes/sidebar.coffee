@@ -1,18 +1,7 @@
-countUnreadMessages = (unread) ->
-  total = 0
-  for chat, count of unread
-    total += count
-  total
+define ["load/server", "load/notify", "load/pulsar", 'helpers/sidebarHelpers'], (server, notify, pulsar, helpers) ->
+  {countUnreadMessages, playSound, updateBadge, updateUnread} = helpers
 
-playSound = (type) ->
-  $("##{type}Sound")[0].play()
-
-define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server, notify, pulsar, badge) ->
   (args, templ) ->
-
-    updateBadge = (selector, num, status='important') ->
-      content = if num > 0 then badge {status: status, num: num} else ''
-      $(selector).html content
 
     # init badge number
     server.ready ->
@@ -26,7 +15,6 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
 
         sessionId = $.cookies.get 'session'
         sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
-        console.log "sidebar listening to: 'notify:session:#{sessionId}'"
 
         sessionUpdates.on 'unansweredChats', ({count}, chime) ->
           updateBadge "#sidebar .notifyUnanswered", count
@@ -37,14 +25,4 @@ define ["load/server", "load/notify", "load/pulsar", 'templates/badge'], (server
           updateBadge "#sidebar .notifyInvites", pendingInvites, 'warning'
           playSound "newInvite" if (pendingInvites > 0) and chime is 'true'
 
-        sessionUpdates.on 'unreadMessages', (args...) ->
-          console.log 'received unreadMessages:', args
-          [unread, chime] = args
-          newMessages = countUnreadMessages unread
-          updateBadge "#sidebar .notifyUnread", newMessages
-          playSound "newMessage" if chime is 'true'
-
-        # update badge number on change
-        sessionUpdates.on 'echoViewed', (unread) ->
-          newMessages = countUnreadMessages unread
-          updateBadge "#sidebar .notifyUnread", newMessages
+        sessionUpdates.on 'unreadMessages', updateUnread

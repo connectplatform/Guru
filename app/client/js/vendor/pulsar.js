@@ -2993,7 +2993,8 @@ exports.qs = function (obj) {
           channel = _ref[name];
           _this.channels[name] = new Channel(name, socket);
           _this.channels[name].listeners = channel.listeners;
-          _results.push(_this.channels[name].events = channel.events);
+          _this.channels[name].events = channel.events;
+          _results.push(_this.channels[name].stack = channel.stack);
         }
         return _results;
       };
@@ -3026,6 +3027,7 @@ exports.qs = function (obj) {
       chan = this.channels[msg.channel];
       switch (msg.type) {
         case 'emit':
+          console.log('received msg:', msg);
           return chan.realEmit.apply(chan, [msg.event].concat(__slice.call(msg.args)));
         case 'joined':
           chan.joined = true;

@@ -25,9 +25,8 @@ boiler 'Service - New Chat', ->
     @getAuthed =>
       should.exist @sessionId
       notify = @getPulsar().channel "notify:session:#{@sessionId}"
-      notify.on 'unansweredChats', ({count}) =>
+      notify.once 'unansweredChats', ({count}) =>
         count.should.eql 1
-        notify.removeAllListeners 'unansweredChats'
         done()
 
       @newChat ->

@@ -91,13 +91,17 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           meta = {sessionId: sessionId, type: metaInfo.type, chime: 'true'}
           notifySession meta, (err) ->
             if err
-              config.log "Notification for '#{metaInfo.type}' failed.", meta.merge {error: err}
+              config.log.warn "Notification for '#{metaInfo.type}' failed.", meta.merge {error: err}
 
           cs.session.role.get (err, role) ->
-            notifyChatEvent
+            meta =
+              sessionId: sessionId
               chatId: chatId
-              message: "#{displayedRole role} has joined the chat"
+              message: "#{displayedRole role} has joined the chat."
               timestamp: new Date().getTime()
+            notifyChatEvent meta, (err) ->
+              if err
+                config.log.warn "Notification for 'join chat' failed.", meta.merge {error: err}
 
           cb null, cs
 

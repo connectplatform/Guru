@@ -1,7 +1,7 @@
 pulsar = config.require 'load/pulsar'
 
 module.exports =
-  required: ['chatId', 'message']
+  required: ['sessionId', 'accountId', 'chatId', 'message']
   service: ({chatId, message}, done) ->
     channel = pulsar.channel chatId
     body =

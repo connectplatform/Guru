@@ -2,7 +2,7 @@ db = require 'mongoose'
 {Website, Specialty} = db.models
 
 stoic = require 'stoic'
-{Session} = stoic.models
+{Session, Chat} = stoic.models
 
 {getString, getType} = config.require 'load/util'
 
@@ -30,9 +30,13 @@ module.exports = [
       Session.accountLookup.get sessionId, (err, accountId) ->
         assert not err and accountId
     defaultArgs: ['sessionId']
-
-  #TODO: validate chatId when we have all args available in validation
-
+  ,
+    typeName: 'ChatId'
+    validation: (chatId, assert, {accountId}) ->
+      return assert false unless accountId
+      Chat(accountId).exists chatId, (err, exists) ->
+        assert not err and exists
+    defaultArgs: ['chatId']
   ,
     typeName: 'SpecialtyId'
     lookup: ({accountId, specialtyName}, found) ->

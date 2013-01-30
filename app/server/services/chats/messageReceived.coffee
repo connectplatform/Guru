@@ -5,16 +5,13 @@ stoic = require 'stoic'
 {Session, Chat, ChatSession} = stoic.models
 
 module.exports =
-  required: ['chatId', 'accountId', 'sessionId']
-  service: ({chatId, accountId, sessionId, message}, done) ->
-    sess = Session(accountId).get sessionId
-    chat = Chat(accountId).get chatId
-
-    return unless sess and chat
+  required: ['sessionId', 'accountId', 'chatId']
+  optional: ['message']
+  service: ({sessionId, accountId, chatId, message}, done) ->
 
     # get user's identity and operators present
     async.parallel [
-      sess.chatName.get
+      Session(accountId).get(sessionId).chatName.get
       ChatSession(accountId).getByChat chatId
 
     ], (err, [username, chatSessions]) ->
@@ -35,7 +32,7 @@ module.exports =
         username: username
         timestamp: Date.now()
 
-      chat.history.rpush said, ->
+      Chat(accountId).get(chatId).history.rpush said, ->
         done()
 
         # asynchronous notifications

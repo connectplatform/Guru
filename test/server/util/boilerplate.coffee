@@ -6,6 +6,7 @@ db = config.require 'server/load/mongo'
 flushCache = config.require 'load/flushCache'
 sampleData = config.require 'policy/sampleData'
 stoic = require 'stoic'
+underscore = require 'underscore'
 
 #Helper functions
 helpers = require './helpers'
@@ -37,6 +38,9 @@ recurlyDataPrep = (done) ->
   standardDataPrep.call @, =>
     Factory.create 'paidOwner', done
 
+memwatch = require 'memwatch'
+heap_diff = null
+
 setup = (testName, dataPrep, tests) ->
   describe testName, (done)->
     before (done) ->
@@ -49,6 +53,9 @@ setup = (testName, dataPrep, tests) ->
         done()
 
     beforeEach (done) ->
+      # TODO / FIXME - refactor out and add option switch to turn on / off heap snapshots / diffs
+      heap_diff = new memwatch.HeapDiff()
+
       @foo = 'hey'
       flushCache config.redis.database, config.redis.database, =>
         dataPrep.call @, done
@@ -62,6 +69,16 @@ setup = (testName, dataPrep, tests) ->
       while helpers.clients.length
         client = helpers.clients.pop()
         client.disconnect() if client?.connected
+
+      # TODO / FIXME - refactor out and add option switch to turn on / off heap snapshots / diffs
+      if heap_diff
+        diff = heap_diff.end()
+        diff_objects = diff.change.details.map (obj) ->
+          obj
+        sorted_diff_objects = diff_objects.sortBy (obj) ->
+          -obj.size_bytes
+
+        console.log sorted_diff_objects.slice 0, 5 # TODO / FIXME - user defined parameter (arbitrarily picking top 5)
 
     tests()
 

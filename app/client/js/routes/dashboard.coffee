@@ -3,6 +3,7 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
     setup:
       (args, templ) ->
         updateDashboard = ->
+          console.log 'updating dashboard'
           return unless window.location.hash is "#/dashboard"
           server.getActiveChats {}, (err, {chats}) ->
             if err

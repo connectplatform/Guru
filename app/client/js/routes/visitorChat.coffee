@@ -50,7 +50,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
 
             # display initial chat history
             server.getChatHistory {chatId: chatId}, (err, {history}) ->
-              notify.error "Error loading chat history: #{err}" if err
+              notify.error "Error loading chat history: #{err}" if err or not history
               appendChatMessage msg for msg in history
 
               # display messages when received

@@ -6,18 +6,18 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
         sidebar {role: 'Supervisor'}, sbTemp
 
       loggedIn: (role = 'Operator') ->
-        server.cookie 'session', 'session_foo'
+        $.cookies.set 'session', 'session_foo'
         registerSessionUpdates()
         server.getMyRole = (params, cb) ->
           cb null, {role: role}
 
       loggedOut: ->
-        server.cookie 'session', null
+        $.cookies.del 'session'
         server.getMyRole = (params, cb) ->
           cb null, {role: 'None'}
 
       visitor: ->
-        server.cookie 'session', 'session_foo'
+        $.cookies.set 'session', 'session_foo'
         server.getMyRole = (params, cb) ->
           cb null, {role: 'Visitor'}
 
@@ -67,7 +67,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           visitorCanAccessChannel: (params, cb) ->
             cb null, {accessAllowed: 'true'}
           getChatHistory: (params, cb) ->
-            histor = [
+            history = [
               {
                 timestamp: 0,
                 type: "notification",

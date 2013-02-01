@@ -1,7 +1,7 @@
 define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage",
 "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender",
 "helpers/embedImageIfExists", "helpers/chatActions", 'helpers/sidebarHelpers'],
-  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions, {readChat}) ->
+  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions, {readChat, getUnread}) ->
     channels: []
     setup:
       (args, templ, query) ->
@@ -115,6 +115,9 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                   $("##{chat.renderedId} .message").bind 'keydown', jwerty.event 'enter', (evt) ->
                     evt.preventDefault()
                     chatActions.sendChatMessage(channel, chat.renderedId)
+
+              # set initial unread chat count
+              updateChatBadge(chat.id) getUnread()
 
               #display incoming messages
               wireUpChatAppender createChatAppender(chat.renderedId), channel

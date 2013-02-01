@@ -7,6 +7,7 @@ module.exports =
     return done null, {reason: 'no session ID'} unless sessionId
     return done null, {reason: 'no account ID'} unless accountId
 
-    ChatSession(accountId).getBySession sessionId, (err, [chatSession]) ->
-      found = if chatSession then chatSession.chatId else null
-      return done err, {chatId: found}
+    ChatSession(accountId).getBySession sessionId, (err, chatSessions) ->
+      config.warn "Error getting existing chat:", {error: err} if err
+      found = chatSessions?[0]?.chatId
+      return done null, {chatId: found}

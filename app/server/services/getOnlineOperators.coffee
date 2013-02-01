@@ -16,4 +16,4 @@ module.exports =
       async.map sessions, getChatName, (err, operatorNames) ->
         config.log.error 'Error getting online operator names', {error: err} if err
 
-        done err, operatorNames
+        done err, {operatorNames: operatorNames}

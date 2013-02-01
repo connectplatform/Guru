@@ -6,7 +6,7 @@ boiler 'Service - Get Chat Archive', ->
   it 'should retrieve the archive of a chat', (done) ->
     Factory.create 'chathistory', (err, history) =>
       @getAuthed =>
-        @client.getChatArchive {accountId: @account._id, search: {'visitor.username': 'sum gai'}}, (err, archive) ->
+        @client.getChatArchive {accountId: @account._id, search: {'visitor.username': 'sum gai'}}, (err, {archive}) ->
           should.not.exist err
           should.exist archive
           archive.length.should.eql 2
@@ -18,7 +18,7 @@ boiler 'Service - Get Chat Archive', ->
   it 'should return no results without params', (done) ->
     Factory.create 'chathistory', (err, history) =>
       @getAuthed =>
-        @client.getChatArchive {accountId: @account._id, search: null}, (err, archive) ->
+        @client.getChatArchive {accountId: @account._id, search: null}, (err, {archive}) ->
           should.not.exist err
           should.exist archive
           archive.length.should.eql 0

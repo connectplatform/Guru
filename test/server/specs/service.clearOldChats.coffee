@@ -8,17 +8,22 @@ createChat = (accountId) ->
   (chat, cb) ->
     {Chat} = stoic.models
     Chat(accountId).create (err, c) ->
+      should.not.exist err
+
       async.parallel [
         c.visitor.mset chat.visitor
         c.status.set chat.status
         c.creationDate.set chat.creationDate
       ], (err) ->
+        should.not.exist err
 
         pushHistory = (historyItem, cb) ->
           c.history.rpush historyItem, cb
 
-        async.forEach chat.history, pushHistory, ->
-          cb err, c
+        async.forEach chat.history, pushHistory, (err) ->
+          should.not.exist err
+
+          cb null, c
 
 getOldChats = (creation, firstChat) ->
   return [
@@ -62,6 +67,7 @@ boiler 'Service - Clear Old Chats', ->
     {Chat} = stoic.models
 
     async.map getOldChats(halfHourAgo, almostHalfHourAgo), createChat(@accountId), (err, chats) =>
+
       [chat1, chat2] = chats.map 'id'
       @clearOldChats (err) =>
         should.not.exist err, "clearOldChats threw an error:#{err}"
@@ -80,7 +86,8 @@ boiler 'Service - Clear Old Chats', ->
   it 'should not delete new chats', (done) ->
     {Chat} = stoic.models
 
-    async.map getOldChats(now, now), createChat(@accountId), =>
+    async.map getOldChats(now, now), createChat(@accountId), (err) =>
+
       @clearOldChats (err) =>
         should.not.exist err
         Chat(@accountId).allChats.members (err, allChats) ->
@@ -123,17 +130,17 @@ boiler 'Service - Clear Old Chats', ->
   testWithSessions = (method) ->
     describe "with operator sessions (#{method})", ->
       beforeEach (done) ->
-        async.map getOldChats(halfHourAgo, halfHourAgo), createChat(@accountId), (err, chats) =>
-          chatId = chats[0].id
+        @getAuthed =>
+          async.map getOldChats(halfHourAgo, halfHourAgo), createChat(@accountId), (err, chats) =>
+            chatId = chats[0].id
 
-          # make sure user has properly joined chat
-          @getAuthed =>
-            @client[method] {sessionId: @sessionId, chatId: chatId}, (err) =>
+            # joinChat/watchChat
+            @client[method] {sessionId: @sessionId, chatId: chatId}, (err, results) =>
               should.not.exist err
               done()
 
       it 'should show me as joined', (done) ->
-        @client.getMyChats {}, (err, chats) =>
+        @client.getMyChats {}, (err, {chats}) =>
           should.not.exist err
           chats.length.should.eql 1, 'chat should exist'
           done()
@@ -149,7 +156,7 @@ boiler 'Service - Clear Old Chats', ->
             allChats.length.should.eql 0, 'all chats should be empty'
 
             # check that operator was properly removed
-            @client.getMyChats {}, (err, chats) =>
+            @client.getMyChats {}, (err, {chats}) =>
               should.not.exist err
               chats.length.should.eql 0, 'my chat sessions should be empty'
               done()

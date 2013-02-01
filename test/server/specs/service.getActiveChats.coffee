@@ -8,7 +8,7 @@ boiler 'Service - Get Active Chats', ->
       @newChat =>
 
         # get active chats
-        @client.getActiveChats {}, (err, [chatData]) =>
+        @client.getActiveChats {}, (err, {chats: [chatData]}) =>
           should.not.exist err
           should.exist chatData, 'expected a chat record'
           chatData.visitor.username.should.eql 'visitor'
@@ -24,7 +24,7 @@ boiler 'Service - Get Active Chats', ->
         @client.joinChat {chatId: @chatId}, =>
 
           # get active chats
-          @client.getActiveChats {}, (err, [chatData]) =>
+          @client.getActiveChats {}, (err, {chats: [chatData]}) =>
             should.not.exist err
             should.exist chatData.operators
             chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
@@ -37,7 +37,7 @@ boiler 'Service - Get Active Chats', ->
           @newChatWith chatData, =>
 
             # get active chats
-            @client.getActiveChats {}, (err, chats) =>
+            @client.getActiveChats {}, (err, {chats}) =>
               should.not.exist err
               should.exist chats
               done err, chats
@@ -95,7 +95,7 @@ boiler 'Service - Get Active Chats', ->
       @createChats (err, chats) =>
         should.not.exist err
 
-        @client.getActiveChats {}, (err, chats) =>
+        @client.getActiveChats {}, (err, {chats}) =>
           should.not.exist err
           vacantChats = chats.findAll (chat) -> chat.status is 'vacant'
           vacantChats.length.should.eql 0
@@ -120,7 +120,7 @@ boiler 'Service - Get Active Chats', ->
               should.not.exist err
 
               # get active chats
-              @client.getActiveChats {}, (err, chats) =>
+              @client.getActiveChats {}, (err, {chats}) =>
                 should.not.exist err
                 should.exist chats
                 chats.length.should.eql 3
@@ -140,7 +140,7 @@ boiler 'Service - Get Active Chats', ->
             @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
               should.not.exist err
 
-              invitee.getActiveChats {sessionId: @targetSession}, (err, chats) =>
+              invitee.getActiveChats {sessionId: @targetSession}, (err, {chats}) =>
                 should.not.exist err
                 chats.length.should.eql 1
                 chats[0].id.should.eql @chatId

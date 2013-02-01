@@ -1,13 +1,13 @@
 define ["load/server", "helpers/util", "templates/serverMessage", "templates/selectUser"],
   (server, util, serverMessage, selectUser) ->
     showUserSelectionBox = (chatId, cb) ->
-      server.getNonpresentOperators {chatId: chatId}, (err, users) ->
+      server.getNonpresentOperators {chatId: chatId}, (err, {operators}) ->
         if err
           server.log
             message: 'Error getting nonpresent operators in chatControls'
             context: {error: err, severity: 'error', chatId: chatId}
 
-        $("#selectModal").html selectUser users: users
+        $("#selectModal").html selectUser users: operators
         $("#selectUser").modal()
 
         $("#selectUser .select").click (evt) ->

@@ -1,8 +1,10 @@
+{getType} = config.require 'load/util'
 {ChatHistory} = require('mongoose').models
 
 module.exports =
   optional: ['search']
   required: ['accountId']
   service: ({accountId, search}, done) ->
-    return done null, [] unless search and typeof(search) is 'object' and Object.keys(search).length > 0
-    ChatHistory.find search.merge(accountId: accountId), done
+    return done null, {archive: []} unless getType(search) is 'Object' and search.keys().length > 0
+    ChatHistory.find search.merge(accountId: accountId), (err, archive) ->
+      done err, {archive: archive}

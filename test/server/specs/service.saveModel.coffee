@@ -23,7 +23,8 @@ boiler 'Service - Save Model', ->
       @user.email.should.eql userFields.email
 
       #check results
-      @client.findModel {queryObject: {_id: @user.id}, modelName: 'User'}, (err, foundUsers) =>
+      @client.findModel {queryObject: {_id: @user.id}, modelName: 'User'}, (err, {data}) =>
+        foundUsers = data
         should.not.exist err
         foundUsers[0].firstName.should.eql userFields.firstName
         foundUsers[0].lastName.should.eql userFields.lastName
@@ -53,7 +54,8 @@ boiler 'Service - Save Model', ->
     @getAuthed =>
 
       #change fields and resave
-      @client.findModel {queryObject: {}, modelName: 'User'}, (err, [target]) =>
+      @client.findModel {queryObject: {}, modelName: 'User'}, (err, {data}) =>
+        [target] = data
         target.firstName = 'Seamus'
         @client.saveModel {fields: target, modelName: 'User'}, (err, user) =>
           should.not.exist err
@@ -63,7 +65,8 @@ boiler 'Service - Save Model', ->
           user.email.should.eql target.email
 
           #check that save was successful
-          @client.findModel {queryObject: {_id: user.id}, modelName: 'User'}, (err, foundUsers) =>
+          @client.findModel {queryObject: {_id: user.id}, modelName: 'User'}, (err, {data}) =>
+            foundUsers = data
             should.not.exist err
             foundUsers[0].firstName.should.eql target.firstName
             foundUsers[0].lastName.should.eql target.lastName

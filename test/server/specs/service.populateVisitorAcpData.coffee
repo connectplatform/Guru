@@ -32,7 +32,8 @@ boiler 'Service - Populate Visitor ACP Data', ->
         acpEndpoint: "http://localhost:8675"
         acpApiKey: "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
 
-      @owner.findModel {queryObject: {url: 'foo.com'}, modelName: 'Website'}, (err, [target]) =>
+      @owner.findModel {queryObject: {url: 'foo.com'}, modelName: 'Website'}, (err, {data}) =>
+        [target] = data
         @owner.saveModel {fields: target.merge(websiteFields), modelName: 'Website'}, done
 
   # note: this is not a service proper, but a subservice located in server/domain that is called by newChat

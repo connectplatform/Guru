@@ -10,7 +10,7 @@ define ->
       animateClose:
         height: "toggle"
       speed: 500
-      timeout: 3000
+      timeout: 15000
       closeButton: false
       closeOnSelfClick: true
       closeOnSelfOver: false

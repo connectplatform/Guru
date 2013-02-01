@@ -10,4 +10,4 @@ module.exports = ({email}, done) ->
     else
       user.sentEmail = false
       user.save()
-      return done null, {status: "OK"}
+      return done null, {result: "sentEmail", email: email}

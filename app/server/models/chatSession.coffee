@@ -117,12 +117,12 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           Session(accountId).get(cs.sessionId).unreadMessages.hdel chatId
 
         ], (err) ->
-          config.log.error 'Error removing chatSession', {error: err} if err
+          config.log.error 'Error removing chat session.', {error: err} if err
 
           # Update chat status
           updateChatStatus = config.service 'chats/updateChatStatus'
           updateChatStatus {accountId: accountId, chatId: chatId}, (err) ->
-            config.log.error 'Error removing chat session.', {error: err, chatId: chatId, accountId: accountId} if err
+            config.log.error 'Error updating chat status.', {error: err, chatId: chatId, accountId: accountId} if err
 
             # send notification to chat
             cs.session.role.get (err, role) ->
@@ -135,11 +135,13 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
 
       removeBySession: tandoor (sessionId, cb) ->
         chatSession.getBySession sessionId, (err, chatSessions) ->
+          return cb err if err
           remover = (cs, next) -> chatSession.remove cs.sessionId, cs.chatId, next
           async.map chatSessions, remover, cb
 
       removeByChat: tandoor (chatId, cb) ->
         chatSession.getByChat chatId, (err, chatSessions) ->
+          return cb err if err
           remover = (cs, next) -> chatSession.remove cs.sessionId, cs.chatId, next
           async.map chatSessions, remover, cb
 

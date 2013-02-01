@@ -6,7 +6,8 @@ boiler 'Service - Find Model', ->
     @getAuthed =>
 
       #do test
-      @client.findModel {queryObject: {}, modelName: 'User'}, (err, users) ->
+      @client.findModel {queryObject: {}, modelName: 'User'}, (err, {data}) ->
+        users = data
         should.not.exist err
         for user in users
           user.firstName.should.exist
@@ -23,7 +24,8 @@ boiler 'Service - Find Model', ->
   it 'should let you find a user by their id', (done) ->
     @getAuthed =>
 
-      @client.findModel {queryObject: {_id: @ownerUser.id}, modelName: 'User'}, (err, [owner]) ->
+      @client.findModel {queryObject: {_id: @ownerUser.id}, modelName: 'User'}, (err, {data}) ->
+        [owner] = data
         owner.firstName.should.eql 'Owner'
         owner.lastName.should.eql 'Man'
         owner.role.should.eql 'Owner'
@@ -35,9 +37,9 @@ boiler 'Service - Find Model', ->
   it 'should let you get your account', (done) ->
     @getAuthed =>
 
-      @client.findModel {modelName: 'Account'}, (err, account) ->
+      @client.findModel {modelName: 'Account'}, (err, {data}) ->
+        [account] = data
         should.not.exist err
-        [account] = account
         should.exist account, 'expected account to exist'
         should.exist account.accountType, 'expected Account Type to exist'
         account.accountType.should.eql 'Unlimited'

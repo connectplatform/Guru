@@ -3,11 +3,11 @@ enums = config.require 'load/enums'
 {Specialty} = require('mongoose').models
 
 module.exports = (accountId, sessionId, chats, done) ->
-  return done null, [] unless chats and chats.length > 0
+  return done null, {chats: []} unless chats and chats.length > 0
 
   getOperatorData accountId, sessionId, (err, my) ->
     return done err if err
-    return done null, [] if not my
+    return done null, {chats: []} if not my
 
     #console.log 'comparing:', chats, 'to:', my.specialties
     isRelevant = (chat) ->
@@ -21,4 +21,4 @@ module.exports = (accountId, sessionId, chats, done) ->
       return false if chat.specialtyId and (chat.specialtyId not in my.specialties)
       return true
 
-    done null, chats.filter isRelevant
+    done null, {chats: chats.filter isRelevant}

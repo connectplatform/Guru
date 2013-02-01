@@ -1,6 +1,6 @@
 unreadMessages = {}
 
-define ['templates/badge'], (badge) ->
+define ['templates/badge', 'helpers/util'], (badge) ->
   helpers =
     countUnreadMessages: (unread) ->
       total = 0
@@ -15,9 +15,13 @@ define ['templates/badge'], (badge) ->
       content = if num > 0 then badge {status: status, num: num} else ''
       $(selector).html content
 
+    getUnread: -> unreadMessages.clone()
+
     updateUnread: (unread, chime) ->
-      unreadMessages = helpers.countUnreadMessages unread
-      helpers.updateBadge "#sidebar .notifyUnread", unreadMessages
+      unread ||= {}
+      unreadMessages = unread
+      count = helpers.countUnreadMessages unreadMessages
+      helpers.updateBadge "#sidebar .notifyUnread", count
       helpers.playSound "newMessage" if chime is 'true'
 
     readChat: (chatId) ->

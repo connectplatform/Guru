@@ -18,8 +18,9 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
         }, (err, data) ->
           return if handleErr err
           {recurlyData, accounts} = data
+          accountType = accounts?.data?[0]?.accountType
 
-          if accounts?[0]?.accountType is 'Unlimited'
+          if accountType is 'Unlimited'
             $('#recurlyDetails').html "<b>Unlimited Account</b> - No payment details."
 
           else

@@ -1,10 +1,10 @@
 define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "templates/chatMessage",
 "templates/serverMessage", "templates/badge", "helpers/util", "helpers/wireUpChatAppender",
 "helpers/embedImageIfExists", "helpers/chatActions", 'helpers/sidebarHelpers'],
-  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions, {readChat}) ->
+  (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions, {readChat, getUnread}) ->
     channels: []
     setup:
-      (args, templ) ->
+      (args, templ, query) ->
         self = this
         self.channels = []
 
@@ -17,7 +17,9 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
         server.ready (services) ->
 
-          server.getMyChats {}, (err, chats) ->
+          server.getMyChats {}, (err, {chats}) ->
+            chats ||= []
+
             if err
               server.log
                 message: 'Error getting chats in operatorChat'
@@ -50,17 +52,22 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               e.preventDefault()
               $(this).tab 'show'
               currentChat = $(this).attr 'chatid'
+              $("##{currentChat} textarea.message").focus()
               $(".notifyUnread[chatid=#{currentChat}]").html ''
 
               # let the sidebar know we read these
               readChat currentChat
+              util.scrollToBottom "##{currentChat} .chat-display-box"
 
               # let the server know we read these
               self.sessionUpdates.emit 'viewedMessages', currentChat
 
             # TODO: Display accepted/last chat instead of first tab
             # on page load click the first tab
-            $('#chatTabs a:first').click()
+            if query.chatId
+              $("#chatTabs a[chatid=#{query.chatId}]").click()
+            else
+              $('#chatTabs a:first').click()
 
             createSubmitHandler = (renderedId, channel) ->
               (evt) ->
@@ -109,6 +116,9 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
                   $("##{chat.renderedId} .message").bind 'keydown', jwerty.event 'enter', (evt) ->
                     evt.preventDefault()
                     chatActions.sendChatMessage(channel, chat.renderedId)
+
+              # set initial unread chat count
+              updateChatBadge(chat.id) getUnread()
 
               #display incoming messages
               wireUpChatAppender createChatAppender(chat.renderedId), channel

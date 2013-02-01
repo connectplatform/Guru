@@ -10,16 +10,18 @@ boiler 'Service - Leave Chat', ->
           should.not.exist err
 
           # Try to leave
-          @client.leaveChat {chatId: @chatId}, (err, channelName) =>
+          @client.leaveChat {chatId: @chatId}, (err) =>
             should.not.exist err
 
             # Check whether we're still in channel
-            @client.getMyChats {}, (err, chats) =>
+            @client.getMyChats {}, (err, {chats}) =>
               should.not.exist err
               chats.length.should.eql 0
 
               # Check whether the chat has the right status
-              @client.getActiveChats {}, (err, [chat]) =>
+              @client.getActiveChats {}, (err, {chats}) =>
+                should.not.exist err
+                [chat] = chats
                 should.exist chat, 'expected one chat record'
                 chat.status.should.eql 'waiting'
 
@@ -37,16 +39,18 @@ boiler 'Service - Leave Chat', ->
               should.not.exist err
 
               # Try to leave
-              @client.leaveChat {chatId: @chatId}, (err, channelName) =>
+              @client.leaveChat {chatId: @chatId}, (err) =>
                 should.not.exist err
 
                 # Check whether we're still in channel
-                @client.getMyChats {}, (err, chats) =>
+                @client.getMyChats {}, (err, {chats}) =>
                   should.not.exist err
                   chats.length.should.eql 0
 
                 # Check whether the chat has the right status
-                @client.getActiveChats {}, (err, [chat]) =>
+                @client.getActiveChats {}, (err, {chats}) =>
+                  should.not.exist err
+                  [chat] = chats
                   should.exist chat, 'expected one chat record'
                   chat.status.should.eql 'active'
 

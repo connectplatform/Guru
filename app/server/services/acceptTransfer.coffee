@@ -5,8 +5,8 @@ stoic = require 'stoic'
 pulsar = config.require 'load/pulsar'
 
 module.exports =
-  required: ['chatId', 'accountId', 'sessionId']
-  service: ({chatId, accountId, sessionId}, done) ->
+  required: ['sessionId', 'accountId', 'chatId']
+  service: ({sessionId, accountId, chatId}, done) ->
 
     # find the requestor's sessionId
     chatSession = ChatSession(accountId).get sessionId, chatId

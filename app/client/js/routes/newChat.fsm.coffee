@@ -22,7 +22,7 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
             fsm.states.noOperators()
 
           else if data.params
-            data.params = params.merge data.params
+            params.merge data.params
             fsm.states.needChat()
 
           else
@@ -37,7 +37,8 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
               context: {error: err}
 
           initial: ->
-            server.getExistingChat {}, fsm.transition
+            server.getExistingChat params, (err, data) ->
+              fsm.transition null, data # we don't care about errors with this
 
           needChat: ->
             $("#content .form-area").html "Connecting to chat..."
@@ -57,7 +58,6 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
 
           # redirect if we have a chat for this session
           gotChat: (args) ->
-            console.log 'got args from chat:', args
             {sessionId, chatId} = args
             $.cookies.set 'session', sessionId
             window.location.hash = "/visitorChat/#{chatId}"

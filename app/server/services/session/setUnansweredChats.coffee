@@ -23,8 +23,8 @@ module.exports = tandoor (accountId, sessionId, done) ->
     async.map chatIds, getData, (err, chatData) ->
 
       # find out which are relevant to me
-      filterRelevant accountId, sessionId, chatData, (err, unanswered) ->
-        unansweredIds = unanswered.map (u) -> u.id
+      filterRelevant accountId, sessionId, chatData, (err, {chats}) ->
+        unansweredIds = chats.map (u) -> u.id
 
         # set my session data
         async.forEach unansweredIds, Session(accountId).get(sessionId).unansweredChats.add, done

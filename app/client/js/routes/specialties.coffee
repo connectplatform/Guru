@@ -18,7 +18,8 @@ define ['load/server', 'load/notify', 'templates/editSpecialty', 'templates/dele
         extraDataPacker = (specialty) -> return specialty
 
         # find all specialties and populate listing
-        server.findModel {modelName: 'Specialty', queryObject:{}}, (err, specialties) ->
+        server.findModel {modelName: 'Specialty', queryObject:{}}, (err, {data}) ->
+          specialties = data || []
           if err
             server.log
               message: 'Error retrieving specialties on specialties crud page'

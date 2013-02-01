@@ -56,7 +56,6 @@ setup = (testName, dataPrep, tests) ->
       # TODO / FIXME - refactor out and add option switch to turn on / off heap snapshots / diffs
       heap_diff = new memwatch.HeapDiff()
 
-      @foo = 'hey'
       flushCache config.redis.database, config.redis.database, =>
         dataPrep.call @, done
 

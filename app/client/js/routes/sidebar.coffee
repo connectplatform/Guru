@@ -1,5 +1,5 @@
 define ["load/server", "load/notify", "load/pulsar", 'helpers/sidebarHelpers'], (server, notify, pulsar, helpers) ->
-  {countUnreadMessages, playSound, updateBadge, updateUnread} = helpers
+  {playSound, updateBadge, updateUnread} = helpers
 
   (args, templ) ->
 
@@ -11,7 +11,7 @@ define ["load/server", "load/notify", "load/pulsar", 'helpers/sidebarHelpers'], 
       server.getChatStats {}, (err, stats) ->
         updateBadge "#sidebar .notifyUnanswered", stats.unanswered?.length
         updateBadge "#sidebar .notifyInvites", stats.invites?.length
-        updateBadge "#sidebar .notifyUnread", countUnreadMessages stats.unreadMessages
+        updateUnread stats.unreadMessages
 
         sessionId = $.cookies.get 'session'
         sessionUpdates = pulsar.channel "notify:session:#{sessionId}"

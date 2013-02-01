@@ -17,10 +17,10 @@ boiler 'Service - Get My Chats', ->
             should.exist data
 
             # Then the data should be correct
-            @client.getMyChats (err, data) =>
+            @client.getMyChats (err, {chats}) =>
               should.not.exist err
-              data.length.should.eql 1
-              [chatData] = data
+              chats.length.should.eql 1
+              [chatData] = chats
               chatData.visitor.username.should.eql 'joinMe'
               should.exist chatData.visitor.referrerData.arbitrary, 'expected referrerData'
               chatData.visitor.referrerData.arbitrary.should.eql 'someValue'
@@ -36,7 +36,7 @@ boiler 'Service - Get My Chats', ->
       ChatSession(accountId).add sessionId, 'chat_bar', {}, (err, chatSession) =>
         should.not.exist err
 
-        @client.getMyChats (err, data) =>
+        @client.getMyChats (err, {chats}) =>
           should.not.exist err
-          data.length.should.eql 0
+          chats.length.should.eql 0
           done()

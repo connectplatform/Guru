@@ -49,7 +49,6 @@ setup = (testName, dataPrep, tests) ->
         done()
 
     beforeEach (done) ->
-      @foo = 'hey'
       flushCache config.redis.database, config.redis.database, =>
         dataPrep.call @, done
 

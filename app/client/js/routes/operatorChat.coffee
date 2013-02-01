@@ -18,6 +18,8 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
         server.ready (services) ->
 
           server.getMyChats {}, (err, {chats}) ->
+            chats ||= []
+
             if err
               server.log
                 message: 'Error getting chats in operatorChat'

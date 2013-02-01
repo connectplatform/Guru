@@ -6,14 +6,14 @@ define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUse
       server.ready ->
 
         server.findModel {modelName: 'Website', queryObject: {}}, (err, {data}) ->
-          websites = data
+          websites = data || []
           if err
             server.log
               message: 'Error finding website'
               context: {error: err}
 
           server.findModel {modelName: 'Specialty', queryObject: {}}, (err, {data}) ->
-            specialties = data
+            specialties = data || []
             if err
               server.log
                 message: 'Error finding specialty'
@@ -56,7 +56,7 @@ define ['load/server', 'load/notify', 'templates/editUser', 'templates/deleteUse
 
               # find all users and populate listing
               server.findModel {modelName: 'User', queryObject: {}}, (err, {data}) ->
-                users = data
+                users = data || []
                 if err
                   console.log 'Error finding user:', err
                   server.log

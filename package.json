@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "node-log": "*",
+    "memwatch": "*",
     "jaded": "0.0.6"
   },
   "engines": {

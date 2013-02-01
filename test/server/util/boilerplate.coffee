@@ -6,7 +6,6 @@ db = config.require 'server/load/mongo'
 flushCache = config.require 'load/flushCache'
 sampleData = config.require 'policy/sampleData'
 stoic = require 'stoic'
-underscore = require 'underscore'
 
 #Helper functions
 helpers = require './helpers'

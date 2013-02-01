@@ -661,6 +661,10 @@
         }
       }
     },
+    "memwatch": {
+      "version": "0.2.0",
+      "from": "memwatch@"
+    },
     "node-log": {
       "version": "0.0.3",
       "from": "node-log@0.0.3",

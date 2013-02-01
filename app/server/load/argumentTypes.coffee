@@ -6,8 +6,8 @@ stoic = require 'stoic'
 
 {getString, getType} = config.require 'load/util'
 
-redisId = /[a-z0-9]{16}/
-mongoId = /[a-f0-9]{24}/
+redisId = /^[a-z0-9]{16}$/
+mongoId = /^[a-f0-9]{24}$/
 
 module.exports = [
     typeName: 'String'
@@ -17,7 +17,7 @@ module.exports = [
   ,
     typeName: 'MongoId'
     validation: ({value}, assert) ->
-      assert getType(value) is 'String' and value.match value
+      assert getType(value) is 'String' and value.match mongoId
     defaultArgs: ['userId', 'accountId', 'websiteId', 'specialtyId']
   ,
     typeName: 'RedisId'

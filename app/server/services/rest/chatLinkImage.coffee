@@ -32,6 +32,9 @@ module.exports = ({pathParts, url}, response) ->
       }
       response.end()
 
+  # need a websiteId to do anything
+  handleError 'No websiteId.' if not websiteId or websiteId is 'undefined'
+
   # check cache
   cached = cache.retrieve cacheLocation
   if cached?

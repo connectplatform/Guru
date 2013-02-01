@@ -2,8 +2,8 @@ stoic = require 'stoic'
 {ChatSession} = stoic.models
 
 module.exports =
-  required: ['chatId', 'targetSessionId', 'accountId', 'sessionId']
-  service: ({chatId, targetSessionId, accountId, sessionId}, done) ->
+  required: ['sessionId', 'accountId', 'chatId', 'targetSessionId']
+  service: ({sessionId, accountId, chatId, targetSessionId}, done) ->
     metaInfo =
       isWatching: 'false'
       type: 'transfer'

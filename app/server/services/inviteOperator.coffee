@@ -2,8 +2,8 @@ stoic = require 'stoic'
 {Session, ChatSession} = stoic.models
 
 module.exports =
-  required: ['chatId', 'accountId', 'sessionId', 'targetSessionId']
-  service: ({chatId, accountId, sessionId, targetSessionId}, done) ->
+  required: ['sessionId', 'accountId', 'chatId', 'targetSessionId']
+  service: ({sessionId, accountId, chatId, targetSessionId}, done) ->
     metaInfo =
       isWatching: 'false'
       type: 'invite'

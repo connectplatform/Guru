@@ -22,7 +22,7 @@ module.exports = [
   ,
     typeName: 'RedisId'
     validation: ({value}, assert) ->
-      assert getType(value) is 'String' and value.match value
+      assert getType(value) is 'String' and value.match redisId
     defaultArgs: ['chatId', 'sessionId']
   ,
     typeName: 'SessionId'

@@ -10,16 +10,16 @@ boiler 'Service - Forgot Password', ->
     client = @getClient()
     client.ready ->
 
-      client.forgotPassword {email: email}, (err, {status}) ->
+      client.forgotPassword {email: email}, (err, {result}) ->
         should.not.exist err
-        status.should.eql 'OK'
+        result.should.eql 'sentEmail'
         done()
 
   it 'should fail gracefully when email not found', (done) ->
     client = @getClient()
     client.ready ->
 
-      client.forgotPassword {email: badEmail}, (err, status) ->
+      client.forgotPassword {email: badEmail}, (err, {result}) ->
         should.exist err
         err.should.eql 'Could not find user.'
         done()

@@ -14,7 +14,7 @@ module.exports = (request, response) ->
 
   getChatArchive = config.service 'getChatArchive'
 
-  getChatArchive {sessionId: sessionId, search: search}, (err, archive) ->
+  getChatArchive {sessionId: sessionId, search: search}, (err, {archive}) ->
     history = for chat in archive
       render 'chatSummary', chat
     history = history.join ''

@@ -9,4 +9,4 @@ module.exports =
       isWatching: 'false'
 
     ChatSession(accountId).get(sessionId, chatId).relationMeta.mset newMeta, (err) ->
-      done err, chatId
+      done err

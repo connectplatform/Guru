@@ -9,17 +9,17 @@ boiler 'Service - Get Nonpresent Operators', ->
         @client.watchChat {chatId: @chatId}, (err) =>
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators {chatId: @chatId}, (err, operatorSessions) =>
+          @client.getNonpresentOperators {chatId: @chatId}, (err, {operators}) =>
             should.not.exist err
 
             # Validate returned data
-            operatorSessions.length.should.eql 1
-            operatorSessions[0].chatName.should.eql 'Owner Man'
-            operatorSessions[0].role.should.eql 'Owner'
+            operators.length.should.eql 1
+            operators[0].chatName.should.eql 'Owner Man'
+            operators[0].role.should.eql 'Owner'
 
             # Make sure we have the right id
             {Session} = stoic.models
-            Session(accountId).get(operatorSessions[0].id).chatName.get (err, chatName) =>
+            Session(accountId).get(operators[0].id).chatName.get (err, chatName) =>
               chatName.should.eql 'Owner Man'
               done()
 
@@ -31,9 +31,9 @@ boiler 'Service - Get Nonpresent Operators', ->
           should.not.exist err
 
           # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators {chatId: @chatId}, (err, operatorSessions) =>
+          @client.getNonpresentOperators {chatId: @chatId}, (err, {operators}) =>
             should.not.exist err
 
             # Validate returned data
-            operatorSessions.length.should.eql 0
+            operators.length.should.eql 0
             done()

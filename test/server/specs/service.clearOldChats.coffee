@@ -133,7 +133,7 @@ boiler 'Service - Clear Old Chats', ->
               done()
 
       it 'should show me as joined', (done) ->
-        @client.getMyChats {}, (err, chats) =>
+        @client.getMyChats {}, (err, {chats}) =>
           should.not.exist err
           chats.length.should.eql 1, 'chat should exist'
           done()
@@ -149,7 +149,7 @@ boiler 'Service - Clear Old Chats', ->
             allChats.length.should.eql 0, 'all chats should be empty'
 
             # check that operator was properly removed
-            @client.getMyChats {}, (err, chats) =>
+            @client.getMyChats {}, (err, {chats}) =>
               should.not.exist err
               chats.length.should.eql 0, 'my chat sessions should be empty'
               done()

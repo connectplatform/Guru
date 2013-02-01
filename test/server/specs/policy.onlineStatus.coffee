@@ -13,10 +13,10 @@ boiler 'Policy - Online Status', ->
 
           # pretend we navigated away
           setSessionOnlineStatus {sessionId: @sessionId, isOnline: false}, (err) =>
-            should.not.exist err, 'expected setSessionOnlineStatus to work'
+            should.not.exist err
 
             # other actions should set us as online
-            @client.getActiveChats {sessionId: @sessionId}, (err, chats) =>
-              should.not.exist err, 'expected getActiveChats to work'
+            @client.getActiveChats {sessionId: @sessionId}, (err, {chats}) =>
+              should.not.exist err
               @expectSessionIsOnline @sessionId, true, =>
                 done()

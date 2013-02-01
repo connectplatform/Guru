@@ -25,4 +25,4 @@ module.exports =
           chatPair.chat.visitor.referrerData = filtered
         chatPair.chat
 
-      done null, chats
+      done null, {chats: chats}

@@ -61,7 +61,7 @@ module.exports =
     Session(accountId).allSessions.members (err, sessions) ->
       if err
         config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}
-        return done err, null
+        return done err
 
       filterSessions accountId, sessions, chatId, (err, operatorSessions) ->
 
@@ -69,4 +69,4 @@ module.exports =
         async.map operatorSessions, packSessionData, (sessionData=[]) ->
 
           sessionData = [sessionData] unless getType(sessionData) is 'Array'
-          done err, sessionData
+          done err, {operators: sessionData}

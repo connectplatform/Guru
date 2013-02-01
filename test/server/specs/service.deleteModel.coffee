@@ -6,7 +6,8 @@ boiler 'Service - Delete Model', ->
     @getAuthed =>
 
       #Get the user that we are going to delete
-      @client.findModel {queryObject: {firstName: 'First'}, modelName: 'User'}, (err, users) =>
+      @client.findModel {queryObject: {firstName: 'First'}, modelName: 'User'}, (err, {data}) =>
+        users = data
         should.not.exist err
         [targetUser] = users
         should.exist targetUser, 'could not find user'
@@ -16,7 +17,8 @@ boiler 'Service - Delete Model', ->
           should.not.exist err
 
           #check whether it worked
-          @client.findModel {queryObject: {}, modelName: 'User'}, (err, users) =>
+          @client.findModel {queryObject: {}, modelName: 'User'}, (err, {data}) =>
+            users = data
             should.not.exist err
 
             for user in users

@@ -21,13 +21,13 @@ boiler 'Service - Accept Transfer', ->
                 chatId.should.eql @chatId
 
                 # after the tranfer, target operator should be in the chat
-                transferee.getMyChats {sessionId: @targetSession}, (err, chats) =>
+                transferee.getMyChats {sessionId: @targetSession}, (err, {chats}) =>
                   should.not.exist err
                   chats.length.should.eql 1
                   chats[0].id.should.eql @chatId
 
                   # after the transfer, transferring operator should not be in the chat
-                  @client.getMyChats {}, (err, chats) =>
+                  @client.getMyChats {}, (err, {chats}) =>
                     should.not.exist err
                     chats.length.should.eql 0
                     done()

@@ -15,4 +15,5 @@ module.exports =
     Model.find queryObject, (err, models) ->
       return done err if err
 
-      async.map models, filterOutput, done
+      async.map models, filterOutput, (err, data) ->
+        done err, {data: data}

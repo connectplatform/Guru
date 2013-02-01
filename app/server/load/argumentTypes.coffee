@@ -11,39 +11,39 @@ mongoId = /[a-f0-9]{24}/
 
 module.exports = [
     typeName: 'String'
-    validation: (arg, assert) ->
-      assert typeof arg is 'string'
+    validation: ({value}, assert) ->
+      assert typeof value is 'string'
     defaultArgs: ['email', 'password', 'isWatching']
   ,
     typeName: 'MongoId'
-    validation: (arg, assert) ->
-      assert (typeof arg) is 'string' and arg.match mongoId
+    validation: ({value}, assert) ->
+      assert getType(value) is 'String' and value.match value
     defaultArgs: ['userId', 'accountId', 'websiteId', 'specialtyId']
   ,
     typeName: 'RedisId'
-    validation: (arg, assert) ->
-      assert (typeof arg) is 'string' and arg.match redisId
+    validation: ({value}, assert) ->
+      assert getType(value) is 'String' and value.match value
     defaultArgs: ['chatId', 'sessionId']
   ,
     typeName: 'SessionId'
-    validation: (sessionId, assert) ->
-      Session.accountLookup.get sessionId, (err, accountId) ->
+    validation: ({value}, assert) ->
+      Session.accountLookup.get value, (err, accountId) ->
         assert not err and accountId
     defaultArgs: ['sessionId']
   ,
     typeName: 'ChatId'
-    validation: (chatId, assert, {accountId}) ->
-      return assert false unless accountId
-      Chat(accountId).exists chatId, (err, exists) ->
-        assert not err and exists
+    validation: ({value, args: {accountId}}, assert) ->
+      return assert false, {reason: 'missing accountId'} unless accountId
+      Chat(accountId).exists value, (err, exists) ->
+        exists = not err and exists
+        assert exists, {reason: 'chatId does not exist'}
     defaultArgs: ['chatId']
   ,
     typeName: 'SpecialtyId'
     lookup: ({accountId, specialtyName}, found) ->
       return found() unless accountId and specialtyName
       Specialty.findOne {accountId: accountId, name: specialtyName}, {_id: true}, (err, results) ->
-        return found err if err or not results
-        found err, results._id
+        found err, results?._id
     defaultArgs: ['specialtyId']
   ,
     typeName: 'WebsiteId'
@@ -54,13 +54,12 @@ module.exports = [
     defaultArgs: ['websiteId']
   ,
     typeName: 'WebsiteUrl'
-    validation: (arg, assert) ->
-      assert arg.match /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}$/
+    validation: ({value}, assert) ->
+      assert value.match /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}$/
     defaultArgs: ['websiteUrl']
   ,
     typeName: 'AccountId'
     lookup: ({sessionId, websiteId}, found) ->
-      #return found "Could not look up AccountId. No SessionId or WebsiteId provided." unless sessionId or websiteId
       return found() unless sessionId or websiteId
 
       if sessionId
@@ -73,7 +72,7 @@ module.exports = [
     defaultArgs: ['accountId']
   ,
     typeName: 'WebsiteImageName'
-    validation: (imageName, assert) ->
-      assert imageName in ['online', 'offline', 'logo']
+    validation: ({value}, assert) ->
+      assert value in ['online', 'offline', 'logo']
     defaultArgs: ['imageName']
 ]

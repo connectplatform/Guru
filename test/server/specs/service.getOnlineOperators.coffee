@@ -4,7 +4,7 @@ boiler 'Service - Get Online Operators', ->
   it "should return the names of all online operators", (done) ->
     @ownerLogin (err, client) =>
 
-      client.getOnlineOperators {}, (err, operators) =>
+      client.getOnlineOperators {}, (err, {operatorNames}) =>
         should.not.exist err
-        operators.should.includeEql "Owner Man"
+        operatorNames.should.includeEql "Owner Man"
         done()

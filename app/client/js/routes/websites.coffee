@@ -6,7 +6,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
       server.ready ->
 
         server.findModel {modelName: 'Specialty', queryObject:{}}, (err, {data}) ->
-          specialties = data
+          specialties = data || []
           validSpecialtyNames = specialties.map (specialty) -> specialty.name
 
           getFormFields = -> formToHash $('#editWebsite form')
@@ -28,7 +28,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
 
           # find all websites and populate listing
           server.findModel {modelName: 'Website', queryObject:{}}, (err, {data}) ->
-            websites = data
+            websites = data || []
             if err
               server.log
                 message: 'Error retrieving websites on websites crud page'

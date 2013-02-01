@@ -19,7 +19,7 @@ define ['load/server', 'load/notify', 'templates/editSpecialty', 'templates/dele
 
         # find all specialties and populate listing
         server.findModel {modelName: 'Specialty', queryObject:{}}, (err, {data}) ->
-          specialties = data
+          specialties = data || []
           if err
             server.log
               message: 'Error retrieving specialties on specialties crud page'

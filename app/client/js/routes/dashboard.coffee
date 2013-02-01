@@ -5,6 +5,7 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
         updateDashboard = ->
           return unless window.location.hash is "#/dashboard"
           server.getActiveChats {}, (err, {chats}) ->
+            chats ||= []
             if err
               server.log
                 message: 'Error retrieving chats on dashboard'

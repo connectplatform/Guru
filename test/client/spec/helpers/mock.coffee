@@ -9,45 +9,45 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
         server.cookie 'session', 'session_foo'
         registerSessionUpdates()
         server.getMyRole = (params, cb) ->
-          cb null, role
+          cb null, {role: role}
 
       loggedOut: ->
         server.cookie 'session', null
         server.getMyRole = (params, cb) ->
-          cb null, 'None'
+          cb null, {role: 'None'}
 
       visitor: ->
         server.cookie 'session', 'session_foo'
         server.getMyRole = (params, cb) ->
-          cb null, 'Visitor'
+          cb null, {role: 'Visitor'}
 
       services: ->
         server.addServices
           login: (params, cb) ->
             mock.loggedIn()
-            cb null, {firstName: 'Bob'} #short version of the user object
+            cb null, {sessionId: 'foo'} #short version of the user object
           leaveChat: ({chatId}, cb) ->
             pulsar.channel(chatId).emit 'serverMessage',
               type: 'notification'
               message:'Visitor has left the chat'
               timestamp: 777
-            cb null, 'foo'
+            cb null, {}
           awsUpload: (params, cb) ->
-            cb null, 'foo'
+            cb null, {}
           getHeaderFooter: (params, cb) ->
             cb null, {header: '', footer: ''}
           getMyRole: (params, cb) ->
-            cb null, 'None'
+            cb null, {role: 'None'}
           getMyChats: (params, cb) ->
-            cb null, []
+            cb null, {chats: []}
           getRecurlyToken: (params, cb) ->
             cb null, {token: 'foo'}
           getChatStats: (params, cb) ->
             cb null, {all: [], unanswered: [], invites: [], unreadMessages: {}}
           getActiveChats: (params, cb) ->
-            cb null, []
+            cb null, {chats: []}
           getExistingChat: (params, cb) ->
-            cb null, null
+            cb null, {}
           createAccount: (params, cb) ->
             cb null, {accountId: 'account_foo', userId: 'owner_bar'}
           createChatOrGetForm: (params, cb) ->
@@ -65,24 +65,24 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           newChat: (params, cb) ->
             cb null, {chatId: 'foo'}
           visitorCanAccessChannel: (params, cb) ->
-            cb null, 'true'
+            cb null, {accessAllowed: 'true'}
           getChatHistory: (params, cb) ->
-            cb null,
-            [
+            histor = [
               {
                 timestamp: 0,
                 type: "notification",
                 message: 'Welcome to live chat! An operator will be with you shortly.'
               }
             ]
+            cb null, {history: history}
           getLogoForChat: (params, cb) ->
-            cb null, "https://s3.amazonaws.com/guru-dev/website/default/logo"
+            cb null, {url: "https://s3.amazonaws.com/guru-dev/website/default/logo"}
           getImageUrl: ({imageName}, cb) ->
-            cb null, "https://s3.amazonaws.com/guru-dev/website/default/#{imageName}"
+            cb null, {url: "https://s3.amazonaws.com/guru-dev/website/default/#{imageName}"}
           printChat: (params, cb) ->
-            cb null, null
+            cb null, {}
           setSessionOffline: (params, cb) ->
-            cb null, null
+            cb null, {}
           findModel: ({modelName}, cb) ->
             switch modelName
               when 'Specialty'
@@ -115,12 +115,12 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               else
                 record = [{id: 'Make a new model mock'}]
                 console.log record
-            cb null, record
+            cb null, {data: record}
           deleteModel: (params, cb) ->
             cb null, params
           log: (params, cb) ->
             console.log 'server log:', params.message, params
-            cb()
+            cb null, {}
           saveModel: ({fields, modelName, sessionId, accountId}, cb) ->
             savedModel = fields
             cb null, fields
@@ -130,18 +130,18 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
           expect(websiteUrl).toBeDefined 'Missing websiteUrl.'
           expect(department).toBeDefined 'Missing department.'
           expect(username).toBeDefined 'Missing username.'
-          cb null, chatId: 'chat_foo'
+          cb null, {chatId: 'chat_foo'}
 
       noOperators: ->
         server.createChatOrGetForm = (params, cb) ->
-          cb null, noOperators: true
+          cb null, {noOperators: true}
 
       activeChats: ->
         server.getActiveChats = (params, cb) ->
           # this is duplicated in boilerplate for server tests
           # TODO: refactor into general collection of mocks
           now = (new Date).getTime()
-          cb null, [
+          chats = [
             {
               id: 'chat_3'
               visitor:
@@ -184,6 +184,7 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               department: 'Sales'
             }
           ]
+          cb null, {chats: chats}
 
       hasChats: ->
         server.getMyChats = (params, cb) ->
@@ -206,5 +207,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
               history
             ]
 
-          cb null, [chat('chat_1', 'Bob'), chat('chat_2', 'Sam')]
+          chats = [chat('chat_1', 'Bob'), chat('chat_2', 'Sam')]
+          cb null, {chats: chats}
 

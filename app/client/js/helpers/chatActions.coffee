@@ -33,15 +33,9 @@ define ['templates/enterEmail', 'load/server', 'load/notify', 'app/config'], (en
 
         $("#enterEmail").modal "hide"
         server.ready ->
-          server.emailChat {chatId: chatId, email: email}, (err, response) ->
+          server.emailChat {chatId: chatId, email: email}, (err) ->
             if err
-              server.log
-                message: 'Error sending email',
-                context:
-                  error: err,
-                  severity: 'warn',
-                  email: email
+              notify.error "Error sending email to '#{email}'."
 
-              notify.error 'Error sending email: ', err
             else
               notify.success "Email sent to #{email}."

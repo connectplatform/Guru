@@ -143,9 +143,12 @@ form input, form .controls button {
 
 .visitor-info {
   position: absolute;
+  overflow-x: hidden;
   overflow-y: auto;
   top: 18px;
   bottom: 90px;
+  right: 0px;
+  left: 14px;
 }
 
 .websiteLogo {

@@ -4,7 +4,7 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
       (args, templ) ->
         updateDashboard = ->
           return unless window.location.hash is "#/dashboard"
-          server.getActiveChats {}, (err, chats) ->
+          server.getActiveChats {}, (err, {chats}) ->
             if err
               server.log
                 message: 'Error retrieving chats on dashboard'
@@ -28,14 +28,14 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
             dashboardAction 'acceptInvite'
             dashboardAction 'acceptTransfer'
 
-            dashboardAction 'acceptChat', (err, result) ->
+            dashboardAction 'acceptChat', (err, {status, chatId}) ->
               if err
                 server.log
                   message: 'Error accepting chat'
                   context: {error: err, severity: 'error'}
 
-              if result.status is 'OK'
-                window.location.hash = '/operatorChat'
+              if status is 'OK'
+                window.location.hash = "/operatorChat?chatId=#{chatId}"
               else
                 notify.alert "Another operator already accepted this chat"
                 updateDashboard()

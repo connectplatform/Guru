@@ -10,8 +10,9 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
       channel: null
       setup: ({chatId}, templ) ->
         server.ready ->
-          server.visitorCanAccessChannel {chatId: chatId}, (err, canAccess) ->
-            unless canAccess
+          server.visitorCanAccessChannel {chatId: chatId}, (err, {accessAllowed}) ->
+            unless accessAllowed
+              $.cookies.del 'session'
               $("#content").html "Sorry, you are not allowed to access this chat.  Please try again."
               server.log
                 message: "Attempted to connect to an invalid chat."
@@ -48,7 +49,7 @@ define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/
                 util.append chatbox, chatMessage message
 
             # display initial chat history
-            server.getChatHistory {chatId: chatId}, (err, history) ->
+            server.getChatHistory {chatId: chatId}, (err, {history}) ->
               notify.error "Error loading chat history: #{err}" if err
               appendChatMessage msg for msg in history
 

@@ -4,7 +4,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
   (server, pulsar, notify, controls, chatMessage, serverMessage, badge, util, wireUpChatAppender, embedImage, chatActions, {readChat}) ->
     channels: []
     setup:
-      (args, templ) ->
+      (args, templ, query) ->
         self = this
         self.channels = []
 
@@ -17,7 +17,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
         server.ready (services) ->
 
-          server.getMyChats {}, (err, chats) ->
+          server.getMyChats {}, (err, {chats}) ->
             if err
               server.log
                 message: 'Error getting chats in operatorChat'
@@ -50,6 +50,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
               e.preventDefault()
               $(this).tab 'show'
               currentChat = $(this).attr 'chatid'
+              $("##{currentChat} textarea.message").focus()
               $(".notifyUnread[chatid=#{currentChat}]").html ''
 
               # let the sidebar know we read these
@@ -60,7 +61,10 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
             # TODO: Display accepted/last chat instead of first tab
             # on page load click the first tab
-            $('#chatTabs a:first').click()
+            if query.chatId
+              $("#chatTabs a[chatid=#{query.chatId}]").click()
+            else
+              $('#chatTabs a:first').click()
 
             createSubmitHandler = (renderedId, channel) ->
               (evt) ->

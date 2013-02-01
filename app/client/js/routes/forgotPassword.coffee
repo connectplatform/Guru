@@ -11,11 +11,9 @@ define ["load/server", "load/notify"], (server, notify) ->
 
         if email
 
-          server.forgotPassword {email: email}, (err, status) ->
-            if err?
-              return notify.error "Error: #{err}"
-            else
-              notify.info status
+          server.forgotPassword {email: email}, (err) ->
+            unless err
+              notify.info "Sent email to '#{email}'."
               window.location.hash = '/'
 
         else

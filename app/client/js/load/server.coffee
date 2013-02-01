@@ -1,4 +1,4 @@
-define ["app/config", "vendor/vein"], (config, _) ->
+define ["app/config", "vendor/vein", "helpers/handleError"], (config, server, handleError) ->
   #TODO change this if vein gets updated to play nice with AMD again
   server = Vein.createClient(port: config.port)
 
@@ -26,8 +26,11 @@ define ["app/config", "vendor/vein"], (config, _) ->
 
           # activate service
           #console.log "calling '#{serviceName}' with:", args
-          serviceDef args, (err, results...) ->
-            console.log 'service error:', err if err
-            done err, results...
+          serviceDef args, (err, results) ->
+
+            # global error handling for server responses
+            handleError err, results
+
+            done err, results
 
   return wrapped

@@ -12,10 +12,10 @@ module.exports =
 
       if err
         config.log.warn new Error 'Error getsetting chat status in acceptChat', {error: err, chatId: chatId}
-        done null, {status:"ERROR", chatId: chatId}
+        done null, {status: "ERROR", chatId: chatId}
 
       else if status is 'active'
-        done null, {status:"ALREADY ACCEPTED", chatId: chatId}
+        done null, {status: "ALREADY ACCEPTED", chatId: chatId}
 
       else
 
@@ -25,4 +25,4 @@ module.exports =
           removeUnanswered accountId, chatId, (err, status) ->
             if err
               config.log.error 'Error removing chat from unanswered chats in acceptChat', {error: err, chatId: chatId}
-            done null, {status:"OK", chatId: chatId}
+            done null, {status: "OK", chatId: chatId}

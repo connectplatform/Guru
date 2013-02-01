@@ -57,6 +57,7 @@ define ["load/server", "load/pulsar", "load/notify", "routes/chatControls", "tem
 
               # let the sidebar know we read these
               readChat currentChat
+              util.scrollToBottom "##{currentChat} .chat-display-box"
 
               # let the server know we read these
               self.sessionUpdates.emit 'viewedMessages', currentChat

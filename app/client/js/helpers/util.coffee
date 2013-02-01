@@ -1,125 +1,131 @@
 define ["templates/treeviewParentNode", "templates/li", "templates/treeview", "templates/relatedChatLink", "app/config"],
   (treeviewParentNode, li, treeview, relatedChatLink, config) ->
-    getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
-    toTitle: (word) ->
-      word[0].toUpperCase() + word.slice(1)
+    util =
+      getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
+      toTitle: (word) ->
+        word[0].toUpperCase() + word.slice(1)
 
-    append: (selector, message) ->
-      $(selector).append message
-      $(selector).scrollTop($(selector)[0].scrollHeight)
+      scrollToBottom: (selector) ->
+        $(selector).scrollTop($(selector)[0].scrollHeight)
 
-    readableSize: (size) ->
-      units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-      i = 0
-      while size >= 1024
-        size /= 1024
-        ++i
-      return "#{Math.floor(size.toFixed(1))} #{units[i]}"
+      append: (selector, message) ->
+        $(selector).append message
+        util.scrollToBottom selector
 
-    prettySeconds: (secs) ->
-      days = Math.floor secs / 86400
-      hours = Math.floor (secs % 86400) / 3600
-      minutes = Math.floor ((secs % 86400) % 3600) / 60
-      seconds = ((secs % 86400) % 3600) % 60
-      out = ""
-      out += "#{days} days " if days > 0
-      out += "#{hours} hours " if hours > 0
-      out += "#{minutes} minutes" if minutes > 0
-      out += " #{seconds} seconds" if seconds > 0 and days <= 0
-      return out
+      readableSize: (size) ->
+        units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+        i = 0
+        while size >= 1024
+          size /= 1024
+          ++i
+        return "#{Math.floor(size.toFixed(1))} #{units[i]}"
 
-    elapsed: (time) ->
-      ms = new Date - new Date time
+      prettySeconds: (secs) ->
+        days = Math.floor secs / 86400
+        hours = Math.floor (secs % 86400) / 3600
+        minutes = Math.floor ((secs % 86400) % 3600) / 60
+        seconds = ((secs % 86400) % 3600) % 60
+        out = ""
+        out += "#{days} days " if days > 0
+        out += "#{hours} hours " if hours > 0
+        out += "#{minutes} minutes" if minutes > 0
+        out += " #{seconds} seconds" if seconds > 0 and days <= 0
+        return out
 
-      hrs = Math.floor(ms / (1000 * 60 * 60))
-      remaining = ms % (1000 * 60 * 60)
+      elapsed: (time) ->
+        ms = new Date - new Date time
 
-      min = Math.floor(remaining / (1000 * 60))
-      remaining = ms % (1000 * 60)
+        hrs = Math.floor(ms / (1000 * 60 * 60))
+        remaining = ms % (1000 * 60 * 60)
 
-      sec = Math.floor(remaining / 1000)
-      {hours: hrs, minutes: min, seconds: sec}
+        min = Math.floor(remaining / (1000 * 60))
+        remaining = ms % (1000 * 60)
 
-    elapsedDisplay: (time) ->
-      e = @elapsed time
-      hours = if hours > 0 then "#{e.hours}h : " else ""
-      "#{hours}#{e.minutes}m : #{e.seconds}s"
+        sec = Math.floor(remaining / 1000)
+        {hours: hrs, minutes: min, seconds: sec}
 
-    autotimer: (selector) ->
-      @updating ?= {}
-      return if @updating[selector]
+      elapsedDisplay: (time) ->
+        e = @elapsed time
+        hours = if hours > 0 then "#{e.hours}h : " else ""
+        "#{hours}#{e.minutes}m : #{e.seconds}s"
 
-      updateCounters = => $(selector).each (_, item) =>
-        $(item).html @elapsedDisplay($(item).attr 'started')
+      autotimer: (selector) ->
+        @updating ?= {}
+        return if @updating[selector]
 
-      updateCounters()
-      id = setInterval updateCounters, 1000
-      @updating[selector] = id
+        updateCounters = => $(selector).each (_, item) =>
+          $(item).html @elapsedDisplay($(item).attr 'started')
 
-    cleartimers: ->
-      clearInterval id for sel, id of @updating
+        updateCounters()
+        id = setInterval updateCounters, 1000
+        @updating[selector] = id
 
-    formToHash: (form) ->
+      cleartimers: ->
+        clearInterval id for sel, id of @updating
 
-      # extract an object from the form
-      toObj = (obj, item) ->
-        obj[item.name] = item.value
-        return obj
+      formToHash: (form) ->
 
-      hash = $(form).serializeArray().reduce toObj, {}
+        # extract an object from the form
+        toObj = (obj, item) ->
+          obj[item.name] = item.value
+          return obj
 
-      # group any related fields into arrays
-      for field in hash.keys()
-        m = field.match /([A-z]+)-[0-9]+/
-        if m
-          arrayName = m[1]
-          hash[arrayName] ||= []
-          hash[arrayName].push hash[field]
-          delete hash[field]
+        hash = $(form).serializeArray().reduce toObj, {}
 
-      return hash
+        # group any related fields into arrays
+        for field in hash.keys()
+          m = field.match /([A-z]+)-[0-9]+/
+          if m
+            arrayName = m[1]
+            hash[arrayName] ||= []
+            hash[arrayName].push hash[field]
+            delete hash[field]
 
-    jsonToUl: (json) ->
-      self = this
+        return hash
 
-      walkJSON = (node, path) ->
-        nodeType = $.type node
+      jsonToUl: (json) ->
+        self = this
 
-        switch nodeType
+        walkJSON = (node, path) ->
+          nodeType = $.type node
 
-          when 'array'
-            rows = ['<ul>']
-            rows.push walkJSON element, path for element in node
-            rows.push '</ul>'
-            return rows.join ""
+          switch nodeType
 
-          when 'object'
-            rows = ['<ul>']
-            for k, v of node
-              newPath = (if path then "#{path}.#{k}" else k)
-              rows.push treeviewParentNode parentName:k, childData: walkJSON v, newPath
-            rows.push '</ul>'
-            return rows.join ""
+            when 'array'
+              rows = ['<ul>']
+              rows.push walkJSON element, path for element in node
+              rows.push '</ul>'
+              return rows.join ""
 
-          when 'undefined', 'null'
-            return ''
+            when 'object'
+              rows = ['<ul>']
+              for k, v of node
+                newPath = (if path then "#{path}.#{k}" else k)
+                rows.push treeviewParentNode parentName:k, childData: walkJSON v, newPath
+              rows.push '</ul>'
+              return rows.join ""
 
-          else
-            return relatedChatLink {appUrl: config.baseUrl, value: node.toString(), path: path}
+            when 'undefined', 'null'
+              return ''
+
+            else
+              return relatedChatLink {appUrl: config.baseUrl, value: node.toString(), path: path}
 
 
-      result = walkJSON json
-      return result
+        result = walkJSON json
+        return result
 
-    getDomain: (url) ->
-      return '' unless url
-      [proto, _, domain] = url.split("/")
-      domain or ''
+      getDomain: (url) ->
+        return '' unless url
+        [proto, _, domain] = url.split("/")
+        domain or ''
 
-    random: ->
-      digit = -> ((Math.random() * 16) | 0).toString 16
-      buffer = []
-      for n in [1..16]
-        buffer.push digit()
+      random: ->
+        digit = -> ((Math.random() * 16) | 0).toString 16
+        buffer = []
+        for n in [1..16]
+          buffer.push digit()
 
-      return buffer.join ''
+        return buffer.join ''
+
+    return util

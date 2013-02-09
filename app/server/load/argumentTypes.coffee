@@ -15,6 +15,14 @@ module.exports = [
       assert typeof value is 'string'
     defaultArgs: ['email', 'password', 'isWatching']
   ,
+    typeName: 'Password'
+    validation: ({value}, assert) ->
+      unless value?.length >= 6
+        assert false, 'Password must be at least 6 characters.'
+      else
+        assert true
+    defaultArgs: ['newPassword', 'oldPassword', 'password']
+  ,
     typeName: 'MongoId'
     validation: ({value}, assert) ->
       assert getType(value) is 'String' and value.match mongoId

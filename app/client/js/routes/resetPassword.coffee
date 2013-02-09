@@ -18,7 +18,7 @@ define ["load/server", "load/notify"], (server, notify) ->
           notify.error "Passwords do not match"
           return
 
-        server.resetPassword {uid: uid, regkey: regkey, newPassword: newPassword}, (err) ->
+        server.resetPassword {userId: uid, registrationKey: regkey, newPassword: newPassword}, (err) ->
           if err?
             $(".submit-button").removeAttr("disabled")
             notify.error "Error changing password: #{err}" if err?

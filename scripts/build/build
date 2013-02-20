@@ -41,8 +41,4 @@ cp -R $client/css/* $public/css
 cp -R $client/img/* $public/img
 cp -R $client/audio/* $public/audio
 
-# Build production compiled files
-#rm -rf   $public/../jsbuild
-#node_modules/.bin/r.js -o app/public/js/app.build.js
-
 echo "Build completed!"

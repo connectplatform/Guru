@@ -27,6 +27,9 @@ module.exports = (cb) ->
 
     # Web server
     app = connect()
+    app.use (req, res, next) ->
+      res.setHeader "Access-Control-Allow-Origin", "*"
+      next()
     app.use connect.compress()
     app.use connect.responseTime()
     app.use connect.favicon()

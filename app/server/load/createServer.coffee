@@ -12,10 +12,11 @@ module.exports = (port, app) ->
   if config.app.ssl
 
     # read cert files
+    ca = config.app.ssl.ca || []
     options =
       key: read config.app.ssl.key
       cert: read config.app.ssl.cert
-      ca: config.app.ssl.ca.map read
+      ca: ca.map read
 
     # create server with ssl
     server = https.createServer(options, app).listen port

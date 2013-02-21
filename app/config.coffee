@@ -15,9 +15,12 @@ config =
       name: 'Guru'
       url: 'http://localhost:4000/chat.html'
       baseUrl: 'http://localhost:4000'
+      api: 'localhost'
       port: 4000
       pulsarPort: 4001
       ssl: false
+        #key: rel 'tmp/certs/test.com.key'
+        #cert: rel 'tmp/certs/test.com.crt'
       chats:
         minutesToTimeout: 15
       mail:
@@ -34,6 +37,8 @@ config =
           bucket: 'guru-dev'
           acl: 'public-read'
           maxSize: '10485760'
+        s3_static:
+          bucket: 'guru-test'
         accessKey: 'AKIAILLS5MBMHVD62AEA'
         secretKey: '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'
     adminNotify: ['brandon@torchlightsoftware.com', 'automart@gmail.com']

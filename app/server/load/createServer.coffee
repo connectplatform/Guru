@@ -4,7 +4,7 @@ fs = require 'fs'
 http = require 'http'
 https = require 'https'
 
-read = (file) -> fs.readFileSync join(__dirname, file), 'utf8'
+read = (file) -> fs.readFileSync file, 'utf8'
 
 module.exports = (port, app) ->
   app ?= ->

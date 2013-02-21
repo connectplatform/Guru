@@ -1,5 +1,4 @@
-define ["app/config", "vendor/pulsar"], (config, _) ->
-  #TODO change this if pulsar gets updated to play nice with AMD again
-  pulsar = Pulsar.createClient port: config.pulsarPort
+define ["app/config", "vendor/pulsar"], (config, Pulsar) ->
+  pulsar = Pulsar.createClient {port: config.pulsarPort, host: config.api}
   window.pulsar = pulsar
   return pulsar

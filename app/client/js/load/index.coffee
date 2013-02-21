@@ -1,6 +1,6 @@
-require
+require.config
   baseUrl: "."
-  packages: [
+  paths: [
     {name: "app", location: "js"}
     {name: "templates", location: "templates"}
     {name: "load", location: "js/load"}
@@ -10,4 +10,5 @@ require
     {name: "policy", location: "js/policy"}
     {name: "middleware", location: "js/policy/middleware"}
   ]
-, ['load/shim', 'load/main']
+
+require ['load/shim', 'load/main']

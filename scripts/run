@@ -11,6 +11,8 @@ tasks = {
   sendRegistration: 'scripts/sendRegistration',
   clearOldChats: 'scripts/clearOldChats',
   printMiddleware: 'scripts/printMiddleware',
+  printAssets: 'scripts/printAssets',
+  deployAssets: 'scripts/deployAssets',
   testEmail: 'scripts/testEmail',
   testLogging: 'scripts/testLogging',
   printTemplate: 'scripts/printTemplate',

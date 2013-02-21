@@ -1,7 +1,7 @@
 define ["app/config", "vendor/vein", "helpers/handleError"], (config, vein, handleError) ->
   #TODO change this if vein gets updated to play nice with AMD again
   vein ||= Vein
-  server = vein.createClient(port: config.port)
+  server = vein.createClient {port: config.port, host: config.api}
 
   wrapped = {}
   utility = ['disconnect', 'cookie', 'ready']

@@ -35,7 +35,7 @@ cp $root/node_modules/jade/runtime.min.js $client/js/vendor/jade-runtime.js
 
 # Non-built files
 cp $client/*.html $public
-cp -R $client/js/*.js $public/js
+#cp -R $client/js/*.js $public/js
 cp -R $client/js/vendor/* $public/js/vendor
 cp -R $client/css/* $public/css
 cp -R $client/img/* $public/img

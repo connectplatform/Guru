@@ -15,9 +15,6 @@ veinAdapter = config.require 'load/veinAdapter'
 
 module.exports = (cb) ->
 
-  # this creates the server as soon as you require it
-  pulsar = require './pulsar'
-
   port = (process.env.GURU_PORT or config.app.port)
   pulsarPort = (process.env.GURU_PULSAR_PORT or config.app.pulsarPort)
 

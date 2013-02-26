@@ -1,6 +1,4 @@
 async = require 'async'
-pulsar = config.require 'load/pulsar'
-createChannel = config.require 'services/chats/createChannel'
 {Chat, Session} = require('stoic').models
 {Account} = require('mongoose').models
 
@@ -11,6 +9,9 @@ module.exports = ->
       sessions: Session(accountId).allSessions.all
     }, (err, {chats, sessions}) ->
       config.log.error "Error getting redis data when trying to reconnect pulsar channels.", {error: err} if err
+
+      pulsar = config.require 'load/pulsar'
+      createChannel = config.require 'services/chats/createChannel'
 
       if chats
         for chat in chats

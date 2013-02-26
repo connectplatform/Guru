@@ -1,6 +1,6 @@
 require.config
   baseUrl: "."
-  paths: [
+  packages: [
     {name: "app", location: "js"}
     {name: "templates", location: "templates"}
     {name: "load", location: "js/load"}

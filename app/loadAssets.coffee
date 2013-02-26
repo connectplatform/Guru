@@ -12,12 +12,14 @@ autoLoad = (path) ->
         hash: false
         filter: (path) -> basename(path).match /\.html$/
         dirname: config.path path
+        compress: true
       }
       new StaticAssets {
         urlPrefix: "/"
         hash: true
         filter: (path) -> not (basename(path).match /\.html$/)
         dirname: config.path path
+        compress: true
       }
   ]
 

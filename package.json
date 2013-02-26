@@ -11,7 +11,7 @@
     "async": "*",
     "should": "*",
     "connect": "2.3.4",
-    "asset-rack": "git://github.com/TorchlightSoftware/asset-rack.git",
+    "asset-rack": "git://github.com/TorchlightSoftware/asset-rack.git#gzip",
     "async": "*",
     "pulsar": "*",
     "vein": "*",

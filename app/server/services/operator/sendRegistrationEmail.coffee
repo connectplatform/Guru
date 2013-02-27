@@ -22,8 +22,9 @@ module.exports = (user, next) ->
     to: user.email
     subject: "Welcome to #{config.app.name}"
 
-  sendEmail body, sendingOptions, ->
-    user.registrationKey = regkey
-    user.sentEmail = true
+  sendEmail body, sendingOptions, -> # fire and forget
+
+  user.registrationKey = regkey
+  user.sentEmail = true
 
   next()

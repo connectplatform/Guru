@@ -9,5 +9,6 @@ module.exports = ({email}, done) ->
 
     else
       user.sentEmail = false
-      user.save()
-      return done null, {result: "sentEmail", email: email}
+      user.save ->
+        console.log 'sentEmail after save:', user.sentEmail
+        return done null, {result: "sentEmail", email: email}

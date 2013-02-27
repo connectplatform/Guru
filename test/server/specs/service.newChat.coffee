@@ -12,10 +12,11 @@ boiler 'Service - New Chat', ->
         # And I am listening on the channel
         @channel = @getPulsar().channel @chatId
         @channel.on 'serverMessage', (data) ->
+          if data.username is 'visitor'
 
-          # Then I should see my message
-          data.message.should.eql 'hello!'
-          done()
+            # Then I should see my message
+            data.message.should.eql 'hello!'
+            done()
 
         # When I send a message
         visitor.say {message: 'hello!', chatId: @chatId}, (err) =>

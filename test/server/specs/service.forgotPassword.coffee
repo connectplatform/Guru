@@ -7,13 +7,18 @@ badEmail = 'foo@bar.com'
 boiler 'Service - Forgot Password', ->
 
   it 'should let a user reset their password', (done) ->
+    {User} = config.require('load/mongo').models
     client = @getClient()
     client.ready ->
 
       client.forgotPassword {email: email}, (err, {result}) ->
         should.not.exist err
         result.should.eql 'sentEmail'
-        done()
+        User.findOne {email: email}, (err, user) ->
+          should.exist user.registrationKey, 'expected registrationKey'
+          should.exist user.sentEmail, 'expected sentEmail'
+          user.sentEmail.should.eql true
+          done()
 
   it 'should fail gracefully when email not found', (done) ->
     client = @getClient()

@@ -2,6 +2,7 @@ db = config.require 'server/load/mongo'
 stoic = require 'stoic'
 async = require 'async'
 should = require 'should'
+{inspect} = require 'util'
 
 Vein = require 'vein'
 Pulsar = require 'pulsar'
@@ -11,6 +12,11 @@ pulsarPort = process.env.GURU_PULSAR_PORT
 
 #Exported object of helper functions
 helpers =
+
+  logger:
+    module.exports = (args...) ->
+      console.log args.map((a) ->
+        if (typeof a) is 'string' then a else inspect a, null, null)...
 
   # keep track of how many tests we've run
   count: 0

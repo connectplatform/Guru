@@ -1,0 +1,39 @@
+Sprints
+
+2013-03-11
+Cargo
+
+2013-03-04
+Cargo
+
+2013-02-25
+Cargo (distributed state)
+
+2013-02-18
+finished CDN deploy
+
+2013-02-11
+Got server monitoring solution
+Started on CDN deploy
+
+2013-02-04
+Working on memory profiling tools (not finished)
+
+2013-01-28
+Add memory profiling to unit tests
+Reset password is fixed
+Thorough check of Redis lifecycles
+Integration testing
+
+2013-01-21
+Add restart job to Guru
+Research memory leak issues
+Rework server access controls/security
+
+2013-01-14
+Redis runs on startup
+Fixes:
+  Logged error: orphan chat relation
+  Logged error: kickUser cannot read session
+  Logged error: isRelevant cannot read relation
+  Fix email on server crash

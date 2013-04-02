@@ -1,5 +1,10 @@
 Sprints
 
+2012-12-17
+Fixed print and email options
+Logout clears session
+Added help pages for new user reference
+
 2012-12-10
 Operators can search for related chats
 Fixes:

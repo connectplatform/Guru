@@ -7,10 +7,10 @@ render = config.require 'services/templates/renderTemplate'
 module.exports =
   required: ['chatId', 'email', 'accountId', 'sessionId']
   service: ({chatId, email, accountId, sessionId}, done) ->
-    Chat(accountId).get(chatId).history.all (err, history) ->
+    Chat(accountId).get(chatId).dump (err, chatData) ->
       return done err if err
 
-      body = render 'chatHistory', history: history
+      body = render 'chatHistory', chatData
 
       sendingOptions =
         to: email

@@ -1,2 +1,19 @@
-for message in history
-  p #{message.username}: #{message.message}
+h2 Chat History
+
+p
+  strong Time:
+  |  #{creationDate}
+p
+  strong Customer:
+  |  #{visitor.username}
+p
+  strong Website:
+  |  #{websiteUrl}
+
+h3 Chats
+
+.well.printPage
+  for message in history
+    p
+      strong #{message.username}:
+      |  #{message.message}

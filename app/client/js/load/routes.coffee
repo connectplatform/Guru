@@ -23,7 +23,7 @@ define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar",
     dermis.route '/operatorChat'
 
     # utility route for printing
-    dermis.route '/printChat/:chatId'
+    dermis.route '/printChat/:chatId', 'routes/printChat', 'routes/printChat'
 
     # CRUD screens for admin
     dermis.route '/account'

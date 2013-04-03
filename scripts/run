@@ -1,31 +1,20 @@
-#!/usr/local/bin/node
-require('coffee-script');
-join = require('path').join;
-require(join(__dirname, '../app/config'));
+#!/usr/local/bin/node /usr/local/bin/coffee
+{join, basename} = require "path"
+fs = require 'fs'
+config = require join __dirname, "../app/config"
 
-// TODO: Exercise for the reader. Add a requireDir function to config which
-// will grab all files in a directory and load them into an object
-tasks = {
-  seed: 'scripts/seed',
-  server: 'scripts/server',
-  sendRegistration: 'scripts/sendRegistration',
-  clearOldChats: 'scripts/clearOldChats',
-  printMiddleware: 'scripts/printMiddleware',
-  printAssets: 'scripts/printAssets',
-  deployAssets: 'scripts/deployAssets',
-  testEmail: 'scripts/testEmail',
-  testLogging: 'scripts/testLogging',
-  printTemplate: 'scripts/printTemplate',
-  jasmine: 'scripts/SpecServer'
-};
-
+# gather cmd line args
 task = process.argv[2]
-args = process.argv.slice(3);
+args = process.argv.slice(3)
 
-if (!task || !tasks[task]) {
-  console.log('Available tasks:\n' + Object.keys(tasks).join('\n'));
-  process.exit(0);
-}
-else {
-  config.require(tasks[task]).apply(null, args);
-}
+script = "scripts/#{task}"
+
+try
+  config.require(script).apply null, args
+
+catch err
+  console.log err.stack + '\n'
+  scripts = join __dirname, 'sources'
+  fs.readdir scripts, (err, files) ->
+    console.log "Available tasks:\n" + files.map((f) -> '  ' + basename f, '.coffee').join('\n')
+    process.exit 0

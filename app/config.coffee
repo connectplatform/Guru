@@ -64,6 +64,7 @@ paths =
   npmBin:     rel 'node_modules/.bin'
   scripts:    rel 'scripts/sources'
   data:       rel 'data'
+  test:       rel 'test/server'
 
   app:        rel 'app'
   client:     rel 'app/client'

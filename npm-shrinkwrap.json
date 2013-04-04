@@ -583,8 +583,8 @@
       "from": "law@0.0.13"
     },
     "stoic": {
-      "version": "0.0.4",
-      "from": "stoic@0.0.4",
+      "version": "0.0.5",
+      "from": "stoic@0.0.5",
       "dependencies": {
         "hiredis": {
           "version": "0.1.14",

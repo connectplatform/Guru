@@ -7,7 +7,8 @@ module.exports =
     getPaidSeats = config.service 'account/getPaidSeats'
     syncSubscription = config.service 'recurly/syncSubscription'
 
-    getPaidSeats {accountId: accountId}, (err, {paidSeats}) ->
+    getPaidSeats {accountId: accountId}, (err, obj={}) ->
+      {paidSeats} = obj
       return done err if err or not paidSeats
       seatCount = paidSeats + newSeats
 

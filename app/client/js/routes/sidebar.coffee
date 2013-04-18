@@ -1,4 +1,7 @@
-define ["load/server", "load/notify", "load/pulsar", 'helpers/sidebarHelpers'], (server, notify, pulsar, helpers) ->
+###
+  define ["load/server", "load/notify", "load/pulsar", 'helpers/sidebarHelpers'], (server, notify, pulsar, helpers) ->
+
+
   {playSound, updateBadge, updateUnread} = helpers
 
   (args, templ) ->
@@ -6,7 +9,8 @@ define ["load/server", "load/notify", "load/pulsar", 'helpers/sidebarHelpers'], 
     # init badge number
     server.ready ->
 
-      $('#sidebar').html templ role: args.role
+
+      $('#navBar').html templ role: args.role
 
       server.getChatStats {}, (err, stats) ->
         updateBadge "#sidebar .notifyUnanswered", stats.unanswered?.length

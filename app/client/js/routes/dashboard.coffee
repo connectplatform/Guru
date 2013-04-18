@@ -1,9 +1,10 @@
-define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/dashboardAction'],
-  (server, notify, util, pulsar, dashboardAction) ->
+define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/dashboardAction', "components/navBar"],
+  (server, notify, util, pulsar, dashboardAction, navBar) ->
     setup:
       (args, templ) ->
         updateDashboard = ->
           return unless window.location.hash is "#/dashboard"
+          
           server.getActiveChats {}, (err, {chats}) ->
             chats ||= []
             if err

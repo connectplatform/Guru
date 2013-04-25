@@ -23,6 +23,7 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
             registerSessionUpdates()
             window.location.hash = '/dashboard'
 
+
       $('#login-cancel-button').click ->
         $('#login-modal').modal 'hide'
         window.location.hash = '/'

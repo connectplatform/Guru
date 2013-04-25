@@ -38,6 +38,8 @@ define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/da
 
               if status is 'OK'
                 window.location.hash = "/operatorChat?chatId=#{chatId}"
+                $(".nav li").removeClass "active"
+                $(".newChatSelector").addClass "active"  unless $this.hasClass("active")
               else
                 notify.alert "Another operator already accepted this chat"
                 updateDashboard()

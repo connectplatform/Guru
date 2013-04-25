@@ -1,0 +1,51 @@
+.navbar.navbar-inverse.navbar-fixed-top
+  .navbar-inner.navBarContainer
+    .container-fluid
+      a.brand(href='#', style='padding-top: 13px;')
+        strong CHAT PRO
+      ul.nav
+        li
+          a(href='#/dashboard') Dashboard 
+            span.notifyUnanswered 
+            span.notifyInvites
+        li.newChatSelector
+          a(href='#/operatorChat') Chats 
+            span.notifyUnread
+        if role == "Owner"
+          ul.nav
+          li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown') Administration
+              b.caret
+            ul.dropdown-menu.collapse.in
+              li
+                a(href="#/account")
+                  i.icon-off
+                  | Account
+              li
+                a(href='#/userProfile')
+                  i.icon-off
+                  | Users
+              li
+                a(href='#/Websites')
+                  i.icon-off
+                  | Websites
+              li
+                a(href='#/specialties')
+                  i.icon-off
+                  | Specialties
+      input.input-medium.search-query(type='text', placeholder='Search...', style='margin-top: 8px; position: absolute; left: 600px')
+      ul.nav.pull-right
+        li.dropdown
+          a.dropdown-toggle(href='#', data-toggle='dropdown') Logged in as Monad
+            b.caret
+          ul.dropdown-menu.collapse.in
+            li
+              a(href="#/logout")
+                i.icon-off
+                | Logout
+            li
+              a(href='#/userProfile')
+                i.icon-off
+                | Profile
+
+      include sounds

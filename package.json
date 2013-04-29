@@ -25,8 +25,7 @@
     "markdown": "*",
     "winston": "*",
     "winston-mongodb": "*",
-    "jade": "*"
-    "flight": "~1.0.0"
+    "jade": "*" 
   },
   "devDependencies": {
     "factory-worker": "*",

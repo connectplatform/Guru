@@ -1,7 +1,7 @@
 .navbar.navbar-inverse.navbar-fixed-top
   .navbar-inner.navBarContainer
     .container-fluid
-      a.brand(href='#', style='padding-top: 13px;')
+      a.brand.brandSpacing(href='#')
         strong CHAT PRO
       ul.nav
         li
@@ -33,7 +33,7 @@
                 a(href='#/specialties')
                   i.icon-off
                   | Specialties
-      input.input-medium.search-query(type='text', placeholder='Search...', style='margin-top: 8px; position: absolute; left: 600px')
+      input.input-medium.search-query.searchBox(type='text', placeholder='Search...')
       ul.nav.pull-right
         li.dropdown
           a.dropdown-toggle(href='#', data-toggle='dropdown') Logged in as Monad

@@ -328,6 +328,16 @@ div {
   list-style: none;
 }
 
+.searchBox {
+  margin-top: 8px; 
+  position: absolute; 
+  left: 600px;
+}
+
+.brandSpacing {
+  padding-top: 13px !important;
+}
+
 .chatTab {
     height: 80px;
     width: 200px;

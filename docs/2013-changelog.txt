@@ -1,13 +1,31 @@
 Sprints
 
+2013-04-22
+Create chat agent, metrics server, finish chat UI refactor
+
+2013-04-15
+Prototype Particle Chat, load test, Michael got nav bar mostly implemented
+
+2013-04-08
+Completed load testing, Michael working on chat UI
+
+2013-04-01
+Load testing, working with Andrei on testing
+
+2013-03-25
+Taxes/Business Dev (no charge)
+
+2013-03-18
+Particle
+
 2013-03-11
-Cargo
+Particle
 
 2013-03-04
-Cargo
+Particle
 
 2013-02-25
-Cargo (distributed state)
+Particle (distributed state)
 
 2013-02-18
 finished CDN deploy

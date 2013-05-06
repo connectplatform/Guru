@@ -1,0 +1,140 @@
+# 10 login/logout/create/join chat
+{ diff: '76.24 mb',
+  biggest: { Array: '44.62 mb', Closure: '11.86 mb', Code: '846.09 kb' } }
+
+{ diff: '73.48 mb',
+  biggest: { Array: '43.38 mb', Closure: '11.41 mb', Code: '787.59 kb' } }
+
+{ diff: '73.55 mb',
+  biggest: { Array: '43.4 mb', Closure: '11.41 mb', Code: '786.23 kb' } }
+
+
+# with logins and 40 chats
+# with network
+{ diff: '53.32 mb',
+  biggest: { Closure: '17.53 mb', Array: '15.92 mb', nop: '2.85 mb' } }
+
+{ diff: '53.19 mb',
+  biggest: { Closure: '17.49 mb', Array: '16.24 mb', nop: '2.84 mb' } }
+
+  { diff: '66.97 mb',
+    biggest: { Array: '39.43 mb', Closure: '10.48 mb', Code: '712.33 kb' } }
+  { diff: '57.86 mb',
+    biggest: { Array: '33.83 mb', Closure: '8.97 mb', Code: '695.93 kb' } }
+  { diff: '57.84 mb',
+    biggest: { Array: '34.2 mb', Closure: '8.97 mb', Code: '674.94 kb' } }
+
+# deleting session.get
+{ diff: '54.38 mb',
+  biggest: { Array: '32.16 mb', Closure: '8.42 mb', Code: '678.73 kb' } }
+
+
+# one chat sent
+{ diff: '8.85 mb',
+  biggest: { Closure: '2.68 mb', Array: '2.44 mb', Code: '921.61 kb' } }
+
+{ diff: '5.25 mb',
+  biggest: { Array: '1.54 mb', Closure: '1.32 mb', Code: '797.42 kb' } }
+
+
+# no chats sent
+{ diff: '6.44 mb',
+  biggest: { Closure: '1.89 mb', Array: '1.72 mb', Code: '881.03 kb' } }
+
+
+
+# without network
+{ diff: '2.13 mb',
+  biggest: { Code: '912.41 kb', Array: '440.28 kb', Closure: '375.68 kb' } }
+
+{ diff: '1.79 mb',
+  biggest: { Code: '888.83 kb', Array: '354.91 kb', Closure: '284.77 kb' } }
+
+
+
+# without top level law (still present on sub services)
+{ diff: '46.67 mb',
+  biggest: { Array: '27.61 mb', Closure: '7.22 mb', Code: '672.2 kb' } }
+
+{ diff: '46.57 mb',
+  biggest: { Array: '27.19 mb', Closure: '7.21 mb', Code: '659.77 kb' } }
+
+{ diff: '46.59 mb',
+  biggest: { Array: '27.19 mb', Closure: '7.21 mb', Code: '675.96 kb' } }
+
+# completely eliminated law
+{ diff: '46.05 mb',
+  biggest: { Array: '26.9 mb', Closure: '7.14 mb', Code: '613.51 kb' } }
+
+{ diff: '45.96 mb',
+  biggest: { Array: '26.84 mb', Closure: '7.13 mb', Code: '618.09 kb' } }
+
+{ diff: '45.98 mb',
+  biggest: { Array: '27.22 mb', Closure: '7.13 mb', Code: '627.73 kb' } }
+
+# deleting args/results in adapter
+{ diff: '57.83 mb',
+  biggest: { Array: '34.19 mb', Closure: '8.97 mb', Code: '678.92 kb' } }
+
+# 40 noops
+{ diff: '7.02 mb',
+  biggest: { Array: '3.71 mb', Closure: '1017.14 kb', Code: '851.34 kb' } }
+
+# 80 noops
+{ diff: '6.97 mb',
+  biggest: { Array: '3.67 mb', Closure: '1003.99 kb', Code: '868.83 kb' } }
+
+# 200 noops
+{ diff: '7.11 mb',
+  biggest: { Array: '3.75 mb', Closure: '1004.06 kb', Code: '922.53 kb' } }
+
+# 10 - 100 findModel
+{ diff: '7.83 mb',
+  biggest: { Array: '3.69 mb', Closure: '1013.34 kb', Code: '870.77 kb' } }
+
+# 10 getMyRole
+{ diff: '8.22 mb',
+  biggest: { Array: '4.4 mb', Closure: '1.18 mb', Code: '859.17 kb' } }
+
+# 100 getMyRole
+{ diff: '19.8 mb',
+  biggest: { Array: '11.59 mb', Closure: '2.98 mb', Code: '908.96 kb' } }
+
+  # with account lookup
+  { diff: '19.79 mb',
+    biggest: { Array: '11.59 mb', Closure: '2.97 mb', Code: '909.34 kb' } }
+
+# 1000 getMyRole
+{ diff: '134.77 mb',
+  biggest: { Array: '79.6 mb', Closure: '20.98 mb', Code: '744.14 kb' } }
+
+# 10 printChat
+{ diff: '10.05 mb',
+  biggest: { Array: '5.2 mb', Closure: '1.38 mb', Code: '1.36 mb' } }
+
+# 40 printChat
+{ diff: '17.79 mb',
+  biggest: { Array: '9.76 mb', Closure: '2.58 mb', Code: '1.38 mb' } }
+
+# 100 printChat
+{ diff: '32.96 mb',
+  biggest: { Array: '18.87 mb', Closure: '4.98 mb', Code: '1.17 mb' } }
+
+# 10 newChat
+{ diff: '13.87 mb',
+  biggest: { Array: '7.71 mb', Closure: '2.02 mb', Code: '1006.47 kb' } }
+
+# 40 newChat
+{ diff: '34.31 mb',
+  biggest: { Array: '19.81 mb', Closure: '5.18 mb', Code: '996.24 kb' } }
+
+# 100 newChat
+{ diff: '75.95 mb',
+  biggest: { Array: '44.36 mb', Closure: '11.72 mb', Code: '1.06 mb' } }
+
+{ diff: '81.6 mb',
+  biggest: { Array: '47.97 mb', Closure: '12.63 mb', Code: '1.16 mb' } }
+
+{ diff: '81.58 mb',
+  biggest: { Array: '47.59 mb', Closure: '12.64 mb', Code: '1.13 mb' } }
+

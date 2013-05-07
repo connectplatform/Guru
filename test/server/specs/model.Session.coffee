@@ -23,4 +23,20 @@ boiler 'Model - Session', ->
 
     Session.create data, (err, session) ->
       should.not.exist err
+      session.username.should.equal data.username
       done()
+
+  it 'should let you create a Session for a User', (done) ->
+    data =
+      accountId: @accountId
+      userId: @userId
+      chatSessions: []
+      username: 'Example User'
+
+    Session.create data, (err, session) =>
+      should.not.exist err
+      session.userId.toString @userId
+      done()
+
+# TODO: add tests to ensure Session.chatSessions only contains refs to acutal
+# chatIds, no duplicates.

@@ -23,5 +23,4 @@ boiler 'Model - Session', ->
 
     Session.create data, (err, session) ->
       should.not.exist err
-      console.log session
       done()

@@ -17,7 +17,7 @@ boiler 'Model - Session', ->
   it 'should let you create a Session for a Visitor', (done) ->
     data =
       accountId: @accountId
-      userId: @userId
+      userId: null
       chatSessions: []
       username: 'Example Visitor'
 

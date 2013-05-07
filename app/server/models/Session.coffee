@@ -1,13 +1,9 @@
-# Session for a logged-in User or non-User visitor
-
 db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 
+# Session for a logged-in User or non-User visitor
 session = new Schema
-  sessionId:
-    type: ObjectId
-    required: true
 
   accountId:
     type: ObjectId
@@ -19,8 +15,10 @@ session = new Schema
 
   chatSessions:
     type: [ObjectId]
-    required: true
+    default: []
 
   username:
     type: String
     required: true
+
+module.exports = session

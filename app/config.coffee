@@ -9,13 +9,14 @@ rel = (path) ->
 
 environment = process.env.NODE_ENV or 'development'
 
+devHost = 'localhost'
 config =
   development:
     app:
       name: 'Guru'
-      url: 'http://localhost:4000/chat.html'
-      baseUrl: 'http://localhost:4000'
-      api: 'localhost'
+      url: 'http://'+devHost+':4000/chat.html'
+      baseUrl: 'http://'+devHost+':4000'
+      api: null
       port: 4000
       pulsarPort: 4001
       ssl: false
@@ -31,7 +32,7 @@ config =
           from: 'info@chatpro.com'
           support: 'success@simulator.amazonses.com'
         getActivationLink: (uid, regkey) ->
-          "http://localhost:4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
+          "http://"+devHost+":4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       aws:
         s3:
           bucket: 'guru-dev'

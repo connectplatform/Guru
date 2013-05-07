@@ -103,7 +103,7 @@
     "asset-rack": {
       "version": "2.0.7",
       "from": "git://github.com/TorchlightSoftware/asset-rack.git#gzip",
-      "resolved": "git://github.com/TorchlightSoftware/asset-rack.git#5e1431d92d97f7ad9f29a53dcb3b962679aa3f1a",
+      "resolved": "git+https://github.com/TorchlightSoftware/asset-rack.git#5e1431d92d97f7ad9f29a53dcb3b962679aa3f1a",
       "dependencies": {
         "browserify": {
           "version": "1.17.3",
@@ -587,7 +587,7 @@
       "from": "stoic@0.0.7",
       "dependencies": {
         "hiredis": {
-          "version": "0.1.14",
+          "version": "0.1.15",
           "from": "hiredis@*"
         },
         "redis": {
@@ -603,7 +603,7 @@
     },
     "restler": {
       "version": "2.0.1",
-      "from": "git://github.com/bitmage/restler.git"
+      "from": "git+https://github.com/bitmage/restler.git"
     },
     "nodemailer": {
       "version": "0.3.27",

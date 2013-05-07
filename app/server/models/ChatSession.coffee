@@ -41,3 +41,5 @@ chatSession = new Schema
   requestor:
     type: ObjectId
     required: false
+
+module.exports = chatSession

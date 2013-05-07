@@ -32,3 +32,5 @@ chat = new Schema
         type: ObjectId
         required: false
     ]
+
+module.exports = chat

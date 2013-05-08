@@ -1,6 +1,6 @@
 should = require 'should'
 db = config.require 'server/load/mongo'
-{Account, Chat, ChatSession, Session, User} = db.models
+{Account, Chat, ChatSession, Session, User, Website} = db.models
 {chatStatusStates} = config.require 'load/enums'
 
 
@@ -11,34 +11,41 @@ boiler 'Model - ChatSession', ->
       User.findOne {accountId: @accountId}, (err, user) =>
         should.not.exist err
         @userId = user._id
-        Factory.create 'chat', (err, chat) =>
+        Website.findOne {accountId: @accountId}, (err, website) =>
           should.not.exist err
-          @chatId = chat._id
-          Factory.create 'session', (err, session) =>
+          should.exist website
+          @websiteId = website._id
+          @websiteUrl = website.url
+          chatData =
+            accountId: @accountId
+            websiteId: @websiteId
+            websiteUrl: @websiteUrl
+          Factory.create 'chat', chatData, (err, chat) =>
             should.not.exist err
-            @sessionId = session._id
-            done err
+            @chatId = chat._id
+            Factory.create 'session', (err, session) =>
+              should.not.exist err
+              @sessionId = session._id
+              Factory.define 'validChatSession', 'chatSession', {
+                sessionId: @sessionId
+                chatId: @chatId
+              }
+              done err
 
-  it 'should let you create a ChatSession', (done) ->
-    data =
-      sessionId: @sessionId
-      chatId: @chatId
-      relation: 'Member'
-    Factory.create 'chatSession', data, (err, chatSession) =>
+  it 'should let you create a valid ChatSession', (done) ->
+    Factory.create 'validChatSession', (err, chatSession) =>
       should.not.exist err
       should.exist chatSession
-      chatSession.sessionId.toString().should.equal data.sessionId
-      chatSession.chatId.toString().should.equal data.chatId
-      chatSession.relation.should.equal data.relation
+      chatSession.sessionId.toString().should.equal @sessionId
+      chatSession.chatId.toString().should.equal @chatId
+      chatSession.relation.should.equal 'Member'
       done()
 
   it 'should not let you create a ChatSession without all data', (done) ->
     data =
-      sessionId: @sessionId
-      chatId: @chatId
       relation: null
 
-    Factory.create 'chatSession', data, (err, chatSession) =>
+    Factory.create 'validChatSession', data, (err, chatSession) =>
       should.exist err
       expectedErrMsg = 'Validator "enum" failed for path relation'
       err.errors.relation.message.should.equal expectedErrMsg

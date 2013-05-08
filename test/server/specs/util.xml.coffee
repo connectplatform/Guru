@@ -20,7 +20,7 @@ describe 'EasyXml', ->
 describe 'xml2js', ->
 
   it 'should deserialize properly', (done) ->
-    file = join config.paths.data, 'sampleData/sampleXml.xml'
+    file = join __dirname, '../sampleData/sampleXml.xml'
     console.log 'file', file
     sampleXml = fs.readFileSync file, 'utf8'
 

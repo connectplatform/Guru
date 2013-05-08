@@ -4,7 +4,7 @@ db = config.require 'server/load/mongo'
 {chatStatusStates} = config.require 'load/enums'
 
 
-boiler 'Model - Session', ->
+boiler 'Model - Chat', ->
   beforeEach (done) ->
     Account.findOne {}, (err, account) =>
       @accountId = account._id

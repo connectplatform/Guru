@@ -33,7 +33,20 @@ boiler 'Model - Session', ->
       chatSessions: []
       username: 'Example User'
 
-    Session.create data, (err, session) =>
+    Session.create data, (err, session) ->
       should.not.exist err
       session.userId.toString().should.equal data.userId
+      done()
+
+  it 'should not let you create a Session without a username', (done) ->
+    data =
+      accountId: @accountId
+      userId: null
+      chatSessions: []
+      username: null
+
+    Session.create data, (err, session) ->
+      should.exist err
+      expectedErrMsg = 'Validator "required" failed for path username'
+      err.errors.username.message.should.equal expectedErrMsg
       done()

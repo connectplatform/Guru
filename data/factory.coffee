@@ -1,8 +1,10 @@
 Factory = require 'factory-worker'
-{User, Account, Specialty, Website, ChatHistory} = config.require('load/mongo').models
+models = config.require('load/mongo').models
+{User, Account, Specialty, Website, ChatHistory, Chat, Session, ChatSession} = models
+{chatStatusStates} = config.require 'load/enums'
 
 {getString} = config.require 'load/util'
-{Chat, ChatSession, Session} = require('stoic').models
+# {Chat, ChatSession, Session} = require('stoic').models
 
 # ================================================================
 # helpers
@@ -86,6 +88,25 @@ Factory.define 'chathistory', ChatHistory, {
       timestamp: -> new Date
   ]
 }
+
+Factory.define 'chat', Chat, {
+  accountId: defaultAccountId
+  status: chatStatusStates[0]
+  history: []
+}
+
+Factory.define 'session', Session, {
+  accountId: defaultAccountId
+  userId: null
+  username: 'Example visitor'
+}
+
+Factory.define 'chatSession', ChatSession, {
+  sessionId: null
+  chatId: null
+  relation: 'Member'
+}
+
 
 # ================================================================
 # redis factories

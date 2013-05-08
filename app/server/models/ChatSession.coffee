@@ -1,12 +1,9 @@
 db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
+{chatSessionRelations} = config.require 'load/enums'
 
 chatSession = new Schema
-  accountId:
-    type: ObjectId
-    required: true
-
   sessionId:
     type: ObjectId
     required: true
@@ -15,27 +12,16 @@ chatSession = new Schema
     type: ObjectId
     required: true
 
-  websiteId: String
-
-  websiteUrl: String
-
-  specialtyId: String
-
   creationDate:
     type: Date
-    required: true
-
-  isWatching:
-    type: Boolean
+    default: Date.now
     required: true
 
   relation:
     type: String
-    enum: 'Member Invite Transfer'.split(' ')
+    enum: chatSessionRelations
     required: true
 
-  requestor:
-    type: ObjectId
-    required: false
+  initiator: ObjectId
 
 module.exports = chatSession

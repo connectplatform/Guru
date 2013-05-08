@@ -8,60 +8,38 @@ boiler 'Model - ChatSession', ->
   beforeEach (done) ->
     Account.findOne {}, (err, account) =>
       @accountId = account._id
-      done err
-
-  beforeEach (done) ->
-    User.findOne {}, (err, user) =>
-      @userId = user._id
-      done err
-
-  beforeEach (done) ->
-    data =
-      accountId: @accountId
-      status: chatStatusStates[0]
-      history: []
-    Chat.create data, (err, chat) =>
-      @chatId = chat._id
-      done err
-
-  beforeEach (done) ->
-    data =
-      accountId: @accountId
-      userId: null
-      chatSession: []
-      username: 'Example Visitor'
-    Session.create data, (err, session) =>
-      @sessionId = session._id
-      done err
+      User.findOne {accountId: @accountId}, (err, user) =>
+        should.not.exist err
+        @userId = user._id
+        Factory.create 'chat', (err, chat) =>
+          should.not.exist err
+          @chatId = chat._id
+          Factory.create 'session', (err, session) =>
+            should.not.exist err
+            @sessionId = session._id
+            done err
 
   it 'should let you create a ChatSession', (done) ->
     data =
-      accountId: @accountId
       sessionId: @sessionId
       chatId: @chatId
-      creationDate: Date.now()
-      isWatching: false
       relation: 'Member'
-
-    ChatSession.create data, (err, chatSession) ->
+    Factory.create 'chatSession', data, (err, chatSession) =>
       should.not.exist err
-      chatSession.accountId.toString().should.equal data.accountId
+      should.exist chatSession
       chatSession.sessionId.toString().should.equal data.sessionId
       chatSession.chatId.toString().should.equal data.chatId
+      chatSession.relation.should.equal data.relation
       done()
 
   it 'should not let you create a ChatSession without all data', (done) ->
     data =
-      accountId: @accountId
-      sessionId: null
+      sessionId: @sessionId
       chatId: @chatId
-      creationDate: Date.now()
-      isWatching: false
-      relation: 'Member'
+      relation: null
 
-    ChatSession.create data, (err, chatSession) ->
+    Factory.create 'chatSession', data, (err, chatSession) =>
       should.exist err
-      console.log err
-      expectedErrMsg = 'Validator "required" failed for path sessionId'
-      err.errors.sessionId.message.should.equal expectedErrMsg
+      expectedErrMsg = 'Validator "enum" failed for path relation'
+      err.errors.relation.message.should.equal expectedErrMsg
       done()

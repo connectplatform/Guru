@@ -5,3 +5,4 @@ module.exports =
 
   accountTypes: ['Paid', 'Unlimited']
   chatStatusStates: ['Waiting', 'Active', 'Vacant']
+  chatSessionRelations: ['Member', 'Invite', 'Transfer', 'Watching']

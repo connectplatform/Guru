@@ -14,8 +14,8 @@ config =
   development:
     app:
       name: 'Guru'
-      url: 'http://'+devHost+':4000/chat.html'
-      baseUrl: 'http://'+devHost+':4000'
+      url: 'http://#{devHost}:4000/chat.html'
+      baseUrl: 'http://#{devHost}:4000'
       api: null
       port: 4000
       pulsarPort: 4001
@@ -32,7 +32,7 @@ config =
           from: 'info@chatpro.com'
           support: 'success@simulator.amazonses.com'
         getActivationLink: (uid, regkey) ->
-          "http://"+devHost+":4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
+          "http://#{devHost}:4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       aws:
         s3:
           bucket: 'guru-dev'

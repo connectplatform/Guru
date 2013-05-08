@@ -13,10 +13,6 @@ session = new Schema
     type: ObjectId
     required: false
 
-  chatSessions:
-    type: [ObjectId]
-    default: []
-
   username:
     type: String
     required: true

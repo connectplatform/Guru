@@ -5,5 +5,4 @@
 -r test/server/util/boilerplate.coffee
 -R spec
 --ui bdd
---globals app,config,boiler,___eio
 -t 4000

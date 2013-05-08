@@ -8,12 +8,9 @@ boiler 'Model - Chat', ->
   beforeEach (done) ->
     Account.findOne {}, (err, account) =>
       @accountId = account._id
-      done err
-
-  beforeEach (done) ->
-    User.findOne {}, (err, user) =>
-      @userId = user._id
-      done err
+      User.findOne {accountId: @accountId}, (err, user) =>
+        @userId = user._id
+        done err
 
   it 'should let you create a Chat with a valid status', (done) ->
     data =
@@ -21,7 +18,7 @@ boiler 'Model - Chat', ->
       status: chatStatusStates[0]
       history: []
 
-    Chat.create data, (err, chat) ->
+    Factory.create 'chat', data, (err, chat) =>
       should.not.exist err
       chat.accountId.toString().should.equal data.accountId
       chat.history.should.be.empty and data.history.should.be.empty
@@ -33,7 +30,7 @@ boiler 'Model - Chat', ->
       status: 'notAStatus'
       history: []
 
-    Chat.create data, (err, chat) ->
+    Factory.create 'chat', data, (err, chat) =>
       should.exist err
       expectedErrMsg = 'Validator "enum" failed for path status'
       err.errors.status.message.should.equal expectedErrMsg
@@ -48,7 +45,7 @@ boiler 'Model - Chat', ->
         username: 'Example User'
       ]
 
-    Chat.create data, (err, chat) ->
+    Factory.create 'chat', data, (err, chat) =>
       should.exist err
       expectedErrMsg = 'Validator "required" failed for path timestamp'
       err.errors['history.0.timestamp'].message.should.equal expectedErrMsg
@@ -64,7 +61,7 @@ boiler 'Model - Chat', ->
         timestamp: Date.now()
       ]
 
-    Chat.create data, (err, chat) ->
+    Factory.create 'chat', data, (err, chat) =>
       should.not.exist err
       chat.history[0].timestamp.should.equal data.history[0].timestamp
       done()
@@ -80,9 +77,8 @@ boiler 'Model - Chat', ->
         userId: @userId
       ]
 
-    Chat.create data, (err, chat) ->
+    Factory.create 'chat', data, (err, chat) =>
       should.not.exist err
       chat.history[0].timestamp.should.equal data.history[0].timestamp
       chat.history[0].userId.toString().should.equal data.history[0].userId
       done()
-

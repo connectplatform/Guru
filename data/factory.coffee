@@ -90,6 +90,7 @@ Factory.define 'chathistory', ChatHistory, {
 }
 
 Factory.define 'chat', Chat, {
+  accountId: null
   status: chatStatusStates[0]
   history: []
   websiteId: null
@@ -97,7 +98,7 @@ Factory.define 'chat', Chat, {
 }
 
 Factory.define 'session', Session, {
-  accountId: defaultAccountId
+  accountId: null
   userId: null
   username: 'Example visitor'
 }

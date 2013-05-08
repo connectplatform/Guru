@@ -23,7 +23,9 @@ boiler 'Model - ChatSession', ->
           Factory.create 'chat', chatData, (err, chat) =>
             should.not.exist err
             @chatId = chat._id
-            Factory.create 'session', (err, session) =>
+            sessionData =
+              accountId: @accountId
+            Factory.create 'session', sessionData, (err, session) =>
               should.not.exist err
               @sessionId = session._id
               Factory.define 'validChatSession', 'chatSession', {

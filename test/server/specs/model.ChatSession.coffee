@@ -49,3 +49,19 @@ boiler 'Model - ChatSession', ->
       chatSession.sessionId.toString().should.equal data.sessionId
       chatSession.chatId.toString().should.equal data.chatId
       done()
+
+  it 'should not let you create a ChatSession without all data', (done) ->
+    data =
+      accountId: @accountId
+      sessionId: null
+      chatId: @chatId
+      creationDate: Date.now()
+      isWatching: false
+      relation: 'Member'
+
+    ChatSession.create data, (err, chatSession) ->
+      should.exist err
+      console.log err
+      expectedErrMsg = 'Validator "required" failed for path sessionId'
+      err.errors.sessionId.message.should.equal expectedErrMsg
+      done()

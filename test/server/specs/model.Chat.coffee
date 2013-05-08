@@ -3,6 +3,7 @@ db = config.require 'server/load/mongo'
 {Account, Chat, User} = db.models
 {chatStatusStates} = config.require 'load/enums'
 
+
 boiler 'Model - Session', ->
   beforeEach (done) ->
     Account.findOne {}, (err, account) =>

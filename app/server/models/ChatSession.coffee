@@ -3,10 +3,6 @@ db = require 'mongoose'
 {ObjectId} = Schema.Types
 
 chatSession = new Schema
-  chatSessionId:
-    type: ObjectId
-    required: true
-
   accountId:
     type: ObjectId
     required: true

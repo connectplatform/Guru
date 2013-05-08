@@ -20,6 +20,14 @@ defaultAccountId = (done) ->
   Account.findOne {accountType: 'Unlimited'}, (err, account) ->
     done err, getString(account._id)
 
+defaultWebsiteId = (done) ->
+  Website.findOne {}, (err, website) ->
+    done err, getString(website._id)
+
+defaultWebsiteUrl = (done) ->
+  Website.findOne {}, (err, website) ->
+    done err, website.url
+
 getSpecialties = (list) ->
   (next) ->
     defaultAccountId (err, accountId) ->
@@ -93,6 +101,8 @@ Factory.define 'chat', Chat, {
   accountId: defaultAccountId
   status: chatStatusStates[0]
   history: []
+  websiteId: defaultWebsiteId
+  websiteUrl: defaultWebsiteUrl
 }
 
 Factory.define 'session', Session, {

@@ -24,9 +24,22 @@ chat = new Schema
       username:
         type: String
         required: true
-      userId:
-        type: ObjectId
-        required: false
+      userId: ObjectId
     ]
+
+  creationDate:
+    type: Date
+    default: Date.now
+    required: true
+
+  websiteId:
+    type: ObjectId
+    required: true
+    
+  websiteUrl:
+    type: String
+    required: true
+    
+  specialtyId: ObjectId
 
 module.exports = chat

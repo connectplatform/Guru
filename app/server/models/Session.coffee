@@ -9,9 +9,7 @@ session = new Schema
     type: ObjectId
     required: true
 
-  userId:
-    type: ObjectId
-    required: false
+  userId: ObjectId
 
   username:
     type: String

@@ -36,6 +36,16 @@ boiler 'Model - Chat', ->
       err.errors.status.message.should.equal expectedErrMsg
       done()
 
+  it 'should not let you create a Chat without a websiteId', (done) ->
+    data =
+      websiteId: null
+
+    Factory.create 'chat', data, (err, chat) =>
+      should.exist err
+      expectedErrMsg = 'Validator "required" failed for path websiteId'
+      err.errors.websiteId.message.should.equal expectedErrMsg
+      done()
+
   it 'should not save a chat with an incomplete history element', (done) ->
     data =
       accountId: @accountId

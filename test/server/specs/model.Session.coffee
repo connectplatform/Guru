@@ -37,6 +37,3 @@ boiler 'Model - Session', ->
       should.not.exist err
       session.userId.toString().should.equal data.userId
       done()
-
-# TODO: add tests to ensure Session.chatSessions only contains refs to acutal
-# chatIds, no duplicates.

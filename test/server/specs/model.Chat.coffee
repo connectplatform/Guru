@@ -67,3 +67,21 @@ boiler 'Model - Session', ->
       should.not.exist err
       chat.history[0].timestamp.should.equal data.history[0].timestamp
       done()
+
+  it 'should save a chat with a User in the history', (done) ->
+    data =
+      accountId: @accountId
+      status: chatStatusStates[0]
+      history: [
+        message: 'I am a User.'
+        username: 'Example User'
+        timestamp: Date.now()
+        userId: @userId
+      ]
+
+    Chat.create data, (err, chat) ->
+      should.not.exist err
+      chat.history[0].timestamp.should.equal data.history[0].timestamp
+      chat.history[0].userId.toString().should.equal data.history[0].userId
+      done()
+

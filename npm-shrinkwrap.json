@@ -839,30 +839,31 @@
       }
     },
     "factory-worker": {
-      "version": "0.6.0",
-      "from": "factory-worker@0.6.0",
+      "version": "0.7.0",
+      "from": "factory-worker@0.7.0",
+      "resolved": "https://registry.npmjs.org/factory-worker/-/factory-worker-0.7.0.tgz",
       "dependencies": {
         "hashish": {
           "version": "0.0.4",
-          "from": "hashish@0.0.4",
+          "from": "hashish@>=0.0.3",
           "dependencies": {
             "traverse": {
               "version": "0.6.3",
-              "from": "traverse@0.6.3"
+              "from": "traverse@>=0.2.4"
             }
           }
         },
         "seq": {
           "version": "0.3.5",
-          "from": "seq@0.3.5",
+          "from": "seq@>= 0.3.5",
           "dependencies": {
             "chainsaw": {
               "version": "0.0.9",
-              "from": "chainsaw@0.0.9",
+              "from": "chainsaw@>=0.0.7 <0.1",
               "dependencies": {
                 "traverse": {
                   "version": "0.3.9",
-                  "from": "traverse@0.3.9"
+                  "from": "traverse@>=0.3.0 <0.4"
                 }
               }
             }

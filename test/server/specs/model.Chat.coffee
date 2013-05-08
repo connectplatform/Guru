@@ -1,6 +1,6 @@
 should = require 'should'
 db = config.require 'server/load/mongo'
-{Account, Chat, User} = db.models
+{Account, Chat, User, Website} = db.models
 {chatStatusStates} = config.require 'load/enums'
 
 
@@ -10,27 +10,56 @@ boiler 'Model - Chat', ->
       @accountId = account._id
       User.findOne {accountId: @accountId}, (err, user) =>
         @userId = user._id
-        done err
+        Website.findOne {accountId: @accountId}, (err, website) =>
+          should.not.exist err
+          should.exist website
+          Factory.define 'validChat', 'chat', {
+            accountId: @accountId
+            websiteId: website._id
+            websiteUrl: website.url
+          }
+          done err
 
-  it 'should let you create a Chat with a valid status', (done) ->
-    data =
-      accountId: @accountId
-      status: chatStatusStates[0]
-      history: []
-
-    Factory.create 'chat', data, (err, chat) =>
+  it 'should let you create a valid Chat with empty history', (done) ->
+    Factory.create 'validChat', (err, chat) =>
       should.not.exist err
-      chat.accountId.toString().should.equal data.accountId
-      chat.history.should.be.empty and data.history.should.be.empty
+      chat.accountId.toString().should.equal @accountId
+      chat.history.should.be.empty
+      done()
+
+  it 'should save a chat without a User in the history', (done) ->
+    data =
+      history: [
+        message: 'I am a visitor.'
+        username: 'Example visitor'
+        timestamp: Date.now()
+      ]
+
+    Factory.create 'validChat', data, (err, chat) =>
+      should.not.exist err
+      chat.history[0].timestamp.should.equal data.history[0].timestamp
+      done()
+
+  it 'should save a chat with a User in the history', (done) ->
+    data =
+      history: [
+        message: 'I am a User.'
+        username: 'Example User'
+        timestamp: Date.now()
+        userId: @userId
+      ]
+
+    Factory.create 'validChat', data, (err, chat) =>
+      should.not.exist err
+      chat.history[0].timestamp.should.equal data.history[0].timestamp
+      chat.history[0].userId.toString().should.equal data.history[0].userId
       done()
 
   it 'should not let you create a Chat with an invalid status', (done) ->
     data =
-      accountId: @accountId
       status: 'notAStatus'
-      history: []
 
-    Factory.create 'chat', data, (err, chat) =>
+    Factory.create 'validChat', data, (err, chat) =>
       should.exist err
       expectedErrMsg = 'Validator "enum" failed for path status'
       err.errors.status.message.should.equal expectedErrMsg
@@ -40,7 +69,7 @@ boiler 'Model - Chat', ->
     data =
       websiteId: null
 
-    Factory.create 'chat', data, (err, chat) =>
+    Factory.create 'validChat', data, (err, chat) =>
       should.exist err
       expectedErrMsg = 'Validator "required" failed for path websiteId'
       err.errors.websiteId.message.should.equal expectedErrMsg
@@ -48,47 +77,14 @@ boiler 'Model - Chat', ->
 
   it 'should not save a chat with an incomplete history element', (done) ->
     data =
-      accountId: @accountId
-      status: chatStatusStates[0]
       history: [
         message: 'I need a timestamp.'
         username: 'Example User'
       ]
 
-    Factory.create 'chat', data, (err, chat) =>
+    Factory.create 'validChat', data, (err, chat) =>
       should.exist err
       expectedErrMsg = 'Validator "required" failed for path timestamp'
       err.errors['history.0.timestamp'].message.should.equal expectedErrMsg
       done()
 
-  it 'should save a chat without a User in the history', (done) ->
-    data =
-      accountId: @accountId
-      status: chatStatusStates[0]
-      history: [
-        message: 'I am a visitor.'
-        username: 'Example visitor'
-        timestamp: Date.now()
-      ]
-
-    Factory.create 'chat', data, (err, chat) =>
-      should.not.exist err
-      chat.history[0].timestamp.should.equal data.history[0].timestamp
-      done()
-
-  it 'should save a chat with a User in the history', (done) ->
-    data =
-      accountId: @accountId
-      status: chatStatusStates[0]
-      history: [
-        message: 'I am a User.'
-        username: 'Example User'
-        timestamp: Date.now()
-        userId: @userId
-      ]
-
-    Factory.create 'chat', data, (err, chat) =>
-      should.not.exist err
-      chat.history[0].timestamp.should.equal data.history[0].timestamp
-      chat.history[0].userId.toString().should.equal data.history[0].userId
-      done()

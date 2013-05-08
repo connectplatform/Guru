@@ -4,10 +4,6 @@ db = require 'mongoose'
 {chatStatusStates} = config.require 'load/enums'
 
 chat = new Schema
-  chatId:
-    type: ObjectId
-    required: true
-
   accountId:
     type: ObjectId
     required: true

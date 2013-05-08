@@ -35,7 +35,7 @@ boiler 'Model - Session', ->
 
     Session.create data, (err, session) =>
       should.not.exist err
-      session.userId.toString @userId
+      session.userId.toString().should.equal data.userId
       done()
 
 # TODO: add tests to ensure Session.chatSessions only contains refs to acutal

@@ -34,7 +34,7 @@ boiler 'Model - ChatSession', ->
       @sessionId = session._id
       done err
 
-  it 'should something', (done) ->
+  it 'should let you create a ChatSession', (done) ->
     data =
       accountId: @accountId
       sessionId: @sessionId

@@ -4,7 +4,7 @@ process.env.GURU_PULSAR_PORT = Math.floor(Math.random() * 1000) + 8000
 
 db = config.require 'load/mongo'
 flushCache = config.require 'load/flushCache'
-sampleData = config.require 'policy/sampleData'
+sampleData = config.require 'data/sampleData'
 stoic = require 'stoic'
 
 #Helper functions

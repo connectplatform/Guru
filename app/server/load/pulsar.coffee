@@ -1,5 +1,5 @@
 Pulsar = require "pulsar"
-createServer = require './createServer'
+createServer = config.require 'load/createServer'
 
 port = process.env.GURU_PULSAR_PORT or config.app.pulsarPort
 

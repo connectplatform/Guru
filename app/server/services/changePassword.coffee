@@ -1,5 +1,5 @@
-stoic = require 'stoic'
-{Session} = stoic.models
+# stoic = require 'stoic'
+# {Session} = stoic.models
 
 getOperatorData = config.require 'services/operator/getOperatorData'
 

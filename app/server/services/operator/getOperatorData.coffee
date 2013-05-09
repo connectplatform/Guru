@@ -1,5 +1,5 @@
-stoic = require 'stoic'
-{Session} = stoic.models
+# stoic = require 'stoic'
+# {Session} = stoic.models
 
 db = config.require 'load/mongo'
 {User} = db.models

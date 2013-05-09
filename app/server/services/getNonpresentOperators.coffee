@@ -1,6 +1,6 @@
 async = require 'async'
-stoic = require 'stoic'
-{ChatSession, Session} = stoic.models
+# stoic = require 'stoic'
+# {ChatSession, Session} = stoic.models
 
 {getType} = config.require 'load/util'
 

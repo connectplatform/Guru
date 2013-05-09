@@ -1,8 +1,8 @@
 async = require 'async'
 getInvites = config.require 'services/operator/getInvites'
 
-stoic = require 'stoic'
-{Session} = stoic.models
+# stoic = require 'stoic'
+# {Session} = stoic.models
 
 module.exports =
   required: ['sessionId', 'accountId']

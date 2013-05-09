@@ -1,9 +1,9 @@
 async = require 'async'
-stoic = require 'stoic'
+# stoic = require 'stoic'
 
 {inspect} = require 'util'
 {getType} = config.require 'load/util'
-{Session} = stoic.models
+# {Session} = stoic.models
 
 getData = (accountId, modelName, item) ->
   (cb) ->

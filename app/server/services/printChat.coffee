@@ -1,5 +1,5 @@
-stoic = require 'stoic'
-{Chat} = stoic.models
+# stoic = require 'stoic'
+# {Chat} = stoic.models
 
 render = config.require 'services/templates/renderTemplate'
 

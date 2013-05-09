@@ -1,5 +1,5 @@
 async = require 'async'
-stoic = require 'stoic'
+# stoic = require 'stoic'
 
 createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'

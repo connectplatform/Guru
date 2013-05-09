@@ -1,12 +1,12 @@
-stoic = require 'stoic'
+# stoic = require 'stoic'
 async = require 'async'
 {queryArray, getType} = config.require 'load/util'
 
-{ChatSession, Session, Chat} = stoic.models
-modelsByName =
-  chatSession: ChatSession
-  chat: Chat
-  session: Session
+# {ChatSession, Session, Chat} = stoic.models
+# modelsByName =
+#   chatSession: ChatSession
+#   chat: Chat
+#   session: Session
 
 getBaseModel = (from, all) ->
   models = (parts[0] for parts in all)

@@ -1,8 +1,6 @@
 async = require 'async'
-stoic = require 'stoic'
-{ChatSession} = stoic.models
-
-pulsar = config.require 'load/pulsar'
+# stoic = require 'stoic'
+# {ChatSession} = stoic.models
 
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']

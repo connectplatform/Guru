@@ -1,6 +1,6 @@
 async = require 'async'
-stoic = require 'stoic'
-{Chat} = stoic.models
+# stoic = require 'stoic'
+# {Chat} = stoic.models
 
 getFullChatData = config.require 'services/chats/getFullChatData'
 chatPriority = config.require 'services/chats/chatPriority'

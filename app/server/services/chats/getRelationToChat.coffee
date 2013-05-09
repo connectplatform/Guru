@@ -1,6 +1,6 @@
 async = require 'async'
-stoic = require 'stoic'
-{ChatSession} = stoic.models
+# stoic = require 'stoic'
+# {ChatSession} = stoic.models
 
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']

@@ -1,11 +1,11 @@
 async = require 'async'
 sugar = require 'sugar'
-stoic = require 'stoic'
+# stoic = require 'stoic'
 mongo = config.require 'load/mongo'
 
 removeUnanswered = config.require 'services/operator/removeUnanswered'
 
-{Chat, ChatSession, Session} = stoic.models
+# {Chat, ChatSession, Session} = stoic.models
 {ChatHistory, Account} = mongo.models
 
 getChatModels = (accountId) ->

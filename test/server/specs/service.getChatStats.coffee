@@ -1,6 +1,5 @@
 async = require 'async'
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Get Chat Stats', ->
 

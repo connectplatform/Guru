@@ -4,8 +4,8 @@ querystring = require 'querystring'
 db = config.require 'load/mongo'
 {Website} = db.models
 
-stoic = require 'stoic'
-{Chat} = stoic.models
+# stoic = require 'stoic'
+# {Chat} = stoic.models
 
 module.exports = (accountId, chatId, referrerData) ->
   websiteUrl = referrerData?.websiteUrl

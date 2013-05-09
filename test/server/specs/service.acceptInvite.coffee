@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Accept Invite', ->
   it "should let an operator accept an invite", (done) ->

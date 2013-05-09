@@ -1,8 +1,8 @@
 db = require 'mongoose'
 {Website, Specialty} = db.models
 
-stoic = require 'stoic'
-{Session, Chat} = stoic.models
+# stoic = require 'stoic'
+# {Session, Chat} = stoic.models
 
 {getString, getType} = config.require 'load/util'
 

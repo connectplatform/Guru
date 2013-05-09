@@ -1,5 +1,3 @@
-pulsar = config.require 'load/pulsar'
-
 module.exports = (chatId) ->
   messageReceived = config.service 'chats/messageReceived'
   channel = pulsar.channel chatId

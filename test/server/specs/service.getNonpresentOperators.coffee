@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Get Nonpresent Operators', ->
   it 'should return a list of operators not currently visible in chat', (done) ->

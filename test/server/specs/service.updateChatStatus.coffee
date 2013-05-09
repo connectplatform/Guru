@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Update Chat Status', ->
   beforeEach (done) ->

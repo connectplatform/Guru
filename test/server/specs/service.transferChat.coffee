@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Transfer Chat', ->
   it "should let you transfer a chat to another operator", (done) ->

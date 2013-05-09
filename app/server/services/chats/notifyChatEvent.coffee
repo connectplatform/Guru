@@ -1,5 +1,3 @@
-pulsar = config.require 'load/pulsar'
-
 module.exports =
   required: ['sessionId', 'accountId', 'chatId', 'message']
   service: ({chatId, message}, done) ->

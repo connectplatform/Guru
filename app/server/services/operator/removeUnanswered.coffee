@@ -1,8 +1,8 @@
 {tandoor} = config.require 'load/util'
 async = require 'async'
 
-stoic = require 'stoic'
-{Session} = stoic.models
+# stoic = require 'stoic'
+# {Session} = stoic.models
 
 module.exports = tandoor (accountId, chatId, done) ->
 

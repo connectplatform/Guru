@@ -1,8 +1,8 @@
 async = require 'async'
 {tandoor} = config.require 'load/util'
 
-stoic = require 'stoic'
-{Session, ChatSession} = stoic.models
+# stoic = require 'stoic'
+# {Session, ChatSession} = stoic.models
 
 getInvites = (rel, next) ->
   rel.relationMeta.get 'type', (err, type) ->

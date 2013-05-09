@@ -1,4 +1,4 @@
-stoic = require 'stoic'
+# stoic = require 'stoic'
 
 removeUnanswered = config.require 'services/operator/removeUnanswered'
 

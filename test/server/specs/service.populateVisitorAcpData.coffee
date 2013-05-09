@@ -2,7 +2,6 @@ should = require 'should'
 connect = require 'connect'
 querystring = require 'querystring'
 {setTimeout} = require 'timers'
-stoic = require 'stoic'
 
 # query/form data
 clientData = {

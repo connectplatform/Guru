@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 async = require 'async'
 sugar = require 'sugar'
 db = config.require 'load/mongo'

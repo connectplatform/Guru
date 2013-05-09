@@ -15,8 +15,6 @@ module.exports = (cb) ->
 
   port = (process.env.GURU_PORT or config.app.port)
 
-  reconnectChannels()
-
   # Web server
   app = connect()
   app.use (req, res, next) ->

@@ -1,7 +1,7 @@
 # NOTE: this is not in use!
 
-stoic = require 'stoic'
-{Session} = stoic.models
+# stoic = require 'stoic'
+# {Session} = stoic.models
 async = require 'async'
 
 getChatName = (session, done) ->

@@ -1,5 +1,5 @@
-stoic = require 'stoic'
-{Chat} = stoic.models
+# stoic = require 'stoic'
+# {Chat} = stoic.models
 queryChat = config.require 'services/queries/query'
 removeUnanswered = config.require 'services/operator/removeUnanswered'
 

@@ -1,6 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
-Pulsar = require 'pulsar'
 
 boiler 'Service - Invite Operator', ->
   beforeEach ->

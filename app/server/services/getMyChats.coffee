@@ -1,6 +1,6 @@
 async = require 'async'
-stoic = require 'stoic'
-{ChatSession, Chat} = stoic.models
+# stoic = require 'stoic'
+# {ChatSession, Chat} = stoic.models
 query = config.require 'services/queries/query'
 {reject} = config.require 'load/util'
 

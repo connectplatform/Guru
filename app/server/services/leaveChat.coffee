@@ -1,5 +1,5 @@
-stoic = require 'stoic'
-{ChatSession} = stoic.models
+# stoic = require 'stoic'
+# {ChatSession} = stoic.models
 
 module.exports =
   required: ['accountId', 'chatId', 'sessionId']

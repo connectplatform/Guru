@@ -1,4 +1,4 @@
-argumentValidations = require './argumentValidations'
+argumentValidations = require './jargon'
 
 policy =
   applyTo: /^[^\/]+$/ # only top level
@@ -89,6 +89,6 @@ policy =
       }
     ]
 
-policy.rules.unshift argumentValidations...
+policy.rules.unshift jargon...
 
 module.exports = policy

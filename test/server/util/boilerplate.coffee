@@ -3,9 +3,7 @@ process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
 process.env.GURU_PULSAR_PORT = Math.floor(Math.random() * 1000) + 8000
 
 db = config.require 'load/mongo'
-flushCache = config.require 'load/flushCache'
 sampleData = config.require 'data/sampleData'
-stoic = require 'stoic'
 
 #Helper functions
 helpers = require './helpers'
@@ -49,12 +47,10 @@ setup = (testName, dataPrep, tests) ->
         done()
 
     beforeEach (done) ->
-      flushCache config.redis.database, config.redis.database, =>
-        dataPrep.call @, done
+      dataPrep.call @, done
 
     after (done) ->
-      flushCache config.redis.database, config.redis.database, ->
-        db.wipe done
+      db.wipe done
 
     afterEach ->
       #console.log "We've run #{++ helpers.count} tests."

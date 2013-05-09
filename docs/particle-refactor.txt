@@ -8,19 +8,20 @@ TOTAL: 116
 
 Models:
 
-  Chat 5
-  Session 5
+x Chat 5
+x Session 5
+x ChatSession 5
 
 Load:
 
   Particle 3
-  Jargon 2
-  App 1
+x Jargon 2
+x App 1
 
   Trash:
 
-    Stoic 1
-    Pulsar 1
+x   Stoic 1
+x   Pulsar 1
 
 Scripts:
 

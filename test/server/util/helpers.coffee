@@ -1,14 +1,11 @@
 db = config.require 'server/load/mongo'
-stoic = require 'stoic'
 async = require 'async'
 should = require 'should'
 {inspect} = require 'util'
 
 Vein = require 'vein'
-Pulsar = require 'pulsar'
 
 testPort = process.env.GURU_PORT
-pulsarPort = process.env.GURU_PULSAR_PORT
 
 #Exported object of helper functions
 helpers =
@@ -52,7 +49,6 @@ helpers =
     else
       return client
 
-  getPulsar: -> Pulsar.createClient port: pulsarPort
   testPort: testPort
 
   loginBuilder: (name) ->
@@ -63,13 +59,13 @@ helpers =
       @getAuthedWith data, cb
 
   getAuthedWith: (data, cb) ->
-    {Session} = stoic.models
+    {Session} = db.models
     client = @getClient()
     client.ready =>
       client.login data, (err, {sessionId}) =>
         console.log 'error on test login:', err if err or not sessionId
-        Session.accountLookup.get sessionId, (_, accountId) ->
-
+        Session.findOne {@sessionId}, (err, session) ->
+          sessionId = session._id
           # vein doesn't handle cookies, but we want client side middleware to do it
           wrappedClient = helpers.wrapVeinClient client, {sessionId: sessionId}
           cb err, wrappedClient, {sessionId: sessionId, accountId: accountId}
@@ -106,7 +102,7 @@ helpers =
     @newChatWith {username: 'visitor', websiteUrl: 'foo.com'}, cb
 
   expectSessionIsOnline: (sessionId, expectation, cb) ->
-    {Session} = stoic.models
+    {Session} = db.models
     Session.accountLookup.get sessionId, (err, accountId) ->
       Session(accountId).get(sessionId).online.get (err, online) =>
         should.not.exist err
@@ -120,10 +116,9 @@ helpers =
       cb null, client, args
 
   createChats: (cb) ->
-    {Chat} = stoic.models
     now = Date.create().getTime()
 
-    {Account, Website} = db.models
+    {Account, Chat, Website} = db.models
 
     websiteUrl = 'foo.com'
     Website.findOne {url: websiteUrl}, {_id: true}, (err, website) ->

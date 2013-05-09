@@ -18,8 +18,8 @@ all = [
 define ['middleware/redirectOperators', 'middleware/redirectVisitors',
   'middleware/redirectGuestsToLogin',
   'routes/help', 'templates/help',
-  'middleware/getRole', 'components/navBar', 'components/operatorChat'],
-  (redirectOperators, redirectVisitors, redirectGuestsToLogin, help, helpTemp, getRole, navBar, operatorChat) ->
+  'middleware/getRole', 'components/navBar'],
+  (redirectOperators, redirectVisitors, redirectGuestsToLogin, help, helpTemp, getRole, navBar) ->
     (dermis) ->
 
       renderNavbar = (args, next) ->

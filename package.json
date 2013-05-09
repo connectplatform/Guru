@@ -14,6 +14,8 @@
     "asset-rack": "git+https://github.com/TorchlightSoftware/asset-rack.git#gzip",
     "async": "*",
     "pulsar": "*",
+    "particle": "git+https://github.com/TorchlightSoftware/particle.git",
+    "mongo-watch": "git+https://github.com/TorchlightSoftware/mongo-watch.git",
     "vein": "*",
     "sugar": "*",
     "law": "*",

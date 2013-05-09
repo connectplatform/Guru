@@ -1,5 +1,5 @@
 {create} = require 'law'
-jargon = config.require 'load/jargon'
+jargon = config.require 'policy/jargon'
 policy = config.require 'policy/policy'
 
 module.exports = ->

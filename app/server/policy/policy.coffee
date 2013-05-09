@@ -1,4 +1,4 @@
-argumentValidations = require './jargon'
+jargon = require './jargon'
 
 policy =
   applyTo: /^[^\/]+$/ # only top level

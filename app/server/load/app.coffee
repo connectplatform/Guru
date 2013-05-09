@@ -12,6 +12,7 @@ reconnectChannels = config.require 'load/reconnectChannels'
 # service init, connect to interfaces
 initServices = config.require 'load/initServices'
 veinAdapter = config.require 'load/veinAdapter'
+particle = config.require 'load/particle'
 
 module.exports = (cb) ->
 
@@ -39,6 +40,9 @@ module.exports = (cb) ->
 
     server = createServer port, app
 
+    # initialize particle stream
+    particle.stream.init server
+
     # attaches services to config.services
     initServices()
 
@@ -51,6 +55,7 @@ module.exports = (cb) ->
 
     # Good job, we made it!
     config.log.info "Server started on #{port}"
+    config.log.info "Particle started on #{port}"
     config.log.info "Pulsar started on #{pulsarPort}"
 
     # Don't put connection strings in our logs

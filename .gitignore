@@ -8,5 +8,4 @@ test/client/public
 app/public
 issue-dump
 tmp
-components
 *~

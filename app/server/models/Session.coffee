@@ -15,4 +15,10 @@ session = new Schema
     type: String
     required: true
 
+session.statics.sessionByOperator = (userId, done) ->
+  @.findOne {userId}, (err, sess) ->
+    done err, sess
+    
+  # TODO.jkr
+
 module.exports = session

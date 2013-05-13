@@ -1,5 +1,5 @@
-# stoic = require 'stoic'
-# {Session} = stoic.models
+db = config.require 'load/mongo'
+{Session} = db.models
 
 module.exports = (user, next) ->
   username = if user.lastName
@@ -8,8 +8,9 @@ module.exports = (user, next) ->
     "#{user.firstName}"
 
   accountId = user.accountId.toString()
-  Session(accountId).create {
-    role: user.role,
-    chatName: username,
+  Session.create {
+    accountId: accountId
+    role: user.role
+    chatName: username
     operatorId: user.id
   }, next

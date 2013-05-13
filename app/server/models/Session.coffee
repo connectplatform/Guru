@@ -15,6 +15,10 @@ session = new Schema
     type: String
     required: true
 
+  online:
+    type: Boolean
+    default: true
+
 session.statics.sessionByOperator = (userId, done) ->
   @.findOne {userId}, (err, sess) ->
     done err, sess

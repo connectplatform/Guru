@@ -8,7 +8,13 @@ module.exports =
     createUserSession = config.service 'operator/createUserSession'
 
     # TODO.jkr
+    # Session.getSessionByOperator user._id, (err, sess) ->
+    Session.findOne user._id, (err, session) ->
+      config.log.warn 'Error getting operator session.', {error: err, userId: user._id} if err
 
+      # if sessionId?
+      #   session.
+        
     
     # Session(accountId).sessionsByOperator.get user._id, (err, sessionId) ->
     #   config.log.warn 'Error getting operator session.', {error: err, userId: user._id} if err

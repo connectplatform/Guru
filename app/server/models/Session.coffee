@@ -18,7 +18,5 @@ session = new Schema
 session.statics.sessionByOperator = (userId, done) ->
   @.findOne {userId}, (err, sess) ->
     done err, sess
-    
-  # TODO.jkr
 
 module.exports = session

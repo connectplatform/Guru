@@ -36,3 +36,13 @@ boiler 'Model - Session', ->
       expectedErrMsg = 'Validator "required" failed for path username with value `null`'
       err.errors.username.message.should.equal expectedErrMsg
       done()
+
+  it 'should let you find an existing Session by its operator', (done) ->
+    data = {@accountId, @userId}
+    Factory.create 'session', data, (err, session) =>
+      should.not.exist err
+      Session.sessionByOperator @userId, (err, foundSession) =>
+        should.not.exist err
+        should.exist foundSession
+        foundSession._id.should.equal session._id
+        done err

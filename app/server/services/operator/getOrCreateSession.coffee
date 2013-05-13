@@ -12,9 +12,17 @@ module.exports =
     Session.findOne user._id, (err, session) ->
       config.log.warn 'Error getting operator session.', {error: err, userId: user._id} if err
 
-      # if sessionId?
-      #   session.
-        
+      if session?
+        session.online = true
+        session.save (err, session) ->
+          if err
+            meta = {error: err, sessionId: session._id}
+            config.log.error 'Error setting operator online status.', meta
+          done err, {sessionId: session._id}
+      else
+        createUserSession user, (err, session) ->
+          config.log.warn 'Error creating user session.', {error: err, userId: user._id} if err
+          done err, {sessionId: session._id}        
     
     # Session(accountId).sessionsByOperator.get user._id, (err, sessionId) ->
     #   config.log.warn 'Error getting operator session.', {error: err, userId: user._id} if err

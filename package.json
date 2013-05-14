@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "factory-worker": "*",
-    "zombie": "*",
     "node-log": "*",
     "jaded": "0.0.6"
   },

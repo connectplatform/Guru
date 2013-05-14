@@ -1,6 +1,8 @@
 {join} = require 'path'
 require 'sugar'
 Object.extend()
+for prop in ['size', 'isObject', 'watch'] # remove conflicts with coffee-script
+  Object.sugarRevert prop
 
 initLogging = require './server/load/logging'
 
@@ -49,6 +51,9 @@ config =
       host: 'mongodb://localhost:27017/guru-dev'
     redis:
       database: 0
+    statsMonitor:
+      receiver: 'console'
+      enabled: [] # 'client count', 'memory leak', '*'
     logging:
       client:
         level: 'info'
@@ -65,6 +70,7 @@ paths =
   scripts:    rel 'scripts/sources'
   data:       rel 'data'
   test:       rel 'test/server'
+  lib:        rel 'lib'
 
   app:        rel 'app'
   client:     rel 'app/client'
@@ -101,5 +107,6 @@ global.config = config[environment].merge
     global.config.services[serviceName]
 
 global.config.log = initLogging global.config.logging
+global.config.sendStats or= ->
 
 module.exports = global.config

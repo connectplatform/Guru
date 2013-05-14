@@ -25,7 +25,7 @@ session = new Schema
     type: String
     enum: enums.staffRoles
 
-  key:
+  secret:
     type: String
     default: random
 

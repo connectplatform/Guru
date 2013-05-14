@@ -65,6 +65,7 @@ helpers =
       client.login data, (err, {sessionId}) =>
         console.log 'error on test login:', err if err or not sessionId
         Session.findOne {@sessionId}, (err, session) ->
+          accountId = session.accountId
           sessionId = session._id
           # vein doesn't handle cookies, but we want client side middleware to do it
           wrappedClient = helpers.wrapVeinClient client, {sessionId: sessionId}

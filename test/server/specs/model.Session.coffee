@@ -48,14 +48,14 @@ boiler 'Model - Session', ->
         foundSession._id.should.equal session._id
         done err
 
-  it 'should not create every Session with the same key', (done) ->
+  it 'should not create every Session with the same secret', (done) ->
     data = {@accountId, @userId}
     Factory.create 'session', data, (err, session1) =>
       should.not.exist err
       should.exist session1
-      session1Key = session1.key
+      session1Secret = session1.secret
       Factory.create 'session', data, (err, session2) =>
         should.not.exist err
         should.exist session2
-        session1Key.should.not.equal session2.key
+        session1Secret.should.not.equal session2.secret
         done err

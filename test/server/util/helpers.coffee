@@ -107,9 +107,7 @@ helpers =
 
   expectSessionIsOnline: (sessionId, expectation, cb) ->
     {Session} = db.models
-    console.log 'BLOW UP NOW'
     Session.accountLookup.get sessionId, (err, accountId) ->
-      console.log 'BLOWUPBLOWUPREALLY'
       Session(accountId).get(sessionId).online.get (err, online) =>
         should.not.exist err
         online.should.eql expectation

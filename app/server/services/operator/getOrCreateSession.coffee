@@ -22,7 +22,7 @@ module.exports =
       else
         createUserSession user, (err, session) ->
           config.log.warn 'Error creating user session.', {error: err, userId: user._id} if err
-          done err, {sessionId: session._id}        
+          done err, {sessionId: session._id}
     
     # Session(accountId).sessionsByOperator.get user._id, (err, sessionId) ->
     #   config.log.warn 'Error getting operator session.', {error: err, userId: user._id} if err

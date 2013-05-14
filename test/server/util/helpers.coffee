@@ -64,12 +64,15 @@ helpers =
     client.ready =>
       client.login data, (err, {sessionSecret}) =>
         console.log 'error on test login:', err if err or not sessionSecret
-        Session.findOne {secret: sessionSecret}, (err, session) ->
-          accountId = session.accountId
-          sessionId = session._id
-          # vein doesn't handle cookies, but we want client side middleware to do it
-          wrappedClient = helpers.wrapVeinClient client, {sessionId: sessionId}
-          cb err, wrappedClient, {sessionSecret, accountId}
+        if err
+          cb err, null, {}
+        else
+          Session.findOne {secret: sessionSecret}, (err, session) ->
+            @accountId = session.accountId
+            @sessionId = session._id
+            # vein doesn't handle cookies, but we want client side middleware to do it
+            wrappedClient = helpers.wrapVeinClient client, {sessionId: @sessionId}
+            cb err, wrappedClient, {sessionSecret, @accountId}
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
@@ -104,7 +107,9 @@ helpers =
 
   expectSessionIsOnline: (sessionId, expectation, cb) ->
     {Session} = db.models
+    console.log 'BLOW UP NOW'
     Session.accountLookup.get sessionId, (err, accountId) ->
+      console.log 'BLOWUPBLOWUPREALLY'
       Session(accountId).get(sessionId).online.get (err, online) =>
         should.not.exist err
         online.should.eql expectation

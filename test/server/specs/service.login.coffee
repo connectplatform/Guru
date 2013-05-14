@@ -13,20 +13,20 @@ boiler 'Service - Login', ->
         session.secret.should.equal sessionSecret
         done()
 
-  # it 'should not accept invalid email', (done) ->
-  #   @invalidLogin (err, client, {sessionId, accountId}) =>
-  #     should.exist err
-  #     err.should.eql 'Invalid user.'
-  #     done()
+  it 'should not accept invalid email', (done) ->
+    @invalidLogin (err, client, {sessionSecret, accountId}) =>
+      should.exist err
+      err.should.equal 'Invalid user.'
+      done()
 
-  # it 'should not accept invalid password', (done) ->
-  #   @wrongpasswordLogin (err, client, {sessionId, accountId}) =>
-  #     should.exist err
-  #     err.should.eql 'Invalid password.'
-  #     done()
+  it 'should not accept invalid password', (done) ->
+    @wrongpasswordLogin (err, client, {sessionSecret, accountId}) =>
+      should.exist err
+      err.should.equal 'Invalid password.'
+      done()
 
   # it 'should reattach you to an existing session', (done) ->
-  #   @ownerLogin (err, client, {sessionId}) =>
+  #   @ownerLogin (err, client, {sessionSecret}) =>
   #     firstSessionId = sessionId
 
   #     client.setSessionOffline {sessionId: sessionId}, (err) =>

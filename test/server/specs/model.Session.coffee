@@ -41,8 +41,21 @@ boiler 'Model - Session', ->
     data = {@accountId, @userId}
     Factory.create 'session', data, (err, session) =>
       should.not.exist err
+      should.exist session
       Session.sessionByOperator @userId, (err, foundSession) =>
         should.not.exist err
         should.exist foundSession
         foundSession._id.should.equal session._id
+        done err
+
+  it 'should not create every Session with the same key', (done) ->
+    data = {@accountId, @userId}
+    Factory.create 'session', data, (err, session1) =>
+      should.not.exist err
+      should.exist session1
+      session1Key = session1.key
+      Factory.create 'session', data, (err, session2) =>
+        should.not.exist err
+        should.exist session2
+        session1Key.should.not.equal session2.key
         done err

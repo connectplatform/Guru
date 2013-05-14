@@ -15,18 +15,18 @@ boiler 'Service - getOrCreateSession', ->
         done err
 
   it 'should create a new Session when one does not exist', (done) ->
-    @getOrCreateSession @user, (err, session) =>
+    @getOrCreateSession @user, (err, sessionKey) =>
       should.not.exist err
-      should.exist session
+      should.exist sessionKey
       done()
 
   it 'should get an existing Session when one already exists', (done) ->
-    Factory.create 'session', {@accountId}, (err, prevSession) =>
+    Factory.create 'session', {@accountId}, (err, session) =>
       should.not.exist err
-      should.exist prevSession
-      @getOrCreateSession @user, (err, res) =>
+      should.exist session
+      prevSessionKey = session.key
+      @getOrCreateSession @user, (err, {sessionKey}) =>
         should.not.exist err
-        should.exist res
-        should.exist res.sessionId
-        res.sessionId.should.equal prevSession._id
+        should.exist sessionKey
+        sessionKey.should.equal prevSessionKey
         done()

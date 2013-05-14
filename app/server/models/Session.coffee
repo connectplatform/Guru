@@ -2,6 +2,7 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 enums = config.require 'load/enums'
+{random} = config.require 'load/util'
 
 # Session for a logged-in User or non-User visitor
 session = new Schema
@@ -23,6 +24,10 @@ session = new Schema
   role:
     type: String
     enum: enums.staffRoles
+
+  key:
+    type: String
+    default: random
 
 session.statics.sessionByOperator = (userId, done) ->
   @.findOne {userId}, (err, sess) ->

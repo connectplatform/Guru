@@ -1,9 +1,11 @@
-# stoic = require 'stoic'
-# {Session} = stoic.models
+db = config.require 'load/mongo'
+{Session} = db.models
 
 module.exports =
-  required: ['sessionId', 'accountId', 'isOnline']
-  service: ({sessionId, accountId, isOnline}, cb) ->
-    Session(accountId).get(sessionId).online.set isOnline, (err) ->
-      config.log.error 'Error setting session status in setSessionOnlineStatus', {error: err, sessionId: sessionId} if err
-      cb err
+  required: ['sessionId', 'isOnline']
+  service: ({sessionId, isOnline}, cb) ->
+    Session.findById sessionId, (err, session) ->
+      session.online = isOnline
+      session.save (err) ->
+        config.log.error 'Error setting session status in setSessionOnlineStatus', {error: err, sessionId: sessionId} if err
+        cb err

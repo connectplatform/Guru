@@ -25,25 +25,31 @@ boiler 'Service - Login', ->
       err.should.equal 'Invalid password.'
       done()
 
-  # it 'should reattach you to an existing session', (done) ->
-  #   @ownerLogin (err, client, {sessionSecret}) =>
-  #     firstSessionId = sessionId
+  it 'should reattach you to an existing session', (done) ->
+    @ownerLogin (err, client, {sessionSecret}) =>
+      Session.findOne {secret: sessionSecret}, (err, session) =>
+        should.not.exist err
+        should.exist session
 
-  #     client.setSessionOffline {sessionId: sessionId}, (err) =>
-  #       should.not.exist err, err.stack if err
+        firstSessionId = session._id
+        firstSessionSecret = sessionSecret
 
-  #       @ownerLogin (err, client, {sessionId, accountId}) =>
-  #         should.not.exist err
-  #         firstSessionId.should.eql sessionId
+        client.setSessionOffline {sessionId: firstSessionId}, (err) =>
+          should.not.exist err, err.stack if err
 
-  #         {Session} = stoic.models
-  #         Session(accountId).get(sessionId).online.get (err, online) =>
-  #           should.not.exist err
-  #           online.should.eql true
-  #           done()
+          @ownerLogin (err, client, {sessionSecret, accountId}) =>
+            should.not.exist err
+            firstSessionSecret.should.equal sessionSecret
 
-  # it 'Admin login should not crash the server', (done) ->
-  #   @adminLogin (err, client, {sessionId, accountId}) =>
-  #     should.exist err
-  #     err.should.eql 'User not associated with accountId.'
-  #     done()
+            Session.findOne {secret: sessionSecret}, (err, session) =>
+              should.not.exist err
+              should.exist session
+
+              session.online.should.equal true
+              done()
+
+  it 'Admin login should not crash the server', (done) ->
+    @adminLogin (err, client, {sessionSecret, accountId}) =>
+      should.exist err
+      err.should.equal 'User not associated with accountId.'
+      done()

@@ -16,7 +16,7 @@ module.exports =
       return done 'Invalid password.' unless user.comparePassword password
       return done 'User not associated with accountId.' unless user.accountId # disables admin login
 
-      getOrCreateSession user, (err, {sessionKey}) ->
-        return done "Could not get session: #{err}" if err or not sessionKey
+      getOrCreateSession user, (err, {sessionSecret}) ->
+        return done "Could not get session: #{err}" if err or not sessionSecret
 
-        done err, {sessionKey}
+        done err, {sessionSecret}

@@ -5,15 +5,13 @@ db = config.require 'load/mongo'
 boiler 'Service - Login', ->
 
   it 'should log you in', (done) ->
-    @ownerLogin (err, client, {sessionId, accountId}) =>
+    @ownerLogin (err, client, {sessionSecret, accountId}) =>
       should.not.exist err, err.stack if err
-      console.log 'HIHIHIHIH'
-      Session.findOne {sessionId}, (err, session) =>
-        console.log {client}
+      Session.findOne {secret: sessionSecret}, (err, session) =>
+        should.not.exist err
+        should.exist session
+        session.secret.should.equal sessionSecret
         done()
-      # Session(accountId).get(sessionId).chatName.get (err, chatName) =>
-      #   chatName.should.eql "Owner Man"
-      #   done()
 
   # it 'should not accept invalid email', (done) ->
   #   @invalidLogin (err, client, {sessionId, accountId}) =>

@@ -63,10 +63,6 @@
         }
       }
     },
-    "async": {
-      "version": "0.2.8",
-      "from": "async@*"
-    },
     "should": {
       "version": "1.2.2",
       "from": "should@*"
@@ -506,6 +502,10 @@
           "from": "underscore@1.4.4"
         }
       }
+    },
+    "async": {
+      "version": "0.2.8",
+      "from": "async@*"
     },
     "particle": {
       "version": "0.0.2",

@@ -1,3 +1,4 @@
+sugar = require 'sugar'
 should = require 'should'
 db = config.require 'server/load/mongo'
 {Account, Chat, User, Website} = db.models
@@ -13,15 +14,13 @@ boiler 'Model - Chat', ->
         Website.findOne {accountId: @accountId}, (err, website) =>
           should.not.exist err
           should.exist website
-          Factory.define 'validChat', 'chat', {
-            accountId: @accountId
-            websiteId: website._id
-            websiteUrl: website.url
-          }
+          @websiteId = website._id
+          @websiteUrl = website.url
+          @validData = {@accountId, @websiteId, @websiteUrl}
           done err
 
   it 'should let you create a valid Chat with empty history', (done) ->
-    Factory.create 'validChat', (err, chat) =>
+    Factory.create 'chat', @validData, (err, chat) =>
       should.not.exist err
       chat.accountId.toString().should.equal @accountId
       chat.history.should.be.empty
@@ -34,10 +33,11 @@ boiler 'Model - Chat', ->
         username: 'Example visitor'
         timestamp: Date.now()
       ]
+    Object.merge data, @validData
 
-    Factory.create 'validChat', data, (err, chat) =>
+    Factory.create 'chat', data, (err, chat) =>
       should.not.exist err
-      chat.history[0].timestamp.should.equal data.history[0].timestamp
+      chat.history[0].timestamp.valueOf().should.equal data.history[0].timestamp
       done()
 
   it 'should save a chat with a User in the history', (done) ->
@@ -48,30 +48,33 @@ boiler 'Model - Chat', ->
         timestamp: Date.now()
         userId: @userId
       ]
+    Object.merge data, @validData
 
-    Factory.create 'validChat', data, (err, chat) =>
+    Factory.create 'chat', data, (err, chat) =>
       should.not.exist err
-      chat.history[0].timestamp.should.equal data.history[0].timestamp
+      chat.history[0].timestamp.valueOf().should.equal data.history[0].timestamp
       chat.history[0].userId.toString().should.equal data.history[0].userId
       done()
 
   it 'should not let you create a Chat with an invalid status', (done) ->
     data =
       status: 'notAStatus'
-
-    Factory.create 'validChat', data, (err, chat) =>
+    Object.merge data, @validData
+    
+    Factory.create 'chat', data, (err, chat) =>
       should.exist err
-      expectedErrMsg = 'Validator "enum" failed for path status'
+      expectedErrMsg = 'Validator "enum" failed for path status with value `notAStatus`'
       err.errors.status.message.should.equal expectedErrMsg
       done()
 
   it 'should not let you create a Chat without a websiteId', (done) ->
-    data =
-      websiteId: null
+    data = {}
+    Object.merge data, @validData
+    data.websiteId = null
 
-    Factory.create 'validChat', data, (err, chat) =>
+    Factory.create 'chat', data, (err, chat) =>
       should.exist err
-      expectedErrMsg = 'Validator "required" failed for path websiteId'
+      expectedErrMsg = 'Validator "required" failed for path websiteId with value `null`'
       err.errors.websiteId.message.should.equal expectedErrMsg
       done()
 
@@ -81,10 +84,11 @@ boiler 'Model - Chat', ->
         message: 'I need a timestamp.'
         username: 'Example User'
       ]
+    Object.merge data, @validData
 
-    Factory.create 'validChat', data, (err, chat) =>
+    Factory.create 'chat', data, (err, chat) =>
       should.exist err
-      expectedErrMsg = 'Validator "required" failed for path timestamp'
+      expectedErrMsg = 'Validator "required" failed for path timestamp with value `undefined`'
       err.errors['history.0.timestamp'].message.should.equal expectedErrMsg
       done()
 

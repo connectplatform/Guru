@@ -8,7 +8,6 @@
     "coffee-script": "*",
     "md5": "*",
     "mongoose": "*",
-    "async": "*",
     "should": "*",
     "connect": "2.3.4",
     "asset-rack": "git+https://github.com/TorchlightSoftware/asset-rack.git#gzip",

@@ -28,14 +28,10 @@ boiler 'Model - ChatSession', ->
             Factory.create 'session', sessionData, (err, session) =>
               should.not.exist err
               @sessionId = session._id
-              Factory.define 'validChatSession', 'chatSession', {
-                sessionId: @sessionId
-                chatId: @chatId
-              }
               done err
 
   it 'should let you create a valid ChatSession', (done) ->
-    Factory.create 'validChatSession', (err, chatSession) =>
+    Factory.create 'chatSession', {@sessionId, @chatId}, (err, chatSession) =>
       should.not.exist err
       should.exist chatSession
       chatSession.sessionId.toString().should.equal @sessionId
@@ -46,9 +42,11 @@ boiler 'Model - ChatSession', ->
   it 'should not let you create a ChatSession without all data', (done) ->
     data =
       relation: null
+      sessionId: @sessionId
+      chatId: @chatId
 
-    Factory.create 'validChatSession', data, (err, chatSession) =>
+    Factory.create 'chatSession', data, (err, chatSession) =>
       should.exist err
-      expectedErrMsg = 'Validator "enum" failed for path relation'
+      expectedErrMsg = 'Validator "enum" failed for path relation with value `null`'
       err.errors.relation.message.should.equal expectedErrMsg
       done()

@@ -13,5 +13,4 @@ module.exports =
       accountId: user.accountId
       userId: user._id
       username: username
-      role: user.role
     }, done

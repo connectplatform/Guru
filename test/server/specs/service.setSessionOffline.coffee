@@ -1,4 +1,6 @@
 should = require 'should'
+db = config.require 'load/mongo'
+{Session} = db.models
 
 boiler 'Service - Set Session Offline', ->
 

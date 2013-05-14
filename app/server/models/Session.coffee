@@ -21,10 +21,6 @@ session = new Schema
     type: Boolean
     default: true
 
-  role:
-    type: String
-    enum: enums.staffRoles
-
   secret:
     type: String
     default: random

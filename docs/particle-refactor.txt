@@ -8,20 +8,20 @@ TOTAL: 116
 
 Models:
 
-x Chat 5
-x Session 5
-x ChatSession 5
++ Chat 5 (5/12)
++ Session 5 (5/12)
++ ChatSession 5 (5/12)
 
 Load:
 
-  Particle 3
-x Jargon 2
-x App 1
++ Particle 3 (5/12)
++ Jargon 2 (5/12)
++ App 1 (5/12)
 
   Trash:
 
-x   Stoic 1
-x   Pulsar 1
++   Stoic 1 (5/12)
++   Pulsar 1 (5/12)
 
 Scripts:
 
@@ -61,11 +61,11 @@ Services:
   log 3 #create new logger
   logout 2
   newChat 5
-  operator/createUserSession 3
++  operator/createUserSession 3 (5/14)
   operator/getAvailableOperators 5
   operator/getInvites 3
   operator/getOperatorData 2
-  operator/getOrCreateSession 3
++  operator/getOrCreateSession 3 (5/14)
   operator/removeUnanswered 3 #calculate
   populateVisitorAcpData 3
   printChat 2
@@ -85,8 +85,9 @@ Tests:
 
   recurly/getRecurlyToken
   middleware.serviceMeta
-  model.chatSession
-  model.session
++  model.Chat (5/14)
++  model.ChatSession (5/14)
++  model.Session (5/14)
   service.acceptChat
   service.acceptInvite
   service.clearOldChats
@@ -99,7 +100,7 @@ Tests:
   service.inviteOperator
   service.joinChat
   service.kickUser
-  service.login
++  service.login (5/14)
   service.logout
   service.newChat
   service.populateVisitorAcpData

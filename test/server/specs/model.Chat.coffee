@@ -1,4 +1,3 @@
-sugar = require 'sugar'
 should = require 'should'
 db = config.require 'server/load/mongo'
 {Account, Chat, User, Website} = db.models

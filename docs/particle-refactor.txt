@@ -8,9 +8,9 @@ TOTAL: 116
 
 Models:
 
-+ Chat 5 (5/12)
-+ Session 5 (5/12)
-+ ChatSession 5 (5/12)
++ Chat 5 (5/10)
++ Session 5 (5/10)
++ ChatSession 5 (5/10)
 
 Load:
 
@@ -20,8 +20,8 @@ Load:
 
   Trash:
 
-+   Stoic 1 (5/12)
-+   Pulsar 1 (5/12)
++   Stoic 1 (5/10)
++   Pulsar 1 (5/10)
 
 Scripts:
 

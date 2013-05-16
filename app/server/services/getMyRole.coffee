@@ -1,11 +1,11 @@
-# stoic = require 'stoic'
-# {Session} = stoic.models
+db = config.require 'load/mongo'
+{Session, User} = db.models
 
 module.exports =
-  optional: ['sessionId', 'accountId']
-  service: ({sessionId, accountId}, done) ->
-    return done null, {role: 'None'} unless sessionId and accountId
+  optional: ['sessionId']
+  service: ({sessionId}, done) ->
+    return done null, {role: 'None'} unless sessionId
 
-    Session(accountId).get(sessionId).role.get (err, role) ->
-      role ||= 'None'
-      done err, {role: role}
+    Session.findById sessionId, (err, session) ->
+      User.findById session.userId, (err, user) ->
+        done err, {role: user.role}

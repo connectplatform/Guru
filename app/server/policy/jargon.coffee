@@ -5,35 +5,35 @@ module.exports =
       except: []
     }
 
-    {
-      filters: ['lookupAccountId']
-      except: [
+    # {
+    #   filters: ['lookupAccountId']
+    #   except: [
 
-        # everyone
-        'getMyRole'
-        'log'
-        'getHeaderFooter'
-        'getImageUrl'
+    #     # everyone
+    #     'getMyRole'
+    #     'log'
+    #     'getHeaderFooter'
+    #     'getImageUrl'
 
-        # visitor
-        'newChat'
-        'submitQuestion'
-        'getExistingChat'
-        'createChatOrGetForm'
-        'visitorCanAccessChannel'
+    #     # visitor
+    #     'newChat'
+    #     'submitQuestion'
+    #     'getExistingChat'
+    #     'createChatOrGetForm'
+    #     'visitorCanAccessChannel'
 
-        # operator
-        'login'
-        'resetPassword'
-        'forgotPassword'
+    #     # operator
+    #     'login'
+    #     'resetPassword'
+    #     'forgotPassword'
 
-        # account creation
-        'createAccount'
-        'inviteOperator'
-        'transferChat'
-        'setSessionOffline'
-      ]
-    }
+    #     # account creation
+    #     'createAccount'
+    #     'inviteOperator'
+    #     'transferChat'
+    #     'setSessionOffline'
+    #   ]
+    # }
 
     {
       filters: ['objectMessageExists' ]

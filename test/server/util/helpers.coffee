@@ -68,16 +68,17 @@ helpers =
           cb err, null, {}
         else
           Session.findOne {secret: sessionSecret}, (err, session) ->
+            @sessionSecret = sessionSecret
             @accountId = session.accountId
             @sessionId = session._id
             # vein doesn't handle cookies, but we want client side middleware to do it
-            wrappedClient = helpers.wrapVeinClient client, {sessionId: @sessionId}
+            wrappedClient = helpers.wrapVeinClient client, {@sessionSecret, @sessionId}
             cb err, wrappedClient, {sessionSecret, @accountId}
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
     @ownerLogin (err, @client, vars) =>
-      {@accountId, @sessionId} = vars
+      {@accountId, @sessionSecret} = vars
       cb err, @client, vars
 
   # create a chat and hang onto visitor client

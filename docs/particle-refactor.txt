@@ -14,9 +14,9 @@ Models:
 
 Load:
 
-+ Particle 3 (5/12)
-+ Jargon 2 (5/12)
-+ App 1 (5/12)
++ Particle 3 (5/8)
++ Jargon 2 (5/8)
++ App 1 (5/8)
 
   Trash:
 
@@ -44,14 +44,14 @@ Services:
 --clearOldChats
   emailChat 2
   filters/isOwner 1
-  filters/isStaff 1
++  filters/isStaff 1 (5/15)
   getActiveChats 5
   getChatHistory 2
   getChatStats 3
   getExistingChat 1
   getLogoForChat 3
   getMyChats 2
-  getMyRole 1
++  getMyRole 1 (5/15)
   getNonpresentOperators 3 #online status
   getOnlineOperators 3
   inviteOperator 2
@@ -59,7 +59,7 @@ Services:
   kickUser 2
   leaveChat 2
   log 3 #create new logger
-  logout 2
++  logout 2 (5/16)
   newChat 5
 +  operator/createUserSession 3 (5/14)
   operator/getAvailableOperators 5
@@ -80,7 +80,7 @@ Services:
 
 Tests:
 
-  Boilerplate 2
++  Boilerplate 2 (5/8)
   Helpers 5
 
   recurly/getRecurlyToken
@@ -101,7 +101,7 @@ Tests:
   service.joinChat
   service.kickUser
 +  service.login (5/14)
-  service.logout
++  service.logout (5/16)
   service.newChat
   service.populateVisitorAcpData
   service.query

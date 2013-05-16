@@ -1,6 +1,6 @@
-TOTAL: 137
+TOTAL: 140
 TARGET TIME: 10 days
-EST VELOC: 13.7
+EST VELOC: 14.0
 
 
 SERVER
@@ -59,6 +59,7 @@ Services:
   kickUser 2
   leaveChat 2
   log 3 #create new logger
++  login 3 (5/13)
 +  logout 2 (5/16)
   newChat 5
 +  operator/createUserSession 3 (5/14)

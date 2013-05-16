@@ -24,4 +24,8 @@ chatSession = new Schema
 
   initiator: ObjectId
 
+# chatSession.pre 'remove', (next) ->
+#   console.log 'removing a ChatSession'
+#   next()
+
 module.exports = chatSession

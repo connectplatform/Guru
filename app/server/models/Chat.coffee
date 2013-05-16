@@ -42,4 +42,12 @@ chat = new Schema
     
   specialtyId: ObjectId
 
+chat.post 'remove', (_chat) ->
+  {ChatSession} = db.models
+  chatId = _chat._id
+  ChatSession.remove {chatId}, (err) ->
+    if err?
+      config.log.error 'Error cascading remove', {error: err, chatId: chatId}
+
+
 module.exports = chat

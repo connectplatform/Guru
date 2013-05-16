@@ -28,4 +28,12 @@ session = new Schema
 session.statics.sessionByOperator = (userId, done) ->
   @.findOne {userId}, (err, sess) ->
     done err, sess
+
+session.post 'remove', (_session) ->
+  {ChatSession} = db.models
+  sessionId = _session._id
+  ChatSession.remove {sessionId}, (err) ->
+    if err?
+      config.log.error 'Error cascading remove', {error: err, sessionId: sessionId}
+
 module.exports = session

@@ -73,7 +73,7 @@ helpers =
             @sessionId = session._id
             # vein doesn't handle cookies, but we want client side middleware to do it
             wrappedClient = helpers.wrapVeinClient client, {@sessionSecret, @sessionId}
-            cb err, wrappedClient, {sessionSecret, @accountId}
+            cb err, wrappedClient, {sessionSecret, @sessionId, @accountId}
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->

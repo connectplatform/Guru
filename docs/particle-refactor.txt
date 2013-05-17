@@ -35,7 +35,7 @@ Services:
   acceptInvite 1
   acceptTransfer 1
   account/getAccountId 1
-  changePassword 2
++  changePassword 2 (5/17)
 --chats/getChatRelations
 --chats/getFullChatData
 --chats/getRelationToChat
@@ -65,7 +65,7 @@ Services:
 +  operator/createUserSession 3 (5/14)
   operator/getAvailableOperators 5
   operator/getInvites 3
-  operator/getOperatorData 2
++  operator/getOperatorData 2 (5/17)
 +  operator/getOrCreateSession 3 (5/14)
   operator/removeUnanswered 3 #calculate
   populateVisitorAcpData 3
@@ -91,6 +91,7 @@ Tests:
 +  model.Session (5/14)
   service.acceptChat
   service.acceptInvite
++  service.changePassword (5/17)
   service.clearOldChats
   service.getActiveChats
   service.getAvailableOperators
@@ -104,6 +105,7 @@ Tests:
 +  service.login (5/14)
 +  service.logout (5/16)
   service.newChat
++  service.operator.getOperatorData (5/17)
   service.populateVisitorAcpData
   service.query
   service.setSessionOffline

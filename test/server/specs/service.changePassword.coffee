@@ -5,23 +5,22 @@ boiler 'Service - Change Password', ->
     @changePassword = (cb) =>
       @ownerLogin (err, client) =>
         should.not.exist err, 'initial login failed'
-
         # change password
-        client.changePassword {sessionId: @sessionId, oldPassword: "foobar", newPassword: "newPassword"}, (err) =>
+        @newPassword = 'newPassword'
+        client.changePassword {sessionId: @sessionId, oldPassword: 'foobar', newPassword: @newPassword}, (err) =>
           should.not.exist err, 'change password failed'
           cb()
 
   it 'should let a user log in with a changed password', (done) ->
     @changePassword =>
-
+      console.log 'hello'
       # try to log in with new password
       newLogin =
         email: 'owner@foo.com'
-        password: "newPassword"
-
+        password: @newPassword
+      
       @getAuthedWith newLogin, (err, client, {sessionId}) =>
         should.not.exist err, 'login with new password failed'
-
         # verify that login worked
         should.exist sessionId
         done()

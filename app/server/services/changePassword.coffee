@@ -1,12 +1,12 @@
-# stoic = require 'stoic'
-# {Session} = stoic.models
+db = config.require 'load/mongo'
+{Session, User} = db.models
 
 getOperatorData = config.require 'services/operator/getOperatorData'
 
 module.exports =
-  required: ['oldPassword', 'newPassword', 'accountId', 'sessionId']
-  service: ({oldPassword, newPassword, accountId, sessionId}, done) ->
-    getOperatorData accountId, sessionId, (err, user) ->
+  required: ['oldPassword', 'newPassword', 'sessionId']
+  service: ({oldPassword, newPassword, sessionId}, done) ->
+    getOperatorData sessionId, (err, user) ->
       config.log.error 'Error getting user from sessionId in changePassword', {error: err, sessionId: sessionId} if err
       return done "User not found." unless user
       return done "Incorrect current password." unless user.comparePassword oldPassword

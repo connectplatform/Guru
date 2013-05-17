@@ -29,7 +29,7 @@ Scripts:
   loadTest 1
 
 Services:
-  deleting 2
++  deleteModel 2 (5/16)
 
   acceptChat 1
   acceptInvite 1
@@ -43,7 +43,7 @@ Services:
 --chats/updateChatStatus
 --clearOldChats
   emailChat 2
-  filters/isOwner 1
++  filters/isOwner 1 (5/16)
 +  filters/isStaff 1 (5/15)
   getActiveChats 5
   getChatHistory 2

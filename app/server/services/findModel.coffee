@@ -1,7 +1,7 @@
 module.exports =
-  required: ['sessionId', 'accountId', 'modelName']
+  required: ['sessionId', 'sessionSecret', 'modelName']
   optional: ['queryObject']
-  service: ({queryObject, modelName, sessionId, accountId}, done) ->
+  service: ({queryObject, sessionId, sessionSecret, modelName}, done) ->
     queryObject ||= {}
     findModel = config.service 'model/findModel'
-    findModel {accountId: accountId, queryObject: queryObject, modelName: modelName}, done
+    findModel {queryObject: queryObject, modelName: modelName}, done

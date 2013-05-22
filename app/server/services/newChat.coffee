@@ -57,10 +57,15 @@ module.exports =
         ]
         async.parallel tasks, (err) ->
           # create pulsar channel
-          createChannel chat.id
+          # createChannel chat.id
 
           # respond to visitor browser
-          done err, {chatId: chat.id, sessionId: session.id}
+          chatData =
+            chatId: chat.id
+            sessionId: session.id
+            sessionSecret: session.secret
+          done err, chatData
+          # done err, {chatId: chat.id, sessionId: session.id, sessionSecret: session.secret}
 
           # query for ACP data and store it in redis
           populateVisitorAcpData accountId, chat.id, params

@@ -93,7 +93,8 @@ helpers =
         @chatId = chatData.chatId
 
         # vein doesn't handle cookies, but we want client side middleware to do it
-        wrappedClient = helpers.wrapVeinClient visitor, {sessionId: chatData.sessionId}
+        # wrappedClient = helpers.wrapVeinClient visitor, {sessionId: chatData.sessionId}
+        wrappedClient = helpers.wrapVeinClient visitor, chatData
         cb null, wrappedClient, data.merge(chatData)
 
   # create a chat but disconnect the visitor when done

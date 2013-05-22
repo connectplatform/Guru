@@ -1,6 +1,6 @@
 # NOTE: this is not in use!
 
-# stoic = require 'stoic'
+db = config.require 'load/mongo'
 # {Session} = stoic.models
 async = require 'async'
 

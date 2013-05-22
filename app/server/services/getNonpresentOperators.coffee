@@ -1,6 +1,6 @@
 async = require 'async'
-# stoic = require 'stoic'
-# {ChatSession, Session} = stoic.models
+db = config.require 'load/mongo'
+{ChatSession, Session} = db.models
 
 {getType} = config.require 'load/util'
 
@@ -58,15 +58,20 @@ packSessionData = (session, cb) ->
 module.exports =
   required: ['chatId', 'sessionId', 'accountId']
   service: ({chatId, sessionId, accountId}, done) ->
-    Session(accountId).allSessions.members (err, sessions) ->
-      if err
-        config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}
-        return done err
+    # Find all ChatSession connecting some active Session to the Chat denoted by chatId
+    ChatSession.find {chatId, sessionId}, (err, chatSessions) ->
+      console.log {err, chatSessions}
+      done err, {}
+    
+    # Session(accountId).allSessions.members (err, sessions) ->
+    #   if err
+    #     config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}
+    #     return done err
 
-      filterSessions accountId, sessions, chatId, (err, operatorSessions) ->
+    #   filterSessions accountId, sessions, chatId, (err, operatorSessions) ->
 
-        # We have the sessions for everyone we want to display, now get their data
-        async.map operatorSessions, packSessionData, (sessionData=[]) ->
+    #     # We have the sessions for everyone we want to display, now get their data
+    #     async.map operatorSessions, packSessionData, (sessionData=[]) ->
 
-          sessionData = [sessionData] unless getType(sessionData) is 'Array'
-          done err, {operators: sessionData}
+    #       sessionData = [sessionData] unless getType(sessionData) is 'Array'
+    #       done err, {operators: sessionData}

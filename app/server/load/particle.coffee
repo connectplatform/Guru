@@ -28,8 +28,10 @@ unless port is 'DISABLED'
       #   payload:
       #     ({sessionSecret}, done) ->
       #       Session.findOne {sessionSecret}, (err, session) ->
-      #         done err, {username: username}
-      #   delta: null
+      #         done err, {username: session.username}
+      #   delta:
+      #     (identity, listener) ->
+      #       listener {username: 'fixedFromDelta'}
 
     disconnect: -> null
       # config.watcher.stopAll()

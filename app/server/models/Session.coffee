@@ -2,7 +2,7 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 enums = config.require 'load/enums'
-{random} = config.require 'load/util'
+{random, getString} = config.require 'load/util'
 
 # Session for a logged-in User or non-User visitor
 session = new Schema
@@ -24,6 +24,14 @@ session = new Schema
   secret:
     type: String
     default: random
+
+  unansweredChats:
+    type: [String]
+    default: []
+
+session.path('_id').get getString
+session.path('accountId').get getString
+session.path('userId').get getString
 
 session.statics.sessionByOperator = (userId, done) ->
   @.findOne {userId}, (err, sess) ->

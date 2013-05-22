@@ -2,6 +2,7 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 {chatStatusStates} = config.require 'load/enums'
+{getString} = config.require 'load/util'
 
 chat = new Schema
   accountId:
@@ -41,6 +42,11 @@ chat = new Schema
     required: true
     
   specialtyId: ObjectId
+
+chat.path('_id').get getString
+chat.path('accountId').get getString
+chat.path('websiteId').get getString
+chat.path('specialtyId').get getString
 
 chat.post 'remove', (_chat) ->
   {ChatSession} = db.models

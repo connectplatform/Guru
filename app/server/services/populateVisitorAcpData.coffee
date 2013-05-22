@@ -2,10 +2,7 @@ restler = require 'restler'
 querystring = require 'querystring'
 
 db = config.require 'load/mongo'
-{Website} = db.models
-
-# stoic = require 'stoic'
-# {Chat} = stoic.models
+{Chat, Website} = db.models
 
 module.exports = (accountId, chatId, referrerData) ->
   websiteUrl = referrerData?.websiteUrl

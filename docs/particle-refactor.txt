@@ -51,7 +51,7 @@ Services:
   getExistingChat 1
   getLogoForChat 3
   getMyChats 2
-+  getMyRole 1 (5/15)
++  getMyRole 1 (5/15) FIXING
   getNonpresentOperators 3 #online status
   getOnlineOperators 3
   inviteOperator 2
@@ -63,7 +63,7 @@ Services:
 +  logout 2 (5/16)
   newChat 5
 +  operator/createUserSession 3 (5/14)
-  operator/getAvailableOperators 5
++  operator/getAvailableOperators 5 (5/21)
   operator/getInvites 3
 +  operator/getOperatorData 2 (5/17)
 +  operator/getOrCreateSession 3 (5/14)
@@ -94,7 +94,7 @@ Tests:
 +  service.changePassword (5/17)
   service.clearOldChats
   service.getActiveChats
-  service.getAvailableOperators
++  service.getAvailableOperators (5/21)
   service.getChatStats
   service.getLogoForChat
   service.getMyChats

@@ -17,19 +17,19 @@ boiler 'particle', ->
     Factory.create 'session', {@accountId}, (err, session) =>
       should.not.exist err
       should.exist session
-      @sessionId = session._id
       collector = new particle.Collector
         network:
           host: 'localhost'
           port: process.env.GURU_PORT
         identity:
-          sessionId: @sessionId
+          sessionSecret: session.secret
       should.exist collector
 
       collector.on 'data', (data, event) ->
         console.log {data, event}
 
       collector.register (err) ->
+        console.log {err}
         should.not.exist err
         done()
 
@@ -43,7 +43,7 @@ boiler 'particle', ->
           host: 'localhost'
           port: process.env.GURU_PORT
         identity:
-          sessionId: @sessionId
+          sessionSecret: session.secret
       should.exist collector
 
       collector.on 'data', (data, event) ->
@@ -53,11 +53,10 @@ boiler 'particle', ->
         should.not.exist err
         done()
 
-  it 'should not register without an valid sessionId', (done) ->
+  it 'should not register without a valid sessionSecret', (done) ->
     Factory.create 'session', {@accountId}, (err, session) =>
       should.not.exist err
       should.exist session
-      @sessionId = session._id
       # We have a valid session, but we won't use it
       collector = new particle.Collector
         network:
@@ -72,5 +71,6 @@ boiler 'particle', ->
 
       collector.register (err) ->
         should.exist err
-        console.log 'err', err
+        errMsg = 'No Session associated with sessionSecret'
+        err.should.equal errMsg
         done()

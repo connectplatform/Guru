@@ -5,10 +5,10 @@ boiler 'Service - New Chat', ->
   it 'should let you chat', (done) ->
     # Given I am logged in
     @getAuthed =>
-
+      console.log 'HIHIHI'
       # And I have a chat
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, visitor) =>
-
+        
         # And I am listening on the channel
         @channel = @getPulsar().channel @chatId
         @channel.on 'serverMessage', (data) ->
@@ -22,29 +22,29 @@ boiler 'Service - New Chat', ->
         visitor.say {message: 'hello!', chatId: @chatId}, (err) =>
           should.not.exist err
 
-  it 'should notify operators of a new chat', (done) ->
-    @getAuthed =>
-      should.exist @sessionId
-      notify = @getPulsar().channel "notify:session:#{@sessionId}"
-      notify.once 'unansweredChats', ({count}) =>
-        count.should.eql 1
-        done()
+  # it 'should notify operators of a new chat', (done) ->
+  #   @getAuthed =>
+  #     should.exist @sessionId
+  #     notify = @getPulsar().channel "notify:session:#{@sessionId}"
+  #     notify.once 'unansweredChats', ({count}) =>
+  #       count.should.eql 1
+  #       done()
 
-      @newChat ->
+  #     @newChat ->
 
-  it 'should return {noOperators: true} if no operators are available', (done) ->
-    @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-      @newChatWith {username: 'visitor', websiteUrl: 'bar.com'}, (err, {noOperators}) ->
-        should.not.exist err
-        should.exist noOperators
-        noOperators.should.eql true
-        done()
+  # it 'should return {noOperators: true} if no operators are available', (done) ->
+  #   @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
+  #     @newChatWith {username: 'visitor', websiteUrl: 'bar.com'}, (err, {noOperators}) ->
+  #       should.not.exist err
+  #       should.exist noOperators
+  #       noOperators.should.eql true
+  #       done()
 
-  it 'should create a chatsession', (done) ->
-    {ChatSession} = require('stoic').models
-    @getAuthed =>
-      @newChat =>
-        ChatSession(@account._id).getByChat @chatId, (err, chatSession) ->
-          should.not.exist err
-          should.exist chatSession
-          done()
+  # it 'should create a chatsession', (done) ->
+  #   {ChatSession} = require('stoic').models
+  #   @getAuthed =>
+  #     @newChat =>
+  #       ChatSession(@account._id).getByChat @chatId, (err, chatSession) ->
+  #         should.not.exist err
+  #         should.exist chatSession
+  #         done()

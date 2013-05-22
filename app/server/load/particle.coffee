@@ -1,13 +1,15 @@
-particle = require 'particle'
+MongoWatch = require 'mongo-watch'
 createServer = config.require 'load/createServer'
 db = config.require 'load/mongo'
 {Session} = db.models
+{Stream} = require 'particle'
+watcher = new MongoWatch {format: 'normal'}
 
 port = process.env.GURU_PARTICLE_PORT or config.app.port
 
 unless port is 'DISABLED'
-  stream = new particle.Stream
-    # onDebug: console.log
+  stream = new Stream
+    onDebug: console.log
 
     identityLookup: ({sessionSecret}, done) ->
       Session.findOne {secret: sessionSecret}, (err, session) ->
@@ -17,24 +19,25 @@ unless port is 'DISABLED'
           errMsg = 'No Session associated with sessionSecret'
           done errMsg, session
 
-    dataSources: {}
+    dataSources: # {}
       # src:
       #   manifest:
       #   payload:
       #   delta:
-      # session:
-      #   manifest:
-      #     username: true
-      #   payload:
-      #     ({sessionSecret}, done) ->
-      #       Session.findOne {sessionSecret}, (err, session) ->
-      #         done err, {username: session.username}
-      #   delta:
-      #     (identity, listener) ->
-      #       listener {username: 'fixedFromDelta'}
+      sessions:
+        manifest:
+          username: true
+        payload:
+          ({sessionSecret}, done) ->
+            Session.findOne {sessionSecret}, (err, session) ->
+              done err, {data: [session]}
+        delta:
+          (identity, listener) ->
+            console.log 'INFO: config.mongo.dbName', config.mongo.dbName
+            watcher.watch "#{config.mongo.dbName}.sessions", listener
 
-    disconnect: -> null
-      # config.watcher.stopAll()
+    disconnect: ->
+      watcher.stopAll()
 
 module.exports =
   stream: stream

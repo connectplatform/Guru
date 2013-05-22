@@ -47,7 +47,8 @@ config =
       apiKey: '162807d2b937497ca43e25db7a01380b'
       apiUrl: 'https://api.recurly.com/v2/'
     mongo:
-      host: 'mongodb://localhost:27017/guru-dev'
+      host: 'mongodb://localhost:27017/guruDev'
+      dbName: 'guruDev'
     redis:
       database: 0
     logging:

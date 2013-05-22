@@ -63,7 +63,7 @@ boiler 'particle', ->
           host: 'localhost'
           port: process.env.GURU_PORT
         identity:
-          sessionId: @accountId # sic
+          sessionSecret: @accountId # sic
       should.exist collector
 
       collector.on 'data', (data, event) ->
@@ -74,3 +74,26 @@ boiler 'particle', ->
         errMsg = 'No Session associated with sessionSecret'
         err.should.equal errMsg
         done()
+
+  # it 'should update upon a change in username', (done) ->
+  #   Factory.create 'session', {@accountId}, (err, session) =>
+  #     should.not.exist err
+  #     should.exist session
+      
+  #     collector = new particle.Collector
+  #       network:
+  #         host: 'localhost'
+  #         port: process.env.GURU_PORT
+  #       identity:
+  #         sessionSecret: @accountId # sic
+  #     should.exist collector
+
+  #     collector.on 'data', (data, event) ->
+  #       console.log {data, event}
+
+  #     collector.register (err) ->
+  #       should.exist err
+  #       errMsg = 'No Session associated with sessionSecret'
+  #       err.should.equal errMsg
+  #       done()
+  #   done()

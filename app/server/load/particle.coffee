@@ -22,6 +22,14 @@ unless port is 'DISABLED'
       #   manifest:
       #   payload:
       #   delta:
+      # session:
+      #   manifest:
+      #     username: true
+      #   payload:
+      #     ({sessionSecret}, done) ->
+      #       Session.findOne {sessionSecret}, (err, session) ->
+      #         done err, {username: username}
+      #   delta: null
 
     disconnect: -> null
       # config.watcher.stopAll()

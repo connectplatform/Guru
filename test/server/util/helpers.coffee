@@ -10,10 +10,7 @@ testPort = process.env.GURU_PORT
 #Exported object of helper functions
 helpers =
 
-  logger:
-    module.exports = (args...) ->
-      console.log args.map((a) ->
-        if (typeof a) is 'string' then a else inspect a, null, null)...
+  logger: config.require 'lib/logger'
 
   # keep track of how many tests we've run
   count: 0

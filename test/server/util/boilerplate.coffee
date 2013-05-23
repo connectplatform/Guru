@@ -56,7 +56,7 @@ setup = (testName, dataPrep, tests) ->
       #console.log "We've run #{++ helpers.count} tests."
       while helpers.clients.length
         client = helpers.clients.pop()
-        client.disconnect() if client?.connected
+        client.destroy() if client?.connected
 
     tests()
 

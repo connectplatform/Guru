@@ -1,6 +1,3 @@
-require 'sugar'
-Object.extend()
-
 connect = require 'connect'
 mongo = config.require 'load/mongo'
 createServer = config.require 'load/createServer'

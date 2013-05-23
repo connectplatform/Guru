@@ -5,9 +5,7 @@ db = config.require 'server/load/mongo'
 
 boiler 'Model - Session', ->
   beforeEach (done) ->
-    console.log 'about to find Account'
     Account.findOne {}, (err, account) =>
-      console.log 'found Account'
       @accountId = account._id
       User.findOne {accountId: @accountId}, (err, user) =>
         @userId = user._id

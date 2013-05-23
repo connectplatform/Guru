@@ -6,7 +6,6 @@ db = require 'mongoose'
 module.exports =
   required: ['email', 'firstName', 'lastName', 'password']
   service: (fields, done, processSideEffects) ->
-
     login = config.service 'login'
     createRecurlyAccount = config.service 'recurly/createAccount'
 

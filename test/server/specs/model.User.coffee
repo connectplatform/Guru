@@ -85,5 +85,5 @@ boiler 'Model - User', ->
 
     @getAuthed (_..., {sessionId}) =>
       @client.saveModel {sessionId: sessionId, fields: user, modelName: 'User'}, (err, savedModel) ->
-        err.should.eql 'Validator "required" failed for path role\n'
+        err.should.eql 'Validator "required" failed for path role with value `undefined`\n'
         done()

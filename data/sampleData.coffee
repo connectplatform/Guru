@@ -10,22 +10,19 @@ module.exports = (done) ->
     mapSpecialties = config.service 'specialties/mapSpecialties'
 
     createAccount = (account, cb) ->
-      console.log 'about to createAccount'
-      Account.create account, () ->
-        console.log 'created Account?'
-        cb()
+      Account.create account, cb
 
     createSpecialty = (accountId) ->
       (specialty, cb) ->
         Specialty.create specialty.merge(accountId: accountId), cb
-
+    
     createUser = (websites, accountId) ->
       (user, cb) ->
         user.accountId = accountId unless user.role is 'Administrator'
         user.websites = websites.filter((site) -> site.url in user.websites).map '_id'
         mapSpecialties {model: user, getter: 'getSpecialtyIds'}, (err, user) ->
           User.create user, cb
-
+    
     createWebsite = (accountId) ->
       (website, cb) ->
         website.merge(accountId: accountId)
@@ -34,7 +31,7 @@ module.exports = (done) ->
           Website.create website, (err, data) ->
             config.log.warn 'error creating website: ', err if err
             cb err, data
-
+    
     accounts = [
         accountType: 'Unlimited'
       ,
@@ -93,7 +90,7 @@ module.exports = (done) ->
         websites: []
         specialties: []
     ]
-
+    
     websites = [
         url: "foo.com"
         contactEmail: 'success@simulator.amazonses.com'
@@ -116,7 +113,7 @@ module.exports = (done) ->
     ]
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
-
+    
     tasks = {
       accounts: (next) -> async.map accounts, createAccount, next
       specialties: ['accounts', (next, {accounts}) -> async.map specialties, createSpecialty(accounts[0]._id), next]
@@ -125,5 +122,5 @@ module.exports = (done) ->
         async.map operators, createUser(websites, accounts[0]._id), next]
       chatHistory: ['accounts', (next, {accounts}) -> Factory.create 'chathistory', {accountId: accounts[0]._id}, next]
     }
-
+    
     async.auto tasks, done

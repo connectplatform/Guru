@@ -1,11 +1,9 @@
-require 'sugar'
-Object.extend()
-
 connect = require 'connect'
-mongo = require './mongo'
-initStoic = require './initStoic'
-createServer = require './createServer'
-loadRest = require './loadRest'
+
+mongo = config.require 'load/mongo'
+initStoic = config.require 'load/initStoic'
+createServer = config.require 'load/createServer'
+loadRest = config.require 'load/loadRest'
 flushCache = config.require 'load/flushCache'
 reconnectChannels = config.require 'load/reconnectChannels'
 
@@ -57,5 +55,15 @@ module.exports = (cb) ->
     if config.env is 'development'
       config.log.info "Using mongo database #{config.mongo.host}"
       config.log.info "Using redis database #{config.redis.database}"
+
+    # measure memory usage
+    if config.env is 'development'
+      try
+        memwatch = require 'memwatch'
+        memwatch.on 'leak', (info) ->
+          config.require('lib/sendStats') 'memory leak', info.growth
+
+      catch error
+        console.log 'Error logging memory leak:', error
 
     cb()

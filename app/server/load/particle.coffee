@@ -9,7 +9,7 @@ port = process.env.GURU_PARTICLE_PORT or config.app.port
 
 unless port is 'DISABLED'
   stream = new Stream
-    onDebug: console.log
+    # onDebug: console.log
 
     identityLookup: ({sessionSecret}, done) ->
       Session.findOne {secret: sessionSecret}, (err, session) ->
@@ -33,7 +33,6 @@ unless port is 'DISABLED'
               done err, {data: [session]}
         delta:
           (identity, listener) ->
-            console.log 'INFO: config.mongo.dbName', config.mongo.dbName
             watcher.watch "#{config.mongo.dbName}.sessions", listener
 
     disconnect: ->

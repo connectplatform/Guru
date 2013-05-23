@@ -17,83 +17,94 @@ boiler 'particle', ->
     Factory.create 'session', {@accountId}, (err, session) =>
       should.not.exist err
       should.exist session
-      done()
-      # collector = new particle.Collector
-      #   onDebug: console.log
-      #   network:
-      #     host: 'localhost'
-      #     port: process.env.GURU_PORT
-      #   identity:
-      #     sessionSecret: session.secret
-      # should.exist collector
-
-      # collector.on 'data', (data, event) ->
-      #   console.log {data, event}
-
-      # collector.register (err) ->
-      #   console.log {err}
-      #   should.not.exist err
-      #   done()
-
-  # it 'should register a User session with a Stream', (done) ->
-  #   Factory.create 'session', {@accountId, @userId}, (err, session) =>
-  #     should.not.exist err
-  #     should.exist session
-  #     @sessionId = session._id
-  #     collector = new particle.Collector
-  #       network:
-  #         host: 'localhost'
-  #         port: process.env.GURU_PORT
-  #       identity:
-  #         sessionSecret: session.secret
-  #     should.exist collector
-
-  #     collector.on 'data', (data, event) ->
-  #       console.log {data, event}
-
-  #     collector.register (err) ->
-  #       should.not.exist err
-  #       done()
-
-  # it 'should not register without a valid sessionSecret', (done) ->
-  #   Factory.create 'session', {@accountId}, (err, session) =>
-  #     should.not.exist err
-  #     should.exist session
-  #     # We have a valid session, but we won't use it
-  #     collector = new particle.Collector
-  #       network:
-  #         host: 'localhost'
-  #         port: process.env.GURU_PORT
-  #       identity:
-  #         sessionSecret: @accountId # sic
-  #     should.exist collector
-
-  #     collector.on 'data', (data, event) ->
-  #       console.log {data, event}
-
-  #     collector.register (err) ->
-  #       should.exist err
-  #       errMsg = 'No Session associated with sessionSecret'
-  #       err.should.equal errMsg
-  #       done()
-
-  # it 'should update upon a change in username', (done) ->
-  #   Factory.create 'session', {@accountId, @userId}, (err, session) =>
-  #     should.not.exist err
-  #     should.exist session
       
-  #     collector = new particle.Collector
-  #       network:
-  #         host: 'localhost'
-  #         port: process.env.GURU_PORT
-  #       identity:
-  #         sessionSecret: session.secret
-  #     should.exist collector
+      collector = new particle.Collector
+        # onDebug: console.log
+        network:
+          host: 'localhost'
+          port: process.env.GURU_PORT
+        identity:
+          sessionSecret: session.secret
+      should.exist collector
 
-  #     collector.on 'data', (data, event) ->
-  #       console.log {data, event}
+      collector.on 'data', (data, event) ->
+        # console.log {data, event}
 
-  #     collector.register (err) ->
-  #       should.not.exist err
-  #       console.log {collector}
-  #       done()
+      collector.register (err) ->
+        should.not.exist err
+        done()
+
+  it 'should register a User session with a Stream', (done) ->
+    Factory.create 'session', {@accountId, @userId}, (err, session) =>
+      should.not.exist err
+      should.exist session
+      @sessionId = session._id
+      collector = new particle.Collector
+        network:
+          host: 'localhost'
+          port: process.env.GURU_PORT
+        identity:
+          sessionSecret: session.secret
+      should.exist collector
+
+      collector.on 'data', (data, event) ->
+        # console.log {data, event}
+
+      collector.register (err) ->
+        should.not.exist err
+        done()
+
+  it 'should not register without a valid sessionSecret', (done) ->
+    Factory.create 'session', {@accountId}, (err, session) =>
+      should.not.exist err
+      should.exist session
+      
+      # We have a valid session, but we won't use it
+      collector = new particle.Collector
+        network:
+          host: 'localhost'
+          port: process.env.GURU_PORT
+        identity:
+          sessionSecret: @accountId # sic
+      should.exist collector
+
+      collector.on 'data', (data, event) ->
+        # console.log {data, event}
+
+      collector.register (err) ->
+        should.exist err
+        errMsg = 'No Session associated with sessionSecret'
+        err.should.equal errMsg
+        done()
+
+  it 'should update upon a change in username', (done) ->
+    Factory.create 'session', {@accountId, @userId}, (err, session) =>
+      should.not.exist err
+      should.exist session
+      oldUsername = session.username
+      newUsername = oldUsername + ' (Updated)'
+      updatedYet = false
+      
+      collector = new particle.Collector
+        # onDebug: console.log
+        network:
+          host: 'localhost'
+          port: process.env.GURU_PORT
+        identity:
+          sessionSecret: session.secret
+      should.exist collector
+
+      collector.on 'data', (data, event) ->
+        if updatedYet
+          should.exist data.sessions[0].username
+          data.sessions[0].username.should.equal newUsername
+        else
+          updatedYet = true
+          
+        # console.log 'data.sessions', data.sessions
+        # console.log 'INFO: `data` event:', {data, event}
+
+      collector.register (err) ->
+        should.not.exist err
+        session.username = newUsername
+        session.save done

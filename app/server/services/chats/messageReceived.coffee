@@ -7,6 +7,7 @@ module.exports =
   required: ['sessionId', 'accountId', 'chatId']
   optional: ['message']
   service: ({sessionId, accountId, chatId, message}, done) ->
+    console.log 'here'
 
     # get user's identity and operators present
     async.parallel [

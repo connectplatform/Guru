@@ -1,6 +1,7 @@
 should = require 'should'
 db = config.require 'load/mongo'
 {ObjectId} = db.Schema.Types
+{ChatSession} = db.models
 
 boiler 'Service - Join Chat', ->
 
@@ -9,25 +10,28 @@ boiler 'Service - Join Chat', ->
       notAChatId = @client.localStorage.sessionId
       @client.joinChat {chatId: notAChatId}, (err, {status}) ->
         should.exist err, 'expected error'
-        err.should.equal "Couldn't find Chat"
-        # err.should.eql "chats/getRelationToChat requires 'chatId' to be a valid ChatId."
+        errMsg = "chats/getRelationToChat requires 'chatId' to be a valid ChatId."
+        err.should.equal errMsg
         done()
 
-  # describe 'after joining', ->
-  #   beforeEach (done) ->
-  #     @getAuthed (_..., {@accountId}) =>
-  #       @newChat =>
-  #         @client.joinChat {chatId: @chatId}, done
+  describe 'after joining', ->
+    beforeEach (done) ->
+      @getAuthed (_..., {@accountId}) =>
+        @newChat =>
+          console.log {@chatId}
+          @client.joinChat {chatId: @chatId}, (err, result) =>
+            console.log {err, result}
+            done err, result
 
-  #   it 'should associate an operator with a chat', (done) ->
-
-  #     #TODO refactor this to check at a higher level than cache contents
-  #     {ChatSession} = stoic.models
-  #     ChatSession(@accountId).getBySession @sessionId, (err, data) =>
-  #       should.not.exist err
-  #       [chatSesson] = data
-  #       chatSesson.chatId.should.eql @chatId
-  #       done()
+    it 'should associate an operator with a chat', (done) ->
+      console.log 'ABOUT TO BLOW UP'
+      #TODO refactor this to check at a higher level than cache contents
+      {ChatSession} = stoic.models
+      ChatSession(@accountId).getBySession @sessionId, (err, data) =>
+        should.not.exist err
+        [chatSesson] = data
+        chatSesson.chatId.should.eql @chatId
+        done()
 
   #   it 'should notify operator of an unread message', (done) ->
 

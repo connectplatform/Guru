@@ -10,7 +10,10 @@ module.exports = (done) ->
     mapSpecialties = config.service 'specialties/mapSpecialties'
 
     createAccount = (account, cb) ->
-      Account.create account, cb
+      console.log 'about to createAccount'
+      Account.create account, () ->
+        console.log 'created Account?'
+        cb()
 
     createSpecialty = (accountId) ->
       (specialty, cb) ->

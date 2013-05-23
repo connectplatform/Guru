@@ -9,7 +9,7 @@ loadRest = config.require 'load/loadRest'
 # service init, connect to interfaces
 initServices = config.require 'load/initServices'
 veinAdapter = config.require 'load/veinAdapter'
-particle = config.require 'load/particle'
+# particle = config.require 'load/particle'
 
 module.exports = (cb) ->
 
@@ -33,7 +33,7 @@ module.exports = (cb) ->
   server = createServer port, app
 
   # initialize particle stream
-  particle.stream.init server
+  # particle.stream.init server
 
   # attaches services to config.services
   initServices()

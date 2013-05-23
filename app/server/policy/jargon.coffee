@@ -36,8 +36,7 @@ module.exports = [
     defaultArgs: ['sessionId']
   ,
     typeName: 'ChatId'
-    validation: ({value, args: {accountId}}, assert) ->
-      return assert false, {reason: 'missing accountId'} unless accountId
+    validation: ({value}, assert) ->
       Chat.findById value, (err, chat) ->
         exists = not err and chat?
         assert exists, {reason: 'Chat does not exist'}

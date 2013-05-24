@@ -5,8 +5,10 @@ boiler 'Service - Say', ->
   it 'should let you say a message in a chat', (done) ->
     @getAuthed =>
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @visitor) =>
+        console.log 'YOYOYO'
         console.log {@chatId}
         message = 'Hello, world!'
+        console.log 'YOYOYO'
         @visitor.say {@chatId, message}, (err, {status}) =>
           should.not.exist err
           should.exist status, 'expected status'

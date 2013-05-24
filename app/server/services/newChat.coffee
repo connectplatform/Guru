@@ -29,7 +29,7 @@ module.exports =
       # create all necessary artifacts
       async.parallel {
         session: (next) -> Session.create {accountId, username}, next
-        chat: (next) -> Chat.create {accountId, status: 'Waiting', websiteId, websiteUrl, specialtyId}, next
+        chat: (next) -> Chat.create {accountId, status: 'Waiting', websiteId, websiteUrl, specialtyId, name: username}, next
         # session: Session(accountId).create {role: 'Visitor', chatName: username }
         # chat: Chat(accountId).create
       }, (err, {chat, session}) ->

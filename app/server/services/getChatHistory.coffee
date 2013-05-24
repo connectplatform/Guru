@@ -11,13 +11,12 @@ module.exports =
           chatId: chatId
           history: chat?.history
         return done 'could not find chat'
-
+      # HERE BE DRAGONS
       if chat.history.length is 0
         chat.history.push
           timestamp: new Date().getTime()
           type: 'notification'
           message: 'Welcome to live chat! An operator will be with you shortly.'
-
-        done err, {history: chat.history}
+      done err, {history: chat.history}
         # chat.save (err) ->
         #   done err, {history: chat.history}

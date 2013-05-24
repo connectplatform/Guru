@@ -19,8 +19,10 @@ module.exports =
           message: message
           username: session.username
           timestamp: Date.now()
-        
-        done()
+
+        chat.history.push said
+        chat.save done
+
     # ], (err, [username, chatSessions]) ->
       # console.log 'here'
       # chatSessions ?= []

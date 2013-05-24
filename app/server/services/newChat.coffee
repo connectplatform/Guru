@@ -56,9 +56,6 @@ module.exports =
             chat.save next
         ]
         async.parallel tasks, (err) ->
-          # create pulsar channel
-          # createChannel chat.id
-
           # respond to visitor browser
           chatData =
             chatId: chat.id

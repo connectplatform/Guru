@@ -20,6 +20,9 @@ module.exports =
           username: session.username
           timestamp: Date.now()
 
+        # TODO: get and notify operators
+        
+
         chat.history.push said
         chat.save done
 

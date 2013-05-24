@@ -18,5 +18,3 @@ module.exports =
           type: 'notification'
           message: 'Welcome to live chat! An operator will be with you shortly.'
       done err, {history: chat.history}
-        # chat.save (err) ->
-        #   done err, {history: chat.history}

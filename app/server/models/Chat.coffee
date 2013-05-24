@@ -5,6 +5,10 @@ db = require 'mongoose'
 {getString} = config.require 'load/util'
 
 chat = new Schema
+  name:
+    type: String
+    required: true
+
   accountId:
     type: ObjectId
     required: true

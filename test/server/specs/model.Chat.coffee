@@ -15,7 +15,8 @@ boiler 'Model - Chat', ->
           should.exist website
           @websiteId = website._id
           @websiteUrl = website.url
-          @validData = {@accountId, @websiteId, @websiteUrl}
+          @chatName = 'MyChat'
+          @validData = {@accountId, @websiteId, @websiteUrl, name: @chatName}
           done err
 
   it 'should let you create a valid Chat with empty history', (done) ->

@@ -26,8 +26,8 @@ session = new Schema
     default: random
 
   unansweredChats:
-    type: [String]
-    default: []
+    type: Number
+    default: 0
 
   unreadMessages:
     type: Number

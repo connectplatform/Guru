@@ -20,31 +20,17 @@ module.exports =
           username: session.username
           timestamp: Date.now()
 
-        # TODO: get and notify operators
-        
+        # Get and notify operators
+        # TODO: Refactor into separate service
+        ChatSession.find {chatId}, (err, chatSessions) ->
+          sessionIds = (c.sessionId for c in chatSessions)
+          condition =
+            _id: '$in': sessionIds
+            userId: '$ne': null
+          Session.find condition, (err, operatorSessions) ->
+            async.forEach operatorSessions, (opSession, next) ->
+              opSession.unreadMessages += 1
+              opSession.save next
 
-        chat.history.push said
-        chat.save done
-
-    # ], (err, [username, chatSessions]) ->
-      # console.log 'here'
-      # chatSessions ?= []
-      # return done err if err
-
-      # operators = (op.sessionId for op in chatSessions)
-
-      # # push history data
-      # said =
-      #   message: message
-      #   username: username
-      #   timestamp: Date.now()
-
-      # Chat(accountId).get(chatId).history.rpush said, ->
-      #   done()
-
-      #   # asynchronous notifications
-      #   async.forEach operators, (op, next) ->
-      #     Session(accountId).get(op).unreadMessages.incrby chatId, 1, next
-
-      #   channel = pulsar.channel chatId
-      #   channel.emit 'serverMessage', said
+            chat.history.push said
+            chat.save done

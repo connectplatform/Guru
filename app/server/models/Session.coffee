@@ -30,8 +30,8 @@ session = new Schema
     default: []
 
   unreadMessages:
-    type: [String]
-    default: []
+    type: Number
+    default: 0
 
 session.path('_id').get getString
 session.path('accountId').get getString

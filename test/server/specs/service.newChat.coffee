@@ -1,7 +1,7 @@
 should = require 'should'
 particle = require 'particle'
 db = config.require 'load/mongo'
-{Chat} = db.models
+{Chat, ChatSession} = db.models
 
 boiler 'Service - New Chat', ->
 
@@ -52,7 +52,7 @@ boiler 'Service - New Chat', ->
           
   # it 'should notify operators of a new chat', (done) ->
   #   @getAuthed =>
-  #     should.exist @sessionId
+  #     should.exist @sessionSecret
   #     notify = @getPulsar().channel "notify:session:#{@sessionId}"
   #     notify.once 'unansweredChats', ({count}) =>
   #       count.should.eql 1
@@ -68,11 +68,10 @@ boiler 'Service - New Chat', ->
   #       noOperators.should.eql true
   #       done()
 
-  # it 'should create a chatsession', (done) ->
-  #   {ChatSession} = require('stoic').models
-  #   @getAuthed =>
-  #     @newChat =>
-  #       ChatSession(@account._id).getByChat @chatId, (err, chatSession) ->
-  #         should.not.exist err
-  #         should.exist chatSession
-  #         done()
+  it 'should create a chatSession', (done) ->
+    @getAuthed =>
+      @newChat =>
+        ChatSession.findOne {@chatId}, (err, chatSession) ->
+          should.not.exist err
+          should.exist chatSession
+          done()

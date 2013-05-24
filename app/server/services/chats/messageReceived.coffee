@@ -7,18 +7,19 @@ module.exports =
   required: ['sessionId', 'accountId', 'chatId']
   optional: ['message']
   service: ({sessionId, accountId, chatId, message}, done) ->
-    console.log 'HERE?!?!'
     # get user's identity and operators present
-    async.parallel [
-      # (next) -> Chat.getById chatId, (err, chat) -> next chat
-      # Session(accountId).get(sessionId).chatName.get
-      # ChatSession(accountId).getByChat chatId
+    async.parallel {
         chat: (next) -> Chat.findById chatId, next
         chatSession: (next) -> ChatSession.findOne {sessionId, chatId}, next
         session: (next) -> Session.findById sessionId, next
-      ], (err, {chat, chatsession, session}) ->
-        console.log 'HERE'
+      }, (err, {chat, chatSession, session}) ->
         return done err if err
+
+        said =
+          message: message
+          username: session.username
+          timestamp: Date.now()
+        
         done()
     # ], (err, [username, chatSessions]) ->
       # console.log 'here'

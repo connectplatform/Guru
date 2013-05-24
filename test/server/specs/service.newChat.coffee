@@ -50,15 +50,18 @@ boiler 'Service - New Chat', ->
             history[0].message.should.equal message
             done()
           
-  # it 'should notify operators of a new chat', (done) ->
-  #   @getAuthed =>
-  #     should.exist @sessionSecret
-  #     notify = @getPulsar().channel "notify:session:#{@sessionId}"
-  #     notify.once 'unansweredChats', ({count}) =>
-  #       count.should.eql 1
-  #       done()
+  it 'should notify operators of a new chat', (done) ->
+    @getAuthed =>
+      should.exist @sessionSecret
+      @newChat =>
+        done()
+        
+      # notify = @getPulsar().channel "notify:session:#{@sessionId}"
+      # notify.once 'unansweredChats', ({count}) =>
+      #   count.should.eql 1
+      #   done()
 
-  #     @newChat ->
+      # @newChat ->
 
   # it 'should return {noOperators: true} if no operators are available', (done) ->
   #   @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>

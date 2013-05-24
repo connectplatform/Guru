@@ -10,6 +10,7 @@ boiler 'particle', ->
       @accountId = account._id
       User.findOne {accountId: @accountId}, (err, user) =>
         should.not.exist err
+        should.exist user
         @userId = user._id
         done err
     
@@ -17,7 +18,7 @@ boiler 'particle', ->
     Factory.create 'session', {@accountId}, (err, session) =>
       should.not.exist err
       should.exist session
-      
+
       collector = new particle.Collector
         # onDebug: console.log
         network:
@@ -28,7 +29,7 @@ boiler 'particle', ->
       should.exist collector
 
       collector.on 'data', (data, event) ->
-        # console.log {data, event}
+        console.log {data, event}
 
       collector.register (err) ->
         should.not.exist err

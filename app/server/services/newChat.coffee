@@ -61,8 +61,9 @@ module.exports =
             chatId: chat.id
             sessionId: session.id
             sessionSecret: session.secret
-          done err, chatData
-          # done err, {chatId: chat.id, sessionId: session.id, sessionSecret: session.secret}
-
+          
           # query for ACP data and store it in redis
-          populateVisitorAcpData accountId, chat.id, params
+          # TODO: refactor for mongo
+          # populateVisitorAcpData accountId, chat.id, params
+
+          done err, chatData

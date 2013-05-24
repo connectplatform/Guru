@@ -33,32 +33,23 @@ boiler 'Service - New Chat', ->
           identity:
             sessionSecret: @sessionSecret
 
+        # Local bin to catch updates for testing
         @collectedData = []
         # Which is listening for data events
-        collector.on 'data', (data, event) ->
+        collector.on 'data', (data, event) =>
           @collectedData.push data
-          console.log {data, event}
         
         # And is registered with a Stream
-        collector.register (err) ->
+        collector.register (err) =>
           should.not.exist err
-          done()
-
-        # STOP: TESTING `SAY`
+          message = 'Hello!'
+          visitor.say {message, @chatId}, (err) =>
+            should.not.exist err
+            @collectedData.should.not.be.empty
+            {history} = @collectedData[0].chats[0]
+            history[0].message.should.equal message
+            done()
           
-        # # And I am listening on the channel
-        # @channel = @getPulsar().channel @chatId
-        # @channel.on 'serverMessage', (data) ->
-        #   if data.username is 'visitor'
-
-        #     # Then I should see my message
-        #     data.message.should.eql 'hello!'
-        #     done()
-
-        # # When I send a message
-        # visitor.say {message: 'hello!', chatId: @chatId}, (err) =>
-        #   should.not.exist err
-
   # it 'should notify operators of a new chat', (done) ->
   #   @getAuthed =>
   #     should.exist @sessionId

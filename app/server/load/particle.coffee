@@ -1,7 +1,7 @@
 MongoWatch = require 'mongo-watch'
 createServer = config.require 'load/createServer'
 db = config.require 'load/mongo'
-{Session} = db.models
+{Chat, ChatSession, Session} = db.models
 {Stream} = require 'particle'
 watcher = new MongoWatch {format: 'normal'}
 
@@ -28,13 +28,34 @@ unless port is 'DISABLED'
         manifest:
           username: true
         payload:
-          ({sessionSecret}, done) ->
+          (identity, done) ->
+            {sessionSecret} = identity
             Session.findOne {sessionSecret}, (err, session) ->
               done err, {data: [session]}
         delta:
           (identity, listener) ->
             watcher.watch "#{config.mongo.dbName}.sessions", listener
-
+      chats:
+        manifest:
+          name: true
+          status: true
+          history: true
+          creationDate: true
+          websiteId: true
+          websiteUrl: true
+          specialtyId: true
+        payload:
+          (identity, done) ->
+            {sessionSecret} = identity
+            Session.findOne {secret: sessionSecret}, (err, session) ->
+              ChatSession.find {sessionId: session._id}, (err, chatSessions) ->
+                chatIds = (cs.chatId for cs in chatSessions)
+                Chat.find {_id: {'$in': chatIds}}, (err, chats) ->
+                  done err, {data: chats}
+        delta:
+          (identity, listener) ->
+            watcher.watch "#{config.mongo.dbName}.chats", listener
+            
     disconnect: ->
       watcher.stopAll()
 

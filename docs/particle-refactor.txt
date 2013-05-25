@@ -46,7 +46,7 @@ Services:
 +  filters/isOwner 1 (5/16)
 +  filters/isStaff 1 (5/15)
   getActiveChats 5
-  getChatHistory 2
++  getChatHistory 2 (5/24)
   getChatStats 3
   getExistingChat 1
   getLogoForChat 3
@@ -61,7 +61,7 @@ Services:
   log 3 #create new logger
 +  login 3 (5/13)
 +  logout 2 (5/16)
-  newChat 5
++  newChat 5 (5/24)
 +  operator/createUserSession 3 (5/14)
 +  operator/getAvailableOperators 5 (5/21)
   operator/getInvites 3

@@ -24,7 +24,7 @@ module.exports =
       if err or reason
         errData = {error: err, websiteId: websiteId, specialtyId: specialtyId, reason: reason}
         config.log.warn 'Could not get availible operators for new chat.', errData
-
+      
       return done err, {noOperators: true} if err or operators.length is 0
       # create all necessary artifacts
       async.parallel {
@@ -36,13 +36,12 @@ module.exports =
         return done err if err
         showToOperators = (next) ->
           notify = (op, next) ->
-            Session.findById session.id, (err, sess) ->
+            Session.findOne {userId: op.id}, (err, sess) ->
               sess.unansweredChats.push chat.id
               sess.save next
               
           async.map operators, notify, next
         tasks = [
-          showToOperators
           (next) ->
             data =
               sessionId: session.id
@@ -54,6 +53,7 @@ module.exports =
             chat.websiteUrl = params.websiteUrl
             chat.specialtyId = specialtyId if specialtyId
             chat.save next
+          showToOperators
         ]
         async.parallel tasks, (err) ->
           # respond to visitor browser

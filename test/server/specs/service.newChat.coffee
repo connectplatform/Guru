@@ -1,7 +1,7 @@
 should = require 'should'
 particle = require 'particle'
 db = config.require 'load/mongo'
-{Chat, ChatSession} = db.models
+{Chat, ChatSession, Session} = db.models
 
 boiler 'Service - New Chat', ->
 
@@ -23,8 +23,6 @@ boiler 'Service - New Chat', ->
     @getAuthed =>
       # And I have a chat
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, visitor) =>
-        # console.log '@sessionSecret', @sessionSecret
-
         # And I have a Collector
         collector = new particle.Collector
           network:
@@ -52,16 +50,19 @@ boiler 'Service - New Chat', ->
           
   it 'should notify operators of a new chat', (done) ->
     @getAuthed =>
-      should.exist @sessionSecret
-      @newChat =>
-        done()
-        
-      # notify = @getPulsar().channel "notify:session:#{@sessionId}"
-      # notify.once 'unansweredChats', ({count}) =>
-      #   count.should.eql 1
-      #   done()
-
-      # @newChat ->
+      Session.findOne {secret: @sessionSecret}, (err, session) =>
+        should.not.exist err
+        should.exist session
+        {unansweredChats} = session
+        unansweredChats.should.be.empty
+        @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, visitor) =>
+          Session.findOne {secret: @sessionSecret}, (err, updatedSess) =>
+            should.not.exist err
+            should.exist updatedSess
+            updatedUnansweredChats = updatedSess.unansweredChats
+            updatedUnansweredChats.should.not.be.empty
+            updatedUnansweredChats.should.include @chatId
+            done()
 
   # it 'should return {noOperators: true} if no operators are available', (done) ->
   #   @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>

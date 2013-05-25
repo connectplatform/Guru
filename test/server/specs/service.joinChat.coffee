@@ -1,7 +1,7 @@
 should = require 'should'
 db = config.require 'load/mongo'
 {ObjectId} = db.Schema.Types
-{ChatSession} = db.models
+{ChatSession, Session} = db.models
 
 boiler 'Service - Join Chat', ->
 
@@ -29,19 +29,21 @@ boiler 'Service - Join Chat', ->
         chatSession.chatId.should.equal @chatId
         done()
 
-  #   it 'should notify operator of an unread message', (done) ->
+    it 'should notify operator of an unread message', (done) ->
 
-  #     pulsar = @getPulsar()
+      Session.findById @sessionId, (err, session) =>
+        should.not.exist err
+        should.exist session
+        session.unreadMessages.should.equal 0
 
-  #     # set up session listener
-  #     sessionNotifications = pulsar.channel "notify:session:#{@sessionId}"
-  #     sessionNotifications.once 'unreadMessages', (counts) =>
-  #       count = counts[@chatId]
-  #       should.exist count
-  #       count.should.eql 1
-  #       done()
-
-  #     sessionNotifications.ready =>
-
-  #       # send a new message
-  #       @client.say {message: 'hi', session: @visitorSession, chatId: @chatId}, =>
+        data =
+          message: 'Hello'
+          sessionId: @sessionId
+          chatId: @chatId
+        @client.say data, (err) =>
+          should.not.exist err
+          Session.findById @sessionId, (err, updatedSession) =>
+            should.not.exist err
+            should.exist updatedSession
+            updatedSession.unreadMessages.should.equal 1
+            done()

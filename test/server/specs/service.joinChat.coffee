@@ -18,19 +18,15 @@ boiler 'Service - Join Chat', ->
     beforeEach (done) ->
       @getAuthed (_..., {@accountId}) =>
         @newChat =>
-          console.log {@chatId}
           @client.joinChat {chatId: @chatId}, (err, result) =>
-            console.log {err, result}
+            @sessionId = @client.localStorage.sessionId
             done err, result
 
     it 'should associate an operator with a chat', (done) ->
-      console.log 'ABOUT TO BLOW UP'
-      #TODO refactor this to check at a higher level than cache contents
-      {ChatSession} = stoic.models
-      ChatSession(@accountId).getBySession @sessionId, (err, data) =>
+      ChatSession.findOne {@sessionId}, (err, chatSession) =>
         should.not.exist err
-        [chatSesson] = data
-        chatSesson.chatId.should.eql @chatId
+        should.exist chatSession
+        chatSession.chatId.should.equal @chatId
         done()
 
   #   it 'should notify operator of an unread message', (done) ->

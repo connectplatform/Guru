@@ -55,7 +55,7 @@ Services:
   getNonpresentOperators 3 #online status
   getOnlineOperators 3
   inviteOperator 2
-  joinChat 2
++  joinChat 2 (5/24)
   kickUser 2
   leaveChat 2
   log 3 #create new logger

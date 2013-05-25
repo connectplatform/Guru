@@ -64,13 +64,13 @@ boiler 'Service - New Chat', ->
             updatedUnansweredChats.should.include @chatId
             done()
 
-  # it 'should return {noOperators: true} if no operators are available', (done) ->
-  #   @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
-  #     @newChatWith {username: 'visitor', websiteUrl: 'bar.com'}, (err, {noOperators}) ->
-  #       should.not.exist err
-  #       should.exist noOperators
-  #       noOperators.should.eql true
-  #       done()
+  it 'should return {noOperators: true} if no operators are available', (done) ->
+    @getAuthedWith {email: 'guru3@foo.com', password: 'foobar'}, =>
+      @newChatWith {username: 'visitor', websiteUrl: 'bar.com'}, (err, {noOperators}) ->
+        should.not.exist err
+        should.exist noOperators
+        noOperators.should.eql true
+        done()
 
   it 'should create a chatSession', (done) ->
     @getAuthed =>

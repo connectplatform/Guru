@@ -33,9 +33,15 @@ module.exports =
           # EITHER have the salient website and specialty qualifications, thus..
           # .. have websiteId in user.websites AND
           # .. have specialtyId in user.specialties
-          cond1 =
-            websites: websiteId  # shorthand for {'$elemMatch': {'$eq': websiteId}}
-            specialties: specialtyId
+          if specialtyId?
+            # If specialtyId is defined, we filter on both that AND websiteId
+            cond1 =
+              websites: websiteId  # shorthand for {'$elemMatch': {'$eq': websiteId}}
+              specialties: specialtyId
+          else
+            # If no specialtyId is defined, then we only filter on websiteId
+            cond1 =
+              websites: websiteId
           # OR are a manager
           cond2 =
             role: {'$in': enums.managerRoles}  # user.role in enums.managerRoles

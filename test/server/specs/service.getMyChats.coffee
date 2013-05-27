@@ -1,5 +1,8 @@
 should = require 'should'
 
+db = config.require 'load/mongo'
+{ChatSession} = db.models
+
 boiler 'Service - Get My Chats', ->
 
   it "should return data on all of a particular operator's chats", (done) ->
@@ -15,28 +18,26 @@ boiler 'Service - Get My Chats', ->
           @client.joinChat {chatId: chatId}, (err, data) =>
             should.not.exist err
             should.exist data
-
+            
             # Then the data should be correct
             @client.getMyChats (err, {chats}) =>
               should.not.exist err
-              chats.length.should.eql 1
-              [chatData] = chats
-              chatData.visitor.username.should.eql 'joinMe'
-              should.exist chatData.visitor.referrerData.arbitrary, 'expected referrerData'
-              chatData.visitor.referrerData.arbitrary.should.eql 'someValue'
-              chatData.status.should.eql 'waiting'
-              new Date chatData.creationDate #just need this to not cause an error
+              should.exist chats
+              chats.length.should.equal 1
+              [chat] = chats
+              chat.name.should.equal 'joinMe'
+              chat.websiteUrl.should.equal 'foo.com'
+              chat.status.should.equal 'Waiting'
               done()
 
-  it "orphan chatSession should not shit the bed", (done) ->
-    {ChatSession} = require('stoic').models
+  it "orphan chatSession should not make things blow up", (done) ->
     @getAuthed (err, @client, {sessionId, accountId}) =>
 
       # Given an orphan ChatSession
-      ChatSession(accountId).add sessionId, 'chat_bar', {}, (err, chatSession) =>
-        should.not.exist err
-
+      @newChatWith {websiteUrl: 'foo.com', username: 'someVisitor'}, (err, {chatId}) =>
+        # The Operator should not be spuriously associated with the Chat
         @client.getMyChats (err, {chats}) =>
           should.not.exist err
-          chats.length.should.eql 0
+          should.exist chats
+          chats.should.be.empty
           done()

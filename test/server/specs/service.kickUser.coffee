@@ -1,4 +1,6 @@
 should = require 'should'
+db = config.require 'load/mongo'
+{Chat, ChatSession} = db.models
 
 boiler 'Service - Kick User', ->
 
@@ -11,13 +13,14 @@ boiler 'Service - Kick User', ->
 
           # Kick user
           @client.kickUser {chatId: @chatId}, (err) =>
+            console.log {err}
             should.not.exist err
 
             # Check that kick worked
-            {Chat} = stoic.models
-            Chat(accountId).get(@chatId).status.get (err, status) =>
+            Chat.findById @chatId, (err, chat) =>
               should.not.exist err
-              status.should.eql 'vacant'
+              should.exist chat
+              chat.status.should.equal 'Vacant'
               done()
 
   it "should should not puke if the visitor has already left", (done) ->

@@ -1,28 +1,21 @@
 async = require 'async'
-# stoic = require 'stoic'
-# {ChatSession, Chat} = stoic.models
-query = config.require 'services/queries/query'
-{reject} = config.require 'load/util'
+db = config.require 'load/mongo'
+{Chat, ChatSession} = db.models
 
 module.exports =
   required: ['accountId', 'sessionId']
-  service: ({accountId, sessionId}, done) ->
-    query {
-      accountId: accountId,
-      queries:
-        chatPairs:
-          ids: sessionId: sessionId
-          select:
-            chat: 'chat'
-            isWatching: 'chatSession.relationMeta.isWatching'
-    }, (err, {chatPairs}) ->
+  service: ({sessionId}, done) ->
+    ChatSession.find {sessionId}, (err, chatSessions) ->
+      return done err, null if err
 
-      # get info for a specific chat
-      chats = for chatPair in chatPairs
-        chatPair.chat.isWatching = chatPair.isWatching
-        if chatPair.chat?.visitor?.referrerData
-          filtered = reject chatPair.chat.visitor.referrerData, 'sessionId', 'specialtyId', 'accountId'
-          chatPair.chat.visitor.referrerData = filtered
-        chatPair.chat
+      # If the operator has no ChatSessions, we are done.
+      return done null, {chats: []} if chatSessions.length == 0
 
-      done null, {chats: chats}
+      # Collect the chatIds of Chats the operator is linked to.
+      chatIds = (cs.chatId for cs in chatSessions)
+
+      Chat.find {_id: '$in': chatIds}, (err, chats) ->
+        if err
+          done err, null
+        else
+          done null, {chats: chats}

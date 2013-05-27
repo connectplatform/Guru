@@ -1,8 +1,8 @@
-# stoic = require 'stoic'
-# {ChatSession} = stoic.models
+db = config.require 'load/mongo'
+{ChatSession} = db.models
 
 module.exports =
-  required: ['accountId', 'chatId', 'sessionId']
-  service: ({chatId, sessionId, accountId}, done) ->
-    ChatSession(accountId).remove sessionId, chatId, (err) ->
+  required: ['chatId', 'sessionId']
+  service: ({chatId, sessionId}, done) ->
+    ChatSession.remove {sessionId, chatId}, (err) ->
       done err

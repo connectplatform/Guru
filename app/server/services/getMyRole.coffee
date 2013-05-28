@@ -7,6 +7,9 @@ module.exports =
     if sessionId?
       Session.findById sessionId, (err, session) ->
         User.findById session.userId, (err, user) ->
-          done err, {role: user?.role}
+          if user?
+            done err, {role: user.role}
+          else
+            done err, {role: 'Visitor'}
     else
       return done null, {role: 'None'}

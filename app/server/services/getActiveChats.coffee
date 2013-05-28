@@ -2,14 +2,16 @@ async = require 'async'
 db = config.require 'load/mongo'
 {Chat, ChatSession} = db.models
 
-# chatPriority = config.require 'services/chats/chatPriority'
+chatPriority = config.require 'services/chats/chatPriority'
 # filterRelevant = config.require 'services/chats/filterRelevant'
 
 module.exports =
   required: ['sessionId', 'accountId']
   service: ({sessionId, accountId}, done) ->
-    Chat.find {accountId}, (err, chats) ->
+    Chat.find {accountId, status: {'$ne': 'Vacant'}}, (err, chats) ->
       done err, null if err
+
+      chats = chats.sortBy(chatPriority)
       return done null, {chats}
       
     # ChatSession.find {sessionId}, (err, chatSessions) ->

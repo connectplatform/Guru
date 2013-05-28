@@ -75,7 +75,7 @@ helpers =
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
     @ownerLogin (err, @client, vars) =>
-      {@accountId, @sessionSecret} = vars
+      {@accountId, @sessionSecret, @sessionId} = vars
       cb err, @client, vars
 
   # create a chat and hang onto visitor client
@@ -123,38 +123,34 @@ helpers =
     {Account, Chat, Website} = db.models
 
     websiteUrl = 'foo.com'
-    Website.findOne {url: websiteUrl}, {_id: true}, (err, website) ->
+    Website.findOne {url: websiteUrl}, (err, website) ->
       throw new Error "Could not find website [#{websiteUrl}]: #{err}" if err or not website
 
       chats = [
         {
-          visitor:
-            username: 'Bob'
+          name: 'Bob'
           websiteUrl: websiteUrl
           websiteId: website._id
           specialtyName: 'Sales'
-          status: 'waiting'
+          status: 'Waiting'
           creationDate: now
           history: []
         }
         {
-          visitor:
-            username: 'Suzie'
-          status: 'active'
+          name: 'Suzie'
+          status: 'Active'
           creationDate: now
           history: []
         }
         {
-          visitor:
-            username: 'Ralph'
-          status: 'active'
+          name: 'Ralph'
+          status: 'Active'
           creationDate: now
           history: []
         }
         {
-          visitor:
-            username: 'Frank'
-          status: 'vacant'
+          name: 'Frank'
+          status: 'Vacant'
           creationDate: now
           history: []
         }
@@ -162,19 +158,13 @@ helpers =
 
       Account.findOne {}, {_id: true}, (err, account) ->
 
-        createChat = (chat, cb) ->
-          Chat(account._id).create (err, c) ->
-            chatData = [
-              c.visitor.mset chat.visitor
-              c.status.set chat.status
-              c.creationDate.set chat.creationDate
-              #c.history.rpush chat.history... #this needs to be a loop
-            ]
-            chatData.push c.websiteId.set chat.websiteId if chat.websiteId?
-            chatData.push c.websiteUrl.set chat.websiteUrl if chat.websiteUrl?
-            chatData.push c.specialtyId.set chat.specialtyId if chat.specialtyId? #TODO: map specialtyIDs
-
-            async.parallel chatData, (err) -> cb err, c
+        createChat = (chatData, cb) ->
+          data =
+            accountId: account._id
+            websiteId: website._id
+            websiteUrl: website.url
+          data.merge chatData
+          Chat.create data, cb
 
         async.map chats, createChat, cb
 

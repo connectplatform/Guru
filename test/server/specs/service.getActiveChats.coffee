@@ -1,4 +1,6 @@
 should = require 'should'
+db = config.require 'load/mongo'
+{ChatSession} = db.models
 
 boiler 'Service - Get Active Chats', ->
 
@@ -58,89 +60,90 @@ boiler 'Service - Get Active Chats', ->
         chats.length.should.equal 1, 'Expected a chat'
         done()
 
-  #   it 'should not show me chats for another specialty', (done) ->
-  #     chatData =
-  #       username: 'visitor'
-  #       websiteUrl: 'foo.com'
-  #       specialtyName: 'Billing'
+    it 'should not show me chats for another specialty', (done) ->
+      chatData =
+        username: 'visitor'
+        websiteUrl: 'foo.com'
+        specialtyName: 'Billing'
 
-  #     @generate chatData, (err, chats) ->
-  #       chats.length.should.eql 0, 'Expected no chats'
-  #       done()
+      @generate chatData, (err, chats) ->
+        chats.length.should.equal 0, 'Expected no chats'
+        done()
 
-  #   it 'should show me chats for my specialty', (done) ->
-  #     chatData =
-  #       username: 'visitor'
-  #       websiteUrl: 'foo.com'
-  #       specialtyName: 'Sales'
+    it 'should show me chats for my specialty', (done) ->
+      chatData =
+        username: 'visitor'
+        websiteUrl: 'foo.com'
+        specialtyName: 'Sales'
 
-  #     @generate chatData, (err, chats) ->
-  #       chats.length.should.eql 1, 'Expected a chat'
-  #       done()
+      @generate chatData, (err, chats) ->
+        chats.length.should.equal 1, 'Expected a chat'
+        done()
 
-  #   it 'specialtyName should not be case sensitive', (done) ->
-  #     chatData =
-  #       username: 'visitor'
-  #       websiteUrl: 'foo.com'
-  #       specialtyName: 'sales'
+    it 'specialtyName should not be case sensitive', (done) ->
+      chatData =
+        username: 'visitor'
+        websiteUrl: 'foo.com'
+        specialtyName: 'sales'
 
-  #     @generate chatData, (err, chats) ->
-  #       chats.length.should.eql 1, 'Expected a chat'
-  #       done()
+      @generate chatData, (err, chats) ->
+        chats.length.should.equal 1, 'Expected a chat'
+        done()
 
-  # it 'should not display any chats with vacant status', (done) ->
-  #   @getAuthed =>
-  #     @createChats (err, chats) =>
-  #       should.not.exist err
+  it 'should not display any chats with vacant status', (done) ->
+    @getAuthed =>
+      @createChats (err, chats) =>
+        should.not.exist err
+        @client.getActiveChats {}, (err, {chats}) =>
+          should.not.exist err
+          should.exist chats
+          vacantChats = [c for c in chats].filter ((c) -> c.status is 'Vacant')
+          vacantChats.should.be.empty
+          done()
 
-  #       @client.getActiveChats {}, (err, {chats}) =>
-  #         should.not.exist err
-  #         vacantChats = chats.findAll (chat) -> chat.status is 'vacant'
-  #         vacantChats.length.should.eql 0
-  #         done()
+  it 'should sort the chats', (done) ->
+    @getAuthed (_..., {@sessionId, accountId}) =>
+      @createChats (err, chats) =>
+        should.not.exist err
+        should.exist chats
 
-  # it 'should sort the chats', (done) ->
-  #   @getAuthed (_..., {accountId}) =>
-  #     @createChats (err, chats) =>
-  #       should.not.exist err
+        # add an invite for the present operator
+        inviteChat = chats[2]
+        ChatSession.create {@sessionId, chatId: inviteChat._id, relation: 'Invite'}, (err, _) =>
+          should.not.exist err
+          should.exist _
+          
+          ChatSession.findOne {@sessionId, chatId: inviteChat._id}, (err, chatSession) =>
+            should.not.exist err
+            should.exist chatSession, 'expected chatSession'
+            ChatSession.find {@sessionId}, (err, chatSessions) =>
+              should.not.exist err
+              should.exist chatSessions
 
-  #       # add an invite for the present operator
-  #       inviteChat = chats[2]
-  #       {ChatSession} = stoic.models
-  #       ChatSession(accountId).add @sessionId, inviteChat.id, {type: 'invite'}, (err) =>
-  #         should.not.exist err
+              # get active chats
+              @client.getActiveChats {}, (err, {chats}) =>
+                should.not.exist err
+                should.exist chats
+                chats.length.should.eql 3
 
-  #         ChatSession(accountId).get(@sessionId, inviteChat.id).relationMeta.getall (err, chatSession) =>
-  #           should.not.exist err
-  #           should.exist chatSession, 'expected chatsession'
+                visitorNames = chats.map (chat) => chat.name
+                visitorNames.should.eql ['Bob', 'Suzie', 'Ralph']
+                done()
 
-  #           ChatSession(accountId).getBySession @sessionId, (err, chatSessions) =>
-  #             should.not.exist err
+  it "should have a chat relation if an operator is invited", (done) ->
+    # Setup
+    @loginOperator (err, invitee) =>
+      @getAuthed =>
+        @newChat =>
+          @client.acceptChat {chatId: @chatId}, (err) =>
+            should.not.exist err
+            console.log 'YOYOYOYO'
+            @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
+              should.not.exist err
 
-  #             # get active chats
-  #             @client.getActiveChats {}, (err, {chats}) =>
-  #               should.not.exist err
-  #               should.exist chats
-  #               chats.length.should.eql 3
-
-  #               visitorNames = chats.map (chat) => chat.visitor.username
-  #               visitorNames.should.eql ['Ralph', 'Bob', 'Suzie']
-  #               done()
-
-  # it "should have a chat relation if an operator is invited", (done) ->
-
-  #   # Setup
-  #   @loginOperator (err, invitee) =>
-  #     @getAuthed =>
-  #       @newChat =>
-  #         @client.acceptChat {chatId: @chatId}, (err) =>
-  #           should.not.exist err
-  #           @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
-  #             should.not.exist err
-
-  #             invitee.getActiveChats {sessionId: @targetSession}, (err, {chats}) =>
-  #               should.not.exist err
-  #               chats.length.should.eql 1
-  #               chats[0].id.should.eql @chatId
-  #               chats[0].relation.should.eql 'invite'
-  #               done()
+              invitee.getActiveChats {sessionId: @targetSession}, (err, {chats}) =>
+                should.not.exist err
+                chats.length.should.eql 1
+                chats[0].id.should.eql @chatId
+                chats[0].relation.should.eql 'invite'
+                done()

@@ -25,6 +25,7 @@ boiler 'Service - Invite Operator', ->
               next()
 
   it "should let you invite an operator to the chat", (done) ->
+    console.log 'HERE'
     @prep =>
 
       # Try to invite other operator

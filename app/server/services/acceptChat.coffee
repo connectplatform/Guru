@@ -1,4 +1,3 @@
-# stoic = require 'stoic'
 db = config.require 'load/mongo'
 {Chat, Session} = db.models
 
@@ -7,7 +6,6 @@ removeUnanswered = config.require 'services/operator/removeUnanswered'
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']
   service: (params, done) ->
-    console.log {params}
     {chatId, sessionId, accountId} = params
 
     Chat.findById chatId, (err, chat) ->

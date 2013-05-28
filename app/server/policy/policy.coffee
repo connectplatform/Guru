@@ -51,6 +51,8 @@ policy =
       {
         filters: ['isStaff', 'setIsOnline' ]
         except: [
+          # testing
+          # 'acceptChat' # FIX THIS, THANKS
 
           # used by everyone
           'getMyRole'

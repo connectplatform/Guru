@@ -21,10 +21,11 @@ boiler 'Service - getOrCreateSession', ->
       done()
 
   it 'should get an existing Session when one already exists', (done) ->
-    Factory.create 'session', {@accountId}, (err, session) =>
+    @getOrCreateSession @user, (err, {sessionSecret}) =>
       should.not.exist err
-      should.exist session
-      prevSessionSecret = session.secret
+      should.exist sessionSecret
+      prevSessionSecret = sessionSecret
+      sessionSecret = undefined
       @getOrCreateSession @user, (err, {sessionSecret}) =>
         should.not.exist err
         should.exist sessionSecret

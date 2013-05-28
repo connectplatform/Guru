@@ -6,10 +6,8 @@ module.exports =
   service: (user, done) ->
     {accountId} = user
     createUserSession = config.service 'operator/createUserSession'
-
-    Session.findOne user._id, (err, session) ->
+    Session.findOne {userId: user._id}, (err, session) ->
       config.log.warn 'Error getting operator session.', {error: err, userId: user._id} if err
-
       if session?
         session.online = true
         session.save (err, session) ->

@@ -52,7 +52,7 @@ boiler 'Service - Accept Chat', ->
         client.acceptChat {sessionId: sessionId, chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
-
+          console.log 'HERE'
           client.getChatStats {sessionId: sessionId}, (err, {unanswered}) ->
             should.not.exist err
             should.exist unanswered

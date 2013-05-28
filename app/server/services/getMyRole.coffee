@@ -7,7 +7,6 @@ module.exports =
     if sessionId?
       Session.findById sessionId, (err, session) ->
         User.findById session.userId, (err, user) ->
-          console.log {err, user}
           if user?
             done err, {role: user.role}
           else

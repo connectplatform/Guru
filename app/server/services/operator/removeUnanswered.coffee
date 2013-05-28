@@ -7,7 +7,6 @@ db = config.require 'load/mongo'
 # module.exports = tandoor (accountId, chatId, done) ->
 module.exports = ({accountId, chatId}, done) ->
   Session.find {accountId}, (err, sessions) ->
-    console.log {sessions}
     remove = (session, next) ->
       session.unansweredChats.splice(session.unansweredChats.indexOf(chatId, 1))
       session.save next

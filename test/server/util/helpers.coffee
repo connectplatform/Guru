@@ -56,18 +56,15 @@ helpers =
       @getAuthedWith data, cb
 
   getAuthedWith: (data, cb) ->
-    console.log 'getAuthedWith:', {data}
     {Session} = db.models
     client = @getClient()
     client.ready =>
       client.login data, (err, {sessionSecret}) =>
-        console.log 'AFTER READY', {data, err, sessionSecret}
         console.log 'error on test login:', err if err or not sessionSecret
         if err
           cb err, null, {}
         else
           Session.findOne {secret: sessionSecret}, (err, session) ->
-            console.log 'DEBUG: getAuthedWith:', {session}
             @sessionSecret = sessionSecret
             @accountId = session.accountId
             @sessionId = session._id
@@ -78,13 +75,8 @@ helpers =
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
     @ownerLogin (err, @client, vars) =>
-      console.log 'Checking if an owner exists'
       {@accountId, @sessionSecret, @sessionId} = vars
-      {Session, User} = db.models
-      Session.findById @sessionId, (err, session) =>
-        console.log {session}
-        # User.findOne {session}
-        cb err, @client, vars
+      cb err, @client, vars
 
   # create a chat and hang onto visitor client
   newVisitor: (data, cb) ->

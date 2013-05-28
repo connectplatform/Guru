@@ -30,7 +30,6 @@ boiler 'Service - Join Chat', ->
         done()
 
     it 'should notify operator of an unread message', (done) ->
-
       Session.findById @sessionId, (err, session) =>
         should.not.exist err
         should.exist session

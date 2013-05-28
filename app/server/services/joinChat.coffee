@@ -15,7 +15,15 @@ module.exports =
           if chat?
             ChatSession.create data, (err, chatSession) ->
               status = if err then 'ERROR' else 'OK'
-              done err, {status: status}
+              # If an Operator is joining the chat
+              if session.userId?
+                # Change status to 'Active'
+                chat.status = 'Active'
+                chat.save (err) ->
+                  done err, {status: status}
+              else
+                # Otherwise the Chat is still Waiting for an Operator
+                done err, {status: status}
           else
             err = "Couldn't find Chat"
             done err, null

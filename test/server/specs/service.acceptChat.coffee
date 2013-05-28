@@ -32,11 +32,12 @@ boiler 'Service - Accept Chat', ->
         client.acceptChat {sessionId: sessionId, chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
-          console.log 'HIIIIIIIIIIIIIIIIIIII'
-          # @getAuthed (err, client, params) =>
+
           @guru2Login (err, client, params) =>
             console.log {params}
-            client.acceptChat {sessionId: sessionId, chatId: @chatId}, (err, result) =>
+            console.log {sessionId}
+            newSessionId = params.sessionId
+            client.acceptChat {sessionId: newSessionId, chatId: @chatId}, (err, result) =>
               should.not.exist err
               result.status.should.eql "ALREADY ACCEPTED"
               done()

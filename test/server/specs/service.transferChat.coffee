@@ -1,5 +1,8 @@
 should = require 'should'
 
+db = config.require 'load/mongo'
+{ChatSession} = db.models
+
 boiler 'Service - Transfer Chat', ->
   it "should let you transfer a chat to another operator", (done) ->
     # Setup
@@ -15,17 +18,9 @@ boiler 'Service - Transfer Chat', ->
 
               # Check whether transfer worked
               # TODO: use getMyChats to test this instead
-              {ChatSession} = stoic.models
-              ChatSession(accountId).getByChat @chatId, (err, chatSessions) =>
+              ChatSession.findOne {@chatId, sessionId: @targetSession}, (err, chatSession) =>
                 should.not.exist err
-
-                # Get the chat session we care about
-                chatSession = {}
-                for cs in chatSessions when cs.sessionId is @targetSession
-                  chatSession = cs
-
-                chatSession.relationMeta.get 'type', (err, type) =>
-                  type.should.eql 'transfer'
-                  chatSession.relationMeta.get 'requestor', (err, requestor) =>
-                    requestor.should.eql @sessionId
-                    done()
+                should.exist chatSession
+                chatSession.relation.should.equal 'Transfer'
+                chatSession.initiator.should.equal @sessionId
+                done()

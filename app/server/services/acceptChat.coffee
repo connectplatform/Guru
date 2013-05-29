@@ -9,7 +9,6 @@ module.exports =
     {chatId, sessionId, accountId} = params
 
     Chat.findById chatId, (err, chat) ->
-      console.log {chat}
       if err
         config.log.warn new Error 'Error getsetting chat status in acceptChat', {error: err, chatId: chatId}
         done null, {status: "ERROR", chatId: chatId}

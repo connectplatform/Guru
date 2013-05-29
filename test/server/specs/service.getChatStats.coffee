@@ -1,29 +1,35 @@
 async = require 'async'
 should = require 'should'
 
+db = config.require 'load/mongo'
+{ChatSession} = db.models
+
 boiler 'Service - Get Chat Stats', ->
 
   it 'should return chat statistics', (done) ->
-    {ChatSession} = stoic.models
 
     @getAuthed =>
 
       @createChats (err, chats) =>
         targetChat = chats[0].id
 
-        ChatSession(@accountId).add @sessionId, targetChat, {type: 'invite'}, =>
+        ChatSession.create {@sessionId, chatId: targetChat, relation: 'Invite'}, (err, chatSession) =>
+          should.not.exist err
+          should.exist chatSession
+
           @client.getChatStats {}, (err, stats) =>
             should.not.exist err
+            should.exist stats
 
-            {invites, invites: [{chatId, type}]} = stats # destructure me, baby
-            invites.length.should.eql 1
-            chatId.should.eql targetChat
-            type.should.eql 'invite'
+            {invites, invites: [{chatId, relation}]} = stats
+            invites.length.should.equal 1
+            chatId.should.equal targetChat
+            relation.should.equal 'Invite'
+            
             done()
 
   describe 'with various chats', ->
     beforeEach ->
-
       @generate = (done) =>
         #Create chats with proper context
 

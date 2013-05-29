@@ -11,9 +11,3 @@ module.exports = ({accountId, chatId}, done) ->
       session.unansweredChats.splice(session.unansweredChats.indexOf(chatId, 1))
       session.save next
     async.map sessions, remove, done
-    
-  # Session(accountId).allSessions.all (err, sessions) ->
-  #   remove = (session, next) ->
-  #     Session(accountId).get(session.id).unansweredChats.srem chatId, next
-
-  #   async.map sessions, remove, done

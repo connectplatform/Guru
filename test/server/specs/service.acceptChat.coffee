@@ -1,5 +1,8 @@
 should = require 'should'
 
+db = config.require 'load/mongo'
+{ChatSession} = db.models
+
 boiler 'Service - Accept Chat', ->
 
   it 'should join the operator into the chat', (done) ->
@@ -10,7 +13,11 @@ boiler 'Service - Accept Chat', ->
           result.status.should.eql "OK"
           result.chatId.should.eql @chatId
 
-          done()
+          ChatSession.findOne {@chatId}, (err, chatSession) =>
+            should.not.exist err
+            should.exist chatSession
+            chatSession.chatId.should.equal @chatId
+            done()
 
           # chan = @getPulsar().channel @chatId
           # message = 'accept chat worked'
@@ -34,8 +41,6 @@ boiler 'Service - Accept Chat', ->
           result.status.should.eql "OK"
 
           @guru2Login (err, client, params) =>
-            console.log {params}
-            console.log {sessionId}
             newSessionId = params.sessionId
             client.acceptChat {sessionId: newSessionId, chatId: @chatId}, (err, result) =>
               should.not.exist err
@@ -52,7 +57,6 @@ boiler 'Service - Accept Chat', ->
         client.acceptChat {sessionId: sessionId, chatId: @chatId}, (err, result) =>
           should.not.exist err
           result.status.should.eql "OK"
-          console.log 'HERE'
           client.getChatStats {sessionId: sessionId}, (err, {unanswered}) ->
             should.not.exist err
             should.exist unanswered
@@ -61,14 +65,18 @@ boiler 'Service - Accept Chat', ->
             done()
 
   it 'should set my visible status to true', (done) ->
-    {ChatSession} = stoic.models
     getVisibleOperators = config.require 'services/chats/getVisibleOperators'
 
     @getAuthed =>
       @newChat =>
-        @client.acceptChat {sessionId: @sessionId, chatId: @chatId}, (err, result) =>
-          ChatSession(@accountId).getByChat @chatId, (err, chatSessions) =>
-            getVisibleOperators chatSessions, (err, [me]) =>
-              should.exist me
-              me.should.eql 'Owner Man'
-              done()
+        @client.acceptChat {@sessionId, @chatId}, (err, result) =>
+          should.not.exist err
+          should.exist result
+          getVisibleOperators @chatId, (err, operators) =>
+            should.not.exist err
+            should.exist operators
+            operators.length.should.equal 1
+            [me] = operators
+            me.firstName.should.equal 'Owner'
+            me.lastName.should.equal 'Man'
+            done()

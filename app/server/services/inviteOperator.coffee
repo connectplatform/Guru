@@ -10,4 +10,21 @@ module.exports =
       chatId: chatId
       relation: 'Invite'
       initiator: sessionId
-    ChatSession.create data, done
+    err = Error 'You cannot invite yourself to a Chat'
+
+    # You cannot invite yourself to a chat
+    # TODO: Implement as filter, via jargon
+    done err, null if sessionId == targetSessionId
+
+    # You cannot invite a Visitor to join a chat
+    # TODO: Implement as filter, via jargon
+    Session.findById targetSessionId, (err, session) ->
+      done err, null if err
+      
+      noSessionErr = Error 'No Session exists with targetSessionId'
+      done noSessionErr, null unless session?
+      
+      err = Error 'You cannot invite a Visitor to join a Chat'
+      done err, null unless session?.userId
+
+      ChatSession.create data, done

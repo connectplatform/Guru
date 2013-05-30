@@ -31,7 +31,7 @@ Scripts:
 Services:
 +  deleteModel 2 (5/16)
 
-  acceptChat 1
++  acceptChat 1 (5/29)
   acceptInvite 1
   acceptTransfer 1
   account/getAccountId 1
@@ -45,16 +45,16 @@ Services:
   emailChat 2
 +  filters/isOwner 1 (5/16)
 +  filters/isStaff 1 (5/15)
-  getActiveChats 5
++  getActiveChats 5 (5/29)
 +  getChatHistory 2 (5/24)
-  getChatStats 3
++  getChatStats 3 (5/29)
   getExistingChat 1
   getLogoForChat 3
-  getMyChats 2
-+  getMyRole 1 (5/15) FIXING
++  getMyChats 2 (5/27)
++  getMyRole 1 (5/15) (5/29)
   getNonpresentOperators 3 #online status
   getOnlineOperators 3
-  inviteOperator 2
++  inviteOperator 2 (5/29)
 +  joinChat 2 (5/24)
   kickUser 2
   leaveChat 2
@@ -64,7 +64,7 @@ Services:
 +  newChat 5 (5/24)
 +  operator/createUserSession 3 (5/14)
 +  operator/getAvailableOperators 5 (5/21)
-  operator/getInvites 3
++  operator/getInvites 3 (5/29)
 +  operator/getOperatorData 2 (5/17)
 +  operator/getOrCreateSession 3 (5/14)
   operator/removeUnanswered 3 #calculate
@@ -76,7 +76,7 @@ Services:
 --sessionNotifications/pendingInvites
 --sessionNotifications/unansweredChats
 --sessionNotifications/unreadMessages
-  transferChat 2
++  transferChat 2 (5/29)
   visitorCanAccessChannel 2
 
 Tests:

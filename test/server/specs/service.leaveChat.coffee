@@ -23,8 +23,7 @@ boiler 'Service - Leave Chat', ->
                 should.not.exist err
                 [chat] = chats
                 should.exist chat, 'expected one chat record'
-                chat.status.should.eql 'waiting'
-
+                chat.status.should.eql 'Waiting'
                 done()
 
   it 'should not change status if there is another operator', (done) ->
@@ -52,6 +51,6 @@ boiler 'Service - Leave Chat', ->
                   should.not.exist err
                   [chat] = chats
                   should.exist chat, 'expected one chat record'
-                  chat.status.should.eql 'active'
+                  chat.status.should.eql 'Active'
 
                   done()

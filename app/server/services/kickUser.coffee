@@ -9,6 +9,7 @@ module.exports =
 
     # First find all ChatSessions linking some Session to the Chat identified by chatId.
     ChatSession.find {chatId}, (err, chatSessions) ->
+      done err, null if err
       # Collect the sessionId's associated with our Chat.
       sessionIds = (cs.sessionId for cs in chatSessions)
       
@@ -17,10 +18,14 @@ module.exports =
       Session.findOne {userId: null, _id: '$in': sessionIds}, (err, visitorSession) ->
         done err, null if err
 
+        err = Error 'Chat has no Visitor as a member'
+        done err, null unless visitorSession?
+
         # Find the ChatSession that links our Visitor to the Chat.
-        ChatSession.findOne {sessionId: visitorSession._id}, (err, vcs) ->
+        ChatSession.findOne {sessionId: visitorSession?._id}, (err, vcs) ->
+          done err, null if err
           # Remove the ChatSession,
-          vcs.remove (err) ->
+          vcs?.remove (err) ->
             Chat.findById chatId, (err, chat) ->
               done err, null if err
               # ASSUMPTION: Only one Visitor per Chat.
@@ -33,27 +38,3 @@ module.exports =
               # The client, using Particle, will detect this change via either
               # the removal of the linking ChatSession, or the change in value
               # of Chat.status.
-
-    # # get sessions by chat
-    # ChatSession(accountId).getByChat chatId, (err, chatSessions) ->
-    #   getRole = (chatSession, cb) ->
-    #     chatSession.session.role.get (err, role) ->
-    #       chatSession.role = role
-    #       cb err, chatSession
-
-    #   # find the visitor
-    #   async.map chatSessions, getRole, (err, chatSessions) ->
-    #     [visitorChatSession] = chatSessions.filter (s) -> s.role is 'Visitor'
-
-    #     unless visitorChatSession
-    #       return done()
-
-    #     # remove the visitor from the chat
-    #     visitorChatSession.session.delete (err) ->
-    #       config.log.error 'Error deleting session in kickUser', {error: err, chatId: chatId} if err
-
-    #       #Trigger callbacks on visitor's page
-    #       notify = pulsar.channel chatId
-    #       notify.emit 'chatEnded'
-
-    #       done()

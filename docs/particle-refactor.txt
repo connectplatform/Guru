@@ -33,8 +33,8 @@ Services:
 
 +  acceptChat 1 (5/29)
 +  acceptInvite 1 (5/30)
-  acceptTransfer 1
-  account/getAccountId 1
++  acceptTransfer 1 (5/30)
++  account/getAccountId 1 (5/30) NOT NEEDED(?), accountId a field of Session
 +  changePassword 2 (5/17)
 --chats/getChatRelations
 --chats/getFullChatData

@@ -1,5 +1,4 @@
 db = config.require 'load/mongo'
-getAccountId = config.require 'services/account/getAccountId'
 enums = config.require 'load/enums'
 parseMongooseError = config.require 'load/helpers/parseMongooseError'
 

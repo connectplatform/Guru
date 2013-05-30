@@ -1,7 +1,7 @@
 # NOTE: this is not in use!
 
 db = config.require 'load/mongo'
-# {Session} = stoic.models
+{Session} = db.models
 async = require 'async'
 
 getChatName = (session, done) ->
@@ -10,10 +10,10 @@ getChatName = (session, done) ->
 module.exports =
   required: ['accountId']
   service: ({accountId}, done) ->
-    Session(accountId).onlineOperators.all (err, sessions) ->
+    Session.find {accountId}, {username: true}, (err, sessions) ->
       config.log.error 'Error getting online operators', {error: err} if err
+      done err, null if err
 
-      async.map sessions, getChatName, (err, operatorNames) ->
-        config.log.error 'Error getting online operator names', {error: err} if err
+      operatorNames = (s.username for s in sessions)
 
-        done err, {operatorNames: operatorNames}
+      done err, {operatorNames: operatorNames}

@@ -56,7 +56,7 @@ Services:
   getOnlineOperators 3
 +  inviteOperator 2 (5/29)
 +  joinChat 2 (5/24)
-  kickUser 2
++  kickUser 2 (5/30)
 +  leaveChat 2 (5/30)
   log 3 #create new logger
 +  login 3 (5/13)

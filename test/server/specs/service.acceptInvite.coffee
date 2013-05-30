@@ -8,7 +8,7 @@ boiler 'Service - Accept Invite', ->
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
+            @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSessionId}, (err) =>
               should.not.exist err
 
               client.acceptInvite {chatId: @chatId}, (err) =>
@@ -16,6 +16,8 @@ boiler 'Service - Accept Invite', ->
 
                 client.getMyChats {}, (err, {chats}) =>
                   should.not.exist err
+                  should.exist chats
                   chats.length.should.eql 1
-                  chats[0].id.should.eql @chatId
+                  [chat] = chats
+                  chat._id.should.eql @chatId
                   done()

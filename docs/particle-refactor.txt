@@ -32,7 +32,7 @@ Services:
 +  deleteModel 2 (5/16)
 
 +  acceptChat 1 (5/29)
-  acceptInvite 1
++  acceptInvite 1 (5/30)
   acceptTransfer 1
   account/getAccountId 1
 +  changePassword 2 (5/17)

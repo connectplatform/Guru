@@ -1,26 +1,28 @@
 async = require 'async'
-# stoic = require 'stoic'
-# {ChatSession} = stoic.models
+db = config.require 'load/mongo'
+{ChatSession} = db.models
 
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']
   service: ({sessionId, accountId, chatId}, done) ->
 
-    # find the requestor's sessionId
-    chatSession = ChatSession(accountId).get sessionId, chatId
-    chatSession.relationMeta.get 'requestor', (err, requestor) ->
-      return done err if err
+    ChatSession.findOne {sessionId, chatId}, (err, chatSession) ->
+      done err, null if err
 
-      # switch out the operators
-      async.parallel [
-        chatSession.relationMeta.mset {type: 'member', isWatching: 'false'}
-        ChatSession(accountId).remove requestor, chatId
+      # We will need to remove this Operator from the Chat
+      initiatorSessionId = chatSession?.initiator
+      
+      chatSession?.initiator = null
+      chatSession?.relation  = 'Member'
+      chatSession?.save (err) ->
+        done err, null if err
 
-      ], (err) ->
-        return done err if err
+        cond =
+          sessionId: initiatorSessionId
+          chatId: chatId
+        ChatSession.findOne cond, (err, initiatorChatSession) ->
+          done err, null if err
 
-        # send notifications and return
-        notifySession = pulsar.channel "notify:session:#{requestor}"
-        notifySession.emit 'kickedFromChat', chatId
+          initiatorChatSession?.remove (err) ->
+            done err, {chatId}
 
-        done null, {chatId: chatId}

@@ -114,7 +114,7 @@ helpers =
   loginOperator: (cb) ->
     @guru1Login (err, client, args) =>
       throw new Error err if err
-      @targetSession = args?.sessionId
+      @targetSessionId = args?.sessionId
       cb null, client, args
 
   createChats: (cb) ->

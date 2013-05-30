@@ -137,13 +137,23 @@ boiler 'Service - Get Active Chats', ->
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            console.log 'YOYOYOYO'
-            @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
+
+            @client.inviteOperator {@chatId, @targetSessionId}, (err) =>
               should.not.exist err
 
-              invitee.getActiveChats {sessionId: @targetSession}, (err, {chats}) =>
+              invitee.getActiveChats {sessionId: @targetSessionId}, (err, {chats}) =>
                 should.not.exist err
+                should.exist chats
                 chats.length.should.eql 1
-                chats[0].id.should.eql @chatId
-                chats[0].relation.should.eql 'invite'
-                done()
+                [chat] = chats
+                should.exist chat
+                chat._id.should.equal @chatId
+                chat.status.should.equal 'Active'
+                cond =
+                  chatId: @chatId
+                  sessionId: @targetSessionId
+                ChatSession.findOne cond, (err, chatSession) =>
+                  should.not.exist err
+                  should.exist.chatSession
+                  chatSession.relation.should.equal 'Invite'
+                  done()

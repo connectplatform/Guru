@@ -95,7 +95,7 @@ policy =
         only: [
           'getChatHistory'
           'inviteOperator'
-          # 'getNonpresentOperators'
+          'getNonpresentOperators'
           'leaveChat'
           'printChat'
           'emailChat'
@@ -103,12 +103,16 @@ policy =
         ]
       }
 
-      {
-        filters:['sessionIsChatMemberOrWatching']
-        only: [
-          'getNonpresentOperators'
-        ]
-      }
+      # Right now, we only want to send invites or transfers if an Operator
+      # is actually a Member of the chat. Since `getNonpresentOperators`
+      # is only used for these two activities, right now we should employ
+      # the stricter filter (`sessionIsChatMember`)
+      # {
+      #   filters:['sessionIsChatMemberOrWatching']
+      #   only: [
+      #     'getNonpresentOperators'
+      #   ]
+      # }
 
       {
         filters: ['isVisibleInChat']

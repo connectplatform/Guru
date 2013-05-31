@@ -8,6 +8,9 @@ db = config.require 'load/mongo'
 module.exports = ({accountId, chatId}, done) ->
   Session.find {accountId}, (err, sessions) ->
     remove = (session, next) ->
-      session.unansweredChats.splice(session.unansweredChats.indexOf(chatId, 1))
+      index = session.unansweredChats.indexOf(chatId, 1)
+
+      session.unansweredChats.splice(index) unless index < 0
       session.save next
+
     async.map sessions, remove, done

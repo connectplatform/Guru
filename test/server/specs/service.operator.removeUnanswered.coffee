@@ -14,29 +14,39 @@ boiler 'Service - removeUnanswered', ->
       @guru2Login (err, @guru2Client) =>
         should.not.exist err
         should.exist @guru2Client
-
-        @newChat =>
-          done()
+        done()
 
   it 'should remove a chat when it is there', (done) ->
+    @newChat =>
+      guru1SessionId = @guru1Client.localStorage.sessionId
+      should.exist guru1SessionId
+
+      Session.findById guru1SessionId, (err, guru1Session) =>
+        should.not.exist err
+        should.exist guru1Session
+      
+        guru1Session.unansweredChats.length.should.equal 1
+      
+        accountId = guru1Session.accountId
+        removeUnanswered {accountId, @chatId}, (err) =>
+          Session.findById guru1SessionId, (err, guru1Session) =>
+            should.not.exist err
+            should.exist guru1Session
+            guru1Session.unansweredChats.length.should.equal 0
+            done()
+    
+
+  it 'should not blow up when a chat is not there', (done) ->
     guru1SessionId = @guru1Client.localStorage.sessionId
     should.exist guru1SessionId
 
     Session.findById guru1SessionId, (err, guru1Session) =>
       should.not.exist err
       should.exist guru1Session
-      
-      guru1Session.unansweredChats.length.should.equal 1
+    
+      guru1Session.unansweredChats.length.should.equal 0
       
       accountId = guru1Session.accountId
       removeUnanswered {accountId, @chatId}, (err) =>
-        Session.findById guru1SessionId, (err, guru1Session) =>
-          should.not.exist err
-          should.exist guru1Session
-          guru1Session.unansweredChats.length.should.equal 0
-          done()
-    
-
-  it 'should not blow up when a chat is not there', (done) ->
-    should.exist null
-    done()
+        should.not.exist err
+        done()

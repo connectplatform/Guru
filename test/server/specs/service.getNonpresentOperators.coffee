@@ -18,7 +18,6 @@ boiler 'Service - Get Nonpresent Operators', ->
             # Validate returned data
             operators.length.should.eql 1
             [op] = operators
-            # console.log {op}
             op.username.should.equal 'Owner Man'
 
             done()

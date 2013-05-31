@@ -6,7 +6,6 @@ module.exports =
   optional: ['relation']
   service: ({sessionId, chatId, relation}, done) ->
     relation = 'Member' unless relation?
-    console.log '<joinChat>', {relation}
     data =
       sessionId: sessionId
       chatId: chatId

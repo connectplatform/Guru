@@ -52,7 +52,7 @@ Services:
   getLogoForChat 3
 +  getMyChats 2 (5/27)
 +  getMyRole 1 (5/15) (5/29)
-  getNonpresentOperators 3 #online status
++  getNonpresentOperators 3 #online status (5/31)
 +  getOnlineOperators 3 (5/30)
 +  inviteOperator 2 (5/29)
 +  joinChat 2 (5/24)

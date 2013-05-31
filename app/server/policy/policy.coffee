@@ -95,7 +95,7 @@ policy =
         only: [
           'getChatHistory'
           'inviteOperator'
-          'getNonpresentOperators'
+          # 'getNonpresentOperators'
           'leaveChat'
           'printChat'
           'emailChat'

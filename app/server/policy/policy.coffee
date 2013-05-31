@@ -104,6 +104,13 @@ policy =
       }
 
       {
+        filters:['sessionIsChatMemberOrWatching']
+        only: [
+          'getNonpresentOperators'
+        ]
+      }
+
+      {
         filters: ['isVisibleInChat']
         only: [ 'transferChat', 'kickUser']
       }

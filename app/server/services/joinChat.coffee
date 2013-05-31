@@ -4,11 +4,13 @@ db = config.require 'load/mongo'
 module.exports =
   required: ['sessionId', 'chatId']
   optional: ['relation']
-  service: ({sessionId, chatId}, done) ->
+  service: ({sessionId, chatId, relation}, done) ->
+    relation = 'Member' unless relation?
+    console.log '<joinChat>', {relation}
     data =
       sessionId: sessionId
       chatId: chatId
-      relation: 'Member'
+      relation: relation
     Session.findById sessionId, (err, session) ->
       if session?
         Chat.findById chatId, (err, chat) ->

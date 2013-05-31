@@ -48,7 +48,7 @@ Services:
 +  getActiveChats 5 (5/29)
 +  getChatHistory 2 (5/24)
 +  getChatStats 3 (5/29)
-  getExistingChat 1
++  getExistingChat 1 (5/30)
   getLogoForChat 3
 +  getMyChats 2 (5/27)
 +  getMyRole 1 (5/15) (5/29)

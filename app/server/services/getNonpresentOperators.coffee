@@ -1,6 +1,6 @@
 async = require 'async'
 db = config.require 'load/mongo'
-{ChatSession, Session} = db.models
+{ChatSession, Session, User} = db.models
 
 {getType} = config.require 'load/util'
 
@@ -46,23 +46,27 @@ filterSessions = (accountId, sessions, chatId, done) ->
       async.map operatorSessionList, removePresentOperators, (err, nonpresentList) ->
         done err, nonpresentList.compact()
 
-packSessionData = (session, cb) ->
-  async.parallel {
-    chatName: session.chatName.get
-    role: session.role.get
-  }, (err, sessionData) ->
-    config.log.error 'Error getting session data in getNonpresentOperators', {error: err, sessionId: session.id} if err
-    sessionData.id = session.id
-    cb sessionData
-
 module.exports =
   required: ['chatId', 'sessionId', 'accountId']
   service: ({chatId, sessionId, accountId}, done) ->
-    # Find all ChatSession connecting some active Session to the Chat denoted by chatId
-    ChatSession.find {chatId, sessionId}, (err, chatSessions) ->
-      console.log {err, chatSessions}
-      done err, {}
-    
+    # First, find all ChatSession connecting some active Session to the Chat
+    # denoted by chatId in which the connected 
+    # 
+    # 
+    ChatSession.find {chatId, relation: 'Member'}, (err, chatSessions) ->
+      done err, null if err
+
+      console.log '<getNonpresentOperators>:', {chatSessions}
+      
+      sessionIdsToExclude = (cs.sessionId for cs in chatSessions)
+      console.log '<getNonpresentOperators>:', {sessionIdsToExclude}
+
+      Session.find {_id: {'$nin': sessionIdsToExclude}, accountId}, (err, sessions) ->
+        console.log '<getNonpresentOperators>:', {sessions}
+        operatorSessions = sessions.filter (s) -> (s.userId?)
+        console.log '<getNonpresentOperators>:', {operatorSessions}
+        done err, {operators: operatorSessions}
+
     # Session(accountId).allSessions.members (err, sessions) ->
     #   if err
     #     config.log.error 'Error retrieving sessions for chat in getNonpresentOperators', {error: err, chatId: chatId}

@@ -1,5 +1,8 @@
 should = require 'should'
 
+db = config.require 'load/mongo'
+{Session} = db.models
+
 boiler 'Service - Get Nonpresent Operators', ->
   it 'should return a list of operators not currently visible in chat', (done) ->
     # Setup
@@ -10,17 +13,20 @@ boiler 'Service - Get Nonpresent Operators', ->
           # Get a list of operators who are online and not visible in chat
           @client.getNonpresentOperators {chatId: @chatId}, (err, {operators}) =>
             should.not.exist err
+            should.exist operators
 
             # Validate returned data
             operators.length.should.eql 1
-            operators[0].chatName.should.eql 'Owner Man'
-            operators[0].role.should.eql 'Owner'
+            [op] = operators
+            # console.log {op}
+            op.username.should.equal 'Owner Man'
 
+            done()
             # Make sure we have the right id
-            {Session} = stoic.models
-            Session(accountId).get(operators[0].id).chatName.get (err, chatName) =>
-              chatName.should.eql 'Owner Man'
-              done()
+            # Session.findById op._id, (err, sess
+            # Session(accountId).get(operators[0].id).chatName.get (err, chatName) =>
+            #   chatName.should.eql 'Owner Man'
+            #   done()
 
   it 'should not return operators who are visible in the chat', (done) ->
     # Setup
@@ -32,6 +38,7 @@ boiler 'Service - Get Nonpresent Operators', ->
           # Get a list of operators who are online and not visible in chat
           @client.getNonpresentOperators {chatId: @chatId}, (err, {operators}) =>
             should.not.exist err
+            should.exist operators
 
             # Validate returned data
             operators.length.should.eql 0

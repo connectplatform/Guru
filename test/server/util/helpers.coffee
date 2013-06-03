@@ -105,11 +105,11 @@ helpers =
 
   expectSessionIsOnline: (sessionId, expectation, cb) ->
     {Session} = db.models
-    Session.accountLookup.get sessionId, (err, accountId) ->
-      Session(accountId).get(sessionId).online.get (err, online) =>
-        should.not.exist err
-        online.should.eql expectation
-        cb()
+    Session.findById sessionId, (err, session) ->
+      should.not.exist err
+      should.exist session
+      session.online.should.equal expectation
+      cb()
 
   loginOperator: (cb) ->
     @guru1Login (err, client, args) =>

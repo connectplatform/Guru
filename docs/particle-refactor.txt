@@ -71,13 +71,13 @@ Services:
   populateVisitorAcpData 3
 +  printChat 2 (6/3)
 --queries/query
-  session/setSessionOnlineStatus 5 #change to reportActivity
++  session/setSessionOnlineStatus 5 #change to reportActivity (6/3)
   session/setUnansweredChats 3 #calculate
 --sessionNotifications/pendingInvites
 --sessionNotifications/unansweredChats
 --sessionNotifications/unreadMessages
 +  transferChat 2 (5/29)
-  visitorCanAccessChannel 2
++  visitorCanAccessChannel 2 (6/3)
 
 Tests:
 

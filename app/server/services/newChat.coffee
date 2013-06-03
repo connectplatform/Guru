@@ -62,6 +62,6 @@ module.exports =
           
           # query for ACP data and store it in redis
           # TODO: refactor for mongo
-          # populateVisitorAcpData accountId, chat.id, params
+          populateVisitorAcpData accountId, chat.id, params
 
           done err, chatData

@@ -4,7 +4,7 @@ EST VELOC: 14.0
 
 
 SERVER
-TOTAL: 116
+TOTAL: 119
 
 Models:
 
@@ -67,9 +67,9 @@ Services:
 +  operator/getInvites 3 (5/29)
 +  operator/getOperatorData 2 (5/17)
 +  operator/getOrCreateSession 3 (5/14)
-  operator/removeUnanswered 3 #calculate
++  operator/removeUnanswered 3 #calculate (5/31)
   populateVisitorAcpData 3
-  printChat 2
++  printChat 2 (6/3)
 --queries/query
   session/setSessionOnlineStatus 5 #change to reportActivity
   session/setUnansweredChats 3 #calculate

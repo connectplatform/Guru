@@ -2,13 +2,13 @@ h2 Chat History
 
 p
   strong Time:
-  |  #{creationDate}
+  | #{creationDate}
 p
   strong Customer:
-  |  #{visitor.username}
+  | #{name}
 p
   strong Website:
-  |  #{websiteUrl}
+  | #{websiteUrl}
 
 h3 Chats
 
@@ -16,4 +16,4 @@ h3 Chats
   for message in history
     p
       strong #{message.username}:
-      |  #{message.message}
+      | #{message.message}

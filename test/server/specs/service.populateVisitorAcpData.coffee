@@ -3,6 +3,9 @@ connect = require 'connect'
 querystring = require 'querystring'
 {setTimeout} = require 'timers'
 
+db = config.require 'load/mongo'
+{Session, Chat} = db.models
+
 # query/form data
 clientData = {
   username: 'Bob'
@@ -36,8 +39,8 @@ boiler 'Service - Populate Visitor ACP Data', ->
         @owner.saveModel {fields: target.merge(websiteFields), modelName: 'Website'}, done
 
   # note: this is not a service proper, but a subservice located in server/domain that is called by newChat
-  it 'should hit the ACP server and dump data into redis', (done) ->
-    testServer = connect().use(response).listen 8675
+  it 'should hit the ACP server and dump data into Mongo', (done) ->
+    testServer = connect().use(response).listen 8675 # process.env.GURU_PORT
 
     @client = @getClient()
     @client.ready =>
@@ -46,20 +49,27 @@ boiler 'Service - Populate Visitor ACP Data', ->
       @client.newChat clientData, (err, {chatId, sessionId}) =>
         should.not.exist err
 
-        # check that data is in stoic
-        {Session, Chat} = stoic.models
+        console.log {chatId, sessionId, clientData}
 
         verifyResult = =>
-          Session.accountLookup.get sessionId, (err, accountId) ->
-            visitor = Chat(accountId).get(chatId).visitor
-            visitor.get 'referrerData', (err, refData) ->
-              should.not.exist err
-              refData.should.include clientData
+          Chat.findById chatId, (err, chat) =>
+            should.not.exist err
+            should.exist chat
+            console.log {chat}
 
-              visitor.get 'acpData', (err, acpData) ->
-                should.not.exist err
-                acpData.should.include expectedAcpData
-                done()
+            # chat
+            
+            done()
+          # Session.accountLookup.get sessionId, (err, accountId) ->
+          #   visitor = Chat(accountId).get(chatId).visitor
+          #   visitor.get 'referrerData', (err, refData) ->
+          #     should.not.exist err
+          #     refData.should.include clientData
+
+          #     visitor.get 'acpData', (err, acpData) ->
+          #       should.not.exist err
+          #       acpData.should.include expectedAcpData
+          #       done()
 
         # The unfortunate part of making the acp lookup run async in the background...
         setTimeout verifyResult, 200

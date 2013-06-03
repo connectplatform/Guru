@@ -58,7 +58,7 @@ Services:
 +  joinChat 2 (5/24)
 +  kickUser 2 (5/30)
 +  leaveChat 2 (5/30)
-  log 3 #create new logger
++  log 3 #create new logger (6/3)
 +  login 3 (5/13)
 +  logout 2 (5/16)
 +  newChat 5 (5/24)

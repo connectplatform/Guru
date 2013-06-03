@@ -1,21 +1,9 @@
 async = require 'async'
-# stoic = require 'stoic'
+db = config.require 'load/mongo'
 
 {inspect} = require 'util'
 {getType} = config.require 'load/util'
-# {Session} = stoic.models
-
-getData = (accountId, modelName, item) ->
-  (cb) ->
-    result = ''
-    Model = stoic.models[modelName]
-
-    Model(accountId).get(item).dump (err, data) ->
-      if err
-        result = "Error dumping #{modelName}: " + err if err
-      else
-        result = "Dump for #{modelName}: " + inspect data
-      cb null, result
+{Chat, Session} = db.models
 
 module.exports =
   optional: ['sessionId', 'accountId']
@@ -29,9 +17,8 @@ module.exports =
 
     if (getType context?.ids) is 'Object'
       async.parallel [
-        getData accountId, 'Chat', context.ids.chatId
-        getData accountId, 'Session', context.ids.sessionId
-
+        (next) -> Chat.findById context.ids.chatId, next
+        (next) -> Session.findById context.ids.sessionId, next
       ], (err, results) ->
 
         config.log.client[severity] message, {clientData: context, retrievedData: results}

@@ -27,7 +27,7 @@ boiler 'Service - Get My Chats', ->
               [chat] = chats
               chat.name.should.equal 'joinMe'
               chat.websiteUrl.should.equal 'foo.com'
-              chat.status.should.equal 'Waiting'
+              chat.status.should.equal 'Active'
               done()
 
   it "orphan chatSession should not make things blow up", (done) ->

@@ -4,5 +4,5 @@ module.exports =
   editableRoles: ['Operator', 'Supervisor'] # can be selected in user management UI
 
   accountTypes: ['Paid', 'Unlimited']
-  chatStatusStates: ['Waiting', 'Active', 'Vacant']
+  chatStatusStates: ['Waiting', 'Active', 'Vacant', 'Archived']
   chatSessionRelations: ['Member', 'Invite', 'Transfer', 'Watching']

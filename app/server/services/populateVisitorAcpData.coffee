@@ -5,7 +5,6 @@ db = config.require 'load/mongo'
 {Chat, Website} = db.models
 
 module.exports = (accountId, chatId, referrerData) ->
-  # console.log 'HEEEEEEEEEEERE-0'
   websiteUrl = referrerData?.websiteUrl
   return unless websiteUrl
 
@@ -26,12 +25,9 @@ module.exports = (accountId, chatId, referrerData) ->
     headers['Authorization'] = "Basic #{acpApiKey}" if acpApiKey
     requestOptions = {headers: headers}
 
-    #config.log.info 'sending ACP data:', {url: targetUrl, headers: headers, data: referrerData}
-    # console.log 'HEEEEEEEEEEERE-1'
+    config.log.info 'sending ACP data:', {url: targetUrl, headers: headers, data: referrerData}
     restler.get(targetUrl, requestOptions).on 'complete', (acpData, response) ->
-      # console.log 'HEEEEEEEEEEERE-2'
       if response?.statusCode in [200, 201]
-        # console.log 'HEEEEEEEEEEERE-3'
         Chat.findById chatId, (err, chat) ->
           return err if err
 

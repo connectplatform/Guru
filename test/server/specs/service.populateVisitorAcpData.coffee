@@ -57,7 +57,6 @@ boiler 'Service - Populate Visitor ACP Data', ->
             should.exist chat
             console.log {chat}
 
-            # chat
             
             done()
           # Session.accountLookup.get sessionId, (err, accountId) ->

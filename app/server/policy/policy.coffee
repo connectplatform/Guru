@@ -111,6 +111,7 @@ policy =
       #   filters:['sessionIsChatMemberOrWatching']
       #   only: [
       #     'getNonpresentOperators'
+      #     'getChatHistory' # ???
       #   ]
       # }
 

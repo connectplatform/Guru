@@ -9,13 +9,14 @@ boiler 'Service - Set Session Offline', ->
     @ownerLogin (err, @client, {accountId, sessionId}) =>
       should.not.exist err
 
-      {Session} = stoic.models
-      Session(accountId).get(sessionId).online.get (err, online) =>
+      Session.findById sessionId, (err, session) =>
         should.not.exist err
-        online.should.eql true, "wasn't set online at login"
+        should.exist session
+        session.online.should.equal true, "wasn't set online at login"
 
         @client.setSessionOffline {}, =>
-          Session(accountId).get(sessionId).online.get (err, online) =>
+          Session.findById sessionId, (err, session) =>
             should.not.exist err
-            online.should.eql false, "wasn't set offline at logout"
+            should.exist session
+            session.online.should.equal false, "wasn't set offline at logout"
             done()

@@ -70,7 +70,7 @@ Services:
 +  operator/removeUnanswered 3 #calculate (5/31)
   populateVisitorAcpData 3
 +  printChat 2 (6/3)
---queries/query
++ --queries/query (6/4)
 +  session/setSessionOnlineStatus 5 #change to reportActivity (6/3)
   session/setUnansweredChats 3 #calculate
 --sessionNotifications/pendingInvites

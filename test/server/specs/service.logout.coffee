@@ -32,6 +32,7 @@ boiler 'Service - Logout', ->
               accountId: @accountId
               websiteId: @websiteId
               websiteUrl: @websiteUrl
+              name: 'Visitor'
             Factory.create 'chat', chatData, (err, chat) =>
               should.not.exist err
               @chatId = chat._id

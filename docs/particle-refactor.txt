@@ -40,7 +40,7 @@ Services:
 --chats/getFullChatData
 --chats/getRelationToChat
 --chats/messageReceived
---chats/updateChatStatus
++ --chats/updateChatStatus (6/4)
 --clearOldChats
 +  emailChat 2 (6/4)
 +  filters/isOwner 1 (5/16)
@@ -82,7 +82,7 @@ Services:
 Tests:
 
 +  Boilerplate 2 (5/8)
-  Helpers 5
++  Helpers 5 (6/4)
 
   recurly/getRecurlyToken
   middleware.serviceMeta

@@ -42,18 +42,18 @@ Services:
 --chats/messageReceived
 --chats/updateChatStatus
 --clearOldChats
-  emailChat 2
++  emailChat 2 (6/4)
 +  filters/isOwner 1 (5/16)
 +  filters/isStaff 1 (5/15)
 +  getActiveChats 5 (5/29)
 +  getChatHistory 2 (5/24)
 +  getChatStats 3 (5/29)
 +  getExistingChat 1 (5/30)
-  getLogoForChat 3
++  getLogoForChat 3 (6/3)
 +  getMyChats 2 (5/27)
 +  getMyRole 1 (5/15) (5/29)
 +  getNonpresentOperators 3 #online status (5/31)
-+  getOnlineOperators 3 (5/30)
+   +  getOnlineOperators 3 (5/30)
 +  inviteOperator 2 (5/29)
 +  joinChat 2 (5/24)
 +  kickUser 2 (5/30)

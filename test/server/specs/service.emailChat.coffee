@@ -11,9 +11,8 @@ boiler 'Service - Email Chat', ->
 
         client.say pack('Hello'), =>
           client.say pack('How are you?'), =>
-
-            client.emailChat {chatId: @chatId, email: 'success@simulator.amazonses.com'}, (err, exitStatus) =>
+            client.emailChat {chatId: @chatId, email: 'success@simulator.amazonses.com'}, (err, response) =>
               should.not.exist err
-              should.exist exitStatus
-              exitStatus.message.should.match /MessageId/
+              should.exist response
+              response.message.should.match /MessageId/
               done()

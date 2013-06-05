@@ -27,8 +27,8 @@ coffee -o $public/js/ -c $client/js/
 # Vein
 cp $root/node_modules/vein/vein.js $client/js/vendor/vein.js
 
-# Pulsar
-cp $root/node_modules/pulsar/pulsar.js $client/js/vendor/pulsar.js
+# Particle
+cp $root/node_modules/particle/particle.js $client/js/vendor/particle.js
 
 # Jade
 cp $root/node_modules/jade/runtime.min.js $client/js/vendor/jade-runtime.js

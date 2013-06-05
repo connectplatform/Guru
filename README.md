@@ -1,24 +1,14 @@
-## Information
+# Guru README
 
-<table>
-<tr> 
-<td>Package</td><td>Guru</td>
-</tr>
-<tr>
-<td>Description</td>
-<td>Live chat for website assistance. Phase 1 will be for Andrei's websites.  Phase 2 will be sold to other businesses.  Phase 3 will open up a marketplace to connect skilled operators with businesses that need live support.</td>
-</tr>
-<tr>
-<td>Node Version</td>
-<td>>= 0.6</td>
-</tr>
-</table>
+## Installation
 
-## Usage
+## Development
 
-```coffee-script
-NOTHING HERE YET
-```
+See the following documents for specifics:
+
+[Session Lifecycle](https://github.com/bitmage/guru/blob/master/docs/sessionLifecycle.md)
+
+## Operation
 
 ## Copyright
 

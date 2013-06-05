@@ -68,7 +68,7 @@ Services:
 +  operator/getOperatorData 2 (5/17)
 +  operator/getOrCreateSession 3 (5/14)
 +  operator/removeUnanswered 3 #calculate (5/31)
-  populateVisitorAcpData 3
++  populateVisitorAcpData 3 (6/5)
 +  printChat 2 (6/3)
 + --queries/query (6/4)
 +  session/setSessionOnlineStatus 5 #change to reportActivity (6/3)

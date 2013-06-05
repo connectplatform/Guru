@@ -27,6 +27,11 @@ response = (req, res) ->
   if (query.customerId == clientData.customerId) && (query.websiteUrl == clientData.websiteUrl)
     res.end JSON.stringify expectedAcpData
 
+badJsonResponse = (req, res) ->
+  query = querystring.parse req._parsedUrl.query
+  if (query.customerId == clientData.customerId) && (query.websiteUrl == clientData.websiteUrl)
+    res.end '}Explode{'
+
 boiler 'Service - Populate Visitor ACP Data', ->
   beforeEach (done) ->
     @ownerLogin (err, @owner) =>
@@ -54,9 +59,28 @@ boiler 'Service - Populate Visitor ACP Data', ->
             should.not.exist err
             should.exist chat
             (Object.equal chat.acpData, expectedAcpData).should.be.true
+            testServer.close()
+            done()
 
-            # TODO: add check for handling of visitor data other than acpData
-            
+        # The unfortunate part of making the acp lookup run async in the background...
+        setTimeout verifyResult, 200
+
+  it 'should catch an error when the ACP server returns an invalid JSON string', (done) ->
+    testServer = connect().use(badJsonResponse).listen 8675 # process.env.GURU_PORT
+
+    @client = @getClient()
+    @client.ready =>
+
+      # Set up chat info
+      @client.newChat clientData, (err, {chatId, sessionId}) =>
+        should.not.exist err
+
+        verifyResult = =>
+          Chat.findById chatId, (err, chat) =>
+            should.not.exist err
+            should.exist chat
+            should.not.exist chat.acpData
+            # (Object.equal chat.acpData, expectedAcpData).should.be.true
             done()
 
         # The unfortunate part of making the acp lookup run async in the background...

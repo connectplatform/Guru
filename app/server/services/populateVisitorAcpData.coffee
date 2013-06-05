@@ -31,17 +31,16 @@ module.exports = (accountId, chatId, referrerData) ->
         Chat.findById chatId, (err, chat) ->
           return err if err
 
-          chat.acpData = JSON.parse acpData
+          try
+            chat.acpData = JSON.parse acpData
+          catch err
+            config.log 'Error parsing JSON string for acpData'
+            return err
+            
           chat.save (err) ->
-            err
-          # if err
-          #   meta = {error: err, acpData: acpData, website: site}
-          #   config.log.error 'Error setting visitor acp data in populateVisitorAcpData', meta
-        
-        # Chat(accountId).get(chatId).visitor.set 'acpData', acpData, (err) ->
-          # if err
-          #   meta = {error: err, acpData: acpData, website: site}
-          #   config.log.error 'Error setting visitor acp data in populateVisitorAcpData', meta
+            if err
+              meta = {error: err, acpData: acpData, website: site}
+              config.log.error 'Error setting visitor acp data in populateVisitorAcpData', meta
       else
         meta = {data: acpData, status: response?.statusCode}
         config.log.error 'received error from ACP server:', meta

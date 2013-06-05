@@ -93,58 +93,18 @@ boiler 'Model - Chat', ->
       err.errors['history.0.timestamp'].message.should.equal expectedErrMsg
       done()
 
-  it 'should convert a querystring to an object when setting', (done) ->
-    queryStr = 'foo=bar&baz=qux&baz=quux&corge='
-    queryData = querystring.parse queryStr
-    data =
-      queryData: queryStr
-    Object.merge data, @validData
-
-    Factory.create 'chat', data, (err, chat) =>
-      should.not.exist err
-      chat.queryData.should.exist
-      (Object.equal chat.queryData, queryData).should.be.true
-      done()
-
-  it 'should convert a JSON string to an object when setting', (done) ->
-    acpData = {x: 2, y: 5, z: [1,2]}
-    acpStr = JSON.stringify acpData
-    data =
-      acpData: acpStr
-    Object.merge data, @validData
-
-    Factory.create 'chat', data, (err, chat) =>
-      should.not.exist err
-      chat.acpData.should.exist
-      (Object.equal chat.acpData, acpData).should.be.true
-      done()
-      
-  it 'should not try to convert non-string visitor data when setting', (done) ->
-    acpData = {x: 2, y: 5, z: [1,2]}
-    acpStr = JSON.stringify acpData
-    data =
-      acpData: acpData
-    Object.merge data, @validData
-
-    Factory.create 'chat', data, (err, chat) =>
-      should.not.exist err
-      chat.acpData.should.exist
-      (Object.equal chat.acpData, acpData).should.be.true
-      done()
-
   it 'should merge visitor data fields when getting visitorData', (done) ->
     queryStr = 'foo=bar&baz=qux&baz=quux&corge='
     queryData = querystring.parse queryStr
     acpData = {x: 2, y: 5, z: [1,2]}
-    acpStr = JSON.stringify acpData
 
     visitorData = {}
     visitorData.merge queryData
     visitorData.merge acpData
             
     data =
-      queryData: queryStr
-      acpData: acpStr
+      queryData: queryData
+      acpData: acpData
     Object.merge data, @validData
 
     Factory.create 'chat', data, (err, chat) =>
@@ -153,3 +113,12 @@ boiler 'Model - Chat', ->
 
       (Object.equal chat.visitorData, visitorData).should.be.true
       done()
+      
+  it 'should have an undefined visitorData when the determining fields are undefined', (done) ->
+    Factory.create 'chat', @validData, (err, chat) =>
+      should.not.exist err
+      should.not.exist chat.acpData, 'acpData should not exist'
+      should.not.exist chat.queryData, 'queryData should not exist'
+      should.not.exist chat.visitorData, 'visitorData should not exist'
+
+      done()      

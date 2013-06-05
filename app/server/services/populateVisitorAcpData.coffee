@@ -31,9 +31,7 @@ module.exports = (accountId, chatId, referrerData) ->
         Chat.findById chatId, (err, chat) ->
           return err if err
 
-          console.log {acpData}
-          console.log JSON.parse(acpData)
-          chat.acpData = acpData
+          chat.acpData = JSON.parse acpData
           chat.save (err) ->
             err
           # if err

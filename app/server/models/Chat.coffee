@@ -48,11 +48,11 @@ chat = new Schema
     
   specialtyId: ObjectId
 
-  queryData: Mixed
+  queryData: Mixed # validate is Object in post-validation hook
 
-  formData: Mixed
+  formData: Mixed # validate is Object in post-validation hook
   
-  acpData: Mixed
+  acpData: Mixed # validate is Object in post-validation hook
   
   visitorData: Mixed
 
@@ -61,24 +61,29 @@ chat.path('accountId').get getString
 chat.path('websiteId').get getString
 chat.path('specialtyId').get getString
 
-chat.path('queryData').set (value) ->
-  if typeof value == 'string'
-    return querystring.parse value
-  else
-    return value
-
-chat.path('acpData').set (value) ->
-  if typeof value == 'string'
-    return JSON.parse value
-  else
-    return value
-
 chat.path('visitorData').get () ->
+  visitorsDataExists = (@queryData? or @formData? or @acpData?)
+  return null unless visitorsDataExists
+    
   visitorData = {}
   visitorData.merge @queryData
   visitorData.merge @formData
   visitorData.merge @acpData
   return visitorData
+
+chat.pre 'save', (next) ->
+  isValid = (x) -> (typeof x == 'object') or (not x?)
+  
+  err = Error 'queryData must be an Object'
+  next err unless isValid @queryData
+  
+  err = Error 'formData must be an Object'
+  next err unless isValid @formData
+  
+  err = Error 'acpData must be an Object'
+  next err unless isValid @acpData
+  
+  next()
 
 chat.post 'remove', (_chat) ->
   {ChatSession} = db.models

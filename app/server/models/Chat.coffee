@@ -1,8 +1,9 @@
 db = require 'mongoose'
 {Schema} = db
-{ObjectId} = Schema.Types
+{ObjectId, Mixed} = Schema.Types
 {chatStatusStates} = config.require 'load/enums'
 {getString} = config.require 'load/util'
+querystring = require 'querystring'
 
 chat = new Schema
   name:
@@ -47,10 +48,37 @@ chat = new Schema
     
   specialtyId: ObjectId
 
+  queryData: Mixed
+
+  formData: Mixed
+  
+  acpData: Mixed
+  
+  visitorData: Mixed
+
 chat.path('_id').get getString
 chat.path('accountId').get getString
 chat.path('websiteId').get getString
 chat.path('specialtyId').get getString
+
+chat.path('queryData').set (value) ->
+  if typeof value == 'string'
+    return querystring.parse value
+  else
+    return value
+
+chat.path('acpData').set (value) ->
+  if typeof value == 'string'
+    return JSON.parse value
+  else
+    return value
+
+chat.path('visitorData').get () ->
+  visitorData = {}
+  visitorData.merge @queryData
+  visitorData.merge @formData
+  visitorData.merge @acpData
+  return visitorData
 
 chat.post 'remove', (_chat) ->
   {ChatSession} = db.models

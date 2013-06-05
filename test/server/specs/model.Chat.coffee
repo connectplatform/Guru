@@ -2,6 +2,7 @@ should = require 'should'
 db = config.require 'server/load/mongo'
 {Account, Chat, User, Website} = db.models
 {chatStatusStates} = config.require 'load/enums'
+querystring = require 'querystring'
 
 
 boiler 'Model - Chat', ->
@@ -92,3 +93,63 @@ boiler 'Model - Chat', ->
       err.errors['history.0.timestamp'].message.should.equal expectedErrMsg
       done()
 
+  it 'should convert a querystring to an object when setting', (done) ->
+    queryStr = 'foo=bar&baz=qux&baz=quux&corge='
+    queryData = querystring.parse queryStr
+    data =
+      queryData: queryStr
+    Object.merge data, @validData
+
+    Factory.create 'chat', data, (err, chat) =>
+      should.not.exist err
+      chat.queryData.should.exist
+      (Object.equal chat.queryData, queryData).should.be.true
+      done()
+
+  it 'should convert a JSON string to an object when setting', (done) ->
+    acpData = {x: 2, y: 5, z: [1,2]}
+    acpStr = JSON.stringify acpData
+    data =
+      acpData: acpStr
+    Object.merge data, @validData
+
+    Factory.create 'chat', data, (err, chat) =>
+      should.not.exist err
+      chat.acpData.should.exist
+      (Object.equal chat.acpData, acpData).should.be.true
+      done()
+      
+  it 'should not try to convert non-string visitor data when setting', (done) ->
+    acpData = {x: 2, y: 5, z: [1,2]}
+    acpStr = JSON.stringify acpData
+    data =
+      acpData: acpData
+    Object.merge data, @validData
+
+    Factory.create 'chat', data, (err, chat) =>
+      should.not.exist err
+      chat.acpData.should.exist
+      (Object.equal chat.acpData, acpData).should.be.true
+      done()
+
+  it 'should merge visitor data fields when getting visitorData', (done) ->
+    queryStr = 'foo=bar&baz=qux&baz=quux&corge='
+    queryData = querystring.parse queryStr
+    acpData = {x: 2, y: 5, z: [1,2]}
+    acpStr = JSON.stringify acpData
+
+    visitorData = {}
+    visitorData.merge queryData
+    visitorData.merge acpData
+            
+    data =
+      queryData: queryStr
+      acpData: acpStr
+    Object.merge data, @validData
+
+    Factory.create 'chat', data, (err, chat) =>
+      should.not.exist err
+      chat.visitorData.should.exist
+
+      (Object.equal chat.visitorData, visitorData).should.be.true
+      done()

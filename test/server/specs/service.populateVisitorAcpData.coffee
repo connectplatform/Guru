@@ -49,26 +49,15 @@ boiler 'Service - Populate Visitor ACP Data', ->
       @client.newChat clientData, (err, {chatId, sessionId}) =>
         should.not.exist err
 
-        console.log {chatId, sessionId, clientData}
-
         verifyResult = =>
           Chat.findById chatId, (err, chat) =>
             should.not.exist err
             should.exist chat
-            console.log {chat}
+            (Object.equal chat.acpData, expectedAcpData).should.be.true
 
+            # TODO: add check for handling of visitor data other than acpData
             
             done()
-          # Session.accountLookup.get sessionId, (err, accountId) ->
-          #   visitor = Chat(accountId).get(chatId).visitor
-          #   visitor.get 'referrerData', (err, refData) ->
-          #     should.not.exist err
-          #     refData.should.include clientData
-
-          #     visitor.get 'acpData', (err, acpData) ->
-          #       should.not.exist err
-          #       acpData.should.include expectedAcpData
-          #       done()
 
         # The unfortunate part of making the acp lookup run async in the background...
         setTimeout verifyResult, 200

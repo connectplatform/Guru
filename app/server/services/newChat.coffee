@@ -14,9 +14,6 @@ module.exports =
     getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
     getAvailableOperators = config.service 'operator/getAvailableOperators'
 
-    visitorMeta =
-      username: username
-      referrerData: params || null
     getAvailableOperators {websiteId, specialtyId}, (err, result) ->
       operators = result?.operators
       accountId = result?.accountId
@@ -61,7 +58,6 @@ module.exports =
             sessionSecret: session.secret
           
           # query for ACP data and store it in redis
-          # TODO: refactor for mongo
           populateVisitorAcpData accountId, chat.id, params
 
           done err, chatData

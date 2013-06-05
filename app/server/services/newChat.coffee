@@ -7,9 +7,10 @@ populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 
 module.exports =
   required: ['websiteUrl', 'websiteId', 'accountId']
-  optional: ['specialtyName', 'specialtyId']
+  optional: ['specialtyName', 'specialtyId', 'queryData', 'formData']
   service: (params, done) ->
     {websiteId, websiteUrl, specialtyId, username} = params
+    {queryData, formData} = params
     username ||= 'anonymous'
     getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
     getAvailableOperators = config.service 'operator/getAvailableOperators'
@@ -47,6 +48,8 @@ module.exports =
             chat.websiteId = websiteId
             chat.websiteUrl = params.websiteUrl
             chat.specialtyId = specialtyId if specialtyId
+            chat.queryData = queryData if queryData
+            chat.formData = formData if formData
             chat.save next
           showToOperators
         ]

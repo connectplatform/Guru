@@ -18,6 +18,37 @@ boiler 'Service - New Chat', ->
           chat._id.should.equal @chatId
           done()
 
+  it 'should create a new Chat with visitor data', (done) ->
+    @getAuthed =>
+      formData =
+          k1: 'v1'
+          k2: 'v2'
+      queryData = 
+          k3: 'v3'
+          k4: 'v4'
+      visitorData =
+        username: 'visitor'
+        websiteUrl: 'foo.com'
+        formData: formData
+        queryData: queryData
+
+      @newVisitor visitorData, (err, visitor) =>
+        {@sessionId, @sessionSecret, @chatId} = visitor.localStorage
+        Chat.findById @chatId, (err, chat) =>
+          should.not.exist err
+          should.exist chat
+          chat._id.should.equal @chatId
+          
+          (Object.equal chat.formData, formData).should.be.true
+          (Object.equal chat.queryData, queryData).should.be.true
+          
+          allVisitorData = {}
+          allVisitorData.merge formData
+          allVisitorData.merge queryData
+          (Object.equal allVisitorData, chat.visitorData).should.be.true
+          
+          done()
+
   it 'should let you chat', (done) ->
     # Given I am logged in
     @getAuthed =>

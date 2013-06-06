@@ -2,6 +2,7 @@ should = require 'should'
 particle = require 'particle'
 db = config.require 'load/mongo'
 {Chat, ChatSession, Session} = db.models
+logger = config.require 'lib/logger'
 
 boiler 'Service - New Chat', ->
 
@@ -65,9 +66,8 @@ boiler 'Service - New Chat', ->
         # Local bin to catch updates for testing
         @collectedData = []
         # Which is listening for data events
-        collector.on 'data', (data, event) =>
-          console.log {data}
-          @collectedData.push data
+        collector.on 'chats.history', (data, event) =>
+          @collectedData = @collectedData.concat event.data
         
         # And is registered with a Stream
         collector.register (err) =>
@@ -76,8 +76,8 @@ boiler 'Service - New Chat', ->
           visitor.say {message, @chatId}, (err) =>
             should.not.exist err
             @collectedData.should.not.be.empty
-            {history} = @collectedData[0].chats[0]
-            history[0].message.should.equal message
+            should.exist @collectedData[0].message
+            @collectedData[0].message.should.equal message
             done()
           
   it 'should notify operators of a new chat', (done) ->

@@ -25,25 +25,18 @@ unless port is 'DISABLED'
       #   payload:
       #   delta:
       sessions:
-        manifest:
-          username: true
+        manifest: true
+          # username: true
         payload:
           (identity, done) ->
             {sessionSecret} = identity
-            Session.findOne {sessionSecret}, (err, session) ->
+            Session.findOne {secret: sessionSecret}, (err, session) ->
               done err, {data: [session]}
         delta:
           (identity, listener) ->
             watcher.watch "#{config.mongo.dbName}.sessions", listener
       chats:
-        manifest:
-          name: true
-          status: true
-          history: true
-          creationDate: true
-          websiteId: true
-          websiteUrl: true
-          specialtyId: true
+        manifest: true
         payload:
           (identity, done) ->
             {sessionSecret} = identity

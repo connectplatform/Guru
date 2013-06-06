@@ -29,7 +29,7 @@ boiler 'particle', ->
       should.exist collector
 
       collector.on 'data', (data, event) ->
-        console.log {data, event}
+        # console.log {data, event}
 
       collector.register (err) ->
         should.not.exist err
@@ -84,7 +84,6 @@ boiler 'particle', ->
       should.exist session
       oldUsername = session.username
       newUsername = oldUsername + ' (Updated)'
-      updatedYet = false
       
       collector = new particle.Collector
         # onDebug: console.log
@@ -95,17 +94,14 @@ boiler 'particle', ->
           sessionSecret: session.secret
       should.exist collector
 
-      collector.on 'data', (data, event) ->
-        if updatedYet
-          should.exist data.sessions[0].username
-          data.sessions[0].username.should.equal newUsername
-        else
-          updatedYet = true
-          
-        # console.log 'data.sessions', data.sessions
-        # console.log 'INFO: `data` event:', {data, event}
-
-      collector.register (err) ->
+      collector.on 'sessions.*', (data, event) ->
+        verify = () ->
+          event.path.should.equal 'username'
+          event.data.should.equal newUsername
+          done()
+        verify()
+      
+      collector.register (err, next) ->
         should.not.exist err
         session.username = newUsername
-        session.save done
+        session.save next

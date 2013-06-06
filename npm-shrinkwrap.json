@@ -508,9 +508,9 @@
       "from": "async@*"
     },
     "particle": {
-      "version": "0.0.2",
+      "version": "0.0.5",
       "from": "particle@git+https://github.com/TorchlightSoftware/particle.git",
-      "resolved": "git+https://github.com/TorchlightSoftware/particle.git#61e390adde7592e186a838028120a6028c412a33",
+      "resolved": "git+https://github.com/TorchlightSoftware/particle.git#447f5a82fcd46a1e5b13decdc898c5b86c2ab8c9",
       "dependencies": {
         "lodash": {
           "version": "1.2.1",
@@ -521,6 +521,10 @@
           "from": "jayschema@git://github.com/bitmage/jayschema.git",
           "resolved": "git://github.com/bitmage/jayschema.git#230604cd66dc360d9d96c9434a4fd58bac4b835d"
         },
+        "eventemitter2": {
+          "version": "0.4.11",
+          "from": "eventemitter2@*"
+        },
         "protosock": {
           "version": "0.2.2",
           "from": "protosock@*",
@@ -530,8 +534,9 @@
               "from": "emitter-component@*"
             },
             "engine.io": {
-              "version": "0.5.0",
+              "version": "0.6.0",
               "from": "engine.io@*",
+              "resolved": "https://registry.npmjs.org/engine.io/-/engine.io-0.6.0.tgz",
               "dependencies": {
                 "debug": {
                   "version": "0.6.0",
@@ -566,8 +571,9 @@
               }
             },
             "engine.io-client": {
-              "version": "0.5.0",
+              "version": "0.6.0",
               "from": "engine.io-client@*",
+              "resolved": "https://registry.npmjs.org/engine.io-client/-/engine.io-client-0.6.0.tgz",
               "dependencies": {
                 "ws": {
                   "version": "0.4.25",
@@ -596,13 +602,18 @@
                   "from": "emitter@git://github.com/component/emitter#1.0.0",
                   "resolved": "git://github.com/component/emitter#9c5379b4d1985a9a16745abe7bbc31524b8a090e"
                 },
+                "indexof": {
+                  "version": "0.0.1",
+                  "from": "indexof@0.0.1",
+                  "resolved": "https://registry.npmjs.org/indexof/-/indexof-0.0.1.tgz"
+                },
                 "engine.io-parser": {
                   "version": "0.3.0",
                   "from": "engine.io-parser@0.3.0"
                 },
                 "debug": {
                   "version": "0.7.2",
-                  "from": "debug@*"
+                  "from": "debug@0.7.2"
                 }
               }
             }
@@ -1064,6 +1075,14 @@
           }
         }
       }
+    },
+    "keypress": {
+      "version": "0.1.0",
+      "from": "keypress@*"
+    },
+    "memwatch": {
+      "version": "0.2.2",
+      "from": "memwatch@*"
     },
     "node-log": {
       "version": "0.0.3",

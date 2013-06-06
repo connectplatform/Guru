@@ -61,11 +61,12 @@ boiler 'Service - New Chat', ->
             port: process.env.GURU_PORT
           identity:
             sessionSecret: @sessionSecret
-
+        
         # Local bin to catch updates for testing
         @collectedData = []
         # Which is listening for data events
         collector.on 'data', (data, event) =>
+          console.log {data}
           @collectedData.push data
         
         # And is registered with a Stream

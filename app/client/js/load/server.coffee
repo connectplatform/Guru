@@ -10,7 +10,7 @@ define ["app/config", "vendor/vein", "helpers/handleError"], (config, vein, hand
   for serviceName, serviceDef of server when serviceName in utility
     wrapped[serviceName] = serviceDef.bind server
 
-  # proxy services, merging any local data (e.g. sessionId)
+  # proxy services, merging any local data (e.g. sessionSecret)
   server.ready ->
     for serviceName, serviceDef of server when serviceName not in utility
       do (serviceName, serviceDef) ->
@@ -23,7 +23,7 @@ define ["app/config", "vendor/vein", "helpers/handleError"], (config, vein, hand
           args = args[0] || {}
 
           # merge session cookie
-          args['sessionId'] = $.cookies.get 'session'
+          args['sessionSecret'] = $.cookies.get 'session'
 
           # activate service
           #console.log "calling '#{serviceName}' with:", args

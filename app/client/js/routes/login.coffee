@@ -16,9 +16,9 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
           password: $('#login-form #password').val()
 
         server.ready ->
-          server.login fields, (err, {sessionId}) ->
+          server.login fields, (err, {sessionSecret}) ->
             return notify.error "Error logging in: #{err}" if err?
-            $.cookies.set 'session', sessionId
+            $.cookies.set 'session', sessionSecret
             $('#login-modal').modal 'hide'
             window.location.hash = '/dashboard'
 

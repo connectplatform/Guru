@@ -9,8 +9,8 @@ define ["load/server", "load/notify", "routes/chatControls", "templates/chatMess
         self.channels = []
 
         # get notified of new messages
-        sessionId = $.cookies.get "session"
-        self.sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
+        sessionSecret = $.cookies.get "session"
+        self.sessionUpdates = pulsar.channel "notify:session:#{sessionSecret}"
 
         # helper function
         renderId = (id) -> id.replace /:/g, '-'
@@ -27,7 +27,7 @@ define ["load/server", "load/notify", "routes/chatControls", "templates/chatMess
                   error: err
                   severity: 'error'
                   ids:
-                    sessionId: sessionId
+                    sessionSecret: sessionSecret
 
             for chat in chats
               chat.renderedId = renderId chat.id

@@ -7,7 +7,7 @@ define ["load/notify"], (notify) ->
     rootCause =
       switch context.reason
         when 'requiredField'
-          if context.fieldName in ['sessionId', 'accountId']
+          if context.fieldName in ['sessionSecret', 'accountId']
             $.cookies.del 'session'
             'You are not logged in.'
 
@@ -15,7 +15,7 @@ define ["load/notify"], (notify) ->
             "#{context.fieldName} is required."
 
         when 'invalidValue'
-          if context.fieldName in ['sessionId', 'accountId']
+          if context.fieldName in ['sessionSecret', 'accountId']
             $.cookies.del 'session'
             'Your session has expired.  Please log in again.'
 

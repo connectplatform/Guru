@@ -13,8 +13,8 @@ define ["load/server", "load/notify", 'helpers/sidebarHelpers'], (server, notify
         updateBadge "#sidebar .notifyInvites", stats.invites?.length
         updateUnread stats.unreadMessages
 
-        sessionId = $.cookies.get 'session'
-        sessionUpdates = pulsar.channel "notify:session:#{sessionId}"
+        sessionSecret = $.cookies.get 'session'
+        sessionUpdates = pulsar.channel "notify:session:#{sessionSecret}"
 
         sessionUpdates.on 'unansweredChats', ({count}, chime) ->
           updateBadge "#sidebar .notifyUnanswered", count

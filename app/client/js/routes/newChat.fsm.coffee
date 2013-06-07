@@ -58,8 +58,8 @@ define ["load/server", "load/notify", 'helpers/util', 'helpers/renderForm'],
 
           # redirect if we have a chat for this session
           gotChat: (args) ->
-            {sessionId, chatId} = args
-            $.cookies.set 'session', sessionId
+            {sessionSecret, chatId} = args
+            $.cookies.set 'session', sessionSecret
             window.location.hash = "/visitorChat/#{chatId}"
 
           noOperators: () ->

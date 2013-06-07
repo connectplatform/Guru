@@ -19,14 +19,13 @@ unless port is 'DISABLED'
           errMsg = 'No Session associated with sessionSecret'
           done errMsg, session
 
-    dataSources: # {}
-      # src:
-      #   manifest:
-      #   payload:
-      #   delta:
+    dataSources:
+
+      # a user's own session data
       sessions:
         manifest: true
-          # username: true
+
+        # TODO: move payload and delta into services
         payload:
           (identity, done) ->
             {sessionSecret} = identity
@@ -35,8 +34,12 @@ unless port is 'DISABLED'
         delta:
           (identity, listener) ->
             watcher.watch "#{config.mongo.dbName}.sessions", listener
+
+      # a user's own chats
       chats:
         manifest: true
+
+        # TODO: move payload and delta into services
         payload:
           (identity, done) ->
             {sessionSecret} = identity
@@ -48,7 +51,7 @@ unless port is 'DISABLED'
         delta:
           (identity, listener) ->
             watcher.watch "#{config.mongo.dbName}.chats", listener
-            
+
     disconnect: ->
       watcher.stopAll()
 

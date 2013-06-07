@@ -1,5 +1,5 @@
-define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'templates/sidebar', 'routes/sidebar'],
-  (server, pulsar, registerSessionUpdates, sbTemp, sidebar) ->
+define ['load/server', 'templates/sidebar', 'routes/sidebar'],
+  (server, sbTemp, sidebar) ->
 
     mock =
       renderSidebar: ->
@@ -7,7 +7,6 @@ define ['load/server', 'load/pulsar', 'policy/registerSessionUpdates', 'template
 
       loggedIn: (role = 'Operator') ->
         $.cookies.set 'session', 'session_foo'
-        registerSessionUpdates()
         server.getMyRole = (params, cb) ->
           cb null, {role: role}
 

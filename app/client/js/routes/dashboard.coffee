@@ -1,5 +1,5 @@
-define ["load/server", "load/notify", "helpers/util", "load/pulsar", 'helpers/dashboardAction'],
-  (server, notify, util, pulsar, dashboardAction) ->
+define ["load/server", "load/notify", "helpers/util", 'helpers/dashboardAction'],
+  (server, notify, util, dashboardAction) ->
     setup:
       (args, templ) ->
         updateDashboard = ->

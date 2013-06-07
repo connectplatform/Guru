@@ -26,9 +26,9 @@ define ["app/config", "vendor/vein", "helpers/handleError"], (config, vein, hand
           args['sessionId'] = $.cookies.get 'session'
 
           # activate service
-          # console.log "calling '#{serviceName}' with:", args
+          #console.log "calling '#{serviceName}' with:", args
           serviceDef args, (err, results) ->
-            # console.log "#{serviceName}:", {err, results}
+            console.log "#{serviceName}:", {err, results}
             # global error handling for server responses
             handleError err, results
 

@@ -1,4 +1,4 @@
-define ["load/server", "load/notify", "load/pulsar", 'helpers/sidebarHelpers'], (server, notify, pulsar, helpers) ->
+define ["load/server", "load/notify", 'helpers/sidebarHelpers'], (server, notify, helpers) ->
   {playSound, updateBadge, updateUnread} = helpers
 
   (args, templ) ->

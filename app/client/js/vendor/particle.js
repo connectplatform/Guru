@@ -207,6 +207,177 @@ require.relative = function(parent) {
 
   return localRequire;
 };
+require.register("component-emitter/index.js", function(exports, require, module){
+
+/**
+ * Expose `Emitter`.
+ */
+
+module.exports = Emitter;
+
+/**
+ * Initialize a new `Emitter`.
+ *
+ * @api public
+ */
+
+function Emitter(obj) {
+  if (obj) return mixin(obj);
+};
+
+/**
+ * Mixin the emitter properties.
+ *
+ * @param {Object} obj
+ * @return {Object}
+ * @api private
+ */
+
+function mixin(obj) {
+  for (var key in Emitter.prototype) {
+    obj[key] = Emitter.prototype[key];
+  }
+  return obj;
+}
+
+/**
+ * Listen on the given `event` with `fn`.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.on = function(event, fn){
+  this._callbacks = this._callbacks || {};
+  (this._callbacks[event] = this._callbacks[event] || [])
+    .push(fn);
+  return this;
+};
+
+/**
+ * Adds an `event` listener that will be invoked a single
+ * time then automatically removed.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.once = function(event, fn){
+  var self = this;
+  this._callbacks = this._callbacks || {};
+
+  function on() {
+    self.off(event, on);
+    fn.apply(this, arguments);
+  }
+
+  fn._off = on;
+  this.on(event, on);
+  return this;
+};
+
+/**
+ * Remove the given callback for `event` or all
+ * registered callbacks.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.off =
+Emitter.prototype.removeListener =
+Emitter.prototype.removeAllListeners = function(event, fn){
+  this._callbacks = this._callbacks || {};
+
+  // all
+  if (0 == arguments.length) {
+    this._callbacks = {};
+    return this;
+  }
+
+  // specific event
+  var callbacks = this._callbacks[event];
+  if (!callbacks) return this;
+
+  // remove all handlers
+  if (1 == arguments.length) {
+    delete this._callbacks[event];
+    return this;
+  }
+
+  // remove specific handler
+  var i = callbacks.indexOf(fn._off || fn);
+  if (~i) callbacks.splice(i, 1);
+  return this;
+};
+
+/**
+ * Emit `event` with the given args.
+ *
+ * @param {String} event
+ * @param {Mixed} ...
+ * @return {Emitter}
+ */
+
+Emitter.prototype.emit = function(event){
+  this._callbacks = this._callbacks || {};
+  var args = [].slice.call(arguments, 1)
+    , callbacks = this._callbacks[event];
+
+  if (callbacks) {
+    callbacks = callbacks.slice(0);
+    for (var i = 0, len = callbacks.length; i < len; ++i) {
+      callbacks[i].apply(this, args);
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Return array of callbacks for `event`.
+ *
+ * @param {String} event
+ * @return {Array}
+ * @api public
+ */
+
+Emitter.prototype.listeners = function(event){
+  this._callbacks = this._callbacks || {};
+  return this._callbacks[event] || [];
+};
+
+/**
+ * Check if this emitter has `event` handlers.
+ *
+ * @param {String} event
+ * @return {Boolean}
+ * @api public
+ */
+
+Emitter.prototype.hasListeners = function(event){
+  return !! this.listeners(event).length;
+};
+
+});
+require.register("component-indexof/index.js", function(exports, require, module){
+
+var indexOf = [].indexOf;
+
+module.exports = function(arr, obj){
+  if (indexOf) return arr.indexOf(obj);
+  for (var i = 0; i < arr.length; ++i) {
+    if (arr[i] === obj) return i;
+  }
+  return -1;
+};
+});
 require.register("LearnBoost-engine.io-protocol/lib/index.js", function(exports, require, module){
 /**
  * Module dependencies.
@@ -906,7 +1077,7 @@ Socket.prototype.onPacket = function (packet) {
         break;
 
       case 'pong':
-        this.ping();
+        this.setPing();
         break;
 
       case 'error':
@@ -945,7 +1116,7 @@ Socket.prototype.onHandshake = function (data) {
   this.pingInterval = data.pingInterval;
   this.pingTimeout = data.pingTimeout;
   this.onOpen();
-  this.ping();
+  this.setPing();
 
   // Prolong liveness of socket on heartbeat
   this.removeListener('heartbeat', this.onHeartbeat);
@@ -974,14 +1145,24 @@ Socket.prototype.onHeartbeat = function (timeout) {
  * @api private
  */
 
-Socket.prototype.ping = function () {
+Socket.prototype.setPing = function () {
   var self = this;
   clearTimeout(self.pingIntervalTimer);
   self.pingIntervalTimer = setTimeout(function () {
     debug('writing ping packet - expecting pong within %sms', self.pingTimeout);
-    self.sendPacket('ping');
+    self.ping();
     self.onHeartbeat(self.pingTimeout);
   }, self.pingInterval);
+};
+
+/**
+* Sends a ping packet 
+*
+* @api public
+*/
+
+Socket.prototype.ping = function () {
+  this.sendPacket('ping');
 };
 
 /**
@@ -1116,8 +1297,11 @@ Socket.prototype.onClose = function (reason, desc) {
       self.writeBuffer = [];
       self.callbackBuffer = [];
     }, 0);
+    var prev = this.readyState;
     this.readyState = 'closed';
-    this.emit('close', reason, desc);
+    if (prev == 'open') {
+      this.emit('close', reason, desc);
+    }
     this.onclose && this.onclose.call(this);
     this.id = null;
   }
@@ -3251,181 +3435,561 @@ require.register("wearefractal-protosock/dist/Client.js", function(exports, requ
 }).call(this);
 
 });
-require.register("component-indexof/index.js", function(exports, require, module){
+require.register("TorchlightSoftware-EventEmitter2/lib/eventemitter2.js", function(exports, require, module){
+;!function(exports, undefined) {
 
-var indexOf = [].indexOf;
+  var isArray = Array.isArray ? Array.isArray : function _isArray(obj) {
+    return Object.prototype.toString.call(obj) === "[object Array]";
+  };
+  var defaultMaxListeners = 10;
 
-module.exports = function(arr, obj){
-  if (indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-});
-require.register("component-emitter/index.js", function(exports, require, module){
-
-/**
- * Module dependencies.
- */
-
-var index = require('indexof');
-
-/**
- * Expose `Emitter`.
- */
-
-module.exports = Emitter;
-
-/**
- * Initialize a new `Emitter`.
- *
- * @api public
- */
-
-function Emitter(obj) {
-  if (obj) return mixin(obj);
-};
-
-/**
- * Mixin the emitter properties.
- *
- * @param {Object} obj
- * @return {Object}
- * @api private
- */
-
-function mixin(obj) {
-  for (var key in Emitter.prototype) {
-    obj[key] = Emitter.prototype[key];
-  }
-  return obj;
-}
-
-/**
- * Listen on the given `event` with `fn`.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.on = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks[event] = this._callbacks[event] || [])
-    .push(fn);
-  return this;
-};
-
-/**
- * Adds an `event` listener that will be invoked a single
- * time then automatically removed.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.once = function(event, fn){
-  var self = this;
-  this._callbacks = this._callbacks || {};
-
-  function on() {
-    self.off(event, on);
-    fn.apply(this, arguments);
-  }
-
-  fn._off = on;
-  this.on(event, on);
-  return this;
-};
-
-/**
- * Remove the given callback for `event` or all
- * registered callbacks.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
-  // all
-  if (0 == arguments.length) {
-    this._callbacks = {};
-    return this;
-  }
-
-  // specific event
-  var callbacks = this._callbacks[event];
-  if (!callbacks) return this;
-
-  // remove all handlers
-  if (1 == arguments.length) {
-    delete this._callbacks[event];
-    return this;
-  }
-
-  // remove specific handler
-  var i = index(callbacks, fn._off || fn);
-  if (~i) callbacks.splice(i, 1);
-  return this;
-};
-
-/**
- * Emit `event` with the given args.
- *
- * @param {String} event
- * @param {Mixed} ...
- * @return {Emitter}
- */
-
-Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks[event];
-
-  if (callbacks) {
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
+  function init() {
+    this._events = {};
+    if (this._conf) {
+      configure.call(this, this._conf);
     }
   }
 
-  return this;
-};
+  function configure(conf) {
+    if (conf) {
+      
+      this._conf = conf;
+      
+      conf.delimiter && (this.delimiter = conf.delimiter);
+      conf.maxListeners && (this._events.maxListeners = conf.maxListeners);
+      conf.wildcard && (this.wildcard = conf.wildcard);
+      conf.newListener && (this.newListener = conf.newListener);
 
-/**
- * Return array of callbacks for `event`.
- *
- * @param {String} event
- * @return {Array}
- * @api public
- */
+      if (this.wildcard) {
+        this.listenerTree = {};
+      }
+    }
+  }
 
-Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
-  return this._callbacks[event] || [];
-};
+  function EventEmitter(conf) {
+    this._events = {};
+    this.newListener = false;
+    configure.call(this, conf);
+  }
 
-/**
- * Check if this emitter has `event` handlers.
- *
- * @param {String} event
- * @return {Boolean}
- * @api public
- */
+  //
+  // Attention, function return type now is array, always !
+  // It has zero elements if no any matches found and one or more
+  // elements (leafs) if there are matches
+  //
+  function searchListenerTree(handlers, type, tree, i) {
+    if (!tree) {
+      return [];
+    }
+    var listeners=[], leaf, len, branch, xTree, xxTree, isolatedBranch, endReached,
+        typeLength = type.length, currentType = type[i], nextType = type[i+1];
+    if (i === typeLength && tree._listeners) {
+      //
+      // If at the end of the event(s) list and the tree has listeners
+      // invoke those listeners.
+      //
+      if (typeof tree._listeners === 'function') {
+        handlers && handlers.push(tree._listeners);
+        return [tree];
+      } else {
+        for (leaf = 0, len = tree._listeners.length; leaf < len; leaf++) {
+          handlers && handlers.push(tree._listeners[leaf]);
+        }
+        return [tree];
+      }
+    }
 
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
-};
+    if ((currentType === '*' || currentType === '**') || tree[currentType]) {
+      //
+      // If the event emitted is '*' at this part
+      // or there is a concrete match at this patch
+      //
+      if (currentType === '*') {
+        for (branch in tree) {
+          if (branch !== '_listeners' && tree.hasOwnProperty(branch)) {
+            listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i+1));
+          }
+        }
+        return listeners;
+      } else if(currentType === '**') {
+        endReached = (i+1 === typeLength || (i+2 === typeLength && nextType === '*'));
+        if(endReached && tree._listeners) {
+          // The next element has a _listeners, add it to the handlers.
+          listeners = listeners.concat(searchListenerTree(handlers, type, tree, typeLength));
+        }
+
+        for (branch in tree) {
+          if (branch !== '_listeners' && tree.hasOwnProperty(branch)) {
+            if(branch === '*' || branch === '**') {
+              if(tree[branch]._listeners && !endReached) {
+                listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], typeLength));
+              }
+              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i));
+            } else if(branch === nextType) {
+              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i+2));
+            } else {
+              // No match on this one, shift into the tree but not in the type array.
+              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i));
+            }
+          }
+        }
+        return listeners;
+      }
+
+      listeners = listeners.concat(searchListenerTree(handlers, type, tree[currentType], i+1));
+    }
+
+    xTree = tree['*'];
+    if (xTree) {
+      //
+      // If the listener tree will allow any match for this part,
+      // then recursively explore all branches of the tree
+      //
+      searchListenerTree(handlers, type, xTree, i+1);
+    }
+    
+    xxTree = tree['**'];
+    if(xxTree) {
+      if(i < typeLength) {
+        if(xxTree._listeners) {
+          // If we have a listener on a '**', it will catch all, so add its handler.
+          searchListenerTree(handlers, type, xxTree, typeLength);
+        }
+        
+        // Build arrays of matching next branches and others.
+        for(branch in xxTree) {
+          if(branch !== '_listeners' && xxTree.hasOwnProperty(branch)) {
+            if(branch === nextType) {
+              // We know the next element will match, so jump twice.
+              searchListenerTree(handlers, type, xxTree[branch], i+2);
+            } else if(branch === currentType) {
+              // Current node matches, move into the tree.
+              searchListenerTree(handlers, type, xxTree[branch], i+1);
+            } else {
+              isolatedBranch = {};
+              isolatedBranch[branch] = xxTree[branch];
+              searchListenerTree(handlers, type, { '**': isolatedBranch }, i+1);
+            }
+          }
+        }
+      } else if(xxTree._listeners) {
+        // We have reached the end and still on a '**'
+        searchListenerTree(handlers, type, xxTree, typeLength);
+      } else if(xxTree['*'] && xxTree['*']._listeners) {
+        searchListenerTree(handlers, type, xxTree['*'], typeLength);
+      }
+    }
+
+    return listeners;
+  }
+
+  function growListenerTree(type, listener) {
+
+    type = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+    
+    //
+    // Looks for two consecutive '**', if so, don't add the event at all.
+    //
+    for(var i = 0, len = type.length; i+1 < len; i++) {
+      if(type[i] === '**' && type[i+1] === '**') {
+        return;
+      }
+    }
+
+    var tree = this.listenerTree;
+    var name = type.shift();
+
+    while (name) {
+
+      if (!tree[name]) {
+        tree[name] = {};
+      }
+
+      tree = tree[name];
+
+      if (type.length === 0) {
+
+        if (!tree._listeners) {
+          tree._listeners = listener;
+        }
+        else if(typeof tree._listeners === 'function') {
+          tree._listeners = [tree._listeners, listener];
+        }
+        else if (isArray(tree._listeners)) {
+
+          tree._listeners.push(listener);
+
+          if (!tree._listeners.warned) {
+
+            var m = defaultMaxListeners;
+            
+            if (typeof this._events.maxListeners !== 'undefined') {
+              m = this._events.maxListeners;
+            }
+
+            if (m > 0 && tree._listeners.length > m) {
+
+              tree._listeners.warned = true;
+              console.error('(node) warning: possible EventEmitter memory ' +
+                            'leak detected. %d listeners added. ' +
+                            'Use emitter.setMaxListeners() to increase limit.',
+                            tree._listeners.length);
+              console.trace();
+            }
+          }
+        }
+        return true;
+      }
+      name = type.shift();
+    }
+    return true;
+  };
+
+  // By default EventEmitters will print a warning if more than
+  // 10 listeners are added to it. This is a useful default which
+  // helps finding memory leaks.
+  //
+  // Obviously not all Emitters should be limited to 10. This function allows
+  // that to be increased. Set to zero for unlimited.
+
+  EventEmitter.prototype.delimiter = '.';
+
+  EventEmitter.prototype.setMaxListeners = function(n) {
+    this._events || init.call(this);
+    this._events.maxListeners = n;
+    if (!this._conf) this._conf = {};
+    this._conf.maxListeners = n;
+  };
+
+  EventEmitter.prototype.event = '';
+
+  EventEmitter.prototype.once = function(event, fn) {
+    this.many(event, 1, fn);
+    return this;
+  };
+
+  EventEmitter.prototype.many = function(event, ttl, fn) {
+    var self = this;
+
+    if (typeof fn !== 'function') {
+      throw new Error('many only accepts instances of Function');
+    }
+
+    function listener() {
+      if (--ttl === 0) {
+        self.off(event, listener);
+      }
+      fn.apply(this, arguments);
+    };
+
+    listener._origin = fn;
+
+    this.on(event, listener);
+
+    return self;
+  };
+
+  EventEmitter.prototype.emit = function() {
+    
+    this._events || init.call(this);
+
+    var type = arguments[0];
+
+    if (type === 'newListener' && !this.newListener) {
+      if (!this._events.newListener) { return false; }
+    }
+
+    // Loop through the *_all* functions and invoke them.
+    if (this._all) {
+      var l = arguments.length;
+      var args = new Array(l - 1);
+      for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+      for (i = 0, l = this._all.length; i < l; i++) {
+        this.event = type;
+        this._all[i].apply(this, args);
+      }
+    }
+
+    // If there is no 'error' event listener then throw.
+    if (type === 'error') {
+      
+      if (!this._all && 
+        !this._events.error && 
+        !(this.wildcard && this.listenerTree.error)) {
+
+        if (arguments[1] instanceof Error) {
+          throw arguments[1]; // Unhandled 'error' event
+        } else {
+          throw new Error("Uncaught, unspecified 'error' event.");
+        }
+        return false;
+      }
+    }
+
+    var handler;
+
+    if(this.wildcard) {
+      handler = [];
+      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+      searchListenerTree.call(this, handler, ns, this.listenerTree, 0);
+    }
+    else {
+      handler = this._events[type];
+    }
+
+    if (typeof handler === 'function') {
+      this.event = type;
+      if (arguments.length === 1) {
+        handler.call(this);
+      }
+      else if (arguments.length > 1)
+        switch (arguments.length) {
+          case 2:
+            handler.call(this, arguments[1]);
+            break;
+          case 3:
+            handler.call(this, arguments[1], arguments[2]);
+            break;
+          // slower
+          default:
+            var l = arguments.length;
+            var args = new Array(l - 1);
+            for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+            handler.apply(this, args);
+        }
+      return true;
+    }
+    else if (handler) {
+      var l = arguments.length;
+      var args = new Array(l - 1);
+      for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+
+      var listeners = handler.slice();
+      for (var i = 0, l = listeners.length; i < l; i++) {
+        this.event = type;
+        listeners[i].apply(this, args);
+      }
+      return (listeners.length > 0) || this._all;
+    }
+    else {
+      return this._all;
+    }
+
+  };
+
+  EventEmitter.prototype.on = function(type, listener) {
+    
+    if (typeof type === 'function') {
+      this.onAny(type);
+      return this;
+    }
+
+    if (typeof listener !== 'function') {
+      throw new Error('on only accepts instances of Function');
+    }
+    this._events || init.call(this);
+
+    // To avoid recursion in the case that type == "newListeners"! Before
+    // adding it to the listeners, first emit "newListeners".
+    this.emit('newListener', type, listener);
+
+    if(this.wildcard) {
+      growListenerTree.call(this, type, listener);
+      return this;
+    }
+
+    if (!this._events[type]) {
+      // Optimize the case of one listener. Don't need the extra array object.
+      this._events[type] = listener;
+    }
+    else if(typeof this._events[type] === 'function') {
+      // Adding the second element, need to change to array.
+      this._events[type] = [this._events[type], listener];
+    }
+    else if (isArray(this._events[type])) {
+      // If we've already got an array, just append.
+      this._events[type].push(listener);
+
+      // Check for listener leak
+      if (!this._events[type].warned) {
+
+        var m = defaultMaxListeners;
+        
+        if (typeof this._events.maxListeners !== 'undefined') {
+          m = this._events.maxListeners;
+        }
+
+        if (m > 0 && this._events[type].length > m) {
+
+          this._events[type].warned = true;
+          console.error('(node) warning: possible EventEmitter memory ' +
+                        'leak detected. %d listeners added. ' +
+                        'Use emitter.setMaxListeners() to increase limit.',
+                        this._events[type].length);
+          console.trace();
+        }
+      }
+    }
+    return this;
+  };
+
+  EventEmitter.prototype.onAny = function(fn) {
+
+    if(!this._all) {
+      this._all = [];
+    }
+
+    if (typeof fn !== 'function') {
+      throw new Error('onAny only accepts instances of Function');
+    }
+
+    // Add the function to the event listener collection.
+    this._all.push(fn);
+    return this;
+  };
+
+  EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+  EventEmitter.prototype.off = function(type, listener) {
+    if (typeof listener !== 'function') {
+      throw new Error('removeListener only takes instances of Function');
+    }
+
+    var handlers,leafs=[];
+
+    if(this.wildcard) {
+      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+      leafs = searchListenerTree.call(this, null, ns, this.listenerTree, 0);
+    }
+    else {
+      // does not use listeners(), so no side effect of creating _events[type]
+      if (!this._events[type]) return this;
+      handlers = this._events[type];
+      leafs.push({_listeners:handlers});
+    }
+
+    for (var iLeaf=0; iLeaf<leafs.length; iLeaf++) {
+      var leaf = leafs[iLeaf];
+      handlers = leaf._listeners;
+      if (isArray(handlers)) {
+
+        var position = -1;
+
+        for (var i = 0, length = handlers.length; i < length; i++) {
+          if (handlers[i] === listener ||
+            (handlers[i].listener && handlers[i].listener === listener) ||
+            (handlers[i]._origin && handlers[i]._origin === listener)) {
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0) {
+          return this;
+        }
+
+        if(this.wildcard) {
+          leaf._listeners.splice(position, 1)
+        }
+        else {
+          this._events[type].splice(position, 1);
+        }
+
+        if (handlers.length === 0) {
+          if(this.wildcard) {
+            delete leaf._listeners;
+          }
+          else {
+            delete this._events[type];
+          }
+        }
+      }
+      else if (handlers === listener ||
+        (handlers.listener && handlers.listener === listener) ||
+        (handlers._origin && handlers._origin === listener)) {
+        if(this.wildcard) {
+          delete leaf._listeners;
+        }
+        else {
+          delete this._events[type];
+        }
+      }
+    }
+
+    return this;
+  };
+
+  EventEmitter.prototype.offAny = function(fn) {
+    var i = 0, l = 0, fns;
+    if (fn && this._all && this._all.length > 0) {
+      fns = this._all;
+      for(i = 0, l = fns.length; i < l; i++) {
+        if(fn === fns[i]) {
+          fns.splice(i, 1);
+          return this;
+        }
+      }
+    } else {
+      this._all = [];
+    }
+    return this;
+  };
+
+  EventEmitter.prototype.removeListener = EventEmitter.prototype.off;
+
+  EventEmitter.prototype.removeAllListeners = function(type) {
+    if (arguments.length === 0) {
+      !this._events || init.call(this);
+      return this;
+    }
+
+    if(this.wildcard) {
+      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+      var leafs = searchListenerTree.call(this, null, ns, this.listenerTree, 0);
+
+      for (var iLeaf=0; iLeaf<leafs.length; iLeaf++) {
+        var leaf = leafs[iLeaf];
+        leaf._listeners = null;
+      }
+    }
+    else {
+      if (!this._events[type]) return this;
+      this._events[type] = null;
+    }
+    return this;
+  };
+
+  EventEmitter.prototype.listeners = function(type) {
+    if(this.wildcard) {
+      var handlers = [];
+      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+      searchListenerTree.call(this, handlers, ns, this.listenerTree, 0);
+      return handlers;
+    }
+
+    this._events || init.call(this);
+
+    if (!this._events[type]) this._events[type] = [];
+    if (!isArray(this._events[type])) {
+      this._events[type] = [this._events[type]];
+    }
+    return this._events[type];
+  };
+
+  EventEmitter.prototype.listenersAny = function() {
+
+    if(this._all) {
+      return this._all;
+    }
+    else {
+      return [];
+    }
+
+  };
+
+  module.exports = {'EventEmitter2': EventEmitter};
+
+}(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
 });
 require.register("particle/dist/main.js", function(exports, require, module){
@@ -3445,8 +4009,8 @@ require.register("particle/dist/main.js", function(exports, require, module){
 require.register("particle/dist/lodash.js", function(exports, require, module){
 /**
  * @license
- * Lo-Dash 1.1.0 (Custom Build) <http://lodash.com/>
- * Build: `lodash exports="commonjs" include="find,extend,clone,without,pick,keys" -o dist/lodash.js`
+ * Lo-Dash 1.2.1 (Custom Build) <http://lodash.com/>
+ * Build: `lodash exports="commonjs" include="find,extend,clone,without,pick,keys,merge" -o dist/lodash.js`
  * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.4.4 <http://underscorejs.org/>
  * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud Inc.
@@ -3460,9 +4024,9 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   /** Detect free variable `exports` */
   var freeExports = typeof exports == 'object' && exports;
 
-  /** Detect free variable `global` and use it as `window` */
+  /** Detect free variable `global`, from Node.js or Browserified code, and use it as `window` */
   var freeGlobal = typeof global == 'object' && global;
-  if (freeGlobal.global === freeGlobal) {
+  if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
     window = freeGlobal;
   }
 
@@ -3471,6 +4035,12 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
 
   /** Used internally to indicate various things */
   var indicatorObject = {};
+
+  /** Used to prefix keys to avoid issues with `__proto__` and properties on `Object.prototype` */
+  var keyPrefix = +new Date + '';
+
+  /** Used as the size when optimizations are enabled for large arrays */
+  var largeArraySize = 200;
 
   /** Used to match empty string literals in compiled template source */
   var reEmptyStringLeading = /\b__p \+= '';/g,
@@ -3571,20 +4141,22 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
       clearTimeout = window.clearTimeout,
       concat = arrayRef.concat,
       floor = Math.floor,
+      getPrototypeOf = reNative.test(getPrototypeOf = Object.getPrototypeOf) && getPrototypeOf,
       hasOwnProperty = objectRef.hasOwnProperty,
       push = arrayRef.push,
       setTimeout = window.setTimeout,
       toString = objectRef.toString;
 
   /* Native method shortcuts for methods with the same name as other `lodash` methods */
-  var nativeBind = reNative.test(nativeBind = slice.bind) && nativeBind,
+  var nativeBind = reNative.test(nativeBind = toString.bind) && nativeBind,
       nativeIsArray = reNative.test(nativeIsArray = Array.isArray) && nativeIsArray,
       nativeIsFinite = window.isFinite,
       nativeIsNaN = window.isNaN,
       nativeKeys = reNative.test(nativeKeys = Object.keys) && nativeKeys,
       nativeMax = Math.max,
       nativeMin = Math.min,
-      nativeRandom = Math.random;
+      nativeRandom = Math.random,
+      nativeSlice = arrayRef.slice;
 
   /** Detect various environments */
   var isIeOpera = reNative.test(window.attachEvent),
@@ -3603,7 +4175,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   /*--------------------------------------------------------------------------*/
 
   /**
-   * Creates a `lodash` object, that wraps the given `value`, to enable method
+   * Creates a `lodash` object, which wraps the given `value`, to enable method
    * chaining.
    *
    * In addition to Lo-Dash methods, wrappers also have the following `Array` methods:
@@ -3621,8 +4193,8 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * `invoke`, `keys`, `map`, `max`, `memoize`, `merge`, `min`, `object`, `omit`,
    * `once`, `pairs`, `partial`, `partialRight`, `pick`, `pluck`, `push`, `range`,
    * `reject`, `rest`, `reverse`, `shuffle`, `slice`, `sort`, `sortBy`, `splice`,
-   * `tap`, `throttle`, `times`, `toArray`, `union`, `uniq`, `unshift`, `values`,
-   * `where`, `without`, `wrap`, and `zip`
+   * `tap`, `throttle`, `times`, `toArray`, `union`, `uniq`, `unshift`, `unzip`,
+   * `values`, `where`, `without`, `wrap`, and `zip`
    *
    * The non-chainable wrapper functions are:
    * `clone`, `cloneDeep`, `contains`, `escape`, `every`, `find`, `has`,
@@ -3641,6 +4213,26 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * @category Chaining
    * @param {Mixed} value The value to wrap in a `lodash` instance.
    * @returns {Object} Returns a `lodash` instance.
+   * @example
+   *
+   * var wrapped = _([1, 2, 3]);
+   *
+   * // returns an unwrapped value
+   * wrapped.reduce(function(sum, num) {
+   *   return sum + num;
+   * });
+   * // => 6
+   *
+   * // returns a wrapped value
+   * var squares = wrapped.map(function(num) {
+   *   return num * num;
+   * });
+   *
+   * _.isArray(squares);
+   * // => false
+   *
+   * _.isArray(squares.value());
+   * // => true
    */
   function lodash() {
     // no operation performed
@@ -3657,7 +4249,6 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
 
   (function() {
     var ctor = function() { this.x = 1; },
-        object = { '0': 1, 'length': 1 },
         props = [];
 
     ctor.prototype = { 'valueOf': 1, 'y': 1 };
@@ -3665,12 +4256,12 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
     for (prop in arguments) { }
 
     /**
-     * Detect if `arguments` objects are `Object` objects (all but Opera < 10.5).
+     * Detect if `arguments` objects are `Object` objects (all but Narwhal and Opera < 10.5).
      *
      * @memberOf _.support
      * @type Boolean
      */
-    support.argsObject = arguments.constructor == Object;
+    support.argsObject = arguments.constructor == Object && !(arguments instanceof Array);
 
     /**
      * Detect if an `arguments` object's [[Class]] is resolvable (all but Firefox < 4, IE < 9).
@@ -3700,6 +4291,14 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
      * @type Boolean
      */
     support.fastBind = nativeBind && !isV8;
+
+    /**
+     * Detect if own properties are iterated after inherited properties (all but IE < 9).
+     *
+     * @memberOf _.support
+     * @type Boolean
+     */
+    support.ownLast = props[0] != 'x';
 
     /**
      * Detect if `arguments` object indexes are non-enumerable
@@ -3753,7 +4352,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * The template used to create iterator functions.
    *
    * @private
-   * @param {Obect} data The data object used to populate the text.
+   * @param {Object} data The data object used to populate the text.
    * @returns {String} Returns the interpolated text.
    */
   var iteratorTemplate = function(obj) {
@@ -3881,31 +4480,27 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * @private
    * @param {Array} array The array to search.
    * @param {Mixed} value The value to search for.
-   * @param {Number} fromIndex The index to search from.
-   * @param {Number} largeSize The length at which an array is considered large.
    * @returns {Boolean} Returns `true`, if `value` is found, else `false`.
    */
-  function cachedContains(array, fromIndex, largeSize) {
+  function cachedContains(array) {
     var length = array.length,
-        isLarge = (length - fromIndex) >= largeSize;
+        isLarge = length >= largeArraySize;
 
     if (isLarge) {
       var cache = {},
-          index = fromIndex - 1;
+          index = -1;
 
       while (++index < length) {
-        // manually coerce `value` to a string because `hasOwnProperty`, in some
-        // older versions of Firefox, coerces objects incorrectly
-        var key = String(array[index]);
-        (hasOwnProperty.call(cache, key) ? cache[key] : (cache[key] = [])).push(array[index]);
+        var key = keyPrefix + array[index];
+        (cache[key] || (cache[key] = [])).push(array[index]);
       }
     }
     return function(value) {
       if (isLarge) {
-        var key = String(value);
-        return hasOwnProperty.call(cache, key) && indexOf(cache[key], value) > -1;
+        var key = keyPrefix + value;
+        return  cache[key] && indexOf(cache[key], value) > -1;
       }
-      return indexOf(array, value, fromIndex) > -1;
+      return indexOf(array, value) > -1;
     }
   }
 
@@ -3991,7 +4586,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
       }
       if (partialArgs.length) {
         args = args.length
-          ? (args = slice(args), rightIndicator ? args.concat(partialArgs) : partialArgs.concat(args))
+          ? (args = nativeSlice.call(args), rightIndicator ? args.concat(partialArgs) : partialArgs.concat(args))
           : partialArgs;
       }
       if (this instanceof bound) {
@@ -4017,6 +4612,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * @param {Object} [options1, options2, ...] The compile options object(s).
    *  arrays - A string of code to determine if the iterable is an array or array-like.
    *  useHas - A boolean to specify using `hasOwnProperty` checks in the object loop.
+   *  useKeys - A boolean to specify using `_.keys` for own property iteration.
    *  args - A string of comma separated arguments the iteration function will accept.
    *  top - A string of code to execute before the iteration branches.
    *  loop - A string of code to execute in the object loop.
@@ -4105,6 +4701,47 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   }
 
   /**
+   * A fallback implementation of `isPlainObject` which checks if a given `value`
+   * is an object created by the `Object` constructor, assuming objects created
+   * by the `Object` constructor have no inherited enumerable properties and that
+   * there are no `Object.prototype` extensions.
+   *
+   * @private
+   * @param {Mixed} value The value to check.
+   * @returns {Boolean} Returns `true`, if `value` is a plain object, else `false`.
+   */
+  function shimIsPlainObject(value) {
+    // avoid non-objects and false positives for `arguments` objects
+    var result = false;
+    if (!(value && toString.call(value) == objectClass) || (!support.argsClass && isArguments(value))) {
+      return result;
+    }
+    // check that the constructor is `Object` (i.e. `Object instanceof Object`)
+    var ctor = value.constructor;
+
+    if (isFunction(ctor) ? ctor instanceof ctor : (support.nodeClass || !isNode(value))) {
+      // IE < 9 iterates inherited properties before own properties. If the first
+      // iterated property is an object's own property then there are no inherited
+      // enumerable properties.
+      if (support.ownLast) {
+        forIn(value, function(value, key, object) {
+          result = hasOwnProperty.call(object, key);
+          return false;
+        });
+        return result === true;
+      }
+      // In most environments an object's own properties are iterated before
+      // its inherited properties. If the last iterated property is an object's
+      // own property then there are no inherited enumerable properties.
+      forIn(value, function(value, key) {
+        result = key;
+      });
+      return result === false || hasOwnProperty.call(value, result);
+    }
+    return result;
+  }
+
+  /**
    * Slices the `collection` from the `start` index up to, but not including,
    * the `end` index.
    *
@@ -4188,13 +4825,11 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * // => true
    */
   var isArray = nativeIsArray || function(value) {
-    // `instanceof` may cause a memory leak in IE 7 if `value` is a host object
-    // http://ajaxian.com/archives/working-aroung-the-instanceof-memory-leak
-    return (support.argsObject && value instanceof Array) || toString.call(value) == arrayClass;
+    return value ? (typeof value == 'object' && toString.call(value) == arrayClass) : false;
   };
 
   /**
-   * A fallback implementation of `Object.keys` that produces an array of the
+   * A fallback implementation of `Object.keys` which produces an array of the
    * given object's own enumerable property names.
    *
    * @private
@@ -4539,11 +5174,8 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   function isEqual(a, b, callback, thisArg, stackA, stackB) {
     // used to indicate that when comparing objects, `a` has at least the properties of `b`
     var whereIndicator = callback === indicatorObject;
-    if (callback && !whereIndicator) {
-      callback = (typeof thisArg == 'undefined')
-        ? callback
-        : lodash.createCallback(callback, thisArg, 2);
-
+    if (typeof callback == 'function' && !whereIndicator) {
+      callback = lodash.createCallback(callback, thisArg, 2);
       var result = callback(a, b);
       if (typeof result != 'undefined') {
         return !!result;
@@ -4711,7 +5343,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   // fallback for older versions of Chrome and Safari
   if (isFunction(/x/)) {
     isFunction = function(value) {
-      return value instanceof Function || toString.call(value) == funcClass;
+      return typeof value == 'function' && toString.call(value) == funcClass;
     };
   }
 
@@ -4744,6 +5376,42 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   }
 
   /**
+   * Checks if a given `value` is an object created by the `Object` constructor.
+   *
+   * @static
+   * @memberOf _
+   * @category Objects
+   * @param {Mixed} value The value to check.
+   * @returns {Boolean} Returns `true`, if `value` is a plain object, else `false`.
+   * @example
+   *
+   * function Stooge(name, age) {
+   *   this.name = name;
+   *   this.age = age;
+   * }
+   *
+   * _.isPlainObject(new Stooge('moe', 40));
+   * // => false
+   *
+   * _.isPlainObject([1, 2, 3]);
+   * // => false
+   *
+   * _.isPlainObject({ 'name': 'moe', 'age': 40 });
+   * // => true
+   */
+  var isPlainObject = !getPrototypeOf ? shimIsPlainObject : function(value) {
+    if (!(value && toString.call(value) == objectClass) || (!support.argsClass && isArguments(value))) {
+      return false;
+    }
+    var valueOf = value.valueOf,
+        objProto = typeof valueOf == 'function' && (objProto = getPrototypeOf(valueOf)) && getPrototypeOf(objProto);
+
+    return objProto
+      ? (value == objProto || getPrototypeOf(value) == objProto)
+      : shimIsPlainObject(value);
+  };
+
+  /**
    * Checks if `value` is a string.
    *
    * @static
@@ -4758,6 +5426,144 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    */
   function isString(value) {
     return typeof value == 'string' || toString.call(value) == stringClass;
+  }
+
+  /**
+   * Recursively merges own enumerable properties of the source object(s), that
+   * don't resolve to `undefined`, into the destination object. Subsequent sources
+   * will overwrite property assignments of previous sources. If a `callback` function
+   * is passed, it will be executed to produce the merged values of the destination
+   * and source properties. If `callback` returns `undefined`, merging will be
+   * handled by the method instead. The `callback` is bound to `thisArg` and
+   * invoked with two arguments; (objectValue, sourceValue).
+   *
+   * @static
+   * @memberOf _
+   * @category Objects
+   * @param {Object} object The destination object.
+   * @param {Object} [source1, source2, ...] The source objects.
+   * @param {Function} [callback] The function to customize merging properties.
+   * @param {Mixed} [thisArg] The `this` binding of `callback`.
+   * @param- {Object} [deepIndicator] Indicates that `stackA` and `stackB` are
+   *  arrays of traversed objects, instead of source objects.
+   * @param- {Array} [stackA=[]] Tracks traversed source objects.
+   * @param- {Array} [stackB=[]] Associates values with source counterparts.
+   * @returns {Object} Returns the destination object.
+   * @example
+   *
+   * var names = {
+   *   'stooges': [
+   *     { 'name': 'moe' },
+   *     { 'name': 'larry' }
+   *   ]
+   * };
+   *
+   * var ages = {
+   *   'stooges': [
+   *     { 'age': 40 },
+   *     { 'age': 50 }
+   *   ]
+   * };
+   *
+   * _.merge(names, ages);
+   * // => { 'stooges': [{ 'name': 'moe', 'age': 40 }, { 'name': 'larry', 'age': 50 }] }
+   *
+   * var food = {
+   *   'fruits': ['apple'],
+   *   'vegetables': ['beet']
+   * };
+   *
+   * var otherFood = {
+   *   'fruits': ['banana'],
+   *   'vegetables': ['carrot']
+   * };
+   *
+   * _.merge(food, otherFood, function(a, b) {
+   *   return _.isArray(a) ? a.concat(b) : undefined;
+   * });
+   * // => { 'fruits': ['apple', 'banana'], 'vegetables': ['beet', 'carrot] }
+   */
+  function merge(object, source, deepIndicator) {
+    var args = arguments,
+        index = 0,
+        length = 2;
+
+    if (!isObject(object)) {
+      return object;
+    }
+    if (deepIndicator === indicatorObject) {
+      var callback = args[3],
+          stackA = args[4],
+          stackB = args[5];
+    } else {
+      stackA = [];
+      stackB = [];
+
+      // allows working with `_.reduce` and `_.reduceRight` without
+      // using their `callback` arguments, `index|key` and `collection`
+      if (typeof deepIndicator != 'number') {
+        length = args.length;
+      }
+      if (length > 3 && typeof args[length - 2] == 'function') {
+        callback = lodash.createCallback(args[--length - 1], args[length--], 2);
+      } else if (length > 2 && typeof args[length - 1] == 'function') {
+        callback = args[--length];
+      }
+    }
+    while (++index < length) {
+      (isArray(args[index]) ? forEach : forOwn)(args[index], function(source, key) {
+        var found,
+            isArr,
+            result = source,
+            value = object[key];
+
+        if (source && ((isArr = isArray(source)) || isPlainObject(source))) {
+          // avoid merging previously merged cyclic sources
+          var stackLength = stackA.length;
+          while (stackLength--) {
+            if ((found = stackA[stackLength] == source)) {
+              value = stackB[stackLength];
+              break;
+            }
+          }
+          if (!found) {
+            var isShallow;
+            if (callback) {
+              result = callback(value, source);
+              if ((isShallow = typeof result != 'undefined')) {
+                value = result;
+              }
+            }
+            if (!isShallow) {
+              value = isArr
+                ? (isArray(value) ? value : [])
+                : (isPlainObject(value) ? value : {});
+            }
+            // add `source` and associated `value` to the stack of traversed objects
+            stackA.push(source);
+            stackB.push(value);
+
+            // recursively merge objects and arrays (susceptible to call stack limits)
+            if (!isShallow) {
+              value = merge(value, source, indicatorObject, callback, stackA, stackB);
+            }
+          }
+        }
+        else {
+          if (callback) {
+            result = callback(value, source);
+            if (typeof result == 'undefined') {
+              result = source;
+            }
+          }
+          if (typeof result != 'undefined') {
+            value = result;
+          }
+        }
+        object[key] = value;
+      });
+    }
+    return object;
   }
 
   /**
@@ -4788,8 +5594,8 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   function pick(object, callback, thisArg) {
     var result = {};
     if (typeof callback != 'function') {
-      var index = 0,
-          props = concat.apply(arrayRef, arguments),
+      var index = -1,
+          props = concat.apply(arrayRef, nativeSlice.call(arguments, 1)),
           length = isObject(object) ? props.length : 0;
 
       while (++index < length) {
@@ -4835,7 +5641,9 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * @returns {Mixed} Returns the found element, else `undefined`.
    * @example
    *
-   * _.find([1, 2, 3, 4], function(num) { return num % 2 == 0; });
+   * _.find([1, 2, 3, 4], function(num) {
+   *   return num % 2 == 0;
+   * });
    * // => 2
    *
    * var food = [
@@ -4918,6 +5726,38 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   /*--------------------------------------------------------------------------*/
 
   /**
+   * Creates an array of `array` elements not present in the other arrays
+   * using strict equality for comparisons, i.e. `===`.
+   *
+   * @static
+   * @memberOf _
+   * @category Arrays
+   * @param {Array} array The array to process.
+   * @param {Array} [array1, array2, ...] Arrays to check.
+   * @returns {Array} Returns a new array of `array` elements not present in the
+   *  other arrays.
+   * @example
+   *
+   * _.difference([1, 2, 3, 4, 5], [5, 2, 10]);
+   * // => [1, 3, 4]
+   */
+  function difference(array) {
+    var index = -1,
+        length = array ? array.length : 0,
+        flattened = concat.apply(arrayRef, nativeSlice.call(arguments, 1)),
+        contains = cachedContains(flattened),
+        result = [];
+
+    while (++index < length) {
+      var value = array[index];
+      if (!contains(value)) {
+        result.push(value);
+      }
+    }
+    return result;
+  }
+
+  /**
    * Gets the index at which the first occurrence of `value` is found using
    * strict equality for comparisons, i.e. `===`. If the `array` is already
    * sorted, passing `true` for `fromIndex` will run a faster binary search.
@@ -4976,7 +5816,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * @static
    * @memberOf _
    * @category Arrays
-   * @param {Array} array The array to iterate over.
+   * @param {Array} array The array to inspect.
    * @param {Mixed} value The value to evaluate.
    * @param {Function|Object|String} [callback=identity] The function called per
    *  iteration. If a property name or object is passed, it will be used to create
@@ -5040,18 +5880,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * // => [2, 3, 4]
    */
   function without(array) {
-    var index = -1,
-        length = array ? array.length : 0,
-        contains = cachedContains(arguments, 1, 30),
-        result = [];
-
-    while (++index < length) {
-      var value = array[index];
-      if (!contains(value)) {
-        result.push(value);
-      }
-    }
-    return result;
+    return difference(array, nativeSlice.call(arguments, 1));
   }
 
   /*--------------------------------------------------------------------------*/
@@ -5172,10 +6001,12 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
 
   lodash.assign = assign;
   lodash.createCallback = createCallback;
+  lodash.difference = difference;
   lodash.forEach = forEach;
   lodash.forIn = forIn;
   lodash.forOwn = forOwn;
   lodash.keys = keys;
+  lodash.merge = merge;
   lodash.pick = pick;
   lodash.without = without;
 
@@ -5194,6 +6025,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
   lodash.isEqual = isEqual;
   lodash.isFunction = isFunction;
   lodash.isObject = isObject;
+  lodash.isPlainObject = isPlainObject;
   lodash.isString = isString;
   lodash.sortedIndex = sortedIndex;
 
@@ -5208,7 +6040,7 @@ require.register("particle/dist/lodash.js", function(exports, require, module){
    * @memberOf _
    * @type String
    */
-  lodash.VERSION = '1.1.0';
+  lodash.VERSION = '1.2.1';
 
   /*--------------------------------------------------------------------------*/
 
@@ -5225,16 +6057,9 @@ require.register("particle/dist/collector.js", function(exports, require, module
 (function() {
   var Client, Collector, EventEmitter, applyOp, find, normalizePayload, objInclude, _, _ref,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __slice = [].slice;
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  if (typeof window !== "undefined" && window !== null) {
-    EventEmitter = require('emitter');
-  } else {
-    EventEmitter = require('events').EventEmitter;
-  }
-
-  _ref = require('./util'), objInclude = _ref.objInclude, find = _ref.find, _ = _ref._;
+  _ref = require('./util'), objInclude = _ref.objInclude, find = _ref.find, _ = _ref._, EventEmitter = _ref.EventEmitter;
 
   normalizePayload = require('./normalizePayload');
 
@@ -5254,7 +6079,12 @@ require.register("particle/dist/collector.js", function(exports, require, module
       this.identity = options.identity || {};
       this.network = options.network || {};
       this.debug = options.onDebug || function() {};
+      this.onData = options.onData || function() {};
       this.error = options.onError || console.error;
+      Collector.__super__.constructor.call(this, {
+        wildcard: true,
+        maxListeners: Infinity
+      });
       this.onRegister = options.onRegister || function(identity, receiver, err) {
         _this.client = Client(_this.network);
         return _this.client.register(identity, receiver, err);
@@ -5263,14 +6093,21 @@ require.register("particle/dist/collector.js", function(exports, require, module
         _this.debug('ready!');
         return _this.status = 'ready';
       });
-      this.on('data', function() {
-        var args;
+      this.on('data', function(data, event) {
+        var eventName, normEvent, op, _i, _len, _ref1;
 
-        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         this.debug('Sending new data notification!');
-        if (options.onData) {
-          return options.onData.apply(options, args);
+        if (event.oplist) {
+          _ref1 = event.oplist;
+          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+            op = _ref1[_i];
+            eventName = "" + event.root + "." + op.path;
+            normEvent = _.merge({}, event, op);
+            delete normEvent.oplist;
+            this.emit(eventName, data, normEvent);
+          }
         }
+        return this.onData(data, event);
       });
     }
 
@@ -5588,16 +6425,19 @@ require.register("particle/dist/normalizePayload.js", function(exports, require,
 require.register("particle/dist/util.js", function(exports, require, module){
 // Generated by CoffeeScript 1.6.2
 (function() {
-  var util, _;
+  var EventEmitter2, util, _;
 
   if (typeof window !== "undefined" && window !== null) {
+    EventEmitter2 = require('EventEmitter2').EventEmitter2;
     _ = require('./lodash')._;
   } else {
+    EventEmitter2 = require('eventemitter2').EventEmitter2;
     _ = require('lodash');
   }
 
   module.exports = util = {
     _: _,
+    EventEmitter: EventEmitter2,
     getType: function(obj) {
       return Object.prototype.toString.call(obj).slice(8, -1);
     },
@@ -5677,7 +6517,6 @@ require.alias("wearefractal-protosock/dist/defaultClient.js", "particle/deps/pro
 require.alias("wearefractal-protosock/dist/Client.js", "particle/deps/protosock/dist/Client.js");
 require.alias("wearefractal-protosock/dist/main.js", "particle/deps/protosock/index.js");
 require.alias("component-emitter/index.js", "wearefractal-protosock/deps/emitter/index.js");
-require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
 require.alias("LearnBoost-engine.io-client/lib/index.js", "wearefractal-protosock/deps/engine.io/lib/index.js");
 require.alias("LearnBoost-engine.io-client/lib/socket.js", "wearefractal-protosock/deps/engine.io/lib/socket.js");
@@ -5692,7 +6531,6 @@ require.alias("LearnBoost-engine.io-client/lib/transports/websocket.js", "wearef
 require.alias("LearnBoost-engine.io-client/lib/transports/flashsocket.js", "wearefractal-protosock/deps/engine.io/lib/transports/flashsocket.js");
 require.alias("LearnBoost-engine.io-client/lib/index.js", "wearefractal-protosock/deps/engine.io/index.js");
 require.alias("component-emitter/index.js", "LearnBoost-engine.io-client/deps/emitter/index.js");
-require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
 require.alias("component-indexof/index.js", "LearnBoost-engine.io-client/deps/indexof/index.js");
 
@@ -5708,8 +6546,9 @@ require.alias("LearnBoost-engine.io-client/lib/index.js", "LearnBoost-engine.io-
 
 require.alias("wearefractal-protosock/dist/main.js", "wearefractal-protosock/index.js");
 
-require.alias("component-emitter/index.js", "particle/deps/emitter/index.js");
-require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
+require.alias("TorchlightSoftware-EventEmitter2/lib/eventemitter2.js", "particle/deps/EventEmitter2/lib/eventemitter2.js");
+require.alias("TorchlightSoftware-EventEmitter2/lib/eventemitter2.js", "particle/deps/EventEmitter2/index.js");
+require.alias("TorchlightSoftware-EventEmitter2/lib/eventemitter2.js", "TorchlightSoftware-EventEmitter2/index.js");
 
 require.alias("particle/dist/main.js", "particle/index.js");
 

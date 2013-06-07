@@ -27,6 +27,7 @@ module.exports = (cb) ->
   app.use connect.static config.paths.static if config.paths.static
   app.use loadRest config.paths.rest
 
+  console.log 'about to start server:', {port}
   server = createServer port, app
 
   # initialize particle stream
@@ -43,8 +44,7 @@ module.exports = (cb) ->
   #restAdapter(app) restServices
 
   # Good job, we made it!
-  config.log.info "Server started on #{port}"
-  config.log.info "Particle started on #{port}"
+  config.log.info "Server started on #{port}."
 
   # Don't put connection strings in our logs
   if config.env is 'development'

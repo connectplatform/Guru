@@ -13,7 +13,7 @@ boiler 'particle', ->
         should.exist user
         @userId = user._id
         done err
-    
+
   it 'should register a visitor session with a Stream', (done) ->
     Factory.create 'session', {@accountId}, (err, session) =>
       should.not.exist err
@@ -59,7 +59,7 @@ boiler 'particle', ->
     Factory.create 'session', {@accountId}, (err, session) =>
       should.not.exist err
       should.exist session
-      
+
       # We have a valid session, but we won't use it
       collector = new particle.Collector
         network:
@@ -84,7 +84,7 @@ boiler 'particle', ->
       should.exist session
       oldUsername = session.username
       newUsername = oldUsername + ' (Updated)'
-      
+
       collector = new particle.Collector
         # onDebug: console.log
         network:
@@ -100,7 +100,7 @@ boiler 'particle', ->
           event.data.should.equal newUsername
           done()
         verify()
-      
+
       collector.register (err, next) ->
         should.not.exist err
         session.username = newUsername

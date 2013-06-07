@@ -1,5 +1,5 @@
-define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util", "policy/registerSessionUpdates"],
-  (server, notify, sidebar, sbTemp, util, registerSessionUpdates) ->
+define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util"],
+  (server, notify, sidebar, sbTemp, util) ->
     (args, templ) ->
 
       $('#content').html templ()
@@ -20,7 +20,6 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
             return notify.error "Error logging in: #{err}" if err?
             $.cookies.set 'session', sessionId
             $('#login-modal').modal 'hide'
-            registerSessionUpdates()
             window.location.hash = '/dashboard'
 
       $('#login-cancel-button').click ->

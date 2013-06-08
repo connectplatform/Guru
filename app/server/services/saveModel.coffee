@@ -3,9 +3,10 @@ enums = config.require 'load/enums'
 parseMongooseError = config.require 'load/helpers/parseMongooseError'
 
 module.exports =
-  required: ['fields', 'modelName', 'sessionId', 'accountId']
-  service: ({fields, modelName, sessionId, accountId}, done) ->
-    # Somewhat of a hack but not sure where else to put this.  Maybe the CRUD services could be controlled by a data structure?
+  required: ['accountId', 'modelName', 'fields']
+  service: ({accountId, modelName, fields}, done) ->
+    # Somewhat of a hack but not sure where else to put this.
+    # Maybe the CRUD services could be controlled by a data structure?
     if modelName is 'User' and fields.role and fields.role not in enums.editableRoles and not fields.id
       return done "Cannot create a #{fields.role} user."
     fields.merge accountId: accountId

@@ -87,3 +87,31 @@ boiler 'Model - User', ->
       @client.saveModel {sessionId: sessionId, fields: user, modelName: 'User'}, (err, savedModel) ->
         err.should.eql 'Validator "required" failed for path role with value `undefined`\n'
         done()
+
+  it 'should automatically insert accountId', (done) ->
+    user =
+      password: 'foobar'
+      role: 'Operator'
+      email: "jkl@foo.com"
+      firstName: 'First'
+      lastName: 'Guru'
+
+    @getAuthed =>
+      @client.saveModel {fields: user, modelName: 'User'}, (err, savedModel) =>
+        should.not.exist err
+        savedModel.accountId.should.eql @accountId
+        done()
+
+  it 'should not let you save without logging in', (done) ->
+    user =
+      password: 'foobar'
+      role: 'Operator'
+      email: "jkl@foo.com"
+      firstName: 'First'
+      lastName: 'Guru'
+
+    @getClient (@client) =>
+      @client.saveModel {fields: user, modelName: 'User'}, (err, savedModel) ->
+        should.exist err, 'expected error'
+        err.should.eql 'You must be an account Owner to access this feature.'
+        done()

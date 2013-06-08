@@ -2,12 +2,11 @@ should = require 'should'
 db = config.require 'server/load/mongo'
 {Account, Session, User} = db.models
 
-
 boiler 'Model - Session', ->
   beforeEach (done) ->
-    Account.findOne {}, (err, account) =>
+    Account.findOne {accountType: 'Unlimited'}, (err, account) =>
       @accountId = account._id
-      User.findOne {accountId: @accountId}, (err, user) =>
+      User.findOne {accountId: @accountId, email: 'owner@foo.com'}, (err, user) =>
         @userId = user._id
         done err
 

@@ -42,8 +42,9 @@ Factory.define 'operator', User, {
 }
 
 # need: {accountId}
-Factory.define 'paidOwner', User, {
-  email: 'owner@bar.com'
+ownerCount = 1
+Factory.define 'owner', User, {
+  email: -> "owner@baz#{ownerCount++}.com"
   sentEmail: true
   registrationKey: 'abcd'
   password: 'foobar'
@@ -51,6 +52,11 @@ Factory.define 'paidOwner', User, {
   firstName: 'Paid'
   lastName: 'Owner'
   websites: []
+}
+
+# need: {accountId}
+Factory.define 'paidOwner', 'owner', {
+  email: 'owner@bar.com'
 }
 
 newOperator = (done) ->
@@ -107,6 +113,10 @@ Factory.define 'chatSession', ChatSession, {
   sessionId: null
   chatId: null
   relation: 'Member'
+}
+
+Factory.define 'account', Account, {
+  accountType: 'Unlimited'
 }
 
 

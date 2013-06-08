@@ -1,7 +1,13 @@
 module.exports =
-  required: ['sessionId', 'sessionSecret', 'modelName']
+  required: ['accountId', 'modelName']
   optional: ['queryObject']
-  service: ({queryObject, sessionId, sessionSecret, modelName}, done) ->
+  service: ({accountId, modelName, queryObject}, done) ->
     queryObject ||= {}
-    findModel = config.service 'model/findModel'
-    findModel {queryObject: queryObject, modelName: modelName}, done
+
+    # inject accountId into query
+    if modelName is 'Account'
+      queryObject.merge {_id: accountId}
+    else
+      queryObject.merge {accountId}
+
+    config.services['model/findModel'] {queryObject, modelName}, done

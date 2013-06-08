@@ -60,17 +60,17 @@ helpers =
     client = @getClient()
     client.ready =>
       client.login data, (err, {sessionSecret}) =>
-        console.log 'error on test login:', err if err or not sessionSecret
-        if err
+        if err or not sessionSecret
+          console.log 'error on test login:', err
           cb err, null, {}
         else
-          Session.findOne {secret: sessionSecret}, (err, session) ->
+          Session.findOne {secret: sessionSecret}, (err, session) =>
             @sessionSecret = sessionSecret
             @accountId = session.accountId
             @sessionId = session._id
             # vein doesn't handle cookies, but we want client side middleware to do it
-            wrappedClient = helpers.wrapVeinClient client, {@sessionSecret, @sessionId}
-            cb err, wrappedClient, {sessionSecret, @sessionId, @accountId}
+            @client = helpers.wrapVeinClient client, {@sessionSecret}
+            cb err, @client, {@sessionSecret, @sessionId, @accountId}
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->

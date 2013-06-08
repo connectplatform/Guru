@@ -94,12 +94,10 @@ policy =
         filters:['sessionIsChatMember']
         only: [
           'getChatHistory'
-          'inviteOperator'
           'getNonpresentOperators'
           'leaveChat'
           'printChat'
           'emailChat'
-          'say'
         ]
       }
 
@@ -117,7 +115,7 @@ policy =
 
       {
         filters: ['isVisibleInChat']
-        only: [ 'transferChat', 'kickUser']
+        only: ['say', 'inviteOperator', 'transferChat', 'kickUser']
       }
 
       {

@@ -45,3 +45,17 @@ boiler 'Service - Find Model', ->
         account.accountType.should.eql 'Unlimited'
 
         done()
+
+  it 'should not find a model from another account', (done) ->
+    Factory.create 'account', (err, account) =>
+      return done err if err
+      Factory.create 'owner', {accountId: account.id}, (err, owner) =>
+        return done err if err
+
+        @getAuthedWith {email: owner.email, password: 'foobar'}, (err) =>
+          should.not.exist err
+
+          @client.findModel {queryObject: {_id: @ownerUser.id}, modelName: 'User'}, (err, {data}) ->
+            should.not.exist err
+            data.should.be.empty
+            done()

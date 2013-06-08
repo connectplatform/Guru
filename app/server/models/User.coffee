@@ -16,8 +16,8 @@ validateWebsite = (websiteIds, cb) ->
       return cb false unless websiteId in validIds
     cb true
 
-validateAccountId = (accountId, cb) ->
-  cb @role is 'Administrator' or @accountId
+validateAccountId = (accountId) ->
+  @role is 'Administrator' or @accountId?
 
 # sync recurly subscription on create/delete
 paidSeatsChanged = (num, next) ->
@@ -40,7 +40,7 @@ user = new Schema
 
   accountId:
     type: ObjectId
-    validate: [validateAccountId, 'accountId required' ]
+    validate: [validateAccountId, 'accountId required']
 
   sentEmail:
     type: Boolean

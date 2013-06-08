@@ -62,15 +62,18 @@ module.exports = [
     defaultArgs: ['websiteUrl']
   ,
     typeName: 'AccountId'
-    lookup: ({sessionId, websiteId}, found) ->
-      return found() unless sessionId or websiteId
 
-      if sessionId
-        Session.findById sessionId, (err, session) ->
+    # if law lookups accepted objects for found (i.e. a valid service signature),
+    # then we could use the filters/lookupAccountId service
+    lookup: ({sessionSecret, websiteId}, found) ->
+      return found() unless sessionSecret or websiteId
+
+      if sessionSecret
+        Session.findOne {secret: sessionSecret}, {accountId: 1}, (err, session) ->
           found err, session?.accountId
 
       else if websiteId
-        Website.findById websiteId, {accountId: true}, (err, website) ->
+        Website.findById websiteId, {accountId: 1}, (err, website) ->
           found err, website?.accountId
 
     defaultArgs: ['accountId']

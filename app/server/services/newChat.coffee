@@ -35,7 +35,7 @@ module.exports =
             Session.findOne {userId: op.id}, (err, sess) ->
               sess.unansweredChats.push chat.id
               sess.save next
-              
+
           async.map operators, notify, next
         tasks = [
           (next) ->
@@ -59,7 +59,7 @@ module.exports =
             chatId: chat.id
             sessionId: session.id
             sessionSecret: session.secret
-          
+
           # query for ACP data and store it in redis
           populateVisitorAcpData accountId, chat.id, params
 

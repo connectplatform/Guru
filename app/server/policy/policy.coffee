@@ -18,6 +18,7 @@ policy =
           'inviteOperator'
           'getMyChats'
           'transferChat'
+          'changePassword'
         ]
       }
 

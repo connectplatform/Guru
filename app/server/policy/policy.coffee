@@ -20,6 +20,7 @@ policy =
           'transferChat'
           'changePassword'
           'getActiveChats'
+          'getChatStats'
         ]
       }
 

@@ -25,6 +25,7 @@ policy =
           'joinChat'
           'getNonpresentOperators'
           'getChatHistory'
+          'kickUser'
         ]
       }
 

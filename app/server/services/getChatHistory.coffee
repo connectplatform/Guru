@@ -2,7 +2,7 @@ db = config.require 'load/mongo'
 {Chat} = db.models
 
 module.exports =
-  required: ['chatId']
+  required: ['sessionSecret', 'chatId']
   service: ({chatId}, done) ->
     Chat.findById chatId, (err, chat) ->
       if err or not chat?

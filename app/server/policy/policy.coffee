@@ -24,6 +24,7 @@ policy =
           'getExistingChat'
           'joinChat'
           'getNonpresentOperators'
+          'getChatHistory'
         ]
       }
 

@@ -14,8 +14,10 @@ policy =
           'chats/getRelationToChat'
           'acceptChat'
           'acceptInvite'
+          'acceptTransfer'
           'inviteOperator'
           'getMyChats'
+          'transferChat'
         ]
       }
 

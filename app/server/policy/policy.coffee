@@ -22,6 +22,7 @@ policy =
           'getActiveChats'
           'getChatStats'
           'getExistingChat'
+          'joinChat'
         ]
       }
 

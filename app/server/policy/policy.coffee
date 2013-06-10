@@ -8,35 +8,46 @@ policy =
         except: []
       }
 
-      # {
-      #   filters: ['lookupAccountId']
-      #   except: [
+      {
+        filters: ['lookupSessionId']
+        only: [
+          'chats/getRelationToChat'
+          'acceptChat'
+          'acceptInvite'
+          'inviteOperator'
+          'getMyChats'
+        ]
+      }
 
-      #     # everyone
-      #     'getMyRole'
-      #     'log'
-      #     'getHeaderFooter'
-      #     'getImageUrl'
+      {
+        filters: ['lookupAccountId']
+        except: [
 
-      #     # visitor
-      #     'newChat'
-      #     'submitQuestion'
-      #     'getExistingChat'
-      #     'createChatOrGetForm'
-      #     'visitorCanAccessChannel'
+          # everyone
+          'getMyRole'
+          'log'
+          'getHeaderFooter'
+          'getImageUrl'
 
-      #     # operator
-      #     'login'
-      #     'resetPassword'
-      #     'forgotPassword'
+          # visitor
+          'newChat'
+          'submitQuestion'
+          'getExistingChat'
+          'createChatOrGetForm'
+          'visitorCanAccessChannel'
 
-      #     # account creation
-      #     'createAccount'
-      #     'inviteOperator'
-      #     'transferChat'
-      #     'setSessionOffline'
-      #   ]
-      # }
+          # operator
+          'login'
+          'resetPassword'
+          'forgotPassword'
+
+          # account creation
+          'createAccount'
+          'inviteOperator'
+          'transferChat'
+          'setSessionOffline'
+        ]
+      }
 
       {
         filters: ['objectMessageExists' ]

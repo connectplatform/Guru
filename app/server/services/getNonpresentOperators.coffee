@@ -5,7 +5,7 @@ db = config.require 'load/mongo'
 {getType} = config.require 'load/util'
 
 module.exports =
-  required: ['chatId', 'sessionId', 'accountId']
+  required: ['chatId', 'sessionSecret']
   service: ({chatId, sessionId, accountId}, done) ->
     # First, find all ChatSession connecting some active Session to the Chat
     # denoted by chatId in which the connected

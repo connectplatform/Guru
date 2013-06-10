@@ -23,6 +23,7 @@ policy =
           'getChatStats'
           'getExistingChat'
           'joinChat'
+          'getNonpresentOperators'
         ]
       }
 

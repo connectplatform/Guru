@@ -2,12 +2,13 @@ should = require 'should'
 db = config.require 'load/mongo'
 {ObjectId} = db.Schema.Types
 {ChatSession, Session} = db.models
+{getString} = config.require 'load/util'
 
 boiler 'Service - Join Chat', ->
 
   it 'should not join a non-existent chat', (done) ->
-    @getAuthed =>
-      notAChatId = @client.localStorage.sessionId
+    @getAuthed (err, client, vars) =>
+      notAChatId = vars.sessionId
       @client.joinChat {chatId: notAChatId}, (err, {status}) ->
         should.exist err, 'expected error'
         errMsg = "chats/getRelationToChat requires 'chatId' to be a valid ChatId."
@@ -16,10 +17,11 @@ boiler 'Service - Join Chat', ->
 
   describe 'after joining', ->
     beforeEach (done) ->
-      @getAuthed (_..., {@accountId}) =>
+      @getAuthed (_..., vars) =>
         @newChat =>
           @client.joinChat {chatId: @chatId}, (err, result) =>
-            @sessionId = @client.localStorage.sessionId
+            @sessionId = vars.sessionId
+            should.exist @sessionId
             done err, result
 
     it 'should associate an operator with a chat', (done) ->

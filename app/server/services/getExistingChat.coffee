@@ -2,6 +2,7 @@ db = config.require 'load/mongo'
 {Session, ChatSession} = db.models
 
 module.exports =
+  required: ['sessionSecret']
   optional: ['sessionId', 'accountId']
   service: ({sessionId, accountId}, done) ->
     return done null, {reason: 'no session ID'} unless sessionId

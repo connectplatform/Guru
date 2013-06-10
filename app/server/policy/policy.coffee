@@ -21,6 +21,7 @@ policy =
           'changePassword'
           'getActiveChats'
           'getChatStats'
+          'getExistingChat'
         ]
       }
 

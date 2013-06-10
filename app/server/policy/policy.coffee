@@ -26,6 +26,7 @@ policy =
           'getNonpresentOperators'
           'getChatHistory'
           'kickUser'
+          'leaveChat'
         ]
       }
 

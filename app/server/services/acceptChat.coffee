@@ -4,7 +4,7 @@ db = config.require 'load/mongo'
 removeUnanswered = config.require 'services/operator/removeUnanswered'
 
 module.exports =
-  required: ['sessionId', 'accountId', 'chatId']
+  required: ['sessionSecret', 'sessionId', 'accountId', 'chatId']
   service: (params, done) ->
     {chatId, sessionId, accountId} = params
 
@@ -15,7 +15,9 @@ module.exports =
       else if chat.status is 'Active'
         done null, {status: "ALREADY ACCEPTED", chatId: chatId}
       else
+        console.log 'about to join chat with params:', params
         config.services['joinChat'] params, (err, _) ->
+          console.log 'JOIIIINED CHAAAAT'
           return done err if err
           removeUnanswered {accountId, chatId}, (err, status) ->
             if err

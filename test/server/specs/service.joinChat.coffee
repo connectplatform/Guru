@@ -1,57 +1,50 @@
 should = require 'should'
-stoic = require 'stoic'
+db = config.require 'load/mongo'
+{ObjectId} = db.Schema.Types
+{ChatSession, Session} = db.models
+{getString} = config.require 'load/util'
 
 boiler 'Service - Join Chat', ->
 
-  it 'should emit "join" notification', (done) ->
-    @getAuthed =>
-      @newChat =>
-
-        # listen for joinChat
-        @channel = @getPulsar().channel @chatId
-        @channel.once 'serverMessage', (data) ->
-          data.type.should.eql 'notification'
-          done()
-
-        @client.joinChat {chatId: @chatId}, ->
-
   it 'should not join a non-existent chat', (done) ->
-    @getAuthed =>
-      @client.joinChat {chatId: 'abc1230123456789'}, (err, {status}) ->
-
+    @getAuthed (err, client, vars) =>
+      notAChatId = vars.sessionId
+      @client.joinChat {chatId: notAChatId}, (err, {status}) ->
         should.exist err, 'expected error'
-        err.should.eql "chats/getRelationToChat requires 'chatId' to be a valid ChatId."
+        errMsg = "chats/getRelationToChat requires 'chatId' to be a valid ChatId."
+        err.should.equal errMsg
         done()
 
   describe 'after joining', ->
     beforeEach (done) ->
-      @getAuthed (_..., {@accountId}) =>
+      @getAuthed (_..., vars) =>
         @newChat =>
-          @client.joinChat {chatId: @chatId}, done
+          @client.joinChat {chatId: @chatId}, (err, result) =>
+            @sessionId = vars.sessionId
+            should.exist @sessionId
+            done err, result
 
     it 'should associate an operator with a chat', (done) ->
-
-      #TODO refactor this to check at a higher level than cache contents
-      {ChatSession} = stoic.models
-      ChatSession(@accountId).getBySession @sessionId, (err, data) =>
+      ChatSession.findOne {@sessionId}, (err, chatSession) =>
         should.not.exist err
-        [chatSesson] = data
-        chatSesson.chatId.should.eql @chatId
+        should.exist chatSession
+        chatSession.chatId.should.equal @chatId
         done()
 
     it 'should notify operator of an unread message', (done) ->
+      Session.findById @sessionId, (err, session) =>
+        should.not.exist err
+        should.exist session
+        session.unreadMessages.should.equal 0
 
-      pulsar = @getPulsar()
-
-      # set up session listener
-      sessionNotifications = pulsar.channel "notify:session:#{@sessionId}"
-      sessionNotifications.once 'unreadMessages', (counts) =>
-        count = counts[@chatId]
-        should.exist count
-        count.should.eql 1
-        done()
-
-      sessionNotifications.ready =>
-
-        # send a new message
-        @client.say {message: 'hi', session: @visitorSession, chatId: @chatId}, =>
+        data =
+          message: 'Hello'
+          sessionId: @sessionId
+          chatId: @chatId
+        @client.say data, (err) =>
+          should.not.exist err
+          Session.findById @sessionId, (err, updatedSession) =>
+            should.not.exist err
+            should.exist updatedSession
+            updatedSession.unreadMessages.should.equal 1
+            done()

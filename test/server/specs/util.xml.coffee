@@ -21,6 +21,7 @@ describe 'xml2js', ->
 
   it 'should deserialize properly', (done) ->
     file = join __dirname, '../sampleData/sampleXml.xml'
+    console.log 'file', file
     sampleXml = fs.readFileSync file, 'utf8'
 
     parser = new xml2js.Parser(explicitArray: false, mergeAttrs: true)

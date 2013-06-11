@@ -1,8 +1,10 @@
 Factory = require 'factory-worker'
-{User, Account, Specialty, Website, ChatHistory} = config.require('load/mongo').models
+models = config.require('load/mongo').models
+{User, Account, Specialty, Website, ChatHistory, Chat, Session, ChatSession} = models
+{chatStatusStates} = config.require 'load/enums'
 
 {getString} = config.require 'load/util'
-{Chat, ChatSession, Session} = require('stoic').models
+# {Chat, ChatSession, Session} = require('stoic').models
 
 # ================================================================
 # helpers
@@ -40,8 +42,9 @@ Factory.define 'operator', User, {
 }
 
 # need: {accountId}
-Factory.define 'paidOwner', User, {
-  email: 'owner@bar.com'
+ownerCount = 1
+Factory.define 'owner', User, {
+  email: -> "owner@baz#{ownerCount++}.com"
   sentEmail: true
   registrationKey: 'abcd'
   password: 'foobar'
@@ -49,6 +52,11 @@ Factory.define 'paidOwner', User, {
   firstName: 'Paid'
   lastName: 'Owner'
   websites: []
+}
+
+# need: {accountId}
+Factory.define 'paidOwner', 'owner', {
+  email: 'owner@bar.com'
 }
 
 newOperator = (done) ->
@@ -86,6 +94,31 @@ Factory.define 'chathistory', ChatHistory, {
       timestamp: -> new Date
   ]
 }
+
+Factory.define 'chat', Chat, {
+  accountId: null
+  status: chatStatusStates[0]
+  history: []
+  websiteId: null
+  websiteUrl: null
+}
+
+Factory.define 'session', Session, {
+  accountId: null
+  userId: null
+  username: 'Example visitor'
+}
+
+Factory.define 'chatSession', ChatSession, {
+  sessionId: null
+  chatId: null
+  relation: 'Member'
+}
+
+Factory.define 'account', Account, {
+  accountType: 'Unlimited'
+}
+
 
 # ================================================================
 # redis factories

@@ -2,13 +2,8 @@ db = config.require 'load/mongo'
 async = require 'async'
 
 module.exports =
-  required: ['accountId', 'modelName', 'queryObject']
-  service: ({accountId, queryObject, modelName}, done) ->
-    if modelName isnt 'Account'
-      queryObject.merge accountId: accountId
-    else
-      queryObject.merge _id: accountId
-
+  required: ['modelName', 'queryObject']
+  service: ({queryObject, modelName}, done) ->
     Model = db.models[modelName]
     {filterOutput} = config.require "models/#{modelName}Filters"
 

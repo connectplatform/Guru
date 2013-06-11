@@ -1,8 +1,8 @@
 db = require 'mongoose'
-{Website, Specialty} = db.models
+{Chat, ChatSession, Session, Specialty, Website} = db.models
 
-stoic = require 'stoic'
-{Session, Chat} = stoic.models
+# stoic = require 'stoic'
+# {Session, Chat} = stoic.models
 
 {getString, getType} = config.require 'load/util'
 
@@ -26,25 +26,20 @@ module.exports = [
     typeName: 'MongoId'
     validation: ({value}, assert) ->
       assert getType(value) is 'String' and value.match mongoId
-    defaultArgs: ['userId', 'accountId', 'websiteId', 'specialtyId']
-  ,
-    typeName: 'RedisId'
-    validation: ({value}, assert) ->
-      assert getType(value) is 'String' and value.match redisId
-    defaultArgs: ['chatId', 'sessionId']
+    defaultArgs: ['userId', 'accountId', 'chatId', 'sessionId', 'websiteId', 'specialtyId']
   ,
     typeName: 'SessionId'
     validation: ({value}, assert) ->
-      Session.accountLookup.get value, (err, accountId) ->
-        assert not err and accountId
+      Session.findById value, (err, session) ->
+        exists = not err and session?
+        assert exists, {reason: 'Session does not exist'}
     defaultArgs: ['sessionId']
   ,
     typeName: 'ChatId'
-    validation: ({value, args: {accountId}}, assert) ->
-      return assert false, {reason: 'missing accountId'} unless accountId
-      Chat(accountId).exists value, (err, exists) ->
-        exists = not err and exists
-        assert exists, {reason: 'chatId does not exist'}
+    validation: ({value}, assert) ->
+      Chat.findById value, (err, chat) ->
+        exists = not err and chat?
+        assert exists, {reason: 'Chat does not exist'}
     defaultArgs: ['chatId']
   ,
     typeName: 'SpecialtyId'
@@ -67,14 +62,18 @@ module.exports = [
     defaultArgs: ['websiteUrl']
   ,
     typeName: 'AccountId'
-    lookup: ({sessionId, websiteId}, found) ->
-      return found() unless sessionId or websiteId
 
-      if sessionId
-        Session.accountLookup.get sessionId, found
+    # if law lookups accepted objects for found (i.e. a valid service signature),
+    # then we could use the filters/lookupAccountId service
+    lookup: ({sessionSecret, websiteId}, found) ->
+      return found() unless sessionSecret or websiteId
+
+      if sessionSecret
+        Session.findOne {secret: sessionSecret}, {accountId: 1}, (err, session) ->
+          found err, session?.accountId
 
       else if websiteId
-        Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
+        Website.findById websiteId, {accountId: 1}, (err, website) ->
           found err, website?.accountId
 
     defaultArgs: ['accountId']

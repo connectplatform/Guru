@@ -2,7 +2,6 @@ module.exports =
   required: ['sessionId']
   optional: ['accountId']
   service: ({sessionId, accountId, type, chime}, done) ->
-    pulsar = config.require 'load/pulsar'
 
     # require data getters
     unansweredChats = config.service 'sessionNotifications/unansweredChats'

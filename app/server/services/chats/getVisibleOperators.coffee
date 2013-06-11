@@ -5,22 +5,18 @@
 
 async = require 'async'
 
-module.exports = (chatSessions, cb) ->
-  nullOutNonvisibleOperators = (chatSession, cb) ->
-    # TODO: Add chatSession.dump
-    async.parallel [
-      chatSession.relationMeta.get 'isWatching'
-      chatSession.session.role.get
-      chatSession.session.chatName.get
+db = config.require 'load/mongo'
+{ChatSession, Session, User} = db.models
 
-    ], (err, [isWatching, role, chatName]) ->
+module.exports = (chatId, cb) ->
+  ChatSession.find {chatId, relation: 'Member'}, (err, chatSessions) ->
+    done err, null if err
+    cond =
+      userId: '$ne': null
+      _id: '$in': (cs.sessionId for cs in chatSessions)
+      
+    Session.find cond, (err, sessions) ->
+      done err, null if err
 
-      if isWatching is 'true' or role is 'Visitor'
-        value = null
-      else
-        value = chatName
-
-      cb err, value
-
-  async.map chatSessions, nullOutNonvisibleOperators, (err, visibleOperators) ->
-    cb err, visibleOperators.filter (element) -> element != null
+      userIds = (s.userId for s in sessions)
+      User.find {_id: '$in': (s.userId for s in sessions)}, cb

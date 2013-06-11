@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Middleware - Service Meta', ->
 
@@ -25,20 +24,3 @@ boiler 'Middleware - Service Meta', ->
         should.exist err
         err.should.eql "login requires 'email' to be a valid String."
         done()
-
-
-  describe 'accountId lookup', ->
-    it 'should err without sessionId', (done) ->
-      @client = @getClient()
-      @client.ready =>
-        @client.getChatStats {}, (err, stats) =>
-          should.exist err
-          err.should.eql "filters/lookupAccountId requires 'accountId' to be defined."
-          done()
-
-    it 'should work with sessionId', (done) ->
-      @ownerLogin (err, @client, {sessionId}) =>
-        @client.getChatStats {sessionId: sessionId}, (err, stats) =>
-          should.not.exist err
-          should.exist stats
-          done()

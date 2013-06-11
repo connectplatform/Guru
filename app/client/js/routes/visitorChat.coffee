@@ -4,8 +4,8 @@ playSound = (type) ->
   catch error
     "Error playing sound: #{error}"
 
-define ["load/server", "load/pulsar", "load/notify", "helpers/util", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
-  (server, pulsar, notify, util, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
+define ["load/server", "load/notify", "helpers/util", "templates/chatMessage", "templates/serverMessage", "helpers/wireUpChatAppender", "helpers/chatActions", 'helpers/embedImageIfExists'],
+  (server, notify, util, chatMessage, serverMessage, wireUpChatAppender, chatActions, embedImage) ->
     self =
       channel: null
       setup: ({chatId}, templ) ->

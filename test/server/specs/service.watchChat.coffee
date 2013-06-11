@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Watch Chat', ->
 
@@ -15,11 +14,12 @@ boiler 'Service - Watch Chat', ->
 
           # when
           @client.watchChat {chatId: chatId}, (err, data) =>
-
             # expect
             should.not.exist err
-            @client.getChatHistory {chatId: chatId}, (err, {history}) =>
+            should.exist data
+            visitorClient.getChatHistory {chatId: chatId}, (err, {history}) =>
               should.not.exist err
+              should.exist history
 
               [entry] = history
               should.exist entry.username

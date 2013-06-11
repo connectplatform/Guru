@@ -1,4 +1,5 @@
 module.exports =
+  required: ['sessionId', 'chatId']
   service: (params, done) ->
-    params.isWatching = 'true'
+    params.relation = 'Watching'
     config.services['joinChat'] params, done

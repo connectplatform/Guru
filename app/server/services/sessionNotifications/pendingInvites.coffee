@@ -1,5 +1,5 @@
-stoic = require 'stoic'
-{ChatSession} = stoic.models
+# stoic = require 'stoic'
+# {ChatSession} = stoic.models
 
 filterChats = config.require 'services/operator/filterChats'
 

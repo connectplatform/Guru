@@ -1,37 +1,36 @@
 async = require 'async'
-pulsar = config.require 'load/pulsar'
 
-stoic = require 'stoic'
-{Session, Chat, ChatSession} = stoic.models
+db = config.require 'load/mongo'
+{Chat, ChatSession, Session} = db.models
 
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']
   optional: ['message']
   service: ({sessionId, accountId, chatId, message}, done) ->
-
     # get user's identity and operators present
-    async.parallel [
-      Session(accountId).get(sessionId).chatName.get
-      ChatSession(accountId).getByChat chatId
+    async.parallel {
+        chat: (next) -> Chat.findById chatId, next
+        chatSession: (next) -> ChatSession.findOne {sessionId, chatId}, next
+        session: (next) -> Session.findById sessionId, next
+      }, (err, {chat, chatSession, session}) ->
+        return done err if err
 
-    ], (err, [username, chatSessions]) ->
-      chatSessions ?= []
-      return done err if err
+        said =
+          message: message
+          username: session.username
+          timestamp: Date.now()
 
-      operators = (op.sessionId for op in chatSessions)
+        # Get and notify operators
+        # TODO: Refactor into separate service
+        ChatSession.find {chatId}, (err, chatSessions) ->
+          sessionIds = (c.sessionId for c in chatSessions)
+          condition =
+            _id: '$in': sessionIds
+            userId: '$ne': null
+          Session.find condition, (err, operatorSessions) ->
+            async.forEach operatorSessions, (opSession, next) ->
+              opSession.unreadMessages += 1
+              opSession.save next
 
-      # push history data
-      said =
-        message: message
-        username: username
-        timestamp: Date.now()
-
-      Chat(accountId).get(chatId).history.rpush said, ->
-        done()
-
-        # asynchronous notifications
-        async.forEach operators, (op, next) ->
-          Session(accountId).get(op).unreadMessages.incrby chatId, 1, next
-
-        channel = pulsar.channel chatId
-        channel.emit 'serverMessage', said
+            chat.history.push said
+            chat.save done

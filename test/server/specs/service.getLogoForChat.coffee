@@ -1,5 +1,7 @@
 should = require 'should'
-stoic = require 'stoic'
+
+db = config.require 'load/mongo'
+{Chat} = db.models
 
 boiler 'Service - Get Logo For Chat', ->
 
@@ -15,9 +17,11 @@ boiler 'Service - Get Logo For Chat', ->
 
         @client.getLogoForChat {chatId: @chatId}, (err, {url}) =>
           should.not.exist err
+          should.exist url
 
-          {Chat} = stoic.models
-          Chat(accountId).get(@chatId).websiteId.get (err, websiteId) =>
+          Chat.findById @chatId, (err, chat) =>
             should.not.exist err
+            should.exist chat
+            {websiteId} = chat
             url.should.eql "https://s3.amazonaws.com/#{config.app.aws.s3.bucket}/website/#{websiteId}/logo"
             done()

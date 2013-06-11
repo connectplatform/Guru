@@ -1,7 +1,7 @@
 async = require 'async'
 
-stoic = require 'stoic'
-{Chat, ChatSession} = stoic.models
+# stoic = require 'stoic'
+# {Chat, ChatSession} = stoic.models
 
 db = require 'mongoose'
 {Website} = db.models

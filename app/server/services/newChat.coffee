@@ -1,65 +1,66 @@
 async = require 'async'
-stoic = require 'stoic'
+db = config.require 'load/mongo'
+{Chat, ChatSession, Session} = db.models
 
 createChannel = config.require 'services/chats/createChannel'
 populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 
 module.exports =
   required: ['websiteUrl', 'websiteId', 'accountId']
-  optional: ['specialtyName', 'specialtyId']
+  optional: ['specialtyName', 'specialtyId', 'queryData', 'formData']
   service: (params, done) ->
-    {websiteId, specialtyId, username} = params
+    {websiteId, websiteUrl, specialtyId, username} = params
+    {queryData, formData} = params
     username ||= 'anonymous'
-
-    {Chat, Session, ChatSession} = stoic.models
-
     getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
     getAvailableOperators = config.service 'operator/getAvailableOperators'
 
-    visitorMeta =
-      username: username
-      referrerData: params || null
-
-    getAvailableOperators {websiteId: websiteId, specialtyId: specialtyId}, (err, result) ->
+    getAvailableOperators {websiteId, specialtyId}, (err, result) ->
       operators = result?.operators
       accountId = result?.accountId
       reason = result?.reason
       if err or reason
         errData = {error: err, websiteId: websiteId, specialtyId: specialtyId, reason: reason}
         config.log.warn 'Could not get availible operators for new chat.', errData
-
-      return done err, {noOperators: true} if err or operators.length is 0
-
-      # create all necessary artifacts
+      if err or operators.length is 0
+        return done err, {noOperators: true}
       async.parallel {
-        session: Session(accountId).create { role: 'Visitor', chatName: username }
-        chat: Chat(accountId).create
-
+        session: (next) -> Session.create {accountId, username}, next
+        chat: (next) -> Chat.create {accountId, status: 'Waiting', websiteId, websiteUrl, specialtyId, name: username}, next
       }, (err, {chat, session}) ->
         return done err if err
-
+        # assert chat?
         showToOperators = (next) ->
           notify = (op, next) ->
-            Session(accountId).get(op.sessionId).unansweredChats.add chat.id, next
+            Session.findOne {userId: op.id}, (err, sess) ->
+              sess.unansweredChats.push chat.id
+              sess.save next
 
           async.map operators, notify, next
-
         tasks = [
-          chat.visitor.mset visitorMeta
+          (next) ->
+            data =
+              sessionId: session.id
+              chatId: chat.id
+              relation: 'Member'
+            ChatSession.create data, next
+          (next) ->
+            chat.websiteId = websiteId
+            chat.websiteUrl = params.websiteUrl
+            chat.specialtyId = specialtyId if specialtyId
+            chat.queryData = queryData if queryData
+            chat.formData = formData if formData
+            chat.save next
           showToOperators
-          ChatSession(accountId).add session.id, chat.id, { isWatching: 'false', type: 'member' }
         ]
-        tasks.push chat.websiteId.set websiteId
-        tasks.push chat.websiteUrl.set params.websiteUrl
-        tasks.push chat.specialtyId.set specialtyId if specialtyId
-
         async.parallel tasks, (err) ->
-
-          # create pulsar channel
-          createChannel chat.id
-
           # respond to visitor browser
-          done err, {chatId: chat.id, sessionId: session.id}
+          chatData =
+            chatId: chat.id
+            sessionId: session.id
+            sessionSecret: session.secret
 
           # query for ACP data and store it in redis
           populateVisitorAcpData accountId, chat.id, params
+
+          done err, chatData

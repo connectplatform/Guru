@@ -1,4 +1,4 @@
-stoic = require 'stoic'
+# stoic = require 'stoic'
 async = require 'async'
 
 module.exports = (accountId, sessionId, next) ->

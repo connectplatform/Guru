@@ -8,13 +8,16 @@ loadModel = (name) ->
 
 db.connect config.mongo.host
 db.connection.on 'error', (error) ->
-  config.log.error "Uncaught mongoose error.", {error: error}
+  console.log "Uncaught mongoose error.", {error: error}
 
 loadModel "User"
 loadModel "Specialty"
 loadModel "Website"
 loadModel "ChatHistory"
 loadModel "Account"
+loadModel "Session"
+loadModel "Chat"
+loadModel "ChatSession"
 
 db.wipe = (cb) ->
   async.parallel (m.remove.bind m, null for _, m of db.models), cb

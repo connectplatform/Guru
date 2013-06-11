@@ -1,11 +1,13 @@
-stoic = require 'stoic'
-{Session} = stoic.models
+db = config.require 'load/mongo'
+{Session, User} = db.models
 
 module.exports = (args, next) ->
-  {sessionId} = args
-  return next 'Argument Required: {session: sessionId}' unless sessionId?
+  config.services['getMyRole'] args, (err, {role}) ->
+    return next err if err
 
-  Session.accountLookup.get sessionId, (err, accountId) ->
-    Session(accountId).get(sessionId).role.get (err, role) ->
-      return next 'You must be an account Owner to access this feature.' unless role is 'Owner'
-      next null, args
+    err = unless role is 'Owner'
+      new Error 'You must be an account Owner to access this feature.'
+    else
+      null
+
+    next err, args

@@ -1,8 +1,8 @@
 async = require 'async'
 {tandoor} = config.require 'load/util'
 
-stoic = require 'stoic'
-{Chat, Session, ChatSession} = stoic.models
+# stoic = require 'stoic'
+# {Chat, Session, ChatSession} = stoic.models
 
 filterRelevant = config.require 'services/chats/filterRelevant'
 

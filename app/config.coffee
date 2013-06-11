@@ -11,15 +11,16 @@ rel = (path) ->
 
 environment = process.env.NODE_ENV or 'development'
 
+devHost = 'localhost'
 config =
   development:
     app:
       name: 'Guru'
-      url: 'http://localhost:4000/chat.html'
-      baseUrl: 'http://localhost:4000'
-      api: 'localhost'
+      url: 'http://#{devHost}:4000'
+      baseUrl: 'http://#{devHost}:4000'
+      api: null
       port: 4000
-      pulsarPort: 4001
+      particlePort: 4000
       ssl: false
         #key: rel 'tmp/certs/test.com.key'
         #cert: rel 'tmp/certs/test.com.crt'
@@ -33,7 +34,7 @@ config =
           from: 'info@chatpro.com'
           support: 'success@simulator.amazonses.com'
         getActivationLink: (uid, regkey) ->
-          "http://localhost:4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
+          "http://#{devHost}:4000/#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       aws:
         s3:
           bucket: 'guru-dev'
@@ -48,7 +49,8 @@ config =
       apiKey: '162807d2b937497ca43e25db7a01380b'
       apiUrl: 'https://api.recurly.com/v2/'
     mongo:
-      host: 'mongodb://localhost:27017/guru-dev'
+      host: 'mongodb://localhost:27017/guruDev'
+      dbName: 'guruDev'
     redis:
       database: 0
     statsMonitor:

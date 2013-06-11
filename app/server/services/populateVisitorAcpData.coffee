@@ -2,10 +2,7 @@ restler = require 'restler'
 querystring = require 'querystring'
 
 db = config.require 'load/mongo'
-{Website} = db.models
-
-stoic = require 'stoic'
-{Chat} = stoic.models
+{Chat, Website} = db.models
 
 module.exports = (accountId, chatId, referrerData) ->
   websiteUrl = referrerData?.websiteUrl
@@ -28,13 +25,22 @@ module.exports = (accountId, chatId, referrerData) ->
     headers['Authorization'] = "Basic #{acpApiKey}" if acpApiKey
     requestOptions = {headers: headers}
 
-    #config.log.info 'sending ACP data:', {url: targetUrl, headers: headers, data: referrerData}
+    config.log.info 'sending ACP data:', {url: targetUrl, headers: headers, data: referrerData}
     restler.get(targetUrl, requestOptions).on 'complete', (acpData, response) ->
       if response?.statusCode in [200, 201]
-        Chat(accountId).get(chatId).visitor.set 'acpData', acpData, (err) ->
-          if err
-            meta = {error: err, acpData: acpData, website: site}
-            config.log.error 'Error setting visitor acp data in populateVisitorAcpData', meta
+        Chat.findById chatId, (err, chat) ->
+          return err if err
+
+          try
+            chat.acpData = JSON.parse acpData
+          catch err
+            config.log 'Error parsing JSON string for acpData'
+            return err
+            
+          chat.save (err) ->
+            if err
+              meta = {error: err, acpData: acpData, website: site}
+              config.log.error 'Error setting visitor acp data in populateVisitorAcpData', meta
       else
         meta = {data: acpData, status: response?.statusCode}
         config.log.error 'received error from ACP server:', meta

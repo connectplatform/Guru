@@ -1,10 +1,70 @@
-argumentValidations = require './argumentValidations'
-
 policy =
   applyTo: /^[^\/]+$/ # only top level
   filterPrefix: 'filters'
   rules:
     [
+      {
+        filters: ['enforceServiceSignature']
+        except: []
+      }
+
+      {
+        filters: ['lookupSessionId']
+        only: [
+          'chats/getRelationToChat'
+          'acceptChat'
+          'acceptInvite'
+          'acceptTransfer'
+          'inviteOperator'
+          'getMyChats'
+          'transferChat'
+          'changePassword'
+          'getActiveChats'
+          'getChatStats'
+          'getExistingChat'
+          'joinChat'
+          'getNonpresentOperators'
+          'getChatHistory'
+          'kickUser'
+          'leaveChat'
+        ]
+      }
+
+      {
+        filters: ['lookupAccountId']
+        except: [
+
+          # everyone
+          'getMyRole'
+          'log'
+          'getHeaderFooter'
+          'getImageUrl'
+
+          # visitor
+          'newChat'
+          'submitQuestion'
+          'getExistingChat'
+          'createChatOrGetForm'
+          'visitorCanAccessChannel'
+
+          # operator
+          'login'
+          'resetPassword'
+          'forgotPassword'
+
+          # account creation
+          'createAccount'
+          'inviteOperator'
+          'transferChat'
+          'setSessionOffline'
+        ]
+      }
+
+      {
+        filters: ['objectMessageExists' ]
+        only: ['say']
+      }
+
       {
         filters: ['isOwner', 'setIsOnline']
         only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload', 'getRecurlyToken']
@@ -13,6 +73,8 @@ policy =
       {
         filters: ['isStaff', 'setIsOnline' ]
         except: [
+          # testing
+          # 'acceptChat' # FIX THIS, THANKS
 
           # used by everyone
           'getMyRole'
@@ -54,18 +116,28 @@ policy =
         filters:['sessionIsChatMember']
         only: [
           'getChatHistory'
-          'inviteOperator'
           'getNonpresentOperators'
           'leaveChat'
           'printChat'
           'emailChat'
-          'say'
         ]
       }
 
+      # Right now, we only want to send invites or transfers if an Operator
+      # is actually a Member of the chat. Since `getNonpresentOperators`
+      # is only used for these two activities, right now we should employ
+      # the stricter filter (`sessionIsChatMember`)
+      # {
+      #   filters:['sessionIsChatMemberOrWatching']
+      #   only: [
+      #     'getNonpresentOperators'
+      #     'getChatHistory' # ???
+      #   ]
+      # }
+
       {
         filters: ['isVisibleInChat']
-        only: [ 'transferChat', 'kickUser']
+        only: ['say', 'inviteOperator', 'transferChat', 'kickUser']
       }
 
       {
@@ -88,7 +160,5 @@ policy =
         only: ['acceptTransfer']
       }
     ]
-
-policy.rules.unshift argumentValidations...
 
 module.exports = policy

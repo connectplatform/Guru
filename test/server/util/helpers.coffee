@@ -1,14 +1,11 @@
 db = config.require 'server/load/mongo'
-stoic = require 'stoic'
 async = require 'async'
 should = require 'should'
 {inspect} = require 'util'
 
 Vein = require 'vein'
-Pulsar = require 'pulsar'
 
 testPort = process.env.GURU_PORT
-pulsarPort = process.env.GURU_PULSAR_PORT
 
 #Exported object of helper functions
 helpers =
@@ -49,7 +46,6 @@ helpers =
     else
       return client
 
-  getPulsar: -> Pulsar.createClient port: pulsarPort
   testPort: testPort
 
   loginBuilder: (name) ->
@@ -60,20 +56,26 @@ helpers =
       @getAuthedWith data, cb
 
   getAuthedWith: (data, cb) ->
-    {Session} = stoic.models
-    @getClient (client) =>
-      client.login data, (err, {sessionId}) =>
-        console.log 'error on test login:', err if err or not sessionId
-        Session.accountLookup.get sessionId, (_, accountId) ->
-
-          # vein doesn't handle cookies, but we want client side middleware to do it
-          wrappedClient = helpers.wrapVeinClient client, {sessionId: sessionId}
-          cb err, wrappedClient, {sessionId: sessionId, accountId: accountId}
+    {Session} = db.models
+    client = @getClient()
+    client.ready =>
+      client.login data, (err, {sessionSecret}) =>
+        if err or not sessionSecret
+          console.log 'error on test login:', err
+          cb err, null, {}
+        else
+          Session.findOne {secret: sessionSecret}, (err, session) =>
+            @sessionSecret = sessionSecret
+            @accountId = session.accountId
+            @sessionId = session._id
+            # vein doesn't handle cookies, but we want client side middleware to do it
+            @client = helpers.wrapVeinClient client, {@sessionSecret}
+            cb err, @client, {@sessionSecret, @sessionId, @accountId}
 
   # to be backwards compatible.  maybe refactor old tests?
   getAuthed: (cb) ->
     @ownerLogin (err, @client, vars) =>
-      {@accountId, @sessionId} = vars
+      {@accountId, @sessionSecret, @sessionId} = vars
       cb err, @client, vars
 
   # create a chat and hang onto visitor client
@@ -86,9 +88,9 @@ helpers =
         throw new Error err if err
         @visitorSession = chatData.sessionId
         @chatId = chatData.chatId
-
         # vein doesn't handle cookies, but we want client side middleware to do it
-        wrappedClient = helpers.wrapVeinClient visitor, {sessionId: chatData.sessionId}
+        # wrappedClient = helpers.wrapVeinClient visitor, {sessionId: chatData.sessionId}
+        wrappedClient = helpers.wrapVeinClient visitor, chatData
         cb null, wrappedClient, data.merge(chatData)
 
   # create a chat but disconnect the visitor when done
@@ -102,58 +104,53 @@ helpers =
     @newChatWith {username: 'visitor', websiteUrl: 'foo.com'}, cb
 
   expectSessionIsOnline: (sessionId, expectation, cb) ->
-    {Session} = stoic.models
-    Session.accountLookup.get sessionId, (err, accountId) ->
-      Session(accountId).get(sessionId).online.get (err, online) =>
-        should.not.exist err
-        online.should.eql expectation
-        cb()
+    {Session} = db.models
+    Session.findById sessionId, (err, session) ->
+      should.not.exist err
+      should.exist session
+      session.online.should.equal expectation
+      cb()
 
   loginOperator: (cb) ->
     @guru1Login (err, client, args) =>
       throw new Error err if err
-      @targetSession = args?.sessionId
+      @targetSessionId = args?.sessionId
       cb null, client, args
 
   createChats: (cb) ->
-    {Chat} = stoic.models
     now = Date.create().getTime()
 
-    {Account, Website} = db.models
+    {Account, Chat, Website} = db.models
 
     websiteUrl = 'foo.com'
-    Website.findOne {url: websiteUrl}, {_id: true}, (err, website) ->
+    Website.findOne {url: websiteUrl}, (err, website) ->
       throw new Error "Could not find website [#{websiteUrl}]: #{err}" if err or not website
 
       chats = [
         {
-          visitor:
-            username: 'Bob'
+          name: 'Bob'
           websiteUrl: websiteUrl
           websiteId: website._id
           specialtyName: 'Sales'
-          status: 'waiting'
+          status: 'Waiting'
           creationDate: now
           history: []
         }
         {
-          visitor:
-            username: 'Suzie'
-          status: 'active'
+          name: 'Suzie'
+          status: 'Active'
           creationDate: now
           history: []
         }
         {
-          visitor:
-            username: 'Ralph'
-          status: 'active'
+          name: 'Ralph'
+          status: 'Active'
           creationDate: now
           history: []
         }
         {
-          visitor:
-            username: 'Frank'
-          status: 'vacant'
+          name: 'Frank'
+          status: 'Vacant'
           creationDate: now
           history: []
         }
@@ -161,19 +158,13 @@ helpers =
 
       Account.findOne {}, {_id: true}, (err, account) ->
 
-        createChat = (chat, cb) ->
-          Chat(account._id).create (err, c) ->
-            chatData = [
-              c.visitor.mset chat.visitor
-              c.status.set chat.status
-              c.creationDate.set chat.creationDate
-              #c.history.rpush chat.history... #this needs to be a loop
-            ]
-            chatData.push c.websiteId.set chat.websiteId if chat.websiteId?
-            chatData.push c.websiteUrl.set chat.websiteUrl if chat.websiteUrl?
-            chatData.push c.specialtyId.set chat.specialtyId if chat.specialtyId? #TODO: map specialtyIDs
-
-            async.parallel chatData, (err) -> cb err, c
+        createChat = (chatData, cb) ->
+          data =
+            accountId: account._id
+            websiteId: website._id
+            websiteUrl: website.url
+          data.merge chatData
+          Chat.create data, cb
 
         async.map chats, createChat, cb
 

@@ -1,44 +1,48 @@
 should = require 'should'
+db = config.require 'load/mongo'
+{Account, Chat, ChatSession, Session, User, Website} = db.models
 
 boiler 'Service - Logout', ->
 
   it 'should remove your session', (done) ->
-    stoic = require('stoic')
-    {Session, ChatSession} = stoic.models
-    redis = stoic.client
+    @ownerLogin (err, client, {sessionSecret, accountId}) =>
+      should.not.exist err
+      sessionId = client.localStorage.sessionId
+      client.logout (err) =>
+        Session.findById sessionId, (err, session) ->
+          should.not.exist err
+          should.not.exist session
+          done()
 
-    @getAuthed =>
-      sessionId = @sessionId
-      operatorId = @ownerUser._id
-      accountId = @account.id
-
-      @client.logout (err) =>
-        should.not.exist err, 'expected no errors from logout'
-
-        # session model should not be found
-        Session(accountId).get(sessionId).dump (err, data) =>
-          should.exist err
-          err.toString().should.eql 'Error: Session does not exist.'
-
-          ChatSession(accountId).getBySession sessionId, (err, chatSessions) =>
+  it 'should remove dependent ChatSessions', (done) ->
+    @ownerLogin (err, client, {sessionSecret, accountId}) =>
+      should.not.exist err
+      @sessionId = client.localStorage.sessionId
+      Account.findOne {}, (err, account) =>
+        @accountId = account._id
+        User.findOne {accountId: @accountId}, (err, user) =>
+          should.not.exist err
+          @userId = user._id
+          Website.findOne {accountId: @accountId}, (err, website) =>
             should.not.exist err
-            should.exist chatSessions
-            chatSessions.should.be.empty
-
-            # keys should not exist
-            redis.keys "*#{sessionId}*", (err, keys) ->
+            should.exist website
+            @websiteId = website._id
+            @websiteUrl = website.url
+            chatData =
+              accountId: @accountId
+              websiteId: @websiteId
+              websiteUrl: @websiteUrl
+              name: 'Visitor'
+            Factory.create 'chat', chatData, (err, chat) =>
               should.not.exist err
-              should.exist keys
-              keys.should.be.empty
-
-              # lookups should not exist
-              redis.smembers "account:#{accountId}:session:allSessions", (err, keys) ->
-                keys.should.not.include sessionId
-
-                redis.smembers "account:#{accountId}:session:onlineOperators", (err, keys) ->
-                  keys.should.not.include sessionId
-
-                  redis.hget "account:#{accountId}:session:sessionsByOperator", operatorId, (err, lookup) ->
+              @chatId = chat._id
+              Factory.create 'chatSession', {@sessionId, @chatId}, (err, chatSession) =>
+                should.not.exist err
+                should.exist chatSession
+                client.logout (err) =>
+                  should.not.exist err
+                  ChatSession.find {@sessionId}, (err, chatSessions) =>
                     should.not.exist err
-                    should.not.exist lookup, 'expected sessionsByOperator to be cleaned'
-                    done()
+                    should.exist chatSessions
+                    chatSessions.should.be.empty
+                    done err

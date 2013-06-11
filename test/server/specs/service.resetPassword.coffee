@@ -17,7 +17,7 @@ boiler 'Service - Reset Password', ->
         should.not.exist err, "expected resetPassword to work: #{err}"
 
         # try to log in with new password
-        client.login loginData, (err, {sessionId}) =>
+        client.login loginData, (err, {sessionSecret}) =>
           should.not.exist err, "expected login to work: #{err}"
-          should.exist sessionId, "expected sessionId"
+          should.exist sessionSecret, "expected sessionId"
           done()

@@ -1,21 +1,20 @@
-stoic = require 'stoic'
-{Chat} = stoic.models
+db = config.require 'load/mongo'
+{Chat} = db.models
 
 module.exports =
-  required: ['accountId', 'chatId']
-  service: ({accountId, chatId}, done) ->
-    Chat(accountId).get(chatId).history.all (err, history) ->
-      if err
+  required: ['sessionSecret', 'chatId']
+  service: ({chatId}, done) ->
+    Chat.findById chatId, (err, chat) ->
+      if err or not chat?
         config.log.error 'Error recovering history for chat',
           error: err
           chatId: chatId
-          history: history
+          history: chat?.history
         return done 'could not find chat'
-
-      if history.length is 0
-        history.push
+      # HERE BE DRAGONS
+      if chat.history.length is 0
+        chat.history.push
           timestamp: new Date().getTime()
           type: 'notification'
           message: 'Welcome to live chat! An operator will be with you shortly.'
-
-      done null, {history: history}
+      done err, {history: chat.history}

@@ -1,39 +1,46 @@
 should = require 'should'
-stoic = require 'stoic'
+
+db = config.require 'load/mongo'
+{Session} = db.models
 
 boiler 'Service - Get Nonpresent Operators', ->
+  beforeEach (done) ->
+    @guru1Login (err, @guru1Client) =>
+      should.not.exist err
+      should.exist @guru1Client
+      
+      @guru2Login (err, @guru2Client) =>
+        should.not.exist err
+        should.exist @guru2Client
+
+        @newChat =>
+          done()
+    
   it 'should return a list of operators not currently visible in chat', (done) ->
-    # Setup
-    @getAuthed (_..., {accountId}) =>
-      @newChat =>
-        @client.watchChat {chatId: @chatId}, (err) =>
+    @guru1Client.joinChat {@chatId}, (err) =>
+      should.not.exist err
 
-          # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators {chatId: @chatId}, (err, {operators}) =>
-            should.not.exist err
+      @guru1Client.getNonpresentOperators {@chatId}, (err, {operators}) =>
+        should.not.exist err
+        should.exist operators
 
-            # Validate returned data
-            operators.length.should.eql 1
-            operators[0].chatName.should.eql 'Owner Man'
-            operators[0].role.should.eql 'Owner'
-
-            # Make sure we have the right id
-            {Session} = stoic.models
-            Session(accountId).get(operators[0].id).chatName.get (err, chatName) =>
-              chatName.should.eql 'Owner Man'
-              done()
+        operators.length.should.equal 1
+        [op] = operators
+        op.username.should.equal 'Second Guru'
+              
+        done()
 
   it 'should not return operators who are visible in the chat', (done) ->
-    # Setup
-    @getAuthed =>
-      @newChat =>
-        @client.acceptChat {chatId: @chatId}, (err) =>
+    @guru1Client.joinChat {@chatId}, (err) =>
+      should.not.exist err
+
+      @guru2Client.joinChat {@chatId}, (err) =>
+        should.not.exist err
+
+        @guru1Client.getNonpresentOperators {@chatId}, (err, {operators}) =>
           should.not.exist err
+          should.exist operators
 
-          # Get a list of operators who are online and not visible in chat
-          @client.getNonpresentOperators {chatId: @chatId}, (err, {operators}) =>
-            should.not.exist err
-
-            # Validate returned data
-            operators.length.should.eql 0
-            done()
+          operators.length.should.equal 0
+              
+          done()

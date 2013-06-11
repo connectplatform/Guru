@@ -1,6 +1,7 @@
 should = require 'should'
-stoic = require 'stoic'
-Pulsar = require 'pulsar'
+
+db = config.require 'load/mongo'
+{ChatSession} = db.models
 
 boiler 'Service - Invite Operator', ->
   beforeEach ->
@@ -12,7 +13,7 @@ boiler 'Service - Invite Operator', ->
 
         # get the invitee's session
         @accountId = accountId
-        @targetSession = sessionId
+        @targetSessionId = sessionId
 
         # create inviter
         @getAuthed =>
@@ -28,40 +29,61 @@ boiler 'Service - Invite Operator', ->
 
   it "should let you invite an operator to the chat", (done) ->
     @prep =>
-
       # Try to invite other operator
-      @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
+      @client.inviteOperator {@chatId, @targetSessionId}, (err) =>
         should.not.exist err, 'expected inviteOperator to not error'
 
         # Check whether operator was invited
         # TODO: test this on the server level, rather than querying db directly
-        {ChatSession} = stoic.models
-        ChatSession(@accountId).getByChat @chatId, (err, chatSessions) =>
-          should.not.exist err, 'expected ChatSession.getByChat to not error'
+        ChatSession.findOne {@chatId, sessionId: @targetSessionId}, (err, chatSession) =>
+          should.not.exist err
+          should.exist chatSession
+          
+          chatSession.relation.should.equal 'Invite'
+          chatSession.initiator.should.equal @sessionId
+          done()
 
-          # get the chatSession we care about
-          chatSession = {}
-          for cs in chatSessions when cs.sessionId is @targetSession
-            chatSession = cs
-
-          chatSession.relationMeta.get 'type', (err, type) =>
-            type.should.eql 'invite'
-            chatSession.relationMeta.get 'requestor', (err, requestor) =>
-              requestor.should.eql @sessionId
-              done()
-
-  it "should notify the operator you invited", (done) ->
+  it "should not let you invite an operator to a nonexistent chat", (done) ->
     @prep =>
-
-      sessionUpdates = "notify:session:#{@targetSession}"
-
-      # Should receive notification
-      recipient = @getPulsar().channel sessionUpdates
-      recipient.once 'pendingInvites', ([chat]) ->
-        should.exist chat
+      badChatId = @targetSessionId # sic
+      @client.inviteOperator {chatId: badChatId, @targetSessionId}, (err) =>
+        should.exist err
         done()
 
-      recipient.ready =>
+  it "should not let you invite yourself to a Chat", (done) ->
+    @prep =>
+      # Try to invite myself
+      @client.inviteOperator {@chatId, targetSessionId: @sessionId}, (err) =>
+        should.exist err
+        err.should.equal 'You cannot invite yourself to a Chat'
+        done()
 
-        # Try to invite other operator
-        @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, ->
+  it "should not let you invite a Visitor to a Chat", (done) ->
+    @prep =>
+      client = @client
+      chatId = @chatId
+      @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, @visitor) =>
+        should.not.exist err
+        should.exist visitor
+        visitorSessionId = visitor.localStorage.sessionId
+        @client.inviteOperator {chatId: chatId, targetSessionId: visitorSessionId}, (err) =>
+          should.exist err
+          err.should.equal 'You cannot invite a Visitor to join a Chat'
+          done()
+
+                              
+# This should be a separate integration test
+  # it "should notify the operator you invited", (done) ->
+  #   @prep =>
+  #     sessionUpdates = "notify:session:#{@targetSession}"
+
+  #     # Should receive notification
+  #     recipient = @getPulsar().channel sessionUpdates
+  #     recipient.once 'pendingInvites', ([chat]) ->
+  #       should.exist chat
+  #       done()
+
+  #     recipient.ready =>
+
+  #       # Try to invite other operator
+  #       @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, ->

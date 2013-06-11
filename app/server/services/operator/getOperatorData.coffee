@@ -1,9 +1,7 @@
-stoic = require 'stoic'
-{Session} = stoic.models
-
 db = config.require 'load/mongo'
-{User} = db.models
+{Session, User} = db.models
 
-module.exports = (accountId, sessionId, done) ->
-  Session(accountId).get(sessionId).operatorId.get (err, opId) ->
-    User.findById opId, done
+module.exports = (sessionId, done) ->
+  Session.findById sessionId, (err, session) ->
+    sessionId = session._id
+    User.findById session.userId, done

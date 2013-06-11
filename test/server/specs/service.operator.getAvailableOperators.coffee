@@ -1,5 +1,4 @@
 should = require 'should'
-stoic = require 'stoic'
 
 boiler 'Service - Get Available Operators', ->
 
@@ -7,6 +6,7 @@ boiler 'Service - Get Available Operators', ->
     @getAvailableOperators = config.service 'operator/getAvailableOperators'
     websiteFromDomain = config.service 'websites/getWebsiteIdForDomain'
     websiteFromDomain {websiteUrl: 'foo.com'}, (err, {websiteId}) =>
+      should.exist websiteId
       @fooSiteId = websiteId
       websiteFromDomain {websiteUrl: 'bar.com'}, (err, {websiteId}) =>
         @barSiteId = websiteId

@@ -1,5 +1,6 @@
 should = require 'should'
-stoic = require 'stoic'
+db = config.require 'load/mongo'
+{ChatSession} = db.models
 
 boiler 'Service - Get Active Chats', ->
 
@@ -8,34 +9,33 @@ boiler 'Service - Get Active Chats', ->
       @newChat =>
 
         # get active chats
-        @client.getActiveChats {}, (err, {chats: [chatData]}) =>
+        @client.getActiveChats {}, (err, {chats: [chat]}) =>
           should.not.exist err
-          should.exist chatData, 'expected a chat record'
-          chatData.visitor.username.should.eql 'visitor'
-          chatData.status.should.eql 'waiting'
-          should.exist new Date chatData.creationDate
+          should.exist chat, 'expected a chat record'
+          chat.name.should.equal 'visitor'
+          chat.status.should.equal 'Waiting'
           done()
 
-  it 'should return operators for chats', (done) ->
-    @getAuthed =>
-      @newChat =>
+  # This is no longer true, as operators is no longer part of the schema
+  # it 'should return operators for chats', (done) ->
+  #   @getAuthed =>
+  #     @newChat =>
 
-        # have our operator join the chat
-        @client.joinChat {chatId: @chatId}, =>
+  #       # have our operator join the chat
+  #       @client.joinChat {chatId: @chatId}, =>
 
-          # get active chats
-          @client.getActiveChats {}, (err, {chats: [chatData]}) =>
-            should.not.exist err
-            should.exist chatData.operators
-            chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
-            done()
+  #         # get active chats
+  #         @client.getActiveChats {}, (err, {chats: [chatData]}) =>
+  #           should.not.exist err
+  #           should.exist chatData.operators
+  #           chatData.operators.length.should.eql 1, 'Expected 1 operator in chat'
+  #           done()
 
   describe 'filter:', ->
     before ->
-      @generate = (chatData, done) =>
+      @generate = (data, done) =>
         @guru3Login (err, @client) =>
-          @newChatWith chatData, =>
-
+          @newChatWith data, (err, chatData) =>
             # get active chats
             @client.getActiveChats {}, (err, {chats}) =>
               should.not.exist err
@@ -48,7 +48,7 @@ boiler 'Service - Get Active Chats', ->
         websiteUrl: 'baz.com'
 
       @generate chatData, (err, chats) ->
-        chats.length.should.eql 0, 'Expected no chats'
+        chats.length.should.equal 0, 'Expected no chats'
         done()
 
     it 'should show me chats for my website', (done) ->
@@ -57,7 +57,7 @@ boiler 'Service - Get Active Chats', ->
         websiteUrl: 'foo.com'
 
       @generate chatData, (err, chats) ->
-        chats.length.should.eql 1, 'Expected a chat'
+        chats.length.should.equal 1, 'Expected a chat'
         done()
 
     it 'should not show me chats for another specialty', (done) ->
@@ -67,7 +67,7 @@ boiler 'Service - Get Active Chats', ->
         specialtyName: 'Billing'
 
       @generate chatData, (err, chats) ->
-        chats.length.should.eql 0, 'Expected no chats'
+        chats.length.should.equal 0, 'Expected no chats'
         done()
 
     it 'should show me chats for my specialty', (done) ->
@@ -77,7 +77,7 @@ boiler 'Service - Get Active Chats', ->
         specialtyName: 'Sales'
 
       @generate chatData, (err, chats) ->
-        chats.length.should.eql 1, 'Expected a chat'
+        chats.length.should.equal 1, 'Expected a chat'
         done()
 
     it 'specialtyName should not be case sensitive', (done) ->
@@ -87,37 +87,38 @@ boiler 'Service - Get Active Chats', ->
         specialtyName: 'sales'
 
       @generate chatData, (err, chats) ->
-        chats.length.should.eql 1, 'Expected a chat'
+        chats.length.should.equal 1, 'Expected a chat'
         done()
 
   it 'should not display any chats with vacant status', (done) ->
     @getAuthed =>
       @createChats (err, chats) =>
         should.not.exist err
-
         @client.getActiveChats {}, (err, {chats}) =>
           should.not.exist err
-          vacantChats = chats.findAll (chat) -> chat.status is 'vacant'
-          vacantChats.length.should.eql 0
+          should.exist chats
+          vacantChats = [c for c in chats].filter ((c) -> c.status is 'Vacant')
+          vacantChats.should.be.empty
           done()
 
   it 'should sort the chats', (done) ->
-    @getAuthed (_..., {accountId}) =>
+    @getAuthed (_..., {@sessionId, accountId}) =>
       @createChats (err, chats) =>
         should.not.exist err
+        should.exist chats
 
         # add an invite for the present operator
         inviteChat = chats[2]
-        {ChatSession} = stoic.models
-        ChatSession(accountId).add @sessionId, inviteChat.id, {type: 'invite'}, (err) =>
+        ChatSession.create {@sessionId, chatId: inviteChat._id, relation: 'Invite'}, (err, _) =>
           should.not.exist err
-
-          ChatSession(accountId).get(@sessionId, inviteChat.id).relationMeta.getall (err, chatSession) =>
+          should.exist _
+          
+          ChatSession.findOne {@sessionId, chatId: inviteChat._id}, (err, chatSession) =>
             should.not.exist err
-            should.exist chatSession, 'expected chatsession'
-
-            ChatSession(accountId).getBySession @sessionId, (err, chatSessions) =>
+            should.exist chatSession, 'expected chatSession'
+            ChatSession.find {@sessionId}, (err, chatSessions) =>
               should.not.exist err
+              should.exist chatSessions
 
               # get active chats
               @client.getActiveChats {}, (err, {chats}) =>
@@ -125,24 +126,34 @@ boiler 'Service - Get Active Chats', ->
                 should.exist chats
                 chats.length.should.eql 3
 
-                visitorNames = chats.map (chat) => chat.visitor.username
-                visitorNames.should.eql ['Ralph', 'Bob', 'Suzie']
+                visitorNames = chats.map (chat) => chat.name
+                visitorNames.should.eql ['Bob', 'Suzie', 'Ralph']
                 done()
 
   it "should have a chat relation if an operator is invited", (done) ->
-
     # Setup
     @loginOperator (err, invitee) =>
       @getAuthed =>
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSession}, (err) =>
+
+            @client.inviteOperator {@chatId, @targetSessionId}, (err) =>
               should.not.exist err
 
-              invitee.getActiveChats {sessionId: @targetSession}, (err, {chats}) =>
+              invitee.getActiveChats {sessionId: @targetSessionId}, (err, {chats}) =>
                 should.not.exist err
+                should.exist chats
                 chats.length.should.eql 1
-                chats[0].id.should.eql @chatId
-                chats[0].relation.should.eql 'invite'
-                done()
+                [chat] = chats
+                should.exist chat
+                chat._id.should.equal @chatId
+                chat.status.should.equal 'Active'
+                cond =
+                  chatId: @chatId
+                  sessionId: @targetSessionId
+                ChatSession.findOne cond, (err, chatSession) =>
+                  should.not.exist err
+                  should.exist.chatSession
+                  chatSession.relation.should.equal 'Invite'
+                  done()

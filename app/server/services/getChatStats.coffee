@@ -1,16 +1,20 @@
 async = require 'async'
 getInvites = config.require 'services/operator/getInvites'
 
-stoic = require 'stoic'
-{Session} = stoic.models
+db = config.require 'load/mongo'
+{Session} = db.models
 
 module.exports =
   required: ['sessionId', 'accountId']
   service: ({sessionId, accountId}, done) ->
-    session = Session(accountId).get sessionId
+    Session.findById sessionId, (err, session) ->
+      done err, null if err
 
-    async.parallel {
-      unreadMessages: session.unreadMessages.getall
-      unanswered: session.unansweredChats.all
-      invites: getInvites sessionId
-    }, done
+      getInvites sessionId, (err, invites) ->
+        done err, null if err
+
+        data =
+          unanswered: session.unansweredChats
+          unreadMessages: session.unreadMessages
+          invites: invites
+        done err, data

@@ -1,10 +1,9 @@
-stoic = require 'stoic'
-{ChatSession} = stoic.models
+db = config.require 'load/mongo'
+{ChatSession} = db.models
 
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']
   service: ({sessionId, accountId, chatId}, done) ->
-    ChatSession(accountId).getBySession sessionId, (err, chatSessions=[]) ->
-      if (chatSessions.any (sess) -> sess.chat.id is chatId)
-        return done err, {accessAllowed: true}
-      done err, {accessAllowed: false}
+    ChatSession.findOne {sessionId, chatId}, (err, chatSession) ->
+      accessAllowed = chatSession?
+      done err, {accessAllowed}

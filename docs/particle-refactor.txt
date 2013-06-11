@@ -1,26 +1,27 @@
-TOTAL: 137
+TOTAL: 140
 TARGET TIME: 10 days
-EST VELOC: 13.7
+EST VELOC: 14.0
 
 
 SERVER
-TOTAL: 116
+TOTAL: 119
 
 Models:
 
-  Chat 5
-  Session 5
++ Chat 5 (5/10)
++ Session 5 (5/10)
++ ChatSession 5 (5/10)
 
 Load:
 
-  Particle 3
-  Jargon 2
-  App 1
++ Particle 3 (5/8)
++ Jargon 2 (5/8)
++ App 1 (5/8)
 
   Trash:
 
-    Stoic 1
-    Pulsar 1
++   Stoic 1 (5/10)
++   Pulsar 1 (5/10)
 
 Scripts:
 
@@ -28,69 +29,72 @@ Scripts:
   loadTest 1
 
 Services:
-  deleting 2
++  deleteModel 2 (5/16)
 
-  acceptChat 1
-  acceptInvite 1
-  acceptTransfer 1
-  account/getAccountId 1
-  changePassword 2
++  acceptChat 1 (5/29)
++  acceptInvite 1 (5/30)
++  acceptTransfer 1 (5/30)
++  account/getAccountId 1 (5/30) NOT NEEDED(?), accountId a field of Session
++  changePassword 2 (5/17)
 --chats/getChatRelations
 --chats/getFullChatData
 --chats/getRelationToChat
 --chats/messageReceived
---chats/updateChatStatus
++ --chats/updateChatStatus (6/4)
 --clearOldChats
-  emailChat 2
-  filters/isOwner 1
-  filters/isStaff 1
-  getActiveChats 5
-  getChatHistory 2
-  getChatStats 3
-  getExistingChat 1
-  getLogoForChat 3
-  getMyChats 2
-  getMyRole 1
-  getNonpresentOperators 3 #online status
-  getOnlineOperators 3
-  inviteOperator 2
-  joinChat 2
-  kickUser 2
-  leaveChat 2
-  log 3 #create new logger
-  logout 2
-  newChat 5
-  operator/createUserSession 3
-  operator/getAvailableOperators 5
-  operator/getInvites 3
-  operator/getOperatorData 2
-  operator/getOrCreateSession 3
-  operator/removeUnanswered 3 #calculate
-  populateVisitorAcpData 3
-  printChat 2
---queries/query
-  session/setSessionOnlineStatus 5 #change to reportActivity
++  emailChat 2 (6/4)
++  filters/isOwner 1 (5/16)
++  filters/isStaff 1 (5/15)
++  getActiveChats 5 (5/29)
++  getChatHistory 2 (5/24)
++  getChatStats 3 (5/29)
++  getExistingChat 1 (5/30)
++  getLogoForChat 3 (6/3)
++  getMyChats 2 (5/27)
++  getMyRole 1 (5/15) (5/29)
++  getNonpresentOperators 3 #online status (5/31)
++  getOnlineOperators 3 (5/30)
++  inviteOperator 2 (5/29)
++  joinChat 2 (5/24)
++  kickUser 2 (5/30)
++  leaveChat 2 (5/30)
++  log 3 #create new logger (6/3)
++  login 3 (5/13)
++  logout 2 (5/16)
++  newChat 5 (5/24)
++  operator/createUserSession 3 (5/14)
++  operator/getAvailableOperators 5 (5/21)
++  operator/getInvites 3 (5/29)
++  operator/getOperatorData 2 (5/17)
++  operator/getOrCreateSession 3 (5/14)
++  operator/removeUnanswered 3 #calculate (5/31)
++  populateVisitorAcpData 3 (6/5)
++  printChat 2 (6/3)
++ --queries/query (6/4)
++  session/setSessionOnlineStatus 5 #change to reportActivity (6/3)
   session/setUnansweredChats 3 #calculate
 --sessionNotifications/pendingInvites
 --sessionNotifications/unansweredChats
 --sessionNotifications/unreadMessages
-  transferChat 2
-  visitorCanAccessChannel 2
++  transferChat 2 (5/29)
++  visitorCanAccessChannel 2 (6/3)
 
 Tests:
 
-  Boilerplate 2
-  Helpers 5
++  Boilerplate 2 (5/8)
++  Helpers 5 (6/4)
 
   recurly/getRecurlyToken
   middleware.serviceMeta
-  model.chatSession
-  model.session
++  model.Chat (5/14)
++  model.ChatSession (5/14)
++  model.Session (5/14)
   service.acceptChat
   service.acceptInvite
++  service.changePassword (5/17)
   service.clearOldChats
   service.getActiveChats
-  service.getAvailableOperators
++  service.getAvailableOperators (5/21)
   service.getChatStats
   service.getLogoForChat
   service.getMyChats
@@ -98,9 +102,10 @@ Tests:
   service.inviteOperator
   service.joinChat
   service.kickUser
-  service.login
-  service.logout
++  service.login (5/14)
++  service.logout (5/16)
   service.newChat
++  service.operator.getOperatorData (5/17)
   service.populateVisitorAcpData
   service.query
   service.setSessionOffline

@@ -1,10 +1,19 @@
 db = config.require 'load/mongo'
 
 module.exports =
-  required: ['modelId', 'modelName']
-  service: ({modelId, modelName}, done) ->
+  required: ['accountId', 'modelId', 'modelName']
+  service: ({accountId, modelId, modelName}, done) ->
     Model = db.models[modelName]
-    Model.findOne {_id: modelId}, (err, model) ->
+
+    queryObject = {_id: modelId}
+
+    # inject accountId into query
+    if modelName is 'Account'
+      queryObject.merge {_id: accountId}
+    else
+      queryObject.merge {accountId}
+
+    Model.findOne queryObject, (err, model) ->
       return done err if err or not model?
 
       model.remove (err) ->

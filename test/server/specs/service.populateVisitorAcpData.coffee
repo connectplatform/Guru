@@ -2,7 +2,9 @@ should = require 'should'
 connect = require 'connect'
 querystring = require 'querystring'
 {setTimeout} = require 'timers'
-stoic = require 'stoic'
+
+db = config.require 'load/mongo'
+{Session, Chat} = db.models
 
 # query/form data
 clientData = {
@@ -25,6 +27,11 @@ response = (req, res) ->
   if (query.customerId == clientData.customerId) && (query.websiteUrl == clientData.websiteUrl)
     res.end JSON.stringify expectedAcpData
 
+badJsonResponse = (req, res) ->
+  query = querystring.parse req._parsedUrl.query
+  if (query.customerId == clientData.customerId) && (query.websiteUrl == clientData.websiteUrl)
+    res.end '}Explode{'
+
 boiler 'Service - Populate Visitor ACP Data', ->
   beforeEach (done) ->
     @ownerLogin (err, @owner) =>
@@ -37,8 +44,8 @@ boiler 'Service - Populate Visitor ACP Data', ->
         @owner.saveModel {fields: target.merge(websiteFields), modelName: 'Website'}, done
 
   # note: this is not a service proper, but a subservice located in server/domain that is called by newChat
-  it 'should hit the ACP server and dump data into redis', (done) ->
-    testServer = connect().use(response).listen 8675
+  it 'should hit the ACP server and dump data into Mongo', (done) ->
+    testServer = connect().use(response).listen 8675 # process.env.GURU_PORT
 
     @client = @getClient()
     @client.ready =>
@@ -47,20 +54,34 @@ boiler 'Service - Populate Visitor ACP Data', ->
       @client.newChat clientData, (err, {chatId, sessionId}) =>
         should.not.exist err
 
-        # check that data is in stoic
-        {Session, Chat} = stoic.models
+        verifyResult = =>
+          Chat.findById chatId, (err, chat) =>
+            should.not.exist err
+            should.exist chat
+            (Object.equal chat.acpData, expectedAcpData).should.be.true
+            testServer.close()
+            done()
+
+        # The unfortunate part of making the acp lookup run async in the background...
+        setTimeout verifyResult, 200
+
+  it 'should catch an error when the ACP server returns an invalid JSON string', (done) ->
+    testServer = connect().use(badJsonResponse).listen 8675 # process.env.GURU_PORT
+
+    @client = @getClient()
+    @client.ready =>
+
+      # Set up chat info
+      @client.newChat clientData, (err, {chatId, sessionId}) =>
+        should.not.exist err
 
         verifyResult = =>
-          Session.accountLookup.get sessionId, (err, accountId) ->
-            visitor = Chat(accountId).get(chatId).visitor
-            visitor.get 'referrerData', (err, refData) ->
-              should.not.exist err
-              refData.should.include clientData
-
-              visitor.get 'acpData', (err, acpData) ->
-                should.not.exist err
-                acpData.should.include expectedAcpData
-                done()
+          Chat.findById chatId, (err, chat) =>
+            should.not.exist err
+            should.exist chat
+            should.not.exist chat.acpData
+            # (Object.equal chat.acpData, expectedAcpData).should.be.true
+            done()
 
         # The unfortunate part of making the acp lookup run async in the background...
         setTimeout verifyResult, 200

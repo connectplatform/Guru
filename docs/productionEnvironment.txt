@@ -1,0 +1,4 @@
+sudo vim /etc/nginx/sites-enabled/chatpro
+service nginx stop && sudo service nginx start
+sudo ufw allow 8000
+sudo ufw status

@@ -2,3 +2,6 @@ sudo vim /etc/nginx/sites-enabled/chatpro
 service nginx stop && sudo service nginx start
 sudo ufw allow 8000
 sudo ufw status
+
+Install Correct MongoDB on Linux:
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/

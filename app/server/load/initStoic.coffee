@@ -7,5 +7,12 @@ stoic.load config.require "models/#{model}" for model in [
   'chatSession'
 ]
 
+run = false
 module.exports = (cb) ->
-  stoic.client.select config.redis.database, cb
+  if run
+    cb null, stoic
+
+  else
+    run = true
+    stoic.client.select config.redis.database, (err) ->
+      cb err, stoic

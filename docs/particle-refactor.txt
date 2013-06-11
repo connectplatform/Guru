@@ -1,0 +1,122 @@
+TOTAL: 137
+TARGET TIME: 10 days
+EST VELOC: 13.7
+
+
+SERVER
+TOTAL: 116
+
+Models:
+
+  Chat 5
+  Session 5
+
+Load:
+
+  Particle 3
+  Jargon 2
+  App 1
+
+  Trash:
+
+    Stoic 1
+    Pulsar 1
+
+Scripts:
+
+  clearOldChats 1
+  loadTest 1
+
+Services:
+  deleting 2
+
+  acceptChat 1
+  acceptInvite 1
+  acceptTransfer 1
+  account/getAccountId 1
+  changePassword 2
+--chats/getChatRelations
+--chats/getFullChatData
+--chats/getRelationToChat
+--chats/messageReceived
+--chats/updateChatStatus
+--clearOldChats
+  emailChat 2
+  filters/isOwner 1
+  filters/isStaff 1
+  getActiveChats 5
+  getChatHistory 2
+  getChatStats 3
+  getExistingChat 1
+  getLogoForChat 3
+  getMyChats 2
+  getMyRole 1
+  getNonpresentOperators 3 #online status
+  getOnlineOperators 3
+  inviteOperator 2
+  joinChat 2
+  kickUser 2
+  leaveChat 2
+  log 3 #create new logger
+  logout 2
+  newChat 5
+  operator/createUserSession 3
+  operator/getAvailableOperators 5
+  operator/getInvites 3
+  operator/getOperatorData 2
+  operator/getOrCreateSession 3
+  operator/removeUnanswered 3 #calculate
+  populateVisitorAcpData 3
+  printChat 2
+--queries/query
+  session/setSessionOnlineStatus 5 #change to reportActivity
+  session/setUnansweredChats 3 #calculate
+--sessionNotifications/pendingInvites
+--sessionNotifications/unansweredChats
+--sessionNotifications/unreadMessages
+  transferChat 2
+  visitorCanAccessChannel 2
+
+Tests:
+
+  Boilerplate 2
+  Helpers 5
+
+  recurly/getRecurlyToken
+  middleware.serviceMeta
+  model.chatSession
+  model.session
+  service.acceptChat
+  service.acceptInvite
+  service.clearOldChats
+  service.getActiveChats
+  service.getAvailableOperators
+  service.getChatStats
+  service.getLogoForChat
+  service.getMyChats
+  service.getNonpresentOperators
+  service.inviteOperator
+  service.joinChat
+  service.kickUser
+  service.login
+  service.logout
+  service.newChat
+  service.populateVisitorAcpData
+  service.query
+  service.setSessionOffline
+  service.transferChat
+  service.updateChatStatus
+  service.watchChat
+
+CLIENT
+TOTAL: 21
+
+  load/particle 3
+--load/pulsar
+  load/routes 1
+--policy/registerSessionUpdates
+  routes/dashboard 8
+  routes/operatorChat 3 # wire up component
+  routes/sidebar 3 # wire up component
+  routes/visitorChat 3 # wire up component
+

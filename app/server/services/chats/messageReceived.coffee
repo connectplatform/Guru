@@ -16,13 +16,7 @@ module.exports =
 
     ], (err, [username, chatSessions]) ->
       chatSessions ?= []
-      if err
-        meta =
-          error: err
-          chatId: chatId
-          username: username
-          chatSessions: chatSessions
-        config.log.error 'Error getting chat name and session in messageReceived', meta
+      return done err if err
 
       operators = (op.sessionId for op in chatSessions)
 

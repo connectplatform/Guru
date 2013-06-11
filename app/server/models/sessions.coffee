@@ -83,18 +83,17 @@ face = (decorators) ->
 
         unansweredChats session, ({after}) ->
           after ['srem'], (context, data, next) ->
-            # must provide accountId - cannot look up after it's been removed
-            notifySession {accountId: accountId, sessionId: session.id, type: 'new'}
+            notifySession {accountId: accountId, sessionId: session.id, type: 'new'}, ->
             next null, data
 
           after ['add'], (context, data, next) ->
-            notifySession {sessionId: session.id, type: 'new', chime: 'true'}
+            notifySession {accountId: accountId, sessionId: session.id, type: 'new', chime: 'true'}, ->
             next null, data
 
         unreadMessages session, ({after}) ->
 
           after ['incrby'], (context, data, next) ->
-            notifySession {sessionId: session.id, type: 'unread', chime: 'true'}
+            notifySession {accountId: accountId, sessionId: session.id, type: 'unread', chime: 'true'}, ->
             next null, data
 
           # filter retreived values with a parseInt

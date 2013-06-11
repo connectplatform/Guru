@@ -13,10 +13,7 @@ pulsarPort = process.env.GURU_PULSAR_PORT
 #Exported object of helper functions
 helpers =
 
-  logger:
-    module.exports = (args...) ->
-      console.log args.map((a) ->
-        if (typeof a) is 'string' then a else inspect a, null, null)...
+  logger: config.require 'lib/logger'
 
   # keep track of how many tests we've run
   count: 0
@@ -64,8 +61,7 @@ helpers =
 
   getAuthedWith: (data, cb) ->
     {Session} = stoic.models
-    client = @getClient()
-    client.ready =>
+    @getClient (client) =>
       client.login data, (err, {sessionId}) =>
         console.log 'error on test login:', err if err or not sessionId
         Session.accountLookup.get sessionId, (_, accountId) ->

@@ -24,13 +24,13 @@
     "markdown": "*",
     "winston": "*",
     "winston-mongodb": "*",
-    "jade": "*" 
+    "jade": "*"
   },
   "devDependencies": {
     "factory-worker": "*",
     "memwatch": "*",
+    "traffic": "*",
     "keypress": "*",
-    "zombie": "*",
     "node-log": "*",
     "jaded": "0.0.6"
   },

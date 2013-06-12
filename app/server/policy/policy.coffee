@@ -17,6 +17,7 @@ policy =
           'acceptTransfer'
           'changePassword'
           'getActiveChats'
+          'getChatStats'
         ]
       }
       # {

@@ -4,11 +4,10 @@ db = config.require 'load/mongo'
 module.exports =
   required: ['sessionSecret']
   service: ({sessionSecret, sessionId}, found) ->
-    return found null, {sessionId} if sessionId
+    # return found null, {sessionId} if sessionId
     
     Session.findOne {secret: sessionSecret}, (err, session) ->
-      found err if err or not session
-
-      found err, {sessionId: session?._id}
+      return found err if err or not session?
+      return found err, {sessionId: session?._id}
 
       

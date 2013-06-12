@@ -1,13 +1,12 @@
 async = require 'async'
 db = config.require 'load/mongo'
-{ChatSession} = db.models
+{ChatSession, Session} = db.models
 
 module.exports =
-  required: ['sessionId', 'accountId', 'chatId']
+  required: ['sessionSecret', 'sessionId', 'accountId', 'chatId']
   service: ({sessionId, accountId, chatId}, done) ->
-
     ChatSession.findOne {sessionId, chatId}, (err, chatSession) ->
-      done err, null if err
+      return done err, null if err or not chatSession?
 
       # We will need to remove this Operator from the Chat
       initiatorSessionId = chatSession?.initiator

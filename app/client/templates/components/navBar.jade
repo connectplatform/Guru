@@ -2,14 +2,14 @@
   .navbar-inner.navBarContainer
     .container-fluid
       a.brand.brandSpacing(href='#')
-        strong #{name}
-      ul.nav 
+        strong #{appName}
+      ul.nav
         li
-          a(href='#/dashboard') Dashboard 
-            span.notifyUnanswered 
+          a(href='#/dashboard') Dashboard
+            span.notifyUnanswered
             span.notifyInvites
         li.newChatSelector
-          a(href='#/operatorChat') Chats 
+          a(href='#/operatorChat') Chats
             span.notifyUnread
         if role == "Owner"
           ul.nav
@@ -36,7 +36,7 @@
       input.input-medium.search-query.searchBox(type='text', placeholder='Search...')
       ul.nav.pull-right
         li.dropdown
-          a.dropdown-toggle(href='#', data-toggle='dropdown') Logged in as Monad
+          a.dropdown-toggle(href='#', data-toggle='dropdown') Logged in as #{username}
             b.caret
           ul.dropdown-menu.collapse.in
             li

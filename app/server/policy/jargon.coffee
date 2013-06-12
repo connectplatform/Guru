@@ -1,9 +1,6 @@
 db = require 'mongoose'
 {Chat, ChatSession, Session, Specialty, Website} = db.models
 
-# stoic = require 'stoic'
-# {Session, Chat} = stoic.models
-
 {getString, getType} = config.require 'load/util'
 
 redisId = /^[a-z0-9]{16}$/
@@ -33,6 +30,10 @@ module.exports = [
       Session.findById value, (err, session) ->
         exists = not err and session?
         assert exists, {reason: 'Session does not exist'}
+    lookup: ({sessionSecret}, found) ->
+      Session.findOne {secret: sessionSecret}, {_id: 1}, (err, session) ->
+        found err, session?._id
+        
     defaultArgs: ['sessionId']
   ,
     typeName: 'ChatId'

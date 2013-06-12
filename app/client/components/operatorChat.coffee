@@ -1,17 +1,17 @@
-"use strict"
-define ["load/server", "load/notify", "load/pulsar", "flight/component"] (server, notify, pulsar, defineComponent) ->
-  operatorChat = ->
+define ["load/server", "load/notify", "flight/component"],
+  (server, notify, defineComponent) ->
+    operatorChat = ->
 
-    @after "initialize", ->
+      @after "initialize", ->
 
-      #adds Template if does not exist in DOM
-      if $('#chatWrapper').length == 0
-        @$node.append templ
+        #adds Template if does not exist in DOM
+        if $('#chatWrapper').length == 0
+          @$node.append templ
 
-      #tests component's firing
-      console.log "operatorChat Component"
+        #tests component's firing
+        console.log "operatorChat Component"
 
-  return defineComponent(operatorChat)
+    return defineComponent(operatorChat)
 
 # required jqueryui dependencies, will merge into component later
 #$ ->

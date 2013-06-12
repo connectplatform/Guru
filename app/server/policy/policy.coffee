@@ -8,27 +8,44 @@ policy =
         except: []
       }
 
+
       {
-        filters: ['lookupSessionId']
+        filters: ['sessionIdMatchesSecret']
         only: [
           'chats/getRelationToChat'
-          'acceptChat'
           'acceptInvite'
           'acceptTransfer'
-          'inviteOperator'
-          'getMyChats'
-          'transferChat'
           'changePassword'
           'getActiveChats'
           'getChatStats'
           'getExistingChat'
-          'joinChat'
+          'getMyChats'
           'getNonpresentOperators'
-          'getChatHistory'
-          'kickUser'
-          'leaveChat'
+          'inviteOperator'
+          'joinChat'
         ]
       }
+      # {
+      #   filters: ['lookupSessionId']
+      #   only: [
+      #     # 'chats/getRelationToChat'
+      #     # 'acceptChat'
+      #     'acceptInvite'
+      #     'acceptTransfer'
+      #     'inviteOperator'
+      #     'getMyChats'
+      #     'transferChat'
+      #     'changePassword'
+      #     'getActiveChats'
+      #     'getChatStats'
+      #     'getExistingChat'
+      #     'joinChat'
+      #     'getNonpresentOperators'
+      #     'getChatHistory'
+      #     'kickUser'
+      #     'leaveChat'
+      #   ]
+      # }
 
       {
         filters: ['lookupAccountId']

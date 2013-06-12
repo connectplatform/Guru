@@ -52,16 +52,16 @@ define ["load/server", "load/notify", "helpers/util", "helpers/dashboardAction"]
           updateDashboard()
 
           # automatically update when unansweredChats changes
-          sessionUpdates = pulsar.channel "notify:session:#{$.cookies.get 'session'}"
+          #sessionUpdates = pulsar.channel "notify:session:#{$.cookies.get 'session'}"
 
-          sessionUpdates.on 'unansweredChats', updateDashboard
-          sessionUpdates.on 'pendingInvites', updateDashboard
+          #sessionUpdates.on 'unansweredChats', updateDashboard
+          #sessionUpdates.on 'pendingInvites', updateDashboard
 
     teardown:
       (done) ->
         util.cleartimers()
-        sessionUpdates = pulsar.channel "notify:session:#{$.cookies.get 'session'}"
+        #sessionUpdates = pulsar.channel "notify:session:#{$.cookies.get 'session'}"
 
-        sessionUpdates.removeAllListeners 'pendingInvites'
-        sessionUpdates.removeAllListeners 'unansweredChats'
+        #sessionUpdates.removeAllListeners 'pendingInvites'
+        #sessionUpdates.removeAllListeners 'unansweredChats'
         done()

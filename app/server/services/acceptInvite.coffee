@@ -1,11 +1,15 @@
 db = config.require 'load/mongo'
-{ChatSession} = db.models
+{ChatSession, Session} = db.models
 
 module.exports =
-  required: ['sessionSecret', 'sessionId', 'chatId']
-  service: ({sessionId, chatId}, done) ->
-    ChatSession.findOne {sessionId, chatId}, (err, chatSession) ->
-      done err, null if err
+  required: ['sessionSecret', 'chatId']
+  service: ({sessionSecret, chatId}, done) ->
+    Session.findOne {secret: sessionSecret}, (err, session) ->
+      return done err, null if err or not session?
+      
+      sessionId = session._id
+      ChatSession.findOne {sessionId, chatId}, (err, chatSession) ->
+        return done err, null if err or not chatSession
 
-      chatSession?.relation = 'Member'
-      chatSession?.save done
+        chatSession?.relation = 'Member'
+        chatSession?.save done

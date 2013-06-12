@@ -1,4 +1,4 @@
-define ["flight/component", 'templates/navBar', 'js/vendor/flight/lib/utils', 'js/vendor/flight/lib/registry', 'app/config'], (defineComponent, templ, utils, registry, config) ->
+define ["flight/component", 'templates/components/navBar', 'js/vendor/flight/lib/utils', 'js/vendor/flight/lib/registry', 'app/config'], (defineComponent, templ, utils, registry, config) ->
   navBar = ->
 
     @after "initialize", ->

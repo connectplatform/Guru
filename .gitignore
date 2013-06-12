@@ -10,4 +10,4 @@ app/public
 issue-dump
 tmp
 *~
-components
+components/*

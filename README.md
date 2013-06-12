@@ -25,12 +25,14 @@ mocha test/server/specs
 To run the client tests:
 
 ```bash
+./scripts/build/traffic
 mocha test/traffic/components
 ```
 
 To run the integration tests:
 
 ```bash
+./scripts/build/traffic
 mocha test/traffic/specs
 ```
 

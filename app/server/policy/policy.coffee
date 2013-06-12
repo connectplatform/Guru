@@ -19,6 +19,7 @@ policy =
           'getActiveChats'
           'getChatStats'
           'getExistingChat'
+          'getMyChats'
         ]
       }
       # {

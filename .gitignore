@@ -5,6 +5,7 @@
 node_modules
 dump.rdb
 test/client/public
+test/traffic/public
 app/public
 issue-dump
 tmp

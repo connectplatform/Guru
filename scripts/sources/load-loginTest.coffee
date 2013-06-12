@@ -8,7 +8,7 @@ process.env.GURU_PULSAR_PORT = 'DISABLED'
 async = require 'async'
 memwatch = require 'memwatch'
 
-h = config.require 'test/util/helpers'
+h = config.require 'test/server/util/helpers'
 Factory = config.require 'data/factory'
 sampleData = config.require 'policy/sampleData'
 logger = config.require 'lib/logger'

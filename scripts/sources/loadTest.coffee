@@ -5,7 +5,7 @@ async = require 'async'
 {memdiff, noop, changeFormat} = config.require 'lib/memdiff'
 changeFormat 'details'
 
-h = config.require 'test/util/helpers'
+h = config.require 'test/server/util/helpers'
 Factory = config.require 'data/factory'
 sampleData = config.require 'policy/sampleData'
 logger = config.require 'lib/logger'

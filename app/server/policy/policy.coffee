@@ -13,6 +13,9 @@ policy =
         filters: ['sessionIdMatchesSecret']
         only: [
           'chats/getRelationToChat'
+          'acceptInvite'
+          'acceptTransfer'
+          'changePassword'
         ]
       }
       # {

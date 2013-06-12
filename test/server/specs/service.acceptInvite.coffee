@@ -8,7 +8,7 @@ boiler 'Service - Accept Invite', ->
         @newChat =>
           @client.acceptChat {chatId: @chatId}, (err) =>
             should.not.exist err
-            @client.inviteOperator {chatId: @chatId, targetSessionId: @targetSessionId}, (err) =>
+            @client.inviteOperator {@chatId, @targetSessionId}, (err) =>
               should.not.exist err
 
               client.acceptInvite {chatId: @chatId}, (err) =>

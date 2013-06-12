@@ -32,7 +32,8 @@ blockquote {
 }
 
 .small-modal {
-  width: 333px;
+  width: 330px;
+  margin-left: -165px;
 }
 
 .small-modal-box {

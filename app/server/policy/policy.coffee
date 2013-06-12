@@ -22,6 +22,7 @@ policy =
           'getMyChats'
           'getNonpresentOperators'
           'inviteOperator'
+          'joinChat'
         ]
       }
       # {

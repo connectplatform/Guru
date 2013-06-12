@@ -12,3 +12,14 @@ define ["load/server", "load/notify", "load/pulsar", "flight/component"] (server
       console.log "operatorChat Component"
 
   return defineComponent(operatorChat)
+
+# required jqueryui dependencies, will merge into component later
+#$ ->
+  #$(".chatboxSlider").slider
+    #orientation: "vertical"
+    #range: "max"
+    #min: 0
+    #max: 100
+    #value: 88
+    #slide: (event, ui) ->
+      #$("#amount").val ui.value

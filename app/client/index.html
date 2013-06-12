@@ -35,29 +35,12 @@
 
    </head>
    <body>
-    <!-- required jqueryui dependencies, will merge into component later --> 
-    <script>
-      $(function() {
-        $( ".chatboxSlider" ).slider({
-          orientation: "vertical",
-          range: "max",
-          min: 0,
-          max: 100,
-          value: 88,
-          slide: function(event, ui) {
-            $("#amount").val(ui.value);
-          }
-        });
-      });
-    </script>
-    <!-- /required jqueryui dependencies, will merge into component later -->
      <div id='help'></div>
      <div class='header'></div>
      <div class="container-fluid">
        <div class="row-fluid page-content">
          <div id="navBar"></div>
-         <!--<div id="sidebar"></div>-->
-         <div id="content" class="span10 row-fluid content-center" style="padding-top: 100px;" ></div>
+         <div id="content" class="span10 row-fluid content-center"></div>
        </div>
      </div>
      <div class='footer'></div>

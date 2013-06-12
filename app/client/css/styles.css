@@ -1,11 +1,3 @@
-
-
-.flightTest{
-width: 100px;
-height: 100px;
-background: #ff0000;
-}
-
 a {
   cursor: pointer;
 }
@@ -14,6 +6,10 @@ blockquote {
   font-size: 13px;
   margin: 6px 15px 6px;
   border-left: none;
+}
+
+#content {
+  padding-top: 100px;
 }
 
 .reflink a {
@@ -277,21 +273,7 @@ span.field {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 /*   Begin new CSS for new UI by Michael O'Brien 4/15/13   */
-
-
 
 body {
     margin: 0;
@@ -329,8 +311,8 @@ div {
 }
 
 .searchBox {
-  margin-top: 8px; 
-  position: absolute; 
+  margin-top: 8px;
+  position: absolute;
   left: 600px;
 }
 
@@ -535,11 +517,3 @@ top: 50px;
   margin-bottom: 5px;
   padding: 8px;
 }
-
-
-
-
-
-
-
-

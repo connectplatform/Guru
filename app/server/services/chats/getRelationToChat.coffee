@@ -1,13 +1,10 @@
-async = require 'async'
 db = config.require 'load/mongo'
-{Chat, ChatSession, Session} = db.models
+{ChatSession} = db.models
 
 module.exports =
-  required: ['sessionSecret', 'sessionId', 'chatId']
-  service: ({chatId, sessionId}, next) ->
-    console.log 'getRelationToChat', {sessionId}
-    ChatSession.findOne {chatId, sessionId}, (err, chatSession) ->
-      console.log 'getRelationToChat, found chatSession:', {chatSession}
+  required: ['sessionSecret', 'chatId']
+  service: ({chatId, sessionSecret}, next) ->
+    ChatSession.findOne {chatId, secret: sessionSecret}, (err, chatSession) ->
       if err?
         next err, null
       else if chatSession?

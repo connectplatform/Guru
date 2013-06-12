@@ -1,17 +1,16 @@
-async = require 'async'
 getInvites = config.require 'services/operator/getInvites'
 
 db = config.require 'load/mongo'
 {Session} = db.models
 
 module.exports =
-  required: ['sessionId', 'accountId']
-  service: ({sessionId, accountId}, done) ->
-    Session.findById sessionId, (err, session) ->
-      done err, null if err
+  required: ['sessionSecret', 'accountId']
+  service: ({sessionSecret}, done) ->
+    Session.findOne {secret: sessionSecret}, (err, session) ->
+      return done err, null if err or not session?
 
-      getInvites sessionId, (err, invites) ->
-        done err, null if err
+      getInvites session._id, (err, invites) ->
+        return done err, null if err
 
         data =
           unanswered: session.unansweredChats

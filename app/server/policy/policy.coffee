@@ -16,6 +16,13 @@ policy =
           'acceptInvite'
           'acceptTransfer'
           'changePassword'
+          'getActiveChats'
+          'getChatStats'
+          'getExistingChat'
+          'getMyChats'
+          'getNonpresentOperators'
+          'inviteOperator'
+          'joinChat'
         ]
       }
       # {

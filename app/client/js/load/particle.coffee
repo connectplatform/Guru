@@ -4,7 +4,7 @@ models = null
 define ['vendor/particle', 'app/config'], ({Collector}, config) ->
 
   # watch out, this will not change the model if you pass a different identity
-  (identity) ->
+  init: (identity, done) ->
 
     # return cached version if it exists
     if models?
@@ -12,7 +12,7 @@ define ['vendor/particle', 'app/config'], ({Collector}, config) ->
 
     # otherwise initialize a new Collector
     else
-      models = new particle.Collector
+      models = new Collector
         # onDebug: console.log
         network:
           host: config.api
@@ -20,4 +20,8 @@ define ['vendor/particle', 'app/config'], ({Collector}, config) ->
         identity: identity
 
       window.models = models
-      return models
+      models.register (err) ->
+        done err, models
+
+  getModels: ->
+    return models

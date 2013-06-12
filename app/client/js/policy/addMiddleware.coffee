@@ -16,19 +16,28 @@ all = [
 ]
 
 define ['middleware/redirectOperators', 'middleware/redirectVisitors',
-  'middleware/redirectGuestsToLogin',
-  'routes/help', 'templates/help',
-  'middleware/getRole', 'components/navBar', 'components/operatorChat'],
-  (redirectOperators, redirectVisitors, redirectGuestsToLogin, help, helpTemp, getRole, navBar, operatorChat) ->
+  'middleware/redirectGuestsToLogin', 'routes/help', 'templates/help',
+  'middleware/getRole', 'components/navBar', 'components/operatorChat',
+  'load/particle', 'app/config'],
+  (deps...) ->
+    [redirectOperators, redirectVisitors, redirectGuestsToLogin, help,
+      helpTemp, getRole, navBar, operatorChat, particle, {appName}] = deps
+
     (dermis) ->
 
       renderNavbar = (args, next) ->
-        navBar.attachTo "#navBar", role: args.role
-        next null, args
+        role = {args}
+        sessionSecret = $.cookies.get 'session'
+        particle.init {sessionSecret}, (err, models) ->
+          return next err if err
+
+          navBar.attachTo "#navBar", {role, models, appName}
+          next null, args
+
       renderHelp = (args, next) ->
         help args, helpTemp
         next null, args
-      
+
       dermis.before all, [getRole]
 
       # access controls

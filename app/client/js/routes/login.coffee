@@ -1,5 +1,5 @@
-define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "helpers/util"],
-  (server, notify, sidebar, sbTemp, util) ->
+define ["load/server", "load/notify", "helpers/util"],
+  (server, notify, util) ->
     (args, templ) ->
 
       $('#content').html templ()
@@ -21,7 +21,6 @@ define ["load/server", "load/notify", "routes/sidebar", "templates/sidebar", "he
             $.cookies.set 'session', sessionSecret
             $('#login-modal').modal 'hide'
             window.location.hash = '/dashboard'
-
 
       $('#login-cancel-button').click ->
         $('#login-modal').modal 'hide'

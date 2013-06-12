@@ -94,12 +94,10 @@ boiler 'particle', ->
           sessionSecret: session.secret
       should.exist collector
 
-      collector.on 'sessions.*', (data, event) ->
-        verify = () ->
-          event.path.should.equal 'username'
-          event.data.should.equal newUsername
-          done()
-        verify()
+      collector.on 'mySession.*', (data, event) ->
+        event.path.should.equal 'username'
+        event.data.should.equal newUsername
+        done()
 
       collector.register (err, next) ->
         should.not.exist err

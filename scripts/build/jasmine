@@ -5,7 +5,7 @@ public=$root/app/public
 testpub=$root/test/client/public
 testclient=$root/test/client
 
-$current/build
+$current/build/build
 
 # create test sandbox
 rm -rf $testpub

@@ -1,0 +1,16 @@
+#!/bin/bash
+current=$(dirname $0)
+root=$current/../..
+public=$root/app/public
+testpub=$root/test/traffic/public
+teststubs=$root/test/traffic/stubs
+
+$current/build
+
+# create test sandbox
+rm -rf $testpub
+cp -r $public $testpub
+
+# overwrite dependencies
+coffee -o $testpub/js/load/ -c $teststubs/
+echo "Built test sandbox."

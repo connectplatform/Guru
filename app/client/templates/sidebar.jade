@@ -1,49 +1,42 @@
-.well.sidebar-nav
-  ul.nav.nav-list
-    li.nav-header
-      | Operator
-    li
-      a(href="#/dashboard")
-        i.icon-home
-        | Dashboard
-      span.notifyUnanswered
-      span.notifyInvites
+.navbar.navbar-inverse.navbar-fixed-top
+  .navbar-inner.navBarContainer
+    .container-fluid
+      a.brand(href='#', style='padding-top: 13px;')
+        strong CHAT PRO
+      ul.nav
+        li
+          a(href='#/dashboard') Dashboard 
+            span.notifyUnanswered 
+            span.notifyInvites
+          li
+            a(href='#/operatorChat') Chats 
+              span.notifyUnread
+          li
+            a(href='#/userProfile') Profile
+          li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown') Administration
 
-    li
-      a(href="#/operatorChat")
-        i.img-chat
-        | My Chats
-      span.notifyUnread
-
-    li
-      a(href="#/userProfile")
-        i.icon-user
-        | My Profile
-
-    li
-      a(href="#/logout")
-        i.icon-off
-        | Logout
-
-    if role == "Owner"
-      li.nav-header
-        | Site Management
-
-      li
-        a(href="#/account")
-          i.icon-briefcase
-          | Account
-      li
-        a(href="#/users")
-          i.icon-user
-          | Users
-       li
-        a(href="#/websites")
-          i.icon-list-alt
-          | Websites
-      li
-        a(href="#/specialties")
-          i.icon-tag
-          | Specialties
-
-  include sounds
+            ul.dropdown-menu.collapse.in
+              li
+                a(href='#/account') Account
+              li
+                a(href='#/users') Users
+              li
+                a(href="#/websites") Websites
+              li
+                a(href="#/specialties") Specialties
+      ul.nav.pull-right
+        li.dropdown
+          a.dropdown-toggle(href='#', data-toggle='dropdown') Session
+            b.caret
+          ul.dropdown-menu.collapse.in
+            li
+              a(href="#/logout")
+                i.icon-off
+                | Logout
+      input.input-medium.search-query(type='text', placeholder='Search...', style='margin-top: 8px; position: absolute; left: 600px')
+      p.navbar-text.pull-right(style='position: absolute; right: 200px;')
+        | Logged in as 
+        a.navbar-link(href='#') Monad
+      
+      include sounds

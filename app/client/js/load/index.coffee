@@ -9,6 +9,8 @@ require.config
     {name: "vendor", location: "js/vendor"}
     {name: "policy", location: "js/policy"}
     {name: "middleware", location: "js/policy/middleware"}
+    {name: "components", location: "components"}
+    {name: "flight", location: "js/vendor/flight/lib"}
   ]
 
 require ['load/shim', 'load/main']

@@ -20,6 +20,7 @@ policy =
           'getChatStats'
           'getExistingChat'
           'getMyChats'
+          'getNonpresentOperators'
         ]
       }
       # {

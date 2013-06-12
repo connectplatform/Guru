@@ -8,7 +8,6 @@ db = config.require 'load/mongo'
 module.exports = ({accountId, chatId}, done) ->
   Session.find {accountId}, (err, sessions) ->
     remove = (session, next) ->
-      console.log 'session.unansweredChats', session.unansweredChats
       index = session.unansweredChats.indexOf(chatId, 1)
 
       session.unansweredChats.splice(index) unless index < 0

@@ -7,7 +7,7 @@ module.exports =
   required: ['sessionSecret', 'sessionId', 'accountId']
   service: ({sessionId, accountId}, done) ->
     Chat.find {accountId, status: {'$ne': 'Vacant'}}, (err, chats) ->
-      done err, null if err
+      return done err, null if err
 
       chats = chats.sortBy(chatPriority)
       return done null, {chats}

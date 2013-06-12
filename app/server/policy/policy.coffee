@@ -21,6 +21,7 @@ policy =
           'getExistingChat'
           'getMyChats'
           'getNonpresentOperators'
+          'inviteOperator'
         ]
       }
       # {

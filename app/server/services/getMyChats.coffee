@@ -1,4 +1,3 @@
-async = require 'async'
 db = config.require 'load/mongo'
 {Chat, ChatSession} = db.models
 

@@ -23,6 +23,7 @@ policy =
           'getNonpresentOperators'
           'inviteOperator'
           'joinChat'
+          'leaveChat'
         ]
       }
       # {

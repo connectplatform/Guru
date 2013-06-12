@@ -11,6 +11,7 @@ mkdir -p $public/js/vendor
 mkdir -p $public/css
 mkdir -p $public/img
 mkdir -p $public/audio
+mkdir -p $public/components
 
 # Templates
 $root/node_modules/jaded/bin/jaded -a "jade" -i $client/templates -o $public/templates
@@ -20,6 +21,7 @@ coffee $root/scripts/build/buildClientConfig.coffee > $public/js/config.js
 
 # CoffeeScript
 coffee -o $public/js/ -c $client/js/
+coffee -o $public/components -c $client/components
 
 # TODO - process that minifies all js
 # uglifyjs -nc --unsafe -mt -o $public/js/main.min.js $public/js/main.js

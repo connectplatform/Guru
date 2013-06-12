@@ -29,6 +29,7 @@
   "devDependencies": {
     "factory-worker": "*",
     "memwatch": "*",
+    "traffic": "*",
     "keypress": "*",
     "node-log": "*",
     "jaded": "0.0.6"

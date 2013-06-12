@@ -17,20 +17,18 @@ all = [
 
 define ['middleware/redirectOperators', 'middleware/redirectVisitors',
   'middleware/redirectGuestsToLogin',
-  'routes/sidebar', 'templates/sidebar',
   'routes/help', 'templates/help',
-  'middleware/getRole'],
-  (redirectOperators, redirectVisitors, redirectGuestsToLogin, sidebar, sbTemp, help, helpTemp, getRole) ->
+  'middleware/getRole', 'components/navBar', 'components/operatorChat'],
+  (redirectOperators, redirectVisitors, redirectGuestsToLogin, help, helpTemp, getRole, navBar, operatorChat) ->
     (dermis) ->
 
-      renderSidebar = (args, next) ->
-        sidebar args, sbTemp
+      renderNavbar = (args, next) ->
+        navBar.attachTo "#navBar", role: args.role
         next null, args
-
       renderHelp = (args, next) ->
         help args, helpTemp
         next null, args
-
+      
       dermis.before all, [getRole]
 
       # access controls
@@ -68,4 +66,4 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
         '/account'
         '/websites'
         '/specialties'
-      ], [redirectGuestsToLogin, renderSidebar, renderHelp]
+      ], [redirectGuestsToLogin, renderNavbar, renderHelp]

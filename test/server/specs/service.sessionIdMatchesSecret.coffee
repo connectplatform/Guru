@@ -12,5 +12,5 @@ boiler 'Service - Get Relation to Chat', ->
       @guru2Login (err, @guru2, {sessionId}) =>
         config.services['filters/sessionIdMatchesSecret'] {sessionSecret, sessionId}, (err) =>
           should.exist err
-          err.should.equal 'sessionId and sessionSecret must belong to same Session'
+          err.message.should.equal 'sessionId and sessionSecret must belong to same Session'
           done()

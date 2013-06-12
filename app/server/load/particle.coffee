@@ -9,7 +9,7 @@ port = process.env.GURU_PARTICLE_PORT or config.app.port
 
 unless port is 'DISABLED'
   stream = new Stream
-    # onDebug: console.log
+    #onDebug: console.log
 
     identityLookup: ({sessionSecret}, done) ->
       Session.findOne {secret: sessionSecret}, (err, session) ->
@@ -22,7 +22,7 @@ unless port is 'DISABLED'
     dataSources:
 
       # a user's own session data
-      sessions:
+      mySession:
         manifest: true
 
         # TODO: move payload and delta into services
@@ -36,7 +36,7 @@ unless port is 'DISABLED'
             watcher.watch "#{config.mongo.dbName}.sessions", listener
 
       # a user's own chats
-      chats:
+      myChats:
         manifest: true
 
         # TODO: move payload and delta into services

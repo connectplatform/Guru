@@ -4,7 +4,7 @@ db = config.require 'load/mongo'
 getOperatorData = config.require 'services/operator/getOperatorData'
 
 module.exports =
-  required: ['oldPassword', 'newPassword', 'sessionSecret']
+  required: ['oldPassword', 'newPassword', 'sessionSecret', 'sessionId']
   service: ({oldPassword, newPassword, sessionId}, done) ->
     getOperatorData sessionId, (err, user) ->
       config.log.error 'Error getting user from sessionId in changePassword', {error: err, sessionId: sessionId} if err

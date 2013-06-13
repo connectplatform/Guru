@@ -2,15 +2,12 @@ db = config.require 'load/mongo'
 {Session, ChatSession} = db.models
 
 module.exports =
-  required: ['sessionSecret']
-  optional: ['sessionId', 'accountId']
-  service: ({sessionId, accountId}, done) ->
+  required: ['sessionSecret', 'sessionId']
+  service: ({sessionId}, done) ->
     return done null, {reason: 'no session ID'} unless sessionId
-    return done null, {reason: 'no account ID'} unless accountId
 
-    ChatSession.find {sessionId}, (err, chatSessions) ->
+    ChatSession.findOne {sessionId}, {chatId: 1}, (err, chatSession) ->
       config.warn "Error getting existing chat:", {error: err} if err
-      done err, null if err
+      return done err, null if err
 
-      found = chatSessions?[0]?.chatId
-      return done null, {chatId: found}
+      return done null, {chatId: chatSession?.chatId}

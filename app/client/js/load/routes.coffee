@@ -1,5 +1,5 @@
-define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar", 'policy/onPageLoad'],
- (dermis, addMiddleware, sidebar, sbTemp, onPageLoad) ->
+define ["dermis", "policy/addMiddleware", 'policy/onPageLoad'],
+ (dermis, addMiddleware, onPageLoad) ->
 
     # routes for visitors to join chat
     dermis.route '/newChat'

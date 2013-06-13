@@ -24,7 +24,7 @@ boiler 'Service - New Chat', ->
       formData =
           k1: 'v1'
           k2: 'v2'
-      queryData = 
+      queryData =
           k3: 'v3'
           k4: 'v4'
       visitorData =
@@ -39,22 +39,26 @@ boiler 'Service - New Chat', ->
           should.not.exist err
           should.exist chat
           chat._id.should.equal @chatId
-          
+
           (Object.equal chat.formData, formData).should.be.true
           (Object.equal chat.queryData, queryData).should.be.true
-          
+
           allVisitorData = {}
           allVisitorData.merge formData
           allVisitorData.merge queryData
           (Object.equal allVisitorData, chat.visitorData).should.be.true
-          
+
           done()
 
   it 'should let you chat', (done) ->
-    # Given I am logged in
+
+    # Given I am logged in and I have a message to send
+    message = 'Hello!'
     @getAuthed =>
+
       # And I have a chat
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, visitor) =>
+
         # And I have a Collector
         collector = new particle.Collector
           network:
@@ -62,24 +66,24 @@ boiler 'Service - New Chat', ->
             port: process.env.GURU_PORT
           identity:
             sessionSecret: @sessionSecret
-        
-        # Local bin to catch updates for testing
-        @collectedData = []
-        # Which is listening for data events
-        collector.on 'chats.history', (data, event) =>
-          @collectedData = @collectedData.concat event.data
-        
-        # And is registered with a Stream
+
+        # Which is listening to chat history
+        collector.once 'myChats.history', (data, event) =>
+
+          # Then I should receive a message
+          event.data.should.not.be.empty
+          should.exist event.data[0].message
+          event.data[0].message.should.equal message
+          done()
+
+        # When I register the collector
         collector.register (err) =>
           should.not.exist err
-          message = 'Hello!'
+
+          # And I send a message
           visitor.say {message, @chatId}, (err) =>
             should.not.exist err
-            @collectedData.should.not.be.empty
-            should.exist @collectedData[0].message
-            @collectedData[0].message.should.equal message
-            done()
-          
+
   it 'should notify operators of a new chat', (done) ->
     @getAuthed =>
       Session.findOne {secret: @sessionSecret}, (err, session) =>

@@ -3,11 +3,12 @@ should = require 'should'
 boiler 'Service - Change Password', ->
   before ->
     @changePassword = (cb) =>
-      @ownerLogin (err, client) =>
+      @ownerLogin (err, client, {@sessionId}) =>
         should.not.exist err, 'initial login failed'
         # change password
         @newPassword = 'newPassword'
-        client.changePassword {sessionId: @sessionId, oldPassword: 'foobar', newPassword: @newPassword}, (err) =>
+        client.changePassword {@sessionId, oldPassword: 'foobar', @newPassword}, (err) =>
+          console.log {err}
           should.not.exist err, 'change password failed'
           cb()
 
@@ -26,7 +27,8 @@ boiler 'Service - Change Password', ->
         done()
 
   it 'should not let you log in with an old password once its been changed', (done) ->
-    @changePassword =>
+    @changePassword (err) =>
+      should.not.exist err
 
       # try to log in with old password
       @ownerLogin (err, client, {sessionId}) =>

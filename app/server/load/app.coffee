@@ -27,7 +27,6 @@ module.exports = (cb) ->
   app.use connect.static config.paths.static if config.paths.static
   app.use loadRest config.paths.rest
 
-  console.log 'about to start server:', {port}
   server = createServer port, app
 
   # initialize particle stream

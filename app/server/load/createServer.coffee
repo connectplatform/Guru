@@ -35,5 +35,4 @@ module.exports = (port, app, done) ->
     return server
 
   else
-    console.log 'creating server:', {port}
     http.createServer(app).listen port, done

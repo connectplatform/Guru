@@ -3,7 +3,7 @@ define ["load/server", "load/notify", "helpers/util", 'helpers/renderForm'],
     setup: (args, templ) ->
 
       $('#content').html ''
-      $('#sidebar').html ''
+      $('#navBar').html ''
       $(".page-content").prepend templ()
 
       fields = [

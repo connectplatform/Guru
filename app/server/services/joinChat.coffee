@@ -23,10 +23,10 @@ module.exports =
       Chat.findById chatId, (err, chat) ->
         return done err if err
         return done (new Error "Couldn't find Chat") if not chat?
-        
+
         ChatSession.create data, (err, chatSession) ->
           return done err, {status: 'ERROR'} if err
-          
+
           status = 'OK'
           # If an Operator is joining the chat
           if session.userId?

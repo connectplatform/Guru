@@ -1,6 +1,6 @@
 should = require 'should'
 db = config.require 'load/mongo'
-{Chat, ChatSession} = db.models
+{Chat} = db.models
 
 boiler 'Service - Kick User', ->
 
@@ -8,11 +8,11 @@ boiler 'Service - Kick User', ->
     # Setup
     @getAuthed (_..., {accountId}) =>
       @newChat =>
-        @client.joinChat {chatId: @chatId}, (err) =>
+        @client.joinChat {@chatId}, (err) =>
           should.not.exist err
 
           # Kick user
-          @client.kickUser {chatId: @chatId}, (err) =>
+          @client.kickUser {@chatId}, (err) =>
             should.not.exist err
 
             # Check that kick worked
@@ -31,15 +31,15 @@ boiler 'Service - Kick User', ->
         should.not.exist err
 
         # And leaves the chat
-        visitor.leaveChat {chatId: @chatId}, (err) =>
+        visitor.leaveChat {@chatId}, (err) =>
           should.not.exist err
 
           # And an Operator joins the chat
-          @client.joinChat {chatId: @chatId}, (err) =>
+          @client.joinChat {@chatId}, (err) =>
             should.not.exist err
 
             # When he kicks the user
-            @client.kickUser {chatId: @chatId}, (err) =>
+            @client.kickUser {@chatId}, (err) =>
 
               # Then we should get an error
               should.exist err
@@ -55,11 +55,11 @@ boiler 'Service - Kick User', ->
         should.not.exist err
 
         # And leaves the chat
-        visitor.leaveChat {chatId: @chatId}, (err) =>
+        visitor.leaveChat {@chatId}, (err) =>
           should.not.exist err
 
           # When he kicks the user
-          @client.kickUser {chatId: @chatId}, (err) =>
+          @client.kickUser {@chatId}, (err) =>
 
             # Then we should get an error
             should.exist err

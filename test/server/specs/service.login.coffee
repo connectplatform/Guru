@@ -33,7 +33,6 @@ boiler 'Service - Login', ->
 
         firstSessionId = session._id
         firstSessionSecret = sessionSecret
-
         client.setSessionOffline {sessionId: firstSessionId}, (err) =>
           should.not.exist err, err.stack if err
 

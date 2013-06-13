@@ -24,6 +24,8 @@ policy =
           'inviteOperator'
           'joinChat'
           'leaveChat'
+          'setSessionOffline'
+          'session/setSessionOnlineStatus'
         ]
       }
       # {

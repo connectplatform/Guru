@@ -7,5 +7,4 @@ module.exports =
   required: ['sessionSecret']
   service: ({sessionSecret}, done) ->
     setSessionOnlineStatus = config.service 'session/setSessionOnlineStatus'
-    setSessionOnlineStatus {sessionSecret: sessionSecret, isOnline: false}, (err) ->
-      done err
+    setSessionOnlineStatus {sessionSecret: sessionSecret, isOnline: false}, done

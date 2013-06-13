@@ -23,6 +23,10 @@ policy =
           'getNonpresentOperators'
           'inviteOperator'
           'joinChat'
+          'leaveChat'
+          'setSessionOffline'
+          'session/setSessionOnlineStatus'
+          'logout'
         ]
       }
       # {

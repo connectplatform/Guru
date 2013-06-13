@@ -110,8 +110,10 @@ boiler 'Model - User', ->
       firstName: 'First'
       lastName: 'Guru'
 
-    @getClient (@client) =>
-      @client.saveModel {fields: user, modelName: 'User'}, (err, savedModel) ->
+    @guru1Login (err, @guru1) =>
+      should.not.exist err
+      should.exist @guru1
+      @guru1.saveModel {fields: user, modelName: 'User'}, (err, savedModel) ->
         should.exist err, 'expected error'
         err.should.eql 'You must be an account Owner to access this feature.'
         done()

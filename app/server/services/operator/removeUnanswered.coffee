@@ -1,14 +1,15 @@
-{tandoor} = config.require 'load/util'
 async = require 'async'
 
 db = config.require 'load/mongo'
 {Session} = db.models
 
-# module.exports = tandoor (accountId, chatId, done) ->
+# Internal utility service, so we don't use Law.
+# Currently only called by acceptChat.
 module.exports = ({accountId, chatId}, done) ->
   Session.find {accountId}, (err, sessions) ->
+    return done err if err
+    
     remove = (session, next) ->
-      console.log 'session.unansweredChats', session.unansweredChats
       index = session.unansweredChats.indexOf(chatId, 1)
 
       session.unansweredChats.splice(index) unless index < 0

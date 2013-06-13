@@ -15,9 +15,9 @@ boiler 'Service - Logout', ->
           done()
 
   it 'should remove dependent ChatSessions', (done) ->
-    @ownerLogin (err, client, {sessionSecret, accountId}) =>
+    @ownerLogin (err, client, {sessionSecret, @sessionId, accountId}) =>
       should.not.exist err
-      @sessionId = client.localStorage.sessionId
+      # @sessionId = client.localStorage.sessionId
       Account.findOne {}, (err, account) =>
         @accountId = account._id
         User.findOne {accountId: @accountId}, (err, user) =>

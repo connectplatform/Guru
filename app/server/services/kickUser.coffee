@@ -2,32 +2,35 @@ async = require 'async'
 db = config.require 'load/mongo'
 {Chat, ChatSession, Session} = db.models
 
-
+# In this service
 module.exports =
-  required: ['chatId', 'accountId', 'sessionId']
-  service: ({chatId, accountId, sessionId}, done) ->
+  required: ['chatId', 'accountId', 'sessionSecret']
+  service: ({chatId}, done) ->
 
     # First find all ChatSessions linking some Session to the Chat identified by chatId.
     ChatSession.find {chatId}, (err, chatSessions) ->
-      done err, null if err
+      return done err if err
       # Collect the sessionId's associated with our Chat.
       sessionIds = (cs.sessionId for cs in chatSessions)
       
       # Find the Session with no userId, which implies that the Session is not
       # associated to an Operator or Owner, and thus represents a Visitor.
       Session.findOne {userId: null, _id: '$in': sessionIds}, (err, visitorSession) ->
-        done err, null if err
+        return done err, null if err
 
-        err = Error 'Chat has no Visitor as a member'
-        done err, null unless visitorSession?
+        err = new Error 'Chat has no Visitor as a member'
+        return done err unless visitorSession?
 
         # Find the ChatSession that links our Visitor to the Chat.
         ChatSession.findOne {sessionId: visitorSession?._id}, (err, vcs) ->
-          done err, null if err
+          return done err if err
+          
           # Remove the ChatSession,
           vcs?.remove (err) ->
             Chat.findById chatId, (err, chat) ->
-              done err, null if err
+              return done err if err
+              return done (new Error 'Chat not found') unless chat?
+              
               # ASSUMPTION: Only one Visitor per Chat.
               # Since we have removed this Visitor, the Chat can only be linked
               # to Operators, so Chat status is 'Vacant'

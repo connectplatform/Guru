@@ -34,9 +34,9 @@ module.exports = (accountId, chatId, referrerData) ->
           try
             chat.acpData = JSON.parse acpData
           catch err
-            config.log 'Error parsing JSON string for acpData'
+            config.log.error 'Error parsing JSON string for acpData.'
             return err
-            
+
           chat.save (err) ->
             if err
               meta = {error: err, acpData: acpData, website: site}

@@ -21,32 +21,25 @@ boiler 'Service - New Chat', ->
 
   it 'should create a new Chat with visitor data', (done) ->
     @getAuthed =>
-      formData =
-          k1: 'v1'
-          k2: 'v2'
       queryData =
-          k3: 'v3'
-          k4: 'v4'
-      visitorData =
-        username: 'visitor'
         websiteUrl: 'foo.com'
-        formData: formData
-        queryData: queryData
+      formData =
+        username: 'visitor'
+        specialtyName: 'Sales'
+      visitorData = queryData.merge formData
 
       @newVisitor visitorData, (err, visitor) =>
         {@sessionId, @sessionSecret, @chatId} = visitor.localStorage
         Chat.findById @chatId, (err, chat) =>
           should.not.exist err
           should.exist chat
-          chat._id.should.equal @chatId
 
-          (Object.equal chat.formData, formData).should.be.true
-          (Object.equal chat.queryData, queryData).should.be.true
+          actual = chat.formData.select('username', 'websiteUrl', 'specialtyName')
+          actual.should.eql visitorData, 'form data did not match'
 
-          allVisitorData = {}
-          allVisitorData.merge formData
-          allVisitorData.merge queryData
-          (Object.equal allVisitorData, chat.visitorData).should.be.true
+          # this is a calculated field that merges query, form, and ACP data
+          actual = chat.visitorData.select('username', 'websiteUrl', 'specialtyName')
+          actual.should.eql visitorData, 'form data did not match'
 
           done()
 

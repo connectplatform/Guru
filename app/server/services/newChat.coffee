@@ -7,15 +7,14 @@ populateVisitorAcpData = config.require 'services/populateVisitorAcpData'
 
 module.exports =
   required: ['websiteUrl', 'websiteId', 'accountId']
-  optional: ['specialtyName', 'specialtyId', 'queryData', 'formData']
+  optional: ['specialtyName', 'specialtyId']
+
+  #params is 'queryData' merged with 'formData'
   service: (params, done) ->
     {websiteId, websiteUrl, specialtyId, username} = params
-    {queryData, formData} = params
     username ||= 'anonymous'
-    getWebsiteIdForDomain = config.service 'websites/getWebsiteIdForDomain'
-    getAvailableOperators = config.service 'operator/getAvailableOperators'
 
-    getAvailableOperators {websiteId, specialtyId}, (err, result) ->
+    config.services['operator/getAvailableOperators'] {websiteId, specialtyId}, (err, result) ->
       operators = result?.operators
       accountId = result?.accountId
       reason = result?.reason
@@ -26,7 +25,7 @@ module.exports =
         return done err, {noOperators: true}
       async.parallel {
         session: (next) -> Session.create {accountId, username}, next
-        chat: (next) -> Chat.create {accountId, status: 'Waiting', websiteId, websiteUrl, specialtyId, name: username}, next
+        chat: (next) -> Chat.create {accountId, status: 'Waiting', websiteId, websiteUrl, specialtyId}, next
       }, (err, {chat, session}) ->
         return done err if err
         # assert chat?
@@ -42,14 +41,13 @@ module.exports =
             data =
               sessionId: session.id
               chatId: chat.id
-              relation: 'Member'
+              relation: 'Visitor'
             ChatSession.create data, next
           (next) ->
             chat.websiteId = websiteId
             chat.websiteUrl = params.websiteUrl
             chat.specialtyId = specialtyId if specialtyId
-            chat.queryData = queryData if queryData
-            chat.formData = formData if formData
+            chat.formData = params
             chat.save next
           showToOperators
         ]

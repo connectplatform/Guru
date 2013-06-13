@@ -5,11 +5,10 @@ db = require 'mongoose'
 {getString} = config.require 'load/util'
 querystring = require 'querystring'
 
-chat = new Schema
-  name:
-    type: String
-    required: true
+isObject = (value) ->
+  (typeof value) is 'object' and not Array.isArray(value)
 
+chat = new Schema
   accountId:
     type: ObjectId
     required: true
@@ -48,28 +47,27 @@ chat = new Schema
 
   specialtyId: ObjectId
 
-  queryData: Mixed # validate is Object in post-validation hook
+  queryData:
+    type: Mixed
+    default: {}
+    validate: isObject
 
-  formData: Mixed # validate is Object in post-validation hook
+  formData:
+    type: Mixed
+    default: {}
+    validate: isObject
 
-  acpData: Mixed # validate is Object in post-validation hook
+  acpData:
+    type: Mixed
+    default: {}
+    validate: isObject
 
-  visitorData: Mixed
+# return string, not ObjectID
+for field in ['_id', 'accountId', 'websiteId', 'specialtyId']
+  chat.path(field).get getString
 
-chat.path('_id').get getString
-chat.path('accountId').get getString
-chat.path('websiteId').get getString
-chat.path('specialtyId').get getString
-
-chat.path('visitorData').get () ->
-  visitorsDataExists = (@queryData? or @formData? or @acpData?)
-  return null unless visitorsDataExists
-
-  visitorData = {}
-  visitorData.merge @queryData
-  visitorData.merge @formData
-  visitorData.merge @acpData
-  return visitorData
+chat.virtual('visitorData').get ->
+  return {}.merge(@queryData).merge(@formData).merge(@acpData)
 
 chat.pre 'save', (next) ->
   isValid = (x) -> (typeof x == 'object') or (not x?)

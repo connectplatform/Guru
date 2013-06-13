@@ -10,8 +10,8 @@ module.exports =
           error: err
           chatId: chatId
           history: chat?.history
-        return done 'could not find chat'
-      # HERE BE DRAGONS
+        return done (new Error 'could not find chat')
+        
       if chat.history.length is 0
         chat.history.push
           timestamp: new Date().getTime()

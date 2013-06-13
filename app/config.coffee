@@ -15,7 +15,7 @@ devHost = 'localhost'
 config =
   development:
     app:
-      name: 'ChatPro'
+      name: 'Chat Pro'
       url: 'http://#{devHost}:4000'
       baseUrl: 'http://#{devHost}:4000'
       api: null

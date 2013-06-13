@@ -6,6 +6,7 @@ define ["load/server", "load/notify", "helpers/util", "helpers/dashboardAction"]
           return unless window.location.hash is "#/dashboard"
 
           server.getActiveChats {}, (err, {chats}) ->
+            console.log {chats}
             chats ||= []
             if err
               server.log

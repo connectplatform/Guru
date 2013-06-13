@@ -21,17 +21,17 @@ define ['middleware/redirectOperators', 'middleware/redirectVisitors',
   'load/particle', 'app/config'],
   (deps...) ->
     [redirectOperators, redirectVisitors, redirectGuestsToLogin, help,
-      helpTemp, getRole, navBar, operatorChat, particle, {appName}] = deps
+      helpTemp, getRole, navBar, operatorChat, particle, config] = deps
 
     (dermis) ->
 
       renderNavbar = (args, next) ->
-        role = {args}
+        {role} = args
         sessionSecret = $.cookies.get 'session'
         particle.init {sessionSecret}, (err, models) ->
           return next err if err
 
-          navBar.attachTo "#navBar", {role, models, appName}
+          navBar.attachTo "#navBar", {role, models, appName: config.name}
           next null, args
 
       renderHelp = (args, next) ->

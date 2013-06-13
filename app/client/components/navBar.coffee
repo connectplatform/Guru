@@ -3,11 +3,11 @@ define ["flight/component", 'templates/components/navBar'],
     navBar = ->
 
       @after "initialize", ->
-        console.log {particleModels: @attr.models}
-
+        window.models = @attr.models
+        console.log data: @attr.models.data
         # apply the template to the DOM if doesn't exist
         if $('.navbar').length == 0
-          @$node.append templ(role: @attr.role, appName: @attr.appName, username: 'Monad')
+          @$node.append templ(role: @attr.role, appName: @attr.appName, username: @attr.models.data.mySession[0].username)
 
         $(".nav li").click () ->
           $(".nav li").removeClass "active"

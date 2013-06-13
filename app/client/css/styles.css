@@ -9,7 +9,7 @@ blockquote {
 }
 
 #content {
-  padding-top: 100px;
+  margin: 60px 5px 5px 5px;
 }
 
 .reflink a {
@@ -17,9 +17,8 @@ blockquote {
   text-decoration: none;
 }
 
-.thumb {
-  float: left;
-  margin: 0 15px 8px;
+[class^="icon-"] {
+  margin-right: 7px;
 }
 
 .printPage {
@@ -99,23 +98,6 @@ form input, form .controls button {
   margin-top: 15px;
 }
 
-.operatorChat {
-  height: 500px;
-}
-
-.nav-list {
-  padding: 0;
-}
-
-.nav-list li a {
-  margin-right: -10px;
-  display: inline-block;
-}
-
-.maxHeight {
-  height: 100%;
-}
-
 #create-account {
   width: 500px;
   margin: 10px auto;
@@ -125,41 +107,11 @@ form input, form .controls button {
   margin: -4px;
 }
 
-.operatorChat {
-  margin-left: 0;
-}
-
 .bold {
   font-weight: bold;
 }
 
-.chatTab {
-  margin-right: 4px;
-}
-
-.actions table td {
-  padding: 4px;
-}
-
-.actions button.btn {
-  width: 75px;
-}
-
-.actions {
-  position: absolute;
-  bottom: 14px;
-}
-
-.visitor-info {
-  position: absolute;
-  overflow-x: hidden;
-  overflow-y: auto;
-  top: 18px;
-  bottom: 90px;
-  right: 0px;
-  left: 14px;
-}
-
+/* visitorChat */
 .websiteLogo {
   position: relative;
   width: 400px;
@@ -176,11 +128,7 @@ form input, form .controls button {
   border: none;
 }
 
-.chatControls {
-  height: 82%;
-  position: relative;
-}
-
+/* edit pages */
 .scrolling-checkboxes {
   position: relative;
   left: 15px;
@@ -188,10 +136,6 @@ form input, form .controls button {
   width: 100%;
   overflow-y: auto;
   margin-bottom: 4px;
-}
-
-#sidebar .badge {
-  margin-right: 2px;
 }
 
 .leftCenter {
@@ -215,21 +159,6 @@ form input, form .controls button {
   margin-top: 6px;
 }
 
-span.field {
-  background-color: #EEE;
-  padding: 4px;
-  border: 1px solid #CCC;
-  border-radius: 5px;
-  position: relative;
-  top: 5px;
-}
-
-#help {
-  position: absolute;
-  top: 20px;
-  right: 25px;
-}
-
 #help img {
   width: 40px;
 }
@@ -242,10 +171,6 @@ span.field {
   .message-form {
     position: relative;
     margin-top: 15px;
-  }
-
-  #sidebar {
-    display: none;
   }
 
   form.message-form {
@@ -289,11 +214,7 @@ div {
     -moz-border-radius: 10px !important;
     border-radius: 10px !important;
     height: 45px;
-    left: 1px;
-    position: absolute;
-    top: 5px;
-    width: 1210px;
-    /*background: rgba(0, 0, 0, 0.8) !important;*/
+    margin: 5px;
 }
 
 .nav{

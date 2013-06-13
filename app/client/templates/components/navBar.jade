@@ -19,19 +19,19 @@
             ul.dropdown-menu.collapse.in
               li
                 a(href="#/account")
-                  i.icon-off
+                  i.icon-briefcase
                   | Account
               li
                 a(href='#/userProfile')
-                  i.icon-off
+                  i.icon-user
                   | Users
               li
                 a(href='#/Websites')
-                  i.icon-off
+                  i.icon-shopping-cart
                   | Websites
               li
                 a(href='#/specialties')
-                  i.icon-off
+                  i.icon-tags
                   | Specialties
       input.input-medium.search-query.searchBox(type='text', placeholder='Search...')
       ul.nav.pull-right
@@ -40,10 +40,12 @@
             b.caret
           ul.dropdown-menu.collapse.in
             li
+              a(href='#/userProfile')
+                i.icon-user
+                | Profile
+            li
               a(href="#/logout")
                 i.icon-off
                 | Logout
-            li
-              a(href='#/userProfile')
-                i.icon-off
-                | Profile
+        li
+          div#help

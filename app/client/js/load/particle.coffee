@@ -8,7 +8,7 @@ define ['vendor/particle', 'app/config'], ({Collector}, config) ->
 
     # return cached version if it exists
     if models?
-      return models
+      return done null, models
 
     # otherwise initialize a new Collector
     else
@@ -21,7 +21,9 @@ define ['vendor/particle', 'app/config'], ({Collector}, config) ->
 
       window.models = models
       models.register (err) ->
-        done err, models
+        return done err if err
+        models.ready ->
+          done null, models
 
   getModels: ->
     return models

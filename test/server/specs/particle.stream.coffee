@@ -2,6 +2,7 @@ should = require 'should'
 db = config.require 'server/load/mongo'
 {Account, User} = db.models
 particle = require 'particle'
+{getType} = config.require 'load/util'
 
 boiler 'particle', ->
   beforeEach (done) ->
@@ -73,9 +74,8 @@ boiler 'particle', ->
         # console.log {data, event}
 
       collector.register (err) ->
-        should.exist err
-        errMsg = 'No Session associated with sessionSecret'
-        err.should.equal errMsg
+        getType(err).should.eql 'Error'
+        err.message.should.equal "particle/identityLookup requires 'sessionSecret' to be a valid SessionSecret."
         done()
 
   it 'should update upon a change in username', (done) ->

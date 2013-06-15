@@ -7,53 +7,69 @@ watcher = new MongoWatch {format: 'normal'}
 
 port = process.env.GURU_PARTICLE_PORT or config.app.port
 
-unless port is 'DISABLED'
-  stream = new Stream
-    #onDebug: console.log
+module.exports = (server) ->
+  unless port is 'DISABLED'
+    stream = new Stream
+      #onDebug: console.log
 
-    identityLookup: ({sessionSecret}, done) ->
-      Session.findOne {secret: sessionSecret}, (err, session) ->
-        if session?
-          done err, session
-        else
-          errMsg = 'No Session associated with sessionSecret'
-          done errMsg, session
+      #identityLookup: config.service 'particle/identityLookup'
 
-    dataSources:
+      identityLookup: (args, done) ->
+        config.services['particle/identityLookup'] args, (err, result) ->
+          done err, result
 
-      # a user's own session data
-      mySession:
-        manifest: true
+      #identityLookup: ({sessionSecret}, done) ->
+        #Session.findOne {secret: sessionSecret}, (err, session) ->
+          #unless session?
+            #done 'Your Session could not be found.'
+          #else
+            #done err, session
 
-        # TODO: move payload and delta into services
-        payload:
-          (identity, done) ->
-            {sessionSecret} = identity
-            Session.findOne {secret: sessionSecret}, (err, session) ->
-              done err, {data: [session]}
-        delta:
-          (identity, listener) ->
-            watcher.watch "#{config.mongo.dbName}.sessions", listener
+      dataSources:
 
-      # a user's own chats
-      myChats:
-        manifest: true
+        # a user's own session data
+        mySession:
+          manifest: true
 
-        # TODO: move payload and delta into services
-        payload:
-          (identity, done) ->
-            {sessionSecret} = identity
-            Session.findOne {secret: sessionSecret}, (err, session) ->
-              ChatSession.find {sessionId: session._id}, (err, chatSessions) ->
-                chatIds = (cs.chatId for cs in chatSessions)
-                Chat.find {_id: {'$in': chatIds}}, (err, chats) ->
-                  done err, {data: chats}
-        delta:
-          (identity, listener) ->
-            watcher.watch "#{config.mongo.dbName}.chats", listener
+          # TODO: move payload and delta into services
+          payload:
+            (identity, done) ->
+              {sessionSecret} = identity
+              Session.findOne {secret: sessionSecret}, (err, session) ->
+                done err, {data: [session]}
+          delta:
+            (identity, listener) ->
+              watcher.watch "#{config.mongo.dbName}.sessions", listener
 
-    disconnect: ->
-      watcher.stopAll()
+        # a user's own chats
+        myChats:
+          manifest: true
 
-module.exports =
-  stream: stream
+          # TODO: move payload and delta into services
+          payload:
+            (identity, done) ->
+              {sessionSecret} = identity
+              Session.findOne {secret: sessionSecret}, (err, session) ->
+                ChatSession.find {sessionId: session._id}, (err, chatSessions) ->
+                  chatIds = (cs.chatId for cs in chatSessions)
+                  Chat.find {_id: {'$in': chatIds}}, (err, chats) ->
+                    done err, {data: chats}
+          delta:
+            (identity, listener) ->
+              watcher.watch "#{config.mongo.dbName}.chats", listener
+
+        #chatSessions:
+          #manifest: true
+          #payload:
+            #(identity, done) ->
+          #delta:
+            #(identity, listener) ->
+              #watcher.watch "#{config.mongo.dbName}.chatsessions", listener
+
+        #allSessions:
+        #allChats:
+
+      disconnect: ->
+        watcher.stopAll()
+
+  stream.init(server)

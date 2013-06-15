@@ -16,8 +16,8 @@ config =
   development:
     app:
       name: 'Chat Pro'
-      url: 'http://#{devHost}:4000'
-      baseUrl: 'http://#{devHost}:4000'
+      url: "http://#{devHost}:4000"
+      baseUrl: "http://#{devHost}:4000"
       api: null
       port: 4000
       particlePort: 4000
@@ -66,6 +66,58 @@ config =
         transport: 'Console'
         timestamp: true
 
+  test:
+    app:
+      name: 'Chat Pro'
+      url: "http://#{devHost}:4000"
+      baseUrl: "http://#{devHost}:4000"
+      api: null
+      port: 4000
+      particlePort: 4000
+      ssl: false
+        #key: rel 'tmp/certs/test.com.key'
+        #cert: rel 'tmp/certs/test.com.crt'
+      chats:
+        minutesToTimeout: 15
+      mail:
+        transport: 'SES'
+        options:
+          AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
+          AWSSecretKey: '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'
+          from: 'info@chatpro.com'
+          support: 'success@simulator.amazonses.com'
+        getActivationLink: (uid, regkey) ->
+          "http://#{devHost}:4000/#/resetPassword?uid=#{uid}&regkey=#{regkey}"
+      aws:
+        s3:
+          bucket: 'guru-dev'
+          acl: 'public-read'
+          maxSize: '10485760'
+        s3_static:
+          bucket: 'guru-test'
+        accessKey: 'AKIAILLS5MBMHVD62AEA'
+        secretKey: '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'
+    adminNotify: ['brandon@torchlightsoftware.com', 'automart@gmail.com']
+    recurly:
+      apiKey: '162807d2b937497ca43e25db7a01380b'
+      apiUrl: 'https://api.recurly.com/v2/'
+    mongo:
+      host: 'mongodb://localhost:27017/guruTest'
+      dbName: 'guruTest'
+    redis:
+      database: 0
+    statsMonitor:
+      receiver: 'console'
+      enabled: [] # 'client count', 'memory leak', '*'
+    logging:
+      client:
+        level: 'info'
+        transport: 'Console'
+        timestamp: true
+      server:
+        level: 'info'
+        transport: 'Console'
+        timestamp: true
 paths =
   root:       rel '.'
   npmBin:     rel 'node_modules/.bin'

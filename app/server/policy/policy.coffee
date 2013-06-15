@@ -29,27 +29,6 @@ policy =
           'logout'
         ]
       }
-      # {
-      #   filters: ['lookupSessionId']
-      #   only: [
-      #     # 'chats/getRelationToChat'
-      #     # 'acceptChat'
-      #     'acceptInvite'
-      #     'acceptTransfer'
-      #     'inviteOperator'
-      #     'getMyChats'
-      #     'transferChat'
-      #     'changePassword'
-      #     'getActiveChats'
-      #     'getChatStats'
-      #     'getExistingChat'
-      #     'joinChat'
-      #     'getNonpresentOperators'
-      #     'getChatHistory'
-      #     'kickUser'
-      #     'leaveChat'
-      #   ]
-      # }
 
       {
         filters: ['lookupAccountId']

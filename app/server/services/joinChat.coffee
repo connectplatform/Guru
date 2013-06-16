@@ -30,7 +30,7 @@ module.exports =
 
       # As described above, changes to the Chat instance are only
       # required if relation is Member.
-      return done err, {status: 'OK'} unless relation is 'Member'
+      return done err, {status} unless relation is 'Member'
       
       # Now an Operator is visibly joining the chat, so change
       # the Chat status to Active

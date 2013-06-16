@@ -13,18 +13,18 @@ module.exports =
 
     # You cannot send yourself a Transfer request
     # TODO: Implement as filter, via jargon
-    err = Error 'You cannot send yourself a Transfer request'
-    done err, null if sessionId == targetSessionId
+    err = new Error 'You cannot send yourself a Transfer request'
+    return done err if (sessionId is targetSessionId)
 
     # You cannot send a transfer request to a Visitor
     # TODO: Implement as filter, via jargon
     Session.findById targetSessionId, (err, session) ->
-      done err, null if err
+      return done err if err
       
-      noSessionErr = Error 'No Session exists with targetSessionId'
-      done noSessionErr, null unless session?
+      noSessionErr = new Error 'No Session exists with targetSessionId'
+      return done noSessionErr unless session?
       
-      err = Error 'You cannot send a transfer request to a Visitor'
-      done err, null unless session?.userId
+      err = new Error 'You cannot send a transfer request to a Visitor'
+      return done err unless session?.userId
 
       ChatSession.create data, done

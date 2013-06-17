@@ -19,7 +19,7 @@ module.exports =
       accountId = result?.accountId
       reason = result?.reason
       if err or reason
-        errData = {error: err, websiteId: websiteId, specialtyId: specialtyId, reason: reason}
+        errData = {error: err, websiteId, specialtyId, reason}
         config.log.warn 'Could not get availible operators for new chat.', errData
       if err or operators.length is 0
         return done err, {noOperators: true}

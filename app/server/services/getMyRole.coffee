@@ -4,14 +4,16 @@ db = config.require 'load/mongo'
 module.exports =
   optional: ['sessionSecret']
   service: ({sessionSecret}, done) ->
-    if sessionSecret?
-      Session.findOne {secret: sessionSecret}, (err, session) ->
-        return done null, {role: 'None'} if err or not session
+    return done null, {role: 'None'} unless sessionSecret?
+    
+    Session.findOne {secret: sessionSecret}, (err, session) ->
+      return done err if err
+      return done null, {role: 'None'} unless session
+      
+      User.findById session.userId, (err, user) ->
+        return done err if err
 
-        User.findById session.userId, (err, user) ->
-          if user?
-            done err, {role: user.role}
-          else
-            done err, {role: 'Visitor'}
-    else
-      return done null, {role: 'None'}
+        if user?
+          return done err, {role: user.role}
+        else
+          return done err, {role: 'Visitor'}

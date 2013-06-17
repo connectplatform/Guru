@@ -117,8 +117,9 @@ boiler 'Model - Chat', ->
   it 'should have an undefined visitorData when the determining fields are undefined', (done) ->
     Factory.create 'chat', @validData, (err, chat) =>
       should.not.exist err
-      should.not.exist chat.acpData, 'acpData should not exist'
-      should.not.exist chat.queryData, 'queryData should not exist'
-      should.not.exist chat.visitorData, 'visitorData should not exist'
+      shouldBeEmpty = (o) -> (Object.equal {}, o).should.be.true
+      shouldBeEmpty chat.acpData, 'acpData should not exist'
+      shouldBeEmpty chat.queryData, 'queryData should not exist'
+      shouldBeEmpty chat.visitorData, 'visitorData should not exist'
 
       done()      

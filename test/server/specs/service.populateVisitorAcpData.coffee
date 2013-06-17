@@ -79,8 +79,8 @@ boiler 'Service - Populate Visitor ACP Data', ->
           Chat.findById chatId, (err, chat) =>
             should.not.exist err
             should.exist chat
-            should.not.exist chat.acpData
-            # (Object.equal chat.acpData, expectedAcpData).should.be.true
+            should.exist chat.acpData
+            (Object.equal chat.acpData, {}).should.be.true
             done()
 
         # The unfortunate part of making the acp lookup run async in the background...

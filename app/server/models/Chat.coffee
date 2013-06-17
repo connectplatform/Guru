@@ -64,7 +64,7 @@ chat = new Schema
     default: {}
     validate: isObject
 
-# return string, not ObjectID
+# return string, not ObjectId
 for field in ['_id', 'accountId', 'websiteId', 'specialtyId']
   chat.path(field).get getString
 

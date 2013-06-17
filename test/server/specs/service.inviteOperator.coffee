@@ -68,7 +68,7 @@ boiler 'Service - Invite Operator', ->
         visitorSessionId = visitor.localStorage.sessionId
         @client.inviteOperator {chatId: chatId, targetSessionId: visitorSessionId}, (err) =>
           should.exist err
-          err.should.equal 'You cannot invite a Visitor to join a Chat'
+          err.should.equal 'targetSessionId cannot refer to a Visitor'
           done()
 
                               

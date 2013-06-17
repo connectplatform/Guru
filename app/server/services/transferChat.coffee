@@ -4,6 +4,7 @@ db = config.require 'load/mongo'
 module.exports =
   required: ['sessionId', 'accountId', 'chatId', 'targetSessionId']
   service: ({sessionId, accountId, chatId, targetSessionId}, done) ->
+    
     data =
       accountId: accountId
       sessionId: targetSessionId
@@ -11,15 +12,4 @@ module.exports =
       relation: 'Transfer'
       initiator: sessionId
 
-    # You cannot send a transfer request to a Visitor
-    # TODO: Implement as filter, via jargon
-    Session.findById targetSessionId, (err, session) ->
-      return done err if err
-      
-      noSessionErr = new Error 'No Session exists with targetSessionId'
-      return done noSessionErr unless session?
-      
-      err = new Error 'You cannot send a transfer request to a Visitor'
-      return done err unless session?.userId
-
-      ChatSession.create data, done
+    ChatSession.create data, done

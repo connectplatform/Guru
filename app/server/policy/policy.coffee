@@ -163,7 +163,7 @@ policy =
       {
         filters: [
           'sessionIdIsNotTargetSessionId'
-          # 'targetSessionIdIsNotVisitor'
+          'targetSessionIdIsNotVisitor'
         ]
         only: [
           'transferChat'

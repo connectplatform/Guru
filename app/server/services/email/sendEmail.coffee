@@ -11,7 +11,7 @@ module.exports = (body, vars, done) ->
   sender.sendMail vars, (err, response) ->
     if err
       config.log.warn "Failed to send email: #{err}", vars if err
-      done err if err
+      return done err if err
     
     data =
       message: response?.message

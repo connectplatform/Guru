@@ -11,11 +11,6 @@ module.exports =
       relation: 'Transfer'
       initiator: sessionId
 
-    # You cannot send yourself a Transfer request
-    # TODO: Implement as filter, via jargon
-    err = new Error 'You cannot send yourself a Transfer request'
-    return done err if (sessionId is targetSessionId)
-
     # You cannot send a transfer request to a Visitor
     # TODO: Implement as filter, via jargon
     Session.findById targetSessionId, (err, session) ->

@@ -4,11 +4,6 @@ db = config.require 'load/mongo'
 module.exports =
   required: ['sessionSecret', 'sessionId', 'accountId', 'chatId', 'targetSessionId']
   service: ({sessionId, accountId, chatId, targetSessionId}, done) ->
-    # You cannot invite yourself to a chat
-    # TODO: Implement as filter, via jargon
-    err = Error 'You cannot invite yourself to a Chat'
-    return done err, null if sessionId == targetSessionId
-      
     # You cannot invite a Visitor to join a chat
     # TODO: Implement as filter, via jargon
     Session.findById targetSessionId, (err, session) ->

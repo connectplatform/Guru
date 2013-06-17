@@ -12,7 +12,7 @@ boiler 'Service - Get Active Chats', ->
         @client.getActiveChats {}, (err, {chats: [chat]}) =>
           should.not.exist err
           should.exist chat, 'expected a chat record'
-          chat.name.should.equal 'visitor'
+          chat.formData.username.should.equal 'visitor'
           chat.status.should.equal 'Waiting'
           done()
 
@@ -116,6 +116,7 @@ boiler 'Service - Get Active Chats', ->
           ChatSession.findOne {@sessionId, chatId: inviteChat._id}, (err, chatSession) =>
             should.not.exist err
             should.exist chatSession, 'expected chatSession'
+            
             ChatSession.find {@sessionId}, (err, chatSessions) =>
               should.not.exist err
               should.exist chatSessions
@@ -126,7 +127,7 @@ boiler 'Service - Get Active Chats', ->
                 should.exist chats
                 chats.length.should.eql 3
 
-                visitorNames = chats.map (chat) => chat.name
+                visitorNames = chats.map (chat) => chat.formData.username
                 visitorNames.should.eql ['Bob', 'Suzie', 'Ralph']
                 done()
 

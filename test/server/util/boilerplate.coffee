@@ -1,6 +1,7 @@
 # pick a port that server and client will run on
 process.env.GURU_PORT = Math.floor(Math.random() * 1000) + 8000
 process.env.GURU_PULSAR_PORT = Math.floor(Math.random() * 1000) + 8000
+process.env.NODE_ENV = 'test'
 
 db = config.require 'load/mongo'
 sampleData = config.require 'data/sampleData'

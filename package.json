@@ -12,7 +12,7 @@
     "connect": "2.3.4",
     "asset-rack": "git+https://github.com/TorchlightSoftware/asset-rack.git#gzip",
     "async": "*",
-    "particle": "git+https://github.com/TorchlightSoftware/particle.git",
+    "particle": "*",
     "mongo-watch": "git+https://github.com/TorchlightSoftware/mongo-watch.git",
     "vein": "*",
     "sugar": "*",

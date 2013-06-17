@@ -66,9 +66,6 @@ chat = new Schema
 for field in ['_id', 'accountId', 'websiteId', 'specialtyId']
   chat.path(field).get getString
 
-chat.virtual('visitorData').get ->
-  return {}.merge(@queryData).merge(@formData).merge(@acpData)
-
 chat.pre 'save', (next) ->
   isValid = (x) -> (typeof x == 'object') or (not x?)
 
@@ -90,5 +87,7 @@ chat.post 'remove', (_chat) ->
     if err?
       config.log.error 'Error cascading remove', {error: err, chatId: chatId}
 
+chat.virtual('visitorData').get ->
+  {}.merge(@queryData).merge(@formData).merge(@acpData)
 
 module.exports = chat

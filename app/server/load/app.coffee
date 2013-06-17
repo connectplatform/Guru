@@ -29,11 +29,11 @@ module.exports = (cb) ->
 
   server = createServer port, app
 
-  # initialize particle stream
-  particle.stream.init server
-
   # attaches services to config.services
   initServices()
+
+  # initialize particle stream
+  particle(server)
 
   # Wire up vein
   topLevelServices = Object.findAll config.services, (name) -> not name.has(/\//)

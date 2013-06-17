@@ -33,8 +33,15 @@ module.exports = [
     lookup: ({sessionSecret}, found) ->
       Session.findOne {secret: sessionSecret}, {_id: 1}, (err, session) ->
         found err, session?._id
-        
+
     defaultArgs: ['sessionId']
+  ,
+    typeName: 'SessionSecret'
+    validation: ({value}, assert) ->
+      Session.findOne {secret: value}, (err, session) ->
+        exists = not err and session?
+        assert exists, {reason: 'Session does not exist'}
+    defaultArgs: ['sessionSecret']
   ,
     typeName: 'ChatId'
     validation: ({value}, assert) ->

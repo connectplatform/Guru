@@ -2,8 +2,8 @@ db = require 'mongoose'
 {Account, Session, User} = db.models
 
 module.exports =
-  # required: ['accountId']
-  # optional: ['accountId', 'sessionId']
+  required: ['accountId']
+  optional: ['accountId', 'sessionSecret']
   service: ({accountId, sessionId}, done) ->
     if accountId?
       getSubscription = config.service 'recurly/getSubscription'

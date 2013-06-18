@@ -37,7 +37,5 @@ module.exports =
       Chat.findById chatId, (err, chat) ->
         return done err if err
         return done (new Error 'Chat not found') if not chat?
-          
-        chat?.status = 'Active'
-        chat?.save (err) ->
-            done err, {status}
+
+        done err, {status}

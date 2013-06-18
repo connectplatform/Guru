@@ -93,7 +93,7 @@ chat.virtual('visitorData').get ->
   {}.merge(@queryData).merge(@formData).merge(@acpData)
 
 chat.methods.recalculateStatus = (done) ->
-  {ChatSession} = (config.require 'load/mongo').models
+  {ChatSession} = db.models
   
   # Try to find at least one Visitor and one visible Operator in the Chat
   async.parallel {
@@ -103,7 +103,7 @@ chat.methods.recalculateStatus = (done) ->
     return done err if err
 
     if visitor? and operator?
-      # We hHave both a Visitor and a visible Operator
+      # We have both a Visitor and a visible Operator
       @status = 'Active'
     else if visitor? and not operator?
       # We have a Visitor but no visible Operator to chat with her
@@ -114,6 +114,5 @@ chat.methods.recalculateStatus = (done) ->
       @status = 'Vacant'
 
     @save done
-
 
 module.exports = chat

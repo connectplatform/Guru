@@ -103,33 +103,20 @@ boiler 'Service - Get Active Chats', ->
 
   it 'should sort the chats', (done) ->
     @getAuthed (_..., {@sessionId, accountId}) =>
+      # creates 4 chats, 2 Active, 1 Waiting, 1 Vacant
       @createChats (err, chats) =>
         should.not.exist err
         should.exist chats
 
-        # add an invite for the present operator
-        inviteChat = chats[2]
-        ChatSession.create {@sessionId, chatId: inviteChat._id, relation: 'Invite'}, (err, _) =>
+        # get active chats
+        @client.getActiveChats {}, (err, {chats}) =>
           should.not.exist err
-          should.exist _
-          
-          ChatSession.findOne {@sessionId, chatId: inviteChat._id}, (err, chatSession) =>
-            should.not.exist err
-            should.exist chatSession, 'expected chatSession'
-            
-            ChatSession.find {@sessionId}, (err, chatSessions) =>
-              should.not.exist err
-              should.exist chatSessions
+          should.exist chats
+          chats.length.should.eql 3
 
-              # get active chats
-              @client.getActiveChats {}, (err, {chats}) =>
-                should.not.exist err
-                should.exist chats
-                chats.length.should.eql 3
-
-                visitorNames = chats.map (chat) => chat.formData.username
-                visitorNames.should.eql ['Bob', 'Suzie', 'Ralph']
-                done()
+          visitorNames = chats.map (chat) => chat.formData.username
+          visitorNames.should.eql ['Bob', 'Suzie', 'Ralph']
+          done()
 
   it "should have a chat relation if an operator is invited", (done) ->
     # Setup

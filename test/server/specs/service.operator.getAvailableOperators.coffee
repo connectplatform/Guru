@@ -14,7 +14,7 @@ boiler 'Service - Get Available Operators', ->
 
   describe 'with no operators', ->
     it 'should return no results', (done) ->
-      @getAvailableOperators {websiteId: @fooSiteId, specialtyName: 'sales'}, (err, {accountId, operators}) ->
+      @getAvailableOperators {websiteId: @fooSiteId, specialtyName: 'Sales'}, (err, {accountId, operators}) ->
         should.not.exist err
         should.exist operators
         operators.length.should.eql 0
@@ -49,3 +49,29 @@ boiler 'Service - Get Available Operators', ->
           should.exist operators
           operators.length.should.eql 0, 'Expected no operators.'
           done()
+
+  describe 'if two operators have sessions but one has status online == false', ->
+    it 'should only show the operator who has status online == true', (done) ->
+      {Session} = config.require('load/mongo').models
+      @guru1Login (err, @guru1, {sessionId}) =>
+        guru1SessionId = sessionId
+        Session.findById guru1SessionId, (err, session1) =>
+          should.not.exist err
+          should.exist session1, 'session1 should exist'
+          session1.online.should.equal true
+          
+          @guru2Login (err, @guru2, {sessionId}) =>
+            guru2SessionId = sessionId
+            Session.findById guru2SessionId, (err, session2) =>
+              should.not.exist err
+              should.exist session2
+
+              session2.online = false
+              session2.save (err) =>
+                should.not.exist err
+                
+                @getAvailableOperators {websiteId: @fooSiteId}, (err, {accountId, operators}) =>
+                  [op] = operators
+                  should.exist op
+                  op._id.should.equal session1.userId
+                  done()

@@ -25,13 +25,10 @@ chatSession = new Schema
 
   initiator: ObjectId
 
-chatSession.path('_id').get getString
-chatSession.path('sessionId').get getString
-chatSession.path('chatId').get getString
-chatSession.path('initiator').get getString
+# return string, not ObjectId
+for field in ['_id', 'sessionId', 'chatId', 'initiator']
+  chatSession.path(field).get getString
 
-# chatSession.pre 'remove', (next) ->
-#   console.log 'removing a ChatSession'
-#   next()
+# TODO: Trigger recalculateStatus on relevant events.
 
 module.exports = chatSession

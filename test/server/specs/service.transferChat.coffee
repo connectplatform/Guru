@@ -50,7 +50,7 @@ boiler 'Service - Transfer Chat', ->
       # Try to invite myself
       @client.transferChat {@chatId, targetSessionId: @sessionId}, (err) =>
         should.exist err
-        err.should.equal 'You cannot send yourself a Transfer request'
+        err.should.equal 'sessionId and targetSessionId cannot be the same.'
         done()
 
   it "should not let you send a Transfer request to a Visitor", (done) ->
@@ -63,5 +63,5 @@ boiler 'Service - Transfer Chat', ->
         visitorSessionId = visitor.localStorage.sessionId
         @client.transferChat {chatId: chatId, targetSessionId: visitorSessionId}, (err) =>
           should.exist err
-          err.should.equal 'You cannot send a transfer request to a Visitor'
+          err.should.equal 'targetSessionId cannot refer to a Visitor'
           done()

@@ -19,7 +19,7 @@ boiler 'Service - Join Chat', ->
     beforeEach (done) ->
       @getAuthed (_..., vars) =>
         @newChat =>
-          @client.joinChat {chatId: @chatId}, (err, result) =>
+          @client.joinChat {@chatId}, (err, result) =>
             @sessionId = vars.sessionId
             should.exist @sessionId
             done err, result

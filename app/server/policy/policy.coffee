@@ -160,6 +160,17 @@ policy =
         filters: ['isInvitedToTransfer']
         only: ['acceptTransfer']
       }
+
+      {
+        filters: [
+          'sessionIdIsNotTargetSessionId'
+          'targetSessionIdIsNotVisitor'
+        ]
+        only: [
+          'transferChat'
+          'inviteOperator'
+        ]
+      }
     ]
 
 module.exports = policy

@@ -33,9 +33,9 @@ session = new Schema
     type: Number
     default: 0
 
-session.path('_id').get getString
-session.path('accountId').get getString
-session.path('userId').get getString
+# return string, not ObjectId
+for field in ['_id', 'accountId', 'userId']
+  session.path(field).get getString
 
 session.statics.sessionByOperator = (userId, done) ->
   @.findOne {userId}, (err, sess) ->

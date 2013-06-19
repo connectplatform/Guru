@@ -1,5 +1,5 @@
 db = config.require 'load/mongo'
-{Chat, ChatSession, Session} = db.models
+{Chat, ChatSession} = db.models
 
 module.exports =
   required: ['sessionSecret', 'sessionId', 'chatId']
@@ -14,26 +14,30 @@ module.exports =
       chatId: chatId
       relation: relation
 
-    # Verify Session matching sessionId exists
-    Session.findById sessionId, (err, session) ->
-      return done err if err
-      return done (new Error "Couldn't find Session") if not session?
+    ChatSession.create data, (err, chatSession) ->
+      return done err, {status: 'ERROR'} if err
 
-      # Verify Chat matching chatId exists
+      # What happens next depends on who is joining the Chat, and how.
+      # 
+      # relation | description 
+      # ---------+------------
+      # Member   | Op. visibly joining the Chat, which must have status Active
+      # Invite   | Op. invited to the Chat, no change in status
+      # Transfer | Op. is being asked to accept a transfer, no change in status
+      # Watching | Op. is invisibly(!) joining the Chat, no change in status
+      # Visitor  | Visitor is visibly joining the Chat, no change in status
+      status = 'OK'
+
+      # As described above, changes to the Chat instance are only
+      # required if relation is Member.
+      return done err, {status} unless relation is 'Member'
+      
+      # Now an Operator is visibly joining the chat, so change
+      # the Chat status to Active
       Chat.findById chatId, (err, chat) ->
         return done err if err
-        return done (new Error "Couldn't find Chat") if not chat?
-
-        ChatSession.create data, (err, chatSession) ->
-          return done err, {status: 'ERROR'} if err
-
-          status = 'OK'
-          # If an Operator is joining the chat
-          if session.userId?
-            # Change Chat status to 'Active'
-            chat.status = 'Active'
-            chat.save (err) ->
-              done err, {status: status}
-          else
-            # Otherwise the Chat is still Waiting for an Operator
-            done err, {status: 'OK'}
+        return done (new Error 'Chat not found') if not chat?
+          
+        chat?.status = 'Active'
+        chat?.save (err) ->
+            done err, {status}

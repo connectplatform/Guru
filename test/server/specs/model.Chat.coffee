@@ -1,6 +1,7 @@
 should = require 'should'
+async = require 'async'
 db = config.require 'server/load/mongo'
-{Account, Chat, User, Website} = db.models
+{Account, Chat, ChatSession, Session, User, Website} = db.models
 {chatStatusStates} = config.require 'load/enums'
 querystring = require 'querystring'
 
@@ -117,8 +118,74 @@ boiler 'Model - Chat', ->
   it 'should have an undefined visitorData when the determining fields are undefined', (done) ->
     Factory.create 'chat', @validData, (err, chat) =>
       should.not.exist err
-      should.not.exist chat.acpData, 'acpData should not exist'
-      should.not.exist chat.queryData, 'queryData should not exist'
-      should.not.exist chat.visitorData, 'visitorData should not exist'
+      shouldBeEmpty = (o) -> (Object.equal {}, o).should.be.true
+      shouldBeEmpty chat.acpData, 'acpData should not exist'
+      shouldBeEmpty chat.queryData, 'queryData should not exist'
+      shouldBeEmpty chat.visitorData, 'visitorData should not exist'
 
-      done()      
+      done()
+
+  describe 'recalculateStatus', ->
+    beforeEach (done) ->
+      @prep = (hasVisitor, hasOperator, next) =>
+        Factory.create 'chat', @validData, (err, chat) =>
+          should.not.exist err
+          should.exist chat
+          @chatId = chat._id
+
+          visitorData =
+            username: 'Visitor'
+            accountId: @accountId
+          operatorData =
+            username: 'Operator'
+            accountId: @accountId
+    
+          async.parallel {
+            visitorSession: (next) => Factory.create 'session', visitorData, next
+            operatorSession: (next) => Factory.create 'session', operatorData, next
+          }, (err, {visitorSession, operatorSession}) =>
+            should.not.exist err
+            should.exist visitorSession, 'error creating visitorSession'
+            should.exist operatorSession, 'error creating operatorSession'
+  
+            visitorChatSessionData =
+              chatId: chat._id
+              sessionId: visitorSession._id
+              relation: if hasVisitor then 'Visitor' else 'Watching'
+            operatorChatSessionData =
+              chatId: chat._id
+              sessionId: operatorSession._id
+              relation: if hasOperator then 'Member' else 'Watching'
+  
+            async.parallel {
+              visitorChatSession: (next) => Factory.create 'chatSession', visitorChatSessionData, next
+              operatorChatSession: (next) => Factory.create 'chatSession', operatorChatSessionData, next
+            }, (err, {visitorChatSession, operatorChatSession}) =>
+              should.not.exist err
+              should.exist visitorChatSession
+              should.exist operatorChatSession
+              next()
+
+      @statusShouldBe = (hasVisitor, hasOperator, expectedStatus, next) =>
+        @prep hasVisitor, hasOperator, () =>
+          Chat.findById @chatId, (err, chat) =>
+            should.not.exist err
+            should.exist chat
+            chat.recalculateStatus (err) =>
+              should.not.exist err
+              chat.status.should.equal expectedStatus
+              next()
+            
+      done()
+
+    it 'should set status to Active when there is both a Visitor and an Operator', (done) ->
+      @statusShouldBe true, true, 'Active', done
+  
+    it 'should set status to Waiting when there is only a Visitor', (done) ->
+      @statusShouldBe true, false, 'Waiting', done
+      
+    it 'should set status to Vacant when there is no Visitor but only an Operator', (done) ->
+      @statusShouldBe false, true, 'Vacant', done
+          
+    it 'should set status to Vacant when there neither a Visitor nor an Operator', (done) ->
+      @statusShouldBe false, false, 'Vacant', done

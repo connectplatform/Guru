@@ -10,12 +10,15 @@ module.exports = ({pathParts, url}, response) ->
   getImageUrl = config.service 'getImageUrl'
 
   handleError = (err) ->
+    console.log 'in handleError'.yellow, err
     if err
       config.log.warn "Failed to find chatLinkImage.", {websiteId: websiteId, url: url, error: err}
       response.writeHead 404
+      console.log 'about to call response.end() in handleError'
       response.end()
       return true
     else
+      console.log 'well, no error'
       return false
 
   respond = (websiteId, isOnline) ->
@@ -30,6 +33,7 @@ module.exports = ({pathParts, url}, response) ->
         "Location": url
         "Cache-Control": 'no-cache, no-store, max-age=0, must-revalidate'
       }
+      console.log 'about to call response.end() in respond'
       response.end()
 
   # need a websiteId to do anything
@@ -37,16 +41,23 @@ module.exports = ({pathParts, url}, response) ->
 
   # check cache
   cached = cache.retrieve cacheLocation
-  if cached?
-    respond websiteId, cached
-
+  console.log {cached}
+  # if cached?
+  if cached
+    console.log {cached}
+    console.log 'cached!!!!'
+    return respond websiteId, cached
+    console.log 'SHOULD NEVER GET HERE'.red
   else
 
     # is anyone online?
+    console.log {websiteId}
     getAvailableOperators {websiteId: websiteId}, (err, data) ->
+      console.log 'getAvailableOperators'.yellow, {err, data}
       return if handleError err
       {accountId, operators} = data
       isOnline = (operators.length > 0)
 
       cache.store cacheLocation, isOnline
-      respond websiteId, isOnline
+      return respond websiteId, isOnline
+      console.log 'ALSO SHOULD NEVER GET HERE'.red

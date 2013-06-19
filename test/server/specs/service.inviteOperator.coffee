@@ -55,7 +55,7 @@ boiler 'Service - Invite Operator', ->
       # Try to invite myself
       @client.inviteOperator {@chatId, targetSessionId: @sessionId}, (err) =>
         should.exist err
-        err.should.equal 'You cannot invite yourself to a Chat'
+        err.should.equal 'sessionId and targetSessionId cannot be the same.'
         done()
 
   it "should not let you invite a Visitor to a Chat", (done) ->
@@ -68,7 +68,7 @@ boiler 'Service - Invite Operator', ->
         visitorSessionId = visitor.localStorage.sessionId
         @client.inviteOperator {chatId: chatId, targetSessionId: visitorSessionId}, (err) =>
           should.exist err
-          err.should.equal 'You cannot invite a Visitor to join a Chat'
+          err.should.equal 'targetSessionId cannot refer to a Visitor'
           done()
 
                               

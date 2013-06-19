@@ -82,8 +82,9 @@ user.path('role').set (newVal) ->
   @oldRole = @role
   newVal
 
-user.path('_id').get getString
-user.path('accountId').get getString
+# return string, not ObjectId
+for field in ['_id', 'accountId']
+  user.path(field).get getString
 
 user.pre 'save', (next) ->
   @password = digest_s @password if @isModified 'password'

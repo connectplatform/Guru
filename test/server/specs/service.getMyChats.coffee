@@ -25,7 +25,7 @@ boiler 'Service - Get My Chats', ->
               should.exist chats
               chats.length.should.equal 1
               [chat] = chats
-              chat.name.should.equal 'joinMe'
+              chat.formData.username.should.equal 'joinMe'
               chat.websiteUrl.should.equal 'foo.com'
               chat.status.should.equal 'Active'
               done()

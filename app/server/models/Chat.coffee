@@ -1,9 +1,11 @@
+async = require 'async'
 db = require 'mongoose'
 {Schema} = db
 {ObjectId, Mixed} = Schema.Types
 {chatStatusStates} = config.require 'load/enums'
 {getString} = config.require 'load/util'
 querystring = require 'querystring'
+
 
 isObject = (value) ->
   (typeof value) is 'object' and not Array.isArray(value)
@@ -62,7 +64,7 @@ chat = new Schema
     default: {}
     validate: isObject
 
-# return string, not ObjectID
+# return string, not ObjectId
 for field in ['_id', 'accountId', 'websiteId', 'specialtyId']
   chat.path(field).get getString
 
@@ -89,5 +91,29 @@ chat.post 'remove', (_chat) ->
 
 chat.virtual('visitorData').get ->
   {}.merge(@queryData).merge(@formData).merge(@acpData)
+
+chat.methods.recalculateStatus = (done) ->
+  {ChatSession} = (config.require 'load/mongo').models
+  
+  # Try to find at least one Visitor and one visible Operator in the Chat
+  async.parallel {
+    visitor: (next) -> ChatSession.findOne {relation: 'Visitor'}, next
+    operator: (next) -> ChatSession.findOne {relation: 'Member'}, next
+  }, (err, {visitor, operator}) =>
+    return done err if err
+
+    if visitor? and operator?
+      # We hHave both a Visitor and a visible Operator
+      @status = 'Active'
+    else if visitor? and not operator?
+      # We have a Visitor but no visible Operator to chat with her
+      @status = 'Waiting'
+    else
+      # We have no Visitor, so the Chat is Vacant, whether or not
+      # it also contains a visible Operator.
+      @status = 'Vacant'
+
+    @save done
+
 
 module.exports = chat

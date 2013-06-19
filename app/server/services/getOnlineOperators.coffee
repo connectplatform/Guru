@@ -11,8 +11,9 @@ module.exports =
   required: ['accountId']
   service: ({accountId}, done) ->
     Session.find {accountId}, {username: true}, (err, sessions) ->
-      config.log.error 'Error getting online operators', {error: err} if err
-      done err, null if err
+      if err
+        config.log.error 'Error getting online operators', {error: err}
+        return done err
 
       operatorNames = (s.username for s in sessions)
 

@@ -10,13 +10,13 @@ db = config.require 'load/mongo'
 
 module.exports = (chatId, cb) ->
   ChatSession.find {chatId, relation: 'Member'}, (err, chatSessions) ->
-    done err, null if err
+    return done err if err
     cond =
       userId: '$ne': null
       _id: '$in': (cs.sessionId for cs in chatSessions)
       
     Session.find cond, (err, sessions) ->
-      done err, null if err
+      return done err if err
 
       userIds = (s.userId for s in sessions)
       User.find {_id: '$in': (s.userId for s in sessions)}, cb

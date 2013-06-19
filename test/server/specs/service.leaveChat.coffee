@@ -1,15 +1,12 @@
 should = require 'should'
-
-db = config.require 'load/mongo'
-{ChatSession} = db.models
-
+{ChatSession} = config.require('load/mongo').models
 
 boiler 'Service - Leave Chat', ->
-  
+
   it 'should remove current operator from chat', (done) ->
     @guru1Login (err, guru1, vars) =>
       should.exist guru1
-      
+
       @newChat =>
         ChatSession.find {@chatId}, (err, chatSessions) =>
           guru1.acceptChat {@chatId}, (err) =>
@@ -24,7 +21,7 @@ boiler 'Service - Leave Chat', ->
               guru1.getMyChats {}, (err, {chats}) =>
                 should.not.exist.err
                 chats.should.be.empty
-  
+
                 # Check whether the chat has the right status
                 guru1.getActiveChats {}, (err, {chats}) =>
                   should.not.exist err
@@ -34,7 +31,7 @@ boiler 'Service - Leave Chat', ->
                   should.exist chat
                   chat.status.should.equal 'Waiting'
                   done()
-    
+
   it 'should not change status if there is another operator', (done) ->
     # Setup
     @getAuthed =>

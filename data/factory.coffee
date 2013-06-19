@@ -21,9 +21,18 @@ defaultAccountId = (done) ->
     done err, getString(account._id)
 
 getSpecialties = (list) ->
-  (next) ->
+  (done) ->
     defaultAccountId (err, accountId) ->
-      config.services['specialties/getSpecialtyIds'] {accountId: accountId, specialties: list}, next
+      config.services['specialties/getSpecialtyIds'] {accountId: accountId, specialties: list}, done
+
+getWebsiteId = (websiteUrl) ->
+  (done) ->
+    config.services['websites/getWebsiteIdForDomain'] {websiteUrl}, (err, {websiteId}) ->
+      done err, websiteId
+
+Factory.assemble = (name, args) ->
+  (done) -> Factory.create name, args, (err, obj) ->
+    done err, obj?._id
 
 # ================================================================
 # mongo factories
@@ -96,34 +105,27 @@ Factory.define 'chathistory', ChatHistory, {
 }
 
 Factory.define 'chat', Chat, {
-  accountId: null
+  accountId: defaultAccountId
   status: chatStatusStates[0]
   history: []
-  websiteId: null
-  websiteUrl: null
+  websiteId: getWebsiteId 'foo.com'
+  websiteUrl: 'foo.com'
 }
 
 Factory.define 'session', Session, {
-  accountId: null
+  accountId: defaultAccountId
   userId: null
   username: 'Example visitor'
 }
 
 Factory.define 'chatSession', ChatSession, {
-  sessionId: null
-  chatId: null
+  sessionId: Factory.assemble 'session'
+  chatId: Factory.assemble 'chat'
   relation: 'Member'
 }
 
 Factory.define 'account', Account, {
   accountType: 'Unlimited'
 }
-
-
-# ================================================================
-# redis factories
-# ================================================================
-#
-# Can't do... need constructor implementation.
 
 module.exports = Factory

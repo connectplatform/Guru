@@ -1,7 +1,7 @@
 db = require 'mongoose'
 {Chat, ChatSession, Session, Specialty, Website} = db.models
 
-{getString, getType} = config.require 'load/util'
+{getString, getType} = config.require 'lib/util'
 
 redisId = /^[a-z0-9]{16}$/
 mongoId = /^[a-f0-9]{24}$/

@@ -1,4 +1,4 @@
-{tandoor} = config.require 'load/util'
+{tandoor} = config.require 'lib/util'
 {ChatSession} = config.require('load/mongo').models
 
 module.exports = tandoor (sessionId, done) ->

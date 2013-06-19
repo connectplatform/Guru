@@ -3,7 +3,7 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId, Mixed} = Schema.Types
 {chatStatusStates} = config.require 'load/enums'
-{getString} = config.require 'load/util'
+{getString} = config.require 'lib/util'
 querystring = require 'querystring'
 
 

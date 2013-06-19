@@ -1,7 +1,7 @@
 db = config.require 'load/mongo'
 {Website} = db.models
 
-{getString} = config.require 'load/util'
+{getString} = config.require 'lib/util'
 
 module.exports =
   required: ['websiteUrl']

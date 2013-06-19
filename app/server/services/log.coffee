@@ -2,7 +2,7 @@ async = require 'async'
 db = config.require 'load/mongo'
 
 {inspect} = require 'util'
-{getType} = config.require 'load/util'
+{getType} = config.require 'lib/util'
 {Chat, Session} = db.models
 
 module.exports =

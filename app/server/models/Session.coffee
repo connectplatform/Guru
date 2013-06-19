@@ -2,7 +2,7 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 enums = config.require 'load/enums'
-{random, getString} = config.require 'load/util'
+{random, getString} = config.require 'lib/util'
 
 # Session for a logged-in User or non-User visitor
 session = new Schema

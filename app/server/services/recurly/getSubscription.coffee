@@ -1,4 +1,4 @@
-{getType} = config.require 'load/util'
+{getType} = config.require 'lib/util'
 
 module.exports =
   required: ['accountId']

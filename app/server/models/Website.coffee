@@ -2,7 +2,7 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 
-{getString} = config.require 'load/util'
+{getString} = config.require 'lib/util'
 
 website = new Schema
 

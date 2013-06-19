@@ -1,5 +1,5 @@
 async = require 'async'
-{tandoor, getType} = config.require 'load/util'
+{tandoor, getType} = config.require 'lib/util'
 
 module.exports = tandoor (chatSessions, relationTypes, done) ->
   if getType(relationTypes) != 'Array'

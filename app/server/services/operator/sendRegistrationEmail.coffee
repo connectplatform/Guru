@@ -1,5 +1,5 @@
 sendEmail = config.require 'services/email/sendEmail'
-{random} = config.require 'load/util'
+{random} = config.require 'lib/util'
 {getActivationLink} = config.app.mail
 
 renderTemplate = config.require 'services/templates/renderTemplate'

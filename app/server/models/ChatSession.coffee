@@ -2,7 +2,7 @@ db = require 'mongoose'
 {Schema} = db
 {ObjectId} = Schema.Types
 {chatSessionRelations} = config.require 'load/enums'
-{getString} = config.require 'load/util'
+{getString} = config.require 'lib/util'
 
 chatSession = new Schema
   sessionId:

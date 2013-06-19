@@ -8,7 +8,7 @@ db = config.require 'load/mongo'
 module.exports = ({accountId, chatId}, done) ->
   Session.find {accountId}, (err, sessions) ->
     return done err if err
-    
+
     remove = (session, next) ->
       index = session.unansweredChats.indexOf(chatId, 1)
 

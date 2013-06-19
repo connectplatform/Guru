@@ -1,6 +1,6 @@
 db = require 'mongoose'
 {Schema} = db
-{getString} = config.require 'load/util'
+{getString} = config.require 'lib/util'
 
 enums = config.require 'load/enums'
 

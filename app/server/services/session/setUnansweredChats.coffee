@@ -1,5 +1,5 @@
 async = require 'async'
-{tandoor} = config.require 'load/util'
+{tandoor} = config.require 'lib/util'
 
 # stoic = require 'stoic'
 # {Chat, Session, ChatSession} = stoic.models

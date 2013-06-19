@@ -5,7 +5,7 @@ db = require 'mongoose'
 {ObjectId} = Schema.Types
 
 enums = config.require 'load/enums'
-{getType, getString} = config.require 'load/util'
+{getType, getString} = config.require 'lib/util'
 
 validateWebsite = (websiteIds, cb) ->
   mongo = config.require 'load/mongo'

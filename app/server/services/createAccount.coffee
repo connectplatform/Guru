@@ -1,6 +1,6 @@
 async = require 'async'
 db = require 'mongoose'
-{curry, select} = config.require 'load/util'
+{curry, select} = config.require 'lib/util'
 {Account, User} = db.models
 
 module.exports =

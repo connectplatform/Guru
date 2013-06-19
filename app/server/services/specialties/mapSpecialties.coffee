@@ -1,4 +1,4 @@
-{curry} = config.require 'load/util'
+{curry} = config.require 'lib/util'
 async = require 'async'
 
 module.exports =

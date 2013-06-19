@@ -17,7 +17,7 @@
       tbody
         each chat in chats
           tr
-            td= chat.visitor.username
+            td= chat.visitorData.username
             td= chat.operators
             td
               if chat.relation == 'invite'

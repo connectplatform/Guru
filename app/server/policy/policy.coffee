@@ -25,6 +25,7 @@ policy =
           'leaveChat'
           'setSessionOffline'
           'session/setSessionOnlineStatus'
+          'operator/getChatMembership'
           'logout'
         ]
       }

@@ -1,5 +1,4 @@
-db = config.require 'load/mongo'
-{Chat, ChatSession} = db.models
+{Chat, ChatSession} = config.require('load/mongo').models
 
 module.exports =
   required: ['accountId', 'sessionSecret', 'sessionId']

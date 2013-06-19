@@ -1,4 +1,4 @@
-{select} = config.require 'load/util'
+{select} = config.require 'lib/util'
 initServices = config.require 'load/initServices'
 {print} = require 'law'
 

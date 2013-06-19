@@ -2,7 +2,7 @@ should = require 'should'
 db = config.require 'server/load/mongo'
 {Account, User} = db.models
 particle = require 'particle'
-{getType} = config.require 'load/util'
+{getType} = config.require 'lib/util'
 
 boiler 'particle', ->
   beforeEach (done) ->

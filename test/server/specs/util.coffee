@@ -1,4 +1,4 @@
-{tandoor} = config.require 'load/util'
+{tandoor} = config.require 'lib/util'
 
 example = tandoor (a, b, next) ->
   next a, b

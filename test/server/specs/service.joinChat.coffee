@@ -2,7 +2,7 @@ should = require 'should'
 db = config.require 'load/mongo'
 {ObjectId} = db.Schema.Types
 {ChatSession, Session} = db.models
-{getString} = config.require 'load/util'
+{getString} = config.require 'lib/util'
 
 boiler 'Service - Join Chat', ->
 

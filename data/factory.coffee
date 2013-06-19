@@ -3,7 +3,7 @@ models = config.require('load/mongo').models
 {User, Account, Specialty, Website, ChatHistory, Chat, Session, ChatSession} = models
 {chatStatusStates} = config.require 'load/enums'
 
-{getString} = config.require 'load/util'
+{getString} = config.require 'lib/util'
 # {Chat, ChatSession, Session} = require('stoic').models
 
 # ================================================================

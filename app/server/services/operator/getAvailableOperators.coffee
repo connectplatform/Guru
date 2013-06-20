@@ -22,7 +22,7 @@ module.exports =
         return done err, {accountId: accountId, operators: [], reason: 'Account not in good standing.'} if err or not goodStanding
 
         # get a list of operator sessions
-        Session.find {accountId: accountId, userId: {'$ne': null}}, (err, sessions) ->
+        Session.find {accountId: accountId, userId: {'$ne': null}, online: true}, (err, sessions) ->
           # go no further if we can't find any sessions
           return done err, {accountId: accountId, operators: [], reason: 'No relevant operators logged in.'} if err or sessions.length is 0
 

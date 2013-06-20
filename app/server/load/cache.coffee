@@ -10,9 +10,8 @@ module.exports =
       data: data
 
   retrieve: (resource) ->
-    #console.log 'cache:', Object.keys cache
     if cache[resource] and (cache[resource].timestamp + retainFor) > Date.now()
-      #console.log 'used cache!'
+      # console.log 'retrieving from cache'.yellow
       cache[resource].data
     else
       undefined

@@ -130,6 +130,13 @@ helpers =
       chats = [
         {
           formData:
+            username: 'Suzie'
+          status: 'Active'
+          creationDate: now
+          history: []
+        }
+        {
+          formData:
             username: 'Bob'
           websiteUrl: websiteUrl
           websiteId: website._id
@@ -137,14 +144,7 @@ helpers =
           status: 'Waiting'
           creationDate: now
           history: []
-        }
-        {
-          formData:
-            username: 'Suzie'
-          status: 'Active'
-          creationDate: now
-          history: []
-        }
+        }        
         {
           formData:
             username: 'Ralph'

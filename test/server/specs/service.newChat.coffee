@@ -48,7 +48,6 @@ boiler 'Service - New Chat', ->
     # Given I am logged in and I have a message to send
     message = 'Hello!'
     @getAuthed =>
-
       # And I have a chat
       @newVisitor {username: 'visitor', websiteUrl: 'foo.com'}, (err, visitor) =>
 
@@ -68,7 +67,6 @@ boiler 'Service - New Chat', ->
           should.exist event.data[0].message
           event.data[0].message.should.equal message
           done()
-
         # When I register the collector
         collector.register (err) =>
           should.not.exist err

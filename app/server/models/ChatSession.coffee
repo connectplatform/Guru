@@ -29,6 +29,19 @@ chatSession = new Schema
 for field in ['_id', 'sessionId', 'chatId', 'initiator']
   chatSession.path(field).get getString
 
-# TODO: Trigger recalculateStatus on relevant events.
+makePostHook = (event) ->
+  (_chatSession) ->
+    chatSession.post event, (_chatSession) ->
+    {Chat} = db.models
+    {chatId} = _chatSession
+    
+    Chat.findById chatId, (err, chat) ->
+      return config.log.error (new Error "Error in ChatSession post '#{event}' hook."), err if err
+      return config.log.error (new Error "Chat not found in in ChatSession post '#{event}' hook.") unless chat
+      
+      chat?.recalculateStatus()
+
+for event in ['save', 'remove']
+  chatSession.post event, makePostHook event
 
 module.exports = chatSession

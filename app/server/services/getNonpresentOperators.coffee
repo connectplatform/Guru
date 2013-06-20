@@ -1,7 +1,7 @@
 db = config.require 'load/mongo'
 {ChatSession, Session, User} = db.models
 
-{getType} = config.require 'load/util'
+{getType} = config.require 'lib/util'
 
 module.exports =
   required: ['sessionSecret', 'sessionId', 'chatId', 'accountId']
@@ -15,6 +15,6 @@ module.exports =
 
       Session.find {_id: {'$nin': sessionIdsToExclude}, accountId}, (err, sessions) ->
         return done err if err
-        
+
         operatorSessions = sessions?.filter (s) -> (s.userId?)
         done err, {operators: operatorSessions}

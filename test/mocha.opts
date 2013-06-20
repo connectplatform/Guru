@@ -5,4 +5,4 @@
 -r test/server/util/boilerplate.coffee
 -R spec
 --ui bdd
--t 4000
+-t 2000

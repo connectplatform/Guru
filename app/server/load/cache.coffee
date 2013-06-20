@@ -1,4 +1,3 @@
-{inspect} = require 'util'
 cache = {}
 retainFor = config?.cache?.retainFor || 300000
 

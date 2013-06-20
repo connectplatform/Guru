@@ -1,5 +1,5 @@
 async = require 'async'
-{curry} = config.require 'load/util'
+{curry} = config.require 'lib/util'
 
 module.exports =
   required: ['sessionSecret']
@@ -8,6 +8,6 @@ module.exports =
       curry config.services['particle/mySessionPayload'], args
       curry config.services['operator/getChatMembership'], args
 
-    ], (err, [{data: [session]}, {chatIds}]) ->
+    ], (err, [{data: [session]}, {chatIds, chatRelation}]) ->
 
-      done err, {session, chatIds}
+      done err, {session, chatIds, chatRelation}

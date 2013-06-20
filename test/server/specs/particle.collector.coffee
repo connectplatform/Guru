@@ -70,3 +70,26 @@ boiler 'Particle', ->
             username: 'Bob'
           }
           chat.save()
+
+    it 'should delete a chat when the relationship is disconnected', (done) ->
+
+      # wait until the chat gets deleted
+      waitForDelete = (data, event) =>
+        if @collector.data.myChats.length is 0
+          done()
+
+      # wait until we have a chat
+      waitForChat = (data, event) =>
+        if @collector.data.myChats.length > 0
+          @collector.off 'data', waitForChat
+          @collector.on 'data', waitForDelete
+
+      @collector.on 'data', waitForChat
+
+      # create a chatSession (and a chat)
+      Factory.create 'chatSession', {@sessionId}, (err, chatSession) =>
+        should.not.exist err
+
+        # update our chat to add history
+        chatSession.remove (err) ->
+          should.not.exist err

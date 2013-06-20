@@ -3,7 +3,7 @@ logger = config.require 'lib/logger'
 
 module.exports = (server) ->
   stream = new Stream
-    #onDebug: logger
+    #onDebug: logger.grey
 
     identityLookup: config.service 'particle/identityLookup'
 

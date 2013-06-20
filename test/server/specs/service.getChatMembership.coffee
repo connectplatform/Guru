@@ -3,7 +3,7 @@ should = require 'should'
 
 boiler 'Service - Get Chat Membership', ->
 
-  it "should get ids for chats I'm in", (done) ->
+  it "should get ids and chatRelation for chats I'm in", (done) ->
     @guru1Login (err, guru1, {sessionSecret, sessionId}) =>
       should.not.exist err
 
@@ -13,10 +13,13 @@ boiler 'Service - Get Chat Membership', ->
         Factory.create 'chatSession', {sessionId}, (err) =>
           should.not.exist err
 
-          config.services['operator/getChatMembership'] {sessionSecret, sessionId}, (err, {chatIds}) =>
+          config.services['operator/getChatMembership'] {sessionSecret, sessionId}, (err, {chatIds, chatRelation}) =>
             should.not.exist err
-            should.exist chatIds?.length
+            should.exist chatIds?.length, 'expected chatIds'
             chatIds.length.should.eql 2
+
+            should.exist chatRelation, 'expected chatRelation'
+            chatRelation.keys().length.should.eql 2
             done()
 
   it "should return empty array for no chats", (done) ->

@@ -4,7 +4,6 @@ db = config.require 'load/mongo'
 
 # Constructs the (inefficient) $where clause for our query
 makeWhere = (age) ->
-  # diffExpr = "#{Date.now()}"
   latestTimestampExpr = "this.history[this.history.length - 1].timestamp.getTime()"
   whereExpr = "Math.abs (#{Date.now()} - #{latestTimestampExpr}) >= #{age}"
 

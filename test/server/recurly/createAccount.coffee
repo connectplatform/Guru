@@ -27,5 +27,5 @@ boiler 'Recurly - Create Account', ->
     it 'should return error', (done) ->
       @createRecurlyAccount {accountId: 'foo'}, (err, @result) =>
         should.exist err, "create account should return error"
-        err.toString().should.eql "recurly/createAccount requires 'accountId' to be a valid MongoId."
+        err.message.should.eql "recurly/createAccount requires 'accountId' to be a valid MongoId."
         done()

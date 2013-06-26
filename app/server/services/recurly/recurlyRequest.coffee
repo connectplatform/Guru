@@ -12,8 +12,10 @@ module.exports =
   optional: ['body', 'rootName']
   required: ['method', 'resource']
   service: ({method, body, resource, rootName, modifies}, done) ->
+    return done "Cannot use recurly in #{config.env} mode." if config.env not in ['production', 'development']
 
-    return done "Cannot use recurly in #{config.env} mode." if config.env isnt 'production'
+    recurlyApiKey = config.recurly[config.env].apiKey
+    recurlyApiUrl = config.recurly[config.env].apiUrl
 
     getErr = (details) ->
       err = if details.status in acceptableStatus then null else new Error "Could not #{verbs[method]} #{rootName or resource}."
@@ -26,7 +28,7 @@ module.exports =
     method ||= 'get'
     options =
       parser: xmlParser().parseString
-      username: config.recurly.apiKey
+      username: recurlyApiKey
       password: ''
       headers:
         'Accept': 'application/xml'
@@ -43,7 +45,7 @@ module.exports =
     return done getErr(cached), cached if cached and method is 'get'
 
     # submit the account details to recurly
-    rest[method]("#{config.recurly.apiUrl}#{resource}", options).on 'complete', (data, response) =>
+    rest[method]("#{recurlyApiUrl}#{resource}", options).once 'complete', (data, response) =>
 
       details = {status: response.statusCode}.merge data
       error = getErr(details)

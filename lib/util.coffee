@@ -11,7 +11,13 @@ module.exports = util =
 
   curry: (fn, args...) -> fn.bind fn.prototype, args...
 
-  getType: (obj) -> Object.prototype.toString.call(obj).slice 8, -1
+  # a thorough type check
+  getType: (obj) ->
+    ptype = Object.prototype.toString.call(obj).slice 8, -1
+    if ptype is 'Object'
+      return obj.constructor.name.toString()
+    else
+      return ptype
 
   # return a hash containing only the keys provided
   select: (hash, keys...) ->
@@ -36,3 +42,8 @@ module.exports = util =
 
   getString: (thing) ->
     if thing then thing.toString() else null
+
+  hasKeys: (obj, keys) ->
+    for k in keys
+      return false unless obj.has k
+    return true

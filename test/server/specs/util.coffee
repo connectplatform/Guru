@@ -1,4 +1,5 @@
-{tandoor} = config.require 'lib/util'
+{tandoor, hasKeys, getType} = config.require 'lib/util'
+{ObjectId} = require('mongoose').Schema.Types
 
 example = tandoor (a, b, next) ->
   next a, b
@@ -27,3 +28,56 @@ describe 'Util', ->
       for x in [1..100]
         partial = partial x
       partial done
+
+  describe 'hasKeys', ->
+
+    it 'empty keys should give true', ->
+      result = hasKeys {a: 1, b: 2}, []
+      result.should.eql true
+
+    it 'present keys should give true', ->
+      result = hasKeys {a: 1, b: 2}, ['a', 'b']
+      result.should.eql true
+
+    it 'non-present keys should give false', ->
+      result = hasKeys {a: 1}, ['a', 'b']
+      result.should.eql false
+
+  describe 'getType', ->
+
+    tests = [
+        description: 'empty object'
+        input: {}
+        expected: 'Object'
+      ,
+        description: 'empty array'
+        input: []
+        expected: 'Array'
+      ,
+        description: 'error'
+        input: new Error
+        expected: 'Error'
+      ,
+        description: 'string'
+        input: 'hi'
+        expected: 'String'
+      ,
+        description: 'undefined'
+        input: undefined
+        expected: 'Undefined'
+      ,
+        description: 'null'
+        input: null
+        expected: 'Null'
+      ,
+        description: 'ObjectId'
+        input: new ObjectId()
+        expected: 'ObjectId'
+    ]
+
+    for test in tests
+      do (test) ->
+        {description, input, expected} = test
+        it description, ->
+          result = getType input
+          result.should.eql expected

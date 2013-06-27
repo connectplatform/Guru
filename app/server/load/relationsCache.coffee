@@ -5,9 +5,9 @@ logger = config.require 'lib/logger'
 # private API
 cache = {}
 
-notify = (emitter, event) ->
+notify = (emitter, message, event) ->
   process.nextTick ->
-    emitter.emit 'update', event
+    emitter.emit message, event
 
 cleanup = (key, value) ->
   if cache[key][value].length is 0
@@ -39,7 +39,7 @@ class Cache extends EventEmitter
       cache[key] or= {}
       cache[key][value] or= []
       cache[key][value].push relation
-      notify @, {key, value, relation, type: 'set'}
+      notify @, 'set', {key, value, relation}
       #logger.grey 'set cache:'.yellow, cache
 
 
@@ -51,7 +51,7 @@ class Cache extends EventEmitter
       unless relation?
         cache[key][value] = []
         cleanup key, value
-        notify @, {key, value, relation, type: 'unset'}
+        notify @, 'unset', {key, value, relation}
 
       # otherwise look for the relation and delete it
       else
@@ -59,6 +59,6 @@ class Cache extends EventEmitter
         if index > -1
           relations.removeAt index
           cleanup key, value
-          notify @, {key, value, relation, type: 'unset'}
+          notify @, 'unset', {key, value, relation}
 
 module.exports = new Cache

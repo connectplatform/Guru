@@ -81,3 +81,24 @@ describe 'Relations Cache', ->
     index.should.exist
     index.should.eql 0
     done()
+
+  it 'should emit a set event', (done) ->
+    relCache.once 'set', ({key, value, relation}) ->
+      key.should.eql 'sessionId'
+      value.should.eql 123
+      relation.should.eql {accountId: 456}
+
+      done()
+
+    relCache.set 'sessionId', 123, {accountId: 456}
+
+  it 'should emit an unset event', (done) ->
+    relCache.once 'unset', ({key, value, relation}) ->
+      key.should.eql 'sessionId'
+      value.should.eql 123
+      should.not.exist relation
+
+      done()
+
+    relCache.set 'sessionId', 123, {accountId: 456}
+    relCache.unset 'sessionId', 123

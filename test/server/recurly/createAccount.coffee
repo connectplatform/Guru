@@ -1,5 +1,7 @@
 should = require 'should'
 {inspect} = require 'util'
+{setTimeout} = require 'timers'
+
 
 boiler 'Recurly - Create Account', ->
   before ->
@@ -17,9 +19,12 @@ boiler 'Recurly - Create Account', ->
 
   describe 'with duplicate accountId', ->
     it 'should return error', (done) ->
-      @createRecurlyAccount {accountId: @account._id}, =>
+      @createRecurlyAccount {accountId: @account._id}, (err) =>
+        should.not.exist err
+        
         @createRecurlyAccount {accountId: @account._id}, (err, @result) =>
           should.exist err, 'expected error'
+          should.exist @result
           @result.errors.error.value.should.eql 'has already been taken'
           done()
 

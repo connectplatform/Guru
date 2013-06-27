@@ -20,6 +20,12 @@ defaultAccountId = (done) ->
   Account.findOne {accountType: 'Unlimited'}, (err, account) ->
     done err, getString(account._id)
 
+getSpecialtyId = (name) ->
+  (done) ->
+    defaultAccountId (err, accountId) ->
+      config.services['specialties/getSpecialtyIds'] {accountId: accountId, specialties: [name]}, (err, {translated}) ->
+        done err, translated?[0]
+
 getSpecialties = (list) ->
   (done) ->
     defaultAccountId (err, accountId) ->
@@ -110,6 +116,7 @@ Factory.define 'chat', Chat, {
   history: []
   websiteId: getWebsiteId 'foo.com'
   websiteUrl: 'foo.com'
+  specialtyId: getSpecialtyId 'Sales'
 }
 
 Factory.define 'session', Session, {

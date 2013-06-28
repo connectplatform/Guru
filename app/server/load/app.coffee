@@ -48,4 +48,4 @@ module.exports = (cb) ->
   # Don't put connection strings in our logs
   if config.env is 'development'
     config.log.info "Using mongo database #{config.mongo.host}"
-   cb()
+  cb()

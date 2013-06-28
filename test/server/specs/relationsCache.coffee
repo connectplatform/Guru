@@ -73,6 +73,14 @@ describe 'Relations Cache', ->
     rel.should.eql {accountId: 456}
     done()
 
+  it 'should find the first relation', (done) ->
+    relCache.set 'sessionId', 123, {accountId: 456}
+    rel = relCache.findOne 'sessionId', 123
+
+    rel.should.exist
+    rel.should.eql {accountId: 456}
+    done()
+
   it 'should find an index', (done) ->
     relCache.set 'sessionId', 123, {accountId: 456}
     relCache.set 'sessionId', 123, {accountId: 789}

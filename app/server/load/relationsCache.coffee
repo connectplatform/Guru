@@ -28,6 +28,7 @@ class Cache extends EventEmitter
 
   findOne: (key, value, search) ->
     relations = @get key, value
+    return relations[0] unless search?
     return relations.find (r) -> includes r, search
 
   findIndex: (key, value, search) ->

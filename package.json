@@ -17,7 +17,7 @@
     "mongo-watch": "git+https://github.com/TorchlightSoftware/mongo-watch.git",
     "vein": "*",
     "sugar": "*",
-    "law": "git+https://github.com/TorchlightSoftware/law.git#dependency",
+    "law": "git+https://github.com/TorchlightSoftware/law.git#d39d3c2c0c4306dc8d9dadab8340dc27bac645b8",
     "restler": "git+https://github.com/bitmage/restler.git",
     "nodemailer": "*",
     "easyxml": "*",

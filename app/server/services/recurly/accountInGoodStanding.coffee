@@ -6,6 +6,8 @@ module.exports =
   optional: ['accountId', 'sessionSecret']
   service: ({accountId, sessionId}, done) ->
     if accountId?
+      console.log '[accountInGoodStanding]'.yellow, 'with accountId'
+      console.log
       getSubscription = config.service 'recurly/getSubscription'
       Account.findById accountId, (err, account) ->
         return done "Couldn't find account.", {goodStanding: false} if err or not account
@@ -20,5 +22,6 @@ module.exports =
             done err, {goodStanding: goodStanding}
     else
       Session.findById sessionId, (err, session) ->
+        console.log '[accountInGoodStanding]'.yellow, 'with sessionId'
         {accountId} = session
         config.services['recurly/accountInGoodStanding'] {accountId}, done

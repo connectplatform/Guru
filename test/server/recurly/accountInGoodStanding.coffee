@@ -17,6 +17,7 @@ recurlyBoiler 'Recurly - Sync Subscription', ->
     @accountId = @account._id.toString()
 
     @createBilling = ({accountId, billingData}, next) =>
+      console.log 'BEFOREEACH'.yellow, 1
       billing =
         first_name: 'Bob'
         last_name: 'Smith'
@@ -27,6 +28,7 @@ recurlyBoiler 'Recurly - Sync Subscription', ->
       billing.merge billingData if billingData
 
       @createRecurlyBilling {accountId: accountId, billingInfo: billing}, (err, result) =>
+        console.log 'BEFOREEACH'.yellow, 2
         #verify 'create', 'billing_info', err, result
         next()
 
@@ -82,14 +84,19 @@ recurlyBoiler 'Recurly - Sync Subscription', ->
     it 'and two users with expired subscription should return false', (done) ->
       @createBilling {accountId: @paidAccountId}, (err) =>
         should.not.exist err
+        console.log 'DEBUG'.yellow, 1
 
         Factory.create 'operator', {accountId: @paidAccountId}, (err, op) =>
+          console.log 'DEBUG'.yellow, 2
           should.not.exist err
           should.exist op
+          console.log 'DEBUG'.yellow, 3
 
           @terminateSubscription {accountId: @paidAccountId}, (err) =>
+            console.log 'DEBUG'.yellow, 4
 
             @accountInGoodStanding {accountId: @paidAccountId}, (err, {goodStanding}) ->
+              console.log 'DEBUG'.yellow, 5
               should.not.exist err
               should.exist goodStanding
               goodStanding.should.eql false

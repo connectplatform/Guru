@@ -17,6 +17,7 @@ boiler 'REST - Print Chat Archive', ->
               Cookie: "session=#{sessionId}"
 
           rest.get(url, options).on 'complete', (data, response) =>
+            console.log {'response.headers': response.headers}
             response.statusCode.should.eql 200, "Status: #{response.status}. Response failed:\n#{response.rawEncoded}"
             data.should.include history.visitor.username
             data.should.include history.visitor.websiteUrl

@@ -10,4 +10,5 @@ for file in fs.readdirSync templPath
   templates[path.basename file, '.jade'] = jade.compile templateText
 
 module.exports = (template, options) ->
+  console.log '[renderTemplate]'.yellow, {template, options}
   templates[template] options

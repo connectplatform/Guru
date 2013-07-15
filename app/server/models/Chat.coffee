@@ -89,6 +89,9 @@ chat.post 'remove', (_chat) ->
     if err?
       config.log.error 'Error cascading remove', {error: err, chatId: chatId}
 
+# chat.post 'init', (_chat) ->
+#   null
+
 chat.virtual('visitorData').get ->
   {}.merge(@queryData).merge(@formData).merge(@acpData)
 

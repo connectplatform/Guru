@@ -4,11 +4,13 @@ db = config.require 'load/mongo'
 {Website, Specialty} = db.models
 
 module.exports =
-  service: (params, done) ->
+  dependencies:
+    services: ['newChat', 'operator/getAvailableOperators', 'specialties/mapSpecialties']
+  service: (params, done, {services}) ->
 
-    newChat = config.service 'newChat'
-    getAvailableOperators = config.service 'operator/getAvailableOperators'
-    mapSpecialties = config.service 'specialties/mapSpecialties'
+    newChat = services['newChat']
+    getAvailableOperators = services['operator/getAvailableOperators']
+    mapSpecialties = services['specialties/mapSpecialties']
 
     # set up continuation to be called at the end
     respond = (requiredFields) ->

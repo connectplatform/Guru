@@ -2,7 +2,7 @@ nodemailer = require 'nodemailer'
 {options, transport} = config.app.mail
 logger = config.require 'lib/logger'
 
-module.exports = (body, vars, done) ->
+module.exports = ({body, vars}, done) ->
   done ||= ->
   sender = nodemailer.createTransport transport, options
   vars.from ||= config.app.mail.options.from

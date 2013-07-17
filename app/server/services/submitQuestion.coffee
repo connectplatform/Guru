@@ -19,7 +19,7 @@ module.exports =
       # render table of customer data
       customerData = ([field, data] for field, data of params when field isnt 'emailData')
       emailData.body += '<br/><br/>User Data:'
-      emailData.body += render 'table', {headers: ['Field', 'Value'], rows: customerData}
+      emailData.body += render {template: 'table', options: {headers: ['Field', 'Value'], rows: customerData}}
 
       sendingOptions =
         to: website.contactEmail
@@ -27,4 +27,4 @@ module.exports =
         replyTo: emailData.email
         subject: emailData.subject
 
-      sendEmail emailData.body, sendingOptions, done
+      sendEmail {body: emailData.body, options: sendingOptions}, done

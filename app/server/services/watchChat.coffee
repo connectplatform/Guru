@@ -1,5 +1,7 @@
 module.exports =
+  dependencies:
+    services: ['joinChat']
   required: ['sessionId', 'chatId']
-  service: (params, done) ->
+  service: (params, done, {services}) ->
     params.relation = 'Watching'
-    config.services['joinChat'] params, done
+    services['joinChat'] params, done

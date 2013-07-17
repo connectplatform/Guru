@@ -33,7 +33,7 @@
     "traffic": "*",
     "keypress": "*",
     "node-log": "*",
-    "jaded": "0.0.6"
+    "jaded": "0.1.0"
   },
   "engines": {
     "node": ">= 0.4.0"

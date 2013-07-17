@@ -1,13 +1,16 @@
 .topOfChatboxDiv
     .usernameInChat
-        | Robert | OZessay.com.au
+        #{username}
       .timeInChat
-        | 7:18
+        #{timeInChat}
     .chatboxSlider
     
        chatbox area, (name chatbox slider) 
     
-       input boxes after chatbox 
+    .chatBoxDisplay
+      for messages in chats
+        ul
+          li.messages   
     .chatBoxInputContainer
       textarea.chatBoxTextArea(rows='3')
     .chatBoxButtonContainer

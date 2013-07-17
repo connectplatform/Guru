@@ -2,10 +2,11 @@ db = config.require 'load/mongo'
 {Chat} = db.models
 
 module.exports =
+  dependencies:
+    services: ['getImageUrl']
   required: ['chatId', 'accountId']
-  service: ({chatId, accountId}, done) ->
-
-    getImageUrl = config.service 'getImageUrl'
+  service: ({chatId, accountId}, done, {services}) ->
+    getImageUrl = services['getImageUrl']
 
     Chat.findById chatId, (err, chat) ->
       if err or not chat?.websiteId

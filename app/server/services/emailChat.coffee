@@ -8,7 +8,6 @@ module.exports =
   service: ({chatId, email}, done, {services}) ->
     sendEmail = services['email/sendEmail']
     render = services['templates/renderTemplate']
-    console.log {sendEmail, render}
     
     Chat.findById chatId, (err, chat) ->
       return done err if err
@@ -19,4 +18,4 @@ module.exports =
       sendingOptions =
         to: email
         subject: "Transcript of your chat on #{config.app.name}"
-      sendEmail {body, vars: sendingOptions}, done
+      sendEmail {body, options: sendingOptions}, done

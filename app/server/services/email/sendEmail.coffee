@@ -1,16 +1,16 @@
 nodemailer = require 'nodemailer'
-{options, transport} = config.app.mail
+{mail} = config.app
 logger = config.require 'lib/logger'
 
-module.exports = ({body, vars}, done) ->
+module.exports = ({body, options}, done) ->
   done ||= ->
-  sender = nodemailer.createTransport transport, options
-  vars.from ||= config.app.mail.options.from
-  vars.html ||= body
-  config.log.info "Sending email to #{vars.to}."
-  sender.sendMail vars, (err, response) ->
+  sender = nodemailer.createTransport mail.transport, mail.options
+  options.from ||= mail.options.from
+  options.html ||= body
+  config.log.info "Sending email to #{options.to}."
+  sender.sendMail options, (err, response) ->
     if err
-      config.log.warn "Failed to send email: #{err}", vars if err
+      config.log.warn "Failed to send email: #{err}", options if err
       return done err if err
     
     data =

@@ -1,18 +1,21 @@
 db = config.require 'load/mongo'
 {Chat} = db.models
 
-sendEmail = config.require 'services/email/sendEmail'
-render = config.require 'services/templates/renderTemplate'
-
 module.exports =
+  dependencies:
+    services: ['email/sendEmail', 'templates/renderTemplate']
   required: ['chatId', 'email', 'accountId', 'sessionSecret', 'sessionId']
-  service: ({chatId, email}, done) ->
+  service: ({chatId, email}, done, {services}) ->
+    sendEmail = services['email/sendEmail']
+    render = services['templates/renderTemplate']
+    
     Chat.findById chatId, (err, chat) ->
       return done err if err
       return done (new Error 'Chat not found') unless chat?
 
-      body = render 'chatHistory', chat
+      body = render {template: 'chatHistory', options: chat}
+
       sendingOptions =
         to: email
         subject: "Transcript of your chat on #{config.app.name}"
-      sendEmail body, sendingOptions, done
+      sendEmail {body, options: sendingOptions}, done

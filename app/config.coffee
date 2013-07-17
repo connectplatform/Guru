@@ -46,8 +46,12 @@ config =
         secretKey: '4IdLGyU52rbz3pFrTLJjgZIJnyT7FkrxRQTSrJDr'
     adminNotify: ['brandon@torchlightsoftware.com', 'automart@gmail.com']
     recurly:
-      apiKey: '162807d2b937497ca43e25db7a01380b'
-      apiUrl: 'https://api.recurly.com/v2/'
+      production:
+        apiKey: '162807d2b937497ca43e25db7a01380b'
+        apiUrl: 'https://api.recurly.com/v2/'
+      development:
+        apiKey: '929610475431428581dce674c933e272'
+        apiUrl: 'https://torchlight.recurly.com/v2/'
     mongo:
       host: 'mongodb://localhost:27017/guruDev'
       dbName: 'guruDev'

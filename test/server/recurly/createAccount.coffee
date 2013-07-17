@@ -1,5 +1,7 @@
 should = require 'should'
 {inspect} = require 'util'
+{setTimeout} = require 'timers'
+
 
 boiler 'Recurly - Create Account', ->
   before ->
@@ -17,9 +19,12 @@ boiler 'Recurly - Create Account', ->
 
   describe 'with duplicate accountId', ->
     it 'should return error', (done) ->
-      @createRecurlyAccount {accountId: @account._id}, =>
+      @createRecurlyAccount {accountId: @account._id}, (err) =>
+        should.not.exist err
+        
         @createRecurlyAccount {accountId: @account._id}, (err, @result) =>
           should.exist err, 'expected error'
+          should.exist @result
           @result.errors.error.value.should.eql 'has already been taken'
           done()
 
@@ -27,5 +32,5 @@ boiler 'Recurly - Create Account', ->
     it 'should return error', (done) ->
       @createRecurlyAccount {accountId: 'foo'}, (err, @result) =>
         should.exist err, "create account should return error"
-        err.toString().should.eql "recurly/createAccount requires 'accountId' to be a valid MongoId."
+        err.message.should.eql "recurly/createAccount requires 'accountId' to be a valid MongoId."
         done()

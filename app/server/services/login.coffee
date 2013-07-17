@@ -2,9 +2,11 @@ db = config.require 'load/mongo'
 {User} = db.models
 
 module.exports =
+  dependencies:
+    services: ['operator/getOrCreateSession']
   required: ['email', 'password']
-  service: ({email, password}, done) ->
-    getOrCreateSession = config.service 'operator/getOrCreateSession'
+  service: ({email, password}, done, {services}) ->
+    getOrCreateSession = services['operator/getOrCreateSession']
 
     User.findOne {email: email}, (err, user) ->
       if err

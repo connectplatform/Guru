@@ -1,7 +1,6 @@
 module.exports =
   required: ['accountId']
   service: ({accountId}, done) ->
-
     recurlyRequest = config.service 'recurly/recurlyRequest'
     getOwner = config.service 'account/getOwner'
 
@@ -17,5 +16,4 @@ module.exports =
           email: owner.email
           first_name: owner.firstName
           last_name: owner.lastName
-
       recurlyRequest params, done

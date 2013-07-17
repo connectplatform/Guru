@@ -1,12 +1,14 @@
 db = config.require 'load/mongo'
 {Session, User} = db.models
 
-getOperatorData = config.require 'services/operator/getOperatorData'
-
 module.exports =
+  dependencies:
+    services: ['operator/getOperatorData']
   required: ['oldPassword', 'newPassword', 'sessionSecret', 'sessionId']
-  service: ({oldPassword, newPassword, sessionId}, done) ->
-    getOperatorData sessionId, (err, user) ->
+  service: ({oldPassword, newPassword, sessionId}, done, {services}) ->
+    getOperatorData = services['operator/getOperatorData']
+    
+    getOperatorData {sessionId}, (err, user) ->
       config.log.error 'Error getting user from sessionId in changePassword', {error: err, sessionId: sessionId} if err
       return done "User not found." unless user
       return done "Incorrect current password." unless user.comparePassword oldPassword

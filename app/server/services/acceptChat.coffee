@@ -1,12 +1,14 @@
 db = config.require 'load/mongo'
 {Chat} = db.models
 
-removeUnanswered = config.require 'services/operator/removeUnanswered'
-
 module.exports =
+  dependencies:
+    services: ['operator/removeUnanswered', 'joinChat']
   required: ['sessionSecret', 'sessionId', 'accountId', 'chatId']
-  service: (params, done) ->
+  service: (params, done, {services}) ->
     {chatId, sessionId, accountId} = params
+    removeUnanswered = services['operator/removeUnanswered']
+    joinChat = services['joinChat']
 
     Chat.findById chatId, (err, chat) ->
       if err
@@ -15,7 +17,7 @@ module.exports =
       else if chat.status is 'Active'
         done null, {status: "ALREADY ACCEPTED", chatId: chatId}
       else
-        config.services['joinChat'] params, (err, _) ->
+        joinChat params, (err, _) ->
           return done err if err
           removeUnanswered {accountId, chatId}, (err, status) ->
             if err

@@ -15,4 +15,5 @@ module.exports = ({accountId, chatId}, done) ->
       session.unansweredChats.splice(index) unless index < 0
       session.save next
 
-    async.map sessions, remove, done
+    async.map sessions, remove, (err, results) ->
+      done err, {}

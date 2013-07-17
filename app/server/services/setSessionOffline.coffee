@@ -4,7 +4,9 @@ db = config.require 'load/mongo'
 {Session} = db.models
 
 module.exports =
+  dependencies:
+    services: ['session/setSessionOnlineStatus']
   required: ['sessionSecret']
-  service: ({sessionSecret}, done) ->
-    setSessionOnlineStatus = config.service 'session/setSessionOnlineStatus'
+  service: ({sessionSecret}, done, {services}) ->
+    setSessionOnlineStatus = services['session/setSessionOnlineStatus']
     setSessionOnlineStatus {sessionSecret: sessionSecret, isOnline: false}, done

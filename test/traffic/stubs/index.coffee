@@ -10,8 +10,11 @@ require.config
     {name: "policy", location: "js/policy"}
     {name: "middleware", location: "js/policy/middleware"}
     {name: "components", location: "components"}
-    {name: "flight", location: "js/vendor/flight/lib"}
   ]
 
+  map: "*":
+    {"flight/component": "js/vendor/flight/lib/component"}
+
 require ['components/operatorChat'], (operatorChat) ->
+  alert 'executed'
   operatorChat.attachTo '#content'

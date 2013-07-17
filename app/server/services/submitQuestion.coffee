@@ -1,13 +1,14 @@
 db = require 'mongoose'
 {Website} = db.models
 
-sendEmail = config.require 'services/email/sendEmail'
-render = config.require 'services/templates/renderTemplate'
-
 module.exports =
+  dependencies:
+    services: ['email/sendEmail', 'templates/renderTemplate']
   required: ['websiteUrl', 'emailData']
-  service: (params, done) ->
+  service: (params, done, {services}) ->
     {websiteUrl, emailData} = params
+    sendEmail = services['email/sendEmail']
+    render = services['templates/renderTemplate']
 
     Website.findOne {url: websiteUrl}, {contactEmail: true}, (err, website) ->
       return done new Error "Could not find website: #{websiteUrl}" if err or not website

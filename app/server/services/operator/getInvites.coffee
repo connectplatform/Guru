@@ -1,8 +1,8 @@
-{tandoor} = config.require 'lib/util'
 {ChatSession} = config.require('load/mongo').models
 
-module.exports = tandoor (sessionId, done) ->
+module.exports = ({sessionId}, done) ->
   ChatSession.find {
     sessionId: sessionId
     relation: '$in': ['Invite', 'Transfer']
-  }, done
+  }, (err, invites) ->
+    done err, {invites}

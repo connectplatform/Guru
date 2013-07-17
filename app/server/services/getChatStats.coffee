@@ -1,15 +1,17 @@
-getInvites = config.require 'services/operator/getInvites'
-
 db = config.require 'load/mongo'
 {Session} = db.models
 
 module.exports =
+  dependencies:
+    services: ['operator/getInvites']
   required: ['sessionSecret', 'accountId']
-  service: ({sessionSecret}, done) ->
+  service: ({sessionSecret}, done, {services}) ->
+    getInvites = services['operator/getInvites']
+    
     Session.findOne {secret: sessionSecret}, (err, session) ->
       return done err, null if err or not session?
 
-      getInvites session._id, (err, invites) ->
+      getInvites {sessionId: session._id}, (err, {invites}) ->
         return done err, null if err
 
         data =

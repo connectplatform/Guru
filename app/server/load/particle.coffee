@@ -24,16 +24,26 @@ module.exports = (server) ->
         payload: config.service 'particle/myChatsPayload'
         delta: config.service 'particle/myChatsDelta'
 
+      visibleSessions:
+        manifest:
+          accountId: true
+          userId: true
+          username: true
+
+        payload: config.service 'particle/visibleSessionsPayload'
+        delta: config.service 'particle/visibleSessionsDelta'
+
       #visibleChatSessions:
         #manifest: true
-        #payload:
-          #(identity, done) ->
-        #delta:
-          #(identity, listener) ->
-            #watcher.watch "#{config.mongo.dbName}.chatsessions", listener
 
-      #visibleSessions:
+        #payload: config.service 'particle/visibleChatsSessionsPayload'
+        #delta: config.service 'particle/visibleChatsSessionsDelta'
+
       #visibleChats:
+        #manifest: true
+
+        #payload: config.service 'particle/visibleChatsPayload'
+        #delta: config.service 'particle/visibleChatsDelta'
 
     disconnect: ->
       watcher.stopAll()

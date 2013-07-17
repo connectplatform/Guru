@@ -167,4 +167,6 @@ global.config = config[environment].merge
 global.config.log = initLogging global.config.logging
 global.config.sendStats or= ->
 
+global.config.require('lib/patchEventEmitter')()
+
 module.exports = global.config

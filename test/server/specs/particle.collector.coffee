@@ -30,7 +30,7 @@ boiler 'Particle', ->
       #@collector.disconnect()
 
     it 'should have all collections', (done) ->
-      for field in ['mySession', 'myChats'] #, 'chatSessions', 'visibleSessions', 'visibleChats']
+      for field in ['mySession', 'myChats', 'visibleSessions'] #, 'visibleChatSessions', 'visibleChats']
         should.exist @collector.data[field], "Expected '#{field}' in the client side collections."
       done()
 
@@ -76,6 +76,7 @@ boiler 'Particle', ->
       # wait until the chat gets deleted
       waitForDelete = (data, event) =>
         if @collector.data.myChats.length is 0
+          @collector.off 'data', waitForDelete
           done()
 
       # wait until we have a chat
@@ -93,3 +94,23 @@ boiler 'Particle', ->
         # update our chat to add history
         chatSession.remove (err) ->
           should.not.exist err
+
+    it 'should not show my session in visibleSessions', ->
+
+      # wait until we see a history record populate
+      mySession = @collector.data.visibleSessions.find (s) -> s._id is @sessionId
+      should.not.exist mySession, 'expected not to find myself in visibleSessions'
+
+    it 'should show sessions for my account in visibleSessions', (done) ->
+
+      Factory.create 'session', {@accountId}, (err, session) =>
+        should.not.exist err
+        should.exist session
+
+        @collector.once 'visibleSessions.**', (data, event) =>
+          {data: {accountId, id, username, sessionSecret}} = event
+          @accountId.should.eql accountId
+          session._id.should.eql id
+          username.should.eql 'Example visitor'
+          should.not.exist sessionSecret
+          done()

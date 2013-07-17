@@ -1,7 +1,9 @@
 module.exports =
+  dependencies:
+    services: ['model/findModel']
   required: ['accountId', 'modelName']
   optional: ['queryObject']
-  service: ({accountId, modelName, queryObject}, done) ->
+  service: ({accountId, modelName, queryObject}, done, {services}) ->
     queryObject ||= {}
 
     # inject accountId into query
@@ -10,4 +12,4 @@ module.exports =
     else
       queryObject.merge {accountId}
 
-    config.services['model/findModel'] {queryObject, modelName}, done
+    services['model/findModel'] {queryObject, modelName}, done

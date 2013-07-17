@@ -9,5 +9,5 @@ module.exports =
     Chat.findById chatId, (err, chat) ->
       return done err if err
 
-      html = render 'chatHistory', chat
+      html = render {template: 'chatHistory', options: chat}
       done null, {html}

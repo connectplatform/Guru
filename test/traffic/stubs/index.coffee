@@ -15,6 +15,9 @@ require.config
   map: "*":
     {"flight/component": "js/vendor/flight/lib/component"}
 
-require ['components/operatorChat'], (operatorChat) ->
-  alert 'executed'
-  operatorChat.attachTo '#content'
+require ['components/navBar'], (navBar) ->
+  navBar.attachTo '#navBar', {
+    role: 'MyRole'
+    appName: 'MyApp'
+    models: data: mySession: [username: 'MyUsername']
+  }

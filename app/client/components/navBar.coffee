@@ -1,10 +1,10 @@
-define ["flight/component", 'templates/components/navBar'],
+define ['flight/component', 'templates/components/navBar'],
   (defineComponent, templ) ->
     navBar = ->
 
-      @after "initialize", ->
+      @after 'initialize', ->
         window.models = @attr.models
-        console.log data: @attr.models.data
+
         # apply the template to the DOM if doesn't exist
         if $('.navbar').length == 0
 
@@ -14,9 +14,9 @@ define ["flight/component", 'templates/components/navBar'],
             username: @attr?.models?.data?.mySession?[0]?.username
           )
 
-        $(".nav li").click () ->
-          $(".nav li").removeClass "active"
+        $('.nav li').click () ->
+          $('.nav li').removeClass 'active'
           $this = $(this)
-          $this.addClass "active" unless $this.hasClass("active")
+          $this.addClass 'active' unless $this.hasClass('active')
 
     return defineComponent(navBar)

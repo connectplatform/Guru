@@ -15,7 +15,8 @@ define ['flight/component', 'templates/components/navBar'],
               appName: @attr.appName
               username: @attr.models.session?.username
             )
-  
+
+          # highlight the active route
           $('.nav li').click () ->
             $('.nav li').removeClass 'active'
             $this = $(this)
@@ -23,29 +24,38 @@ define ['flight/component', 'templates/components/navBar'],
 
         @attr.collector.on 'myData.*', (data, event) =>
           console.log '[DEBUG] myData.*'
-          console.log 'myData.* (event)', JSON.stringify event
-          console.log 'myData.* (data)', JSON.stringify data
+          # console.log 'myData.* (event)', JSON.stringify event
+          # console.log 'myData.* (data)', JSON.stringify data
+
+          # TODO: factor out into processEvent function
+          switch event.path
+            when 'unansweredChats'
+              $('.notifyUnanswered').text event.data
+            when 'unreadMessages'
+              $('.notifyUnread').text event.data
 
         @attr.collector.ready () =>
           console.log '[DEBUG] ready'
+          
           @attr.models = @attr.collector?.data?.myData?[0]
-          s = JSON.stringify @attr.collector.data
-          console.log '@attr.collector.data', s
+
+          # s = JSON.stringify @attr.collector.data
+          # console.log '@attr.collector.data', s
 
           applyTemplate()
-          
+
+          # process initial payload data
           {unansweredChats} = @attr.models.session
           {unreadMessages} = @attr.models.session
-          console.log {unansweredChats, unreadMessages}
           $('.notifyUnanswered').text unansweredChats
-          # $('#notifyInvites')
           $('.notifyUnread').text unreadMessages
+
+          # TODO: this should come from a cache source
+          # $('#notifyInvites')
           
         @attr.collector.register()
 
-        # for debugging only
+        # for debugging only, make models accessible in browser console
         # window.models = @attr.models
-
-
 
     return defineComponent(navBar)

@@ -68,7 +68,7 @@ define [], () ->
       path: 'unansweredChats'
       data: 1
     ]
-   ,
+
     [
       root: 'myData.mySession'
       operation: 'set'
@@ -76,7 +76,23 @@ define [], () ->
       path: 'unansweredChats'
       data: 2
     ]
-   ,
+
+    [
+      root: 'myData.mySession'
+      operation: 'set'
+      id: '1111'
+      path: 'unreadMessages'
+      data: 1
+    ]
+
+    [
+      root: 'myData.mySession'
+      operation: 'set'
+      id: '1111'
+      path: 'unreadMessages'
+      data: 2
+    ]
+
     [
       root: 'myData.mySession'
       operation: 'set'
@@ -84,6 +100,7 @@ define [], () ->
       path: 'unansweredChats'
       data: 3
     ]
+
     [
       root: 'myData.mySession'
       operation: 'set'
@@ -91,11 +108,20 @@ define [], () ->
       path: 'unansweredChats'
       data: 2
     ]
+
     [
       root: 'myData.mySession'
       operation: 'set'
       id: '1111'
       path: 'username'
       data: 'Rosella'
+    ]
+
+    [
+      root: 'myData.mySession'
+      operation: 'set'
+      id: '1111'
+      path: 'unreadMessages'
+      data: 1
     ]
   ]

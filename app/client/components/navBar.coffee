@@ -13,7 +13,7 @@ define ['flight/component', 'templates/components/navBar'],
             @$node.append templ(
               role: @attr.role
               appName: @attr.appName
-              username: @attr.models.session?.username
+              username: @attr.models.mySession?.username
             )
 
           # highlight the active route
@@ -33,10 +33,12 @@ define ['flight/component', 'templates/components/navBar'],
               $('.notifyUnanswered').text event.data
             when 'unreadMessages'
               $('.notifyUnread').text event.data
+            when 'username'
+              $('.username').text event.data
 
         @attr.collector.ready () =>
           console.log '[DEBUG] ready'
-          
+
           @attr.models = @attr.collector?.data?.myData?[0]
 
           # s = JSON.stringify @attr.collector.data
@@ -45,14 +47,14 @@ define ['flight/component', 'templates/components/navBar'],
           applyTemplate()
 
           # process initial payload data
-          {unansweredChats} = @attr.models.session
-          {unreadMessages} = @attr.models.session
+          {unansweredChats} = @attr.models.mySession
+          {unreadMessages} = @attr.models.mySession
           $('.notifyUnanswered').text unansweredChats
           $('.notifyUnread').text unreadMessages
 
           # TODO: this should come from a cache source
           # $('#notifyInvites')
-          
+
         @attr.collector.register()
 
         # for debugging only, make models accessible in browser console

@@ -19,73 +19,39 @@ require [
   'components/navBar'
   'vendor/particle'
   'vendor/eventemitter2'
+  'load/mock'
 ],
-(navBar, particle, EventEmitter2) ->
+(navBar, particle, EventEmitter2, mock) ->
 
-  mockStream = (oplist) ->
+  mockStream = (deltas) ->
     (identity, receive, finish) ->
-      manifest =
-        myData:
-          chatSessions: true
-            # sessionId: true
-            # chatId: true
-            # creationDate: true
-            # relation: true
-            # initiator: true
-          session: true
-            # accountId: true
-            # userId: true
-            # username: true
-            # online: true
-            # secret: true
-            # unansweredChats: true
-            # unreadMessages: true
-      receive 'manifest', manifest
+      receive 'manifest', mock.manifest
+      receive 'payload', mock.payload
 
-      payload =
-        root: 'myData'
-        timestamp: new Date
-        data: [
-          'chatSessions':
-            id: 2
-            sessionId: '1111'
-            chatId: '4321'
-            creationDate: new Date
-            relation: 'Member'
-            initiator: '666'
-          'session':
-            id: '1111'
-            accountId: '2222'
-            userId: '3333'
-            username: 'Graham'
-            online: true
-            secret: '4444'
-            unansweredChats: 0
-            unreadMessages: 0
-        ]
-      receive 'payload', payload
+      doWithDelay = (ops, delay = 1000) ->
+        [op, rest...] = ops
+        return unless op?
 
-      if oplist
-        receive 'delta', {
-          root: 'myData'
-          timestamp: new Date
-          oplist: oplist
-        }
+        setTimeout (() ->
+          console.log "doing a thing with op: #{JSON.stringify op}"
+          receive 'delta', {
+            root: 'myData'
+            timestamp: new Date
+            oplist: op
+          }
+          doWithDelay rest, delay
+        ), delay
+
+      doWithDelay deltas if deltas
 
       finish()
 
-  oplist = [
-    root: 'myData.session'
-    operation: 'set'
-    id: '1111'
-    path: 'unansweredChats'
-    data: 1
-  ]
-  
+  oplist = []
+
   collector = new particle.Collector
     identity:
       sessionId: '1111'
-    onRegister: mockStream oplist
+    onRegister: mockStream mock.deltas
 
   navBar.attachTo '#navBar', {
     role: 'Operator'

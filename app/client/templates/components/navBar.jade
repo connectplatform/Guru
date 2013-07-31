@@ -6,11 +6,11 @@
       ul.nav
         li
           a(href='#/dashboard') Dashboard
-            span.notifyUnanswered
-            span.notifyInvites
+            span.notifyUnanswered.badge.badge-warning
+            span.notifyInvites.badge.badge-important
         li.newChatSelector
           a(href='#/operatorChat') Chats
-            span.notifyUnread
+            span.notifyUnread.badge.badge-info
         if role == "Owner"
           ul.nav
           li.dropdown
@@ -35,7 +35,7 @@
                   | Specialties
       ul.nav.pull-right
         li.dropdown
-          a.dropdown-toggle(href='#', data-toggle='dropdown') Logged in as #{username}
+          a.dropdown-toggle(href='#', data-toggle='dropdown') Logged in as <span class="username">#{username}</span>
             b.caret
           ul.dropdown-menu.collapse.in
             li

@@ -23,7 +23,7 @@ define [], () ->
         # secret: true
         # unansweredChats: true
         # unreadMessages: true
-      # myUser: true
+      myUser: true
         # accountId: true
         # sentEmail: false
         # registrationKey: false
@@ -56,6 +56,8 @@ define [], () ->
         secret: '4444'
         unansweredChats: 0
         unreadMessages: 0
+      # myUser:
+      #   role: 'Owner'
       visibleSessions: []
       visibleChatSessions: []
     ]

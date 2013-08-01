@@ -54,7 +54,7 @@ require [
     onRegister: mockStream mock.deltas
 
   navBar.attachTo '#navBar', {
-    role: 'Operator'
+    role: 'Owner'
     appName: 'Guru'
     collector: collector
   }

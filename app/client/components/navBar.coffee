@@ -13,7 +13,7 @@ define ['flight/component', 'templates/components/navBar'],
             @$node.append templ(
               role: @attr.role
               appName: @attr.appName
-              username: @attr.models.mySession?.username
+              username: @attr.models.mySession?[0]?.username
             )
 
           # highlight the active route
@@ -22,24 +22,29 @@ define ['flight/component', 'templates/components/navBar'],
             $this = $(this)
             $this.addClass 'active' unless $this.hasClass 'active'
 
-        @attr.collector.on 'myData.*', (data, event) =>
-          console.log '[DEBUG] myData.*'
-          # console.log 'myData.* (event)', JSON.stringify event
-          # console.log 'myData.* (data)', JSON.stringify data
+        @attr.collector.on 'mySession.unansweredChats', (data, event) =>
+          # console.log 'event!:', JSON.stringify {data, event}
+          $('.notifyUnanswered').text event.data
 
-          # TODO: factor out into processEvent function
-          switch event.path
-            when 'unansweredChats'
-              $('.notifyUnanswered').text event.data
-            when 'unreadMessages'
-              $('.notifyUnread').text event.data
-            when 'username'
-              $('.username').text event.data
+        # @attr.collector.on 'myData.*', (data, event) =>
+        #   console.log '[DEBUG] myData.*'
+        #   console.log '[myData.* (event)]', JSON.stringify event
+        #   console.log '[myData.* (data)]', JSON.stringify data
+
+        #   # TODO: factor out into processEvent function
+        #   switch event.path
+        #     when 'unansweredChats'
+        #       $('.notifyUnanswered').text event.data
+        #     when 'unreadMessages'
+        #       $('.notifyUnread').text event.data
+        #     when 'username'
+        #       $('.username').text event.data
 
         @attr.collector.ready () =>
           console.log '[DEBUG] ready'
 
-          @attr.models = @attr.collector?.data?.myData?[0]
+          @attr.models = @attr.collector?.data
+          console.log JSON.stringify {'@attr.models': @attr.models}
 
           # s = JSON.stringify @attr.collector.data
           # console.log '@attr.collector.data', s

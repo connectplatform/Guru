@@ -26,18 +26,19 @@ require [
   mockStream = (deltas) ->
     (identity, receive, finish) ->
       receive 'manifest', mock.manifest
-      receive 'payload', mock.payload
+      for p in mock.payload
+        receive 'payload', p
 
-      doWithDelay = (ops, delay = 1000) ->
-        [op, rest...] = ops
-        return unless op?
+      doWithDelay = (_deltas, delay = 1000) ->
+        [oplist, rest...] = _deltas
+        return unless oplist?
 
         setTimeout (() ->
-          console.log "doing a thing with op: #{JSON.stringify op}"
+          [{root}] = oplist
           receive 'delta', {
-            root: 'myData'
+            root: root
             timestamp: new Date
-            oplist: op
+            oplist: oplist
           }
           doWithDelay rest, delay
         ), delay

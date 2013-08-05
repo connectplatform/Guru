@@ -43,6 +43,7 @@ define ['flight/component', 'templates/components/navBar'],
         @attr.collector.ready () =>
           console.log '[DEBUG] ready'
 
+          window.collector = @attr.collector
           @attr.models = @attr.collector?.data
           console.log JSON.stringify {'@attr.models': @attr.models}
 

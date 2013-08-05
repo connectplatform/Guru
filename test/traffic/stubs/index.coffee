@@ -23,36 +23,12 @@ require [
 ],
 (navBar, particle, EventEmitter2, mock) ->
 
-  mockStream = (deltas) ->
-    (identity, receive, finish) ->
-      receive 'manifest', mock.manifest
-      for p in mock.payload
-        receive 'payload', p
-
-      doWithDelay = (_deltas, delay = 1000) ->
-        [oplist, rest...] = _deltas
-        return unless oplist?
-
-        setTimeout (() ->
-          [{root}] = oplist
-          receive 'delta', {
-            root: root
-            timestamp: new Date
-            oplist: oplist
-          }
-          doWithDelay rest, delay
-        ), delay
-
-      doWithDelay deltas if deltas
-
-      finish()
-
   oplist = []
 
   collector = new particle.Collector
     identity:
       sessionId: '1111'
-    onRegister: mockStream mock.deltas
+    onRegister: mock.mockStream mock.deltas
 
   navBar.attachTo '#navBar', {
     role: 'Owner'

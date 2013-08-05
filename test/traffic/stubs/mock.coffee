@@ -1,5 +1,5 @@
 define [], () ->
-  manifest:
+  manifest =
     myChats: true
       # accountId: true
       # status: true
@@ -40,7 +40,7 @@ define [], () ->
       # relation: true
       # initiator: true
 
-  payload: [
+  payload= [
     root: 'myChats'
     timestamp: new Date
     data: []
@@ -79,7 +79,7 @@ define [], () ->
     data: []
   ]
 
-  deltas: [
+  deltas = [
     [
       root: 'mySession'
       operation: 'set'
@@ -144,3 +144,34 @@ define [], () ->
       data: 1
     ]
   ]
+
+  mockStream = (deltas) ->
+    (identity, receive, finish) ->
+      receive 'manifest', manifest
+      for p in payload
+        receive 'payload', p
+
+      doWithDelay = (_deltas, delay = 1000) ->
+        [oplist, rest...] = _deltas
+        return unless oplist?
+
+        setTimeout (() ->
+          [{root}] = oplist
+          receive 'delta', {
+            root: root
+            timestamp: new Date
+            oplist: oplist
+          }
+          doWithDelay rest, delay
+        ), delay
+
+      doWithDelay deltas if deltas
+
+      finish()
+
+  exports = {
+    deltas
+    manifest
+    payload
+    mockStream
+  }

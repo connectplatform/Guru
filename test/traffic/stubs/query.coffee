@@ -30,7 +30,7 @@ define ['vendor/eventemitter2', 'load/render'], (EventEmitter2, render) ->
       @paths = Config.bind(@)()
       @models = @collector.data
 
-      # QUESTION -- is this how you us bubbling Particle events to
+      # QUESTION -- is this how you want us bubbling Particle events to
       # UI updates via the proxy?
       @collector.onAny (_, {root, path}) =>
         event = "#{root}.#{path}"

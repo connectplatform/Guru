@@ -1,70 +1,87 @@
 define [], () ->
-  manifest:
-    myData:
-      myChats: true
-        # accountId: true
-        # status: true
-        # history: [
-        #   message: true
-        #   timestamp: true
-        #   username: true
-        #   userId: true
-        # ]
-        # creationDate: true
-        # websiteId: true
-        # websiteUrl: true
-        # specialtyId: true
-        # acpData: true
-      mySession: true
-        # accountId: true
-        # userId: true
-        # username: true
-        # online: true
-        # secret: true
-        # unansweredChats: true
-        # unreadMessages: true
-      myUser: true
-        # accountId: true
-        # sentEmail: false
-        # registrationKey: false
-        # email: true
-        # password: false
-        # role: true
-        # websites: true
-        # specialties: true
-      visibleSessions: true
-      visibleChats: true
-      visibleChatSessions: true
-        # sessionId: true
-        # chatId: true
-        # creationDate: true
-        # relation: true
-        # initiator: true
+  manifest =
+    myChats: true
+      # accountId: true
+      # status: true
+      # history: [
+      #   message: true
+      #   timestamp: true
+      #   username: true
+      #   userId: true
+      # ]
+      # creationDate: true
+      # websiteId: true
+      # websiteUrl: true
+      # specialtyId: true
+      # acpData: true
+    mySession: true
+      # accountId: true
+      # userId: true
+      # username: true
+      # online: true
+      # secret: true
+      # unansweredChats: true
+      # unreadMessages: true
+    myUser: true
+      # accountId: true
+      # sentEmail: false
+      # registrationKey: false
+      # email: true
+      # password: false
+      # role: true
+      # websites: true
+      # specialties: true
+    visibleSessions: true
+    visibleChats: true
+    visibleChatSessions: true
+      # sessionId: true
+      # chatId: true
+      # creationDate: true
+      # relation: true
+      # initiator: true
 
-  payload:
-    root: 'myData'
+  payload= [
+    root: 'myChats'
+    timestamp: new Date
+    data: []
+   ,
+    root: 'myChatSessions'
+    timestamp: new Date
+    data: []
+   ,
+    root: 'mySession'
     timestamp: new Date
     data: [
-      myChats: []
-      myChatSessions: []
-      mySession:
-        id: '1111'
-        accountId: '2222'
-        userId: '3333'
-        username: 'Graham'
-        online: true
-        secret: '4444'
-        unansweredChats: 0
-        unreadMessages: 0
-      # myUser:
-      #   role: 'Owner'
-      visibleSessions: []
-      visibleChatSessions: []
+      id: '1111'
+      accountId: '2222'
+      userId: '3333'
+      username: 'Graham'
+      online: true
+      secret: '4444'
+      unansweredChats: 0
+      unreadMessages: 0
     ]
+   ,
+    root: 'myUser'
+    timestamp: new Date
+    data: []
+   ,
+    root: 'visibleSessions'
+    timestamp: new Date
+    data: []
+   ,
+    root: 'visibleChats'
+    timestamp: new Date
+    data: []
+   ,
+    root: 'visibleChatSessions'
+    timestamp: new Date
+    data: []
+  ]
 
-  deltas: [
+  deltas = [
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'unansweredChats'
@@ -72,7 +89,7 @@ define [], () ->
     ]
 
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'unansweredChats'
@@ -80,7 +97,7 @@ define [], () ->
     ]
 
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'unreadMessages'
@@ -88,7 +105,7 @@ define [], () ->
     ]
 
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'unreadMessages'
@@ -96,7 +113,7 @@ define [], () ->
     ]
 
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'unansweredChats'
@@ -104,7 +121,7 @@ define [], () ->
     ]
 
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'unansweredChats'
@@ -112,7 +129,7 @@ define [], () ->
     ]
 
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'username'
@@ -120,10 +137,41 @@ define [], () ->
     ]
 
     [
-      root: 'myData.mySession'
+      root: 'mySession'
       operation: 'set'
       id: '1111'
       path: 'unreadMessages'
       data: 1
     ]
   ]
+
+  mockStream = (deltas) ->
+    (identity, receive, finish) ->
+      receive 'manifest', manifest
+      for p in payload
+        receive 'payload', p
+
+      doWithDelay = (_deltas, delay = 1000) ->
+        [oplist, rest...] = _deltas
+        return unless oplist?
+
+        setTimeout (() ->
+          [{root}] = oplist
+          receive 'delta', {
+            root: root
+            timestamp: new Date
+            oplist: oplist
+          }
+          doWithDelay rest, delay
+        ), delay
+
+      doWithDelay deltas if deltas
+
+      finish()
+
+  exports = {
+    deltas
+    manifest
+    payload
+    mockStream
+  }

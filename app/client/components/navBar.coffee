@@ -1,63 +1,44 @@
 define ['flight/component', 'templates/components/navBar'],
   (defineComponent, templ) ->
-    navBar = ->
+    navBar = () ->
 
-      @after 'initialize', ->
-        console.log '[DEBUG] initialize'
+      @after 'initialize', () ->
 
-        # apply the template to the DOM if doesn't exist
-        applyTemplate = () =>
+        @attr.collector.register()
+
+        @attr.collector.ready () =>
+
+          # render template to DOM if it doesn't exist
+          # QUESTION -- is this idiomatic jquery?
           if $('.navbar').length == 0
-            console.log '[DEBUG] applying template.*'
-            console.log '@attr.models', @attr.models
-            @$node.append templ(
+            @$node.append (templ {
               role: @attr.role
               appName: @attr.appName
-              username: @attr.models.mySession?.username
-            )
+              username: @attr.models?.mySession?[0]?.username
+            })
 
+          # AD HOC -- data-blind UIX scripting should separated
           # highlight the active route
           $('.nav li').click () ->
             $('.nav li').removeClass 'active'
             $this = $(this)
             $this.addClass 'active' unless $this.hasClass 'active'
 
-        @attr.collector.on 'myData.*', (data, event) =>
-          console.log '[DEBUG] myData.*'
-          # console.log 'myData.* (event)', JSON.stringify event
-          # console.log 'myData.* (data)', JSON.stringify data
-
-          # TODO: factor out into processEvent function
-          switch event.path
-            when 'unansweredChats'
-              $('.notifyUnanswered').text event.data
-            when 'unreadMessages'
-              $('.notifyUnread').text event.data
-            when 'username'
-              $('.username').text event.data
-
-        @attr.collector.ready () =>
-          console.log '[DEBUG] ready'
-
-          @attr.models = @attr.collector?.data?.myData?[0]
-
-          # s = JSON.stringify @attr.collector.data
-          # console.log '@attr.collector.data', s
-
-          applyTemplate()
-
           # process initial payload data
-          {unansweredChats} = @attr.models.mySession
-          {unreadMessages} = @attr.models.mySession
+          {
+            unansweredChats
+            unreadMessages
+          } = @attr.models.mySession
+
+          # AD HOC -- should be part of a lifecycle step
           $('.notifyUnanswered').text unansweredChats
           $('.notifyUnread').text unreadMessages
 
           # TODO: this should come from a cache source
           # $('#notifyInvites')
 
-        @attr.collector.register()
-
-        # for debugging only, make models accessible in browser console
-        # window.models = @attr.models
+          @attr.QueryProxy @node,
+                           @attr.collector,
+                           @attr.queryProxyConfig
 
     return defineComponent(navBar)

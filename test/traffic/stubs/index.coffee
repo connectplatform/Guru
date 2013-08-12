@@ -18,43 +18,28 @@ require.config
 require [
   'components/navBar'
   'vendor/particle'
-  'vendor/eventemitter2'
   'load/mock'
+  'load/query'
 ],
-(navBar, particle, EventEmitter2, mock) ->
-
-  mockStream = (deltas) ->
-    (identity, receive, finish) ->
-      receive 'manifest', mock.manifest
-      receive 'payload', mock.payload
-
-      doWithDelay = (ops, delay = 1000) ->
-        [op, rest...] = ops
-        return unless op?
-
-        setTimeout (() ->
-          console.log "doing a thing with op: #{JSON.stringify op}"
-          receive 'delta', {
-            root: 'myData'
-            timestamp: new Date
-            oplist: op
-          }
-          doWithDelay rest, delay
-        ), delay
-
-      doWithDelay deltas if deltas
-
-      finish()
+(navBar, particle, mock, query) ->
 
   oplist = []
 
   collector = new particle.Collector
     identity:
       sessionId: '1111'
-    onRegister: mockStream mock.deltas
+    onRegister: mock.mockStream mock.deltas
 
+  # console.log 'query.queryProxyConfig:', query.queryProxyConfig
+  # console.log 'query.QueryProxy:', query.QueryProxy
+
+  # AD HOC -- QueryProxy should already be available in
+  # the Component definition
   navBar.attachTo '#navBar', {
     role: 'Owner'
     appName: 'Guru'
     collector: collector
+    models: collector.data
+    queryProxyConfig: query.queryProxyConfig
+    QueryProxy: query.QueryProxy
   }

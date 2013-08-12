@@ -12,7 +12,6 @@ define ['flight/component', 'templates/components/navBar', 'load/render'],
             $(@node).append (templ {
               role: @attr.role
               appName: @attr.appName
-              username: @attr.models?.mySession?[0]?.username
             })
 
           $('.nav li').click () ->
@@ -20,21 +19,9 @@ define ['flight/component', 'templates/components/navBar', 'load/render'],
             $this = $(this)
             $this.addClass 'active' unless $this.hasClass 'active'
 
-          # process initial payload data
-          {
-            unansweredChats
-            unreadMessages
-          } = @attr.models.mySession
-
-          $('.notifyUnanswered').html unansweredChats
-          $('.notifyUnread').html unreadMessages
-
-          # TODO: this should come from a cache source
-          # $('#notifyInvites')
-
         @attr.collector.ready prepareUI
 
-        @attr.queryProxy.on 'unansweredChats', (data) =>
+        @attr.queryProxy.init 'unansweredChats', (data) =>
           sel = $(@node).find('.notifyUnanswered')
           templ = (data) ->
             return "" unless data?.unansweredChats > 0
@@ -42,7 +29,7 @@ define ['flight/component', 'templates/components/navBar', 'load/render'],
 
           render.replace sel, templ, data
 
-        @attr.queryProxy.on 'unreadMessages', (data) =>
+        @attr.queryProxy.init 'unreadMessages', (data) =>
           sel = $(@node).find('.notifyUnread')
           templ = (data) ->
             return "" unless data?.unreadMessages > 0
@@ -50,5 +37,11 @@ define ['flight/component', 'templates/components/navBar', 'load/render'],
 
           render.replace sel, templ, data
 
+        @attr.queryProxy.init 'username', (data) =>
+          sel = $(@node).find('.username')
+          templ = (data) ->
+            return "#{data?.username}"
+
+          render.replace sel, templ, data
 
     return defineComponent(navBar)

@@ -1,32 +1,41 @@
 define ['vendor/eventemitter2', 'load/render'], (EventEmitter2, render) ->
-  queryProxyConfig = () ->
-    'mySession.unansweredChats':
-      get: () =>
-        {unansweredChats} = @models.mySession?[0]
 
-      updateUI: ({unansweredChats}) =>
-        $(@node).find('.notifyUnanswered').html unansweredChats
+  config =
+    'unansweredChats':
+      path: 'mySession.unansweredChats'
 
-    'mySession.unreadMessages':
-      get: () =>
-        {unreadMessages} = @models.mySession?[0]
+      get: (coll) ->
+        {unansweredChats} = coll.data.mySession?[0]
+        return {unansweredChats}
 
-      updateUI: ({unreadMessages}) =>
-        $(@node).find('.notifyUnread').html unreadMessages
+    'unreadMessages':
+      path: 'mySession.unreadMessages'
+
+      get: (coll) ->
+        {unreadMessages} = coll.data.mySession?[0]
+        return {unreadMessages}
 
 
-  class QueryProxy # extends EventEmitter2
-    constructor: (@node, @collector, Config) ->
-      @paths = Config.bind(@)()
-      @models = @collector.data
+  class QueryProxy extends EventEmitter2
+    constructor: (@collector, config) ->
 
-      @collector.onAny (_, {root, path}) =>
-        event = "#{root}.#{path}"
+      # for each data model path
+      for event, def of config
+        do (event, def) =>
 
-        _data = @paths[event]?.get()
-        @paths[event]?.updateUI _data if _data?
+          # when the collector emits a change in <path>
+          @collector.on def.path, () =>
+
+            # get the data needed for update events
+            data = def.get @collector
+
+            # emit the event for subscribers
+            @emit event, data
+
+      return @
+
 
   return {
-    queryProxyConfig
+    config
     QueryProxy
   }

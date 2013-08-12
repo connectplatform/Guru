@@ -33,8 +33,6 @@ require [
   # console.log 'query.queryProxyConfig:', query.queryProxyConfig
   # console.log 'query.QueryProxy:', query.QueryProxy
 
-  # AD HOC -- QueryProxy should already be available in
-  # the Component definition
   navBar.attachTo '#navBar', {
     role: 'Owner'
     appName: 'Guru'

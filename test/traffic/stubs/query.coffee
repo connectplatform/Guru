@@ -15,24 +15,42 @@ define ['vendor/eventemitter2', 'load/render'], (EventEmitter2, render) ->
         {unreadMessages} = coll.data.mySession?[0]
         return {unreadMessages}
 
+    'username':
+      path: 'mySession.username'
+
+      get: (coll) ->
+        {username} = coll.data.mySession?[0]
+        return {username}
+
 
   class QueryProxy extends EventEmitter2
     constructor: (@collector, config) ->
+      @queries = config
 
-      # for each data model path
-      for event, def of config
-        do (event, def) =>
+      # given a query event and its path, data getter
+      for query, def of @queries
+        do (query, def) =>
 
           # when the collector emits a change in <path>
           @collector.on def.path, () =>
-
-            # get the data needed for update events
-            data = def.get @collector
-
-            # emit the event for subscribers
-            @emit event, data
+            @execute query
 
       return @
+
+    execute: (query) ->
+      # get the data needed for update events
+      data = @queries[query].get @collector
+
+      # emit the query event for subscribers
+      @emit query, data
+
+    init: (query, updater) ->
+      # set up listener to update on query events
+      @on query, updater
+
+      # fire initial setup
+      @collector.ready () =>
+        @execute query
 
 
   return {

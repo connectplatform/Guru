@@ -30,14 +30,12 @@ require [
       sessionId: '1111'
     onRegister: mock.mockStream mock.deltas
 
-  # console.log 'query.queryProxyConfig:', query.queryProxyConfig
-  # console.log 'query.QueryProxy:', query.QueryProxy
+  queryProxy = new query.QueryProxy collector, query.config
 
   navBar.attachTo '#navBar', {
     role: 'Owner'
     appName: 'Guru'
     collector: collector
     models: collector.data
-    queryProxyConfig: query.queryProxyConfig
-    QueryProxy: query.QueryProxy
+    queryProxy: queryProxy
   }

@@ -8,9 +8,9 @@ define ['vendor/jquery'], ($) ->
   replace = (sel, template, data) ->
     sel.html (template data)
 
-  makeRender = (node, template) ->
-    append: (data) -> append node, template, data
-    prepend: (data) -> prepend node, template, data
-    replace: (data) -> replace node, template, data
+  makeRender = (sel, template) ->
+    append: (data) -> append sel, template, data
+    prepend: (data) -> prepend sel, template, data
+    replace: (data) -> replace sel, template, data
 
   return {append, prepend, replace, makeRender}

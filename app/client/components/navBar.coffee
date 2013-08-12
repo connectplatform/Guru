@@ -9,6 +9,7 @@ define ['flight/component', 'templates/components/navBar'],
         @attr.collector.ready () =>
 
           # render template to DOM if it doesn't exist
+          # QUESTION -- is this idiomatic jquery?
           if $('.navbar').length == 0
             @$node.append (templ {
               role: @attr.role
@@ -16,6 +17,7 @@ define ['flight/component', 'templates/components/navBar'],
               username: @attr.models?.mySession?[0]?.username
             })
 
+          # AD HOC -- data-blind UIX scripting should separated
           # highlight the active route
           $('.nav li').click () ->
             $('.nav li').removeClass 'active'
@@ -28,6 +30,7 @@ define ['flight/component', 'templates/components/navBar'],
             unreadMessages
           } = @attr.models.mySession
 
+          # AD HOC -- should be part of a lifecycle step
           $('.notifyUnanswered').text unansweredChats
           $('.notifyUnread').text unreadMessages
 

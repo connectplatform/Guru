@@ -21,7 +21,7 @@ define ['flight/component', 'templates/components/navBar', 'load/render'],
 
         @attr.collector.ready prepareUI
 
-        @attr.queryProxy.init 'unansweredChats', (data) =>
+        @attr.queryProxy.attach 'unansweredChats', (data) =>
           sel = $(@node).find('.notifyUnanswered')
           templ = (data) ->
             return "" unless data?.unansweredChats > 0
@@ -29,7 +29,7 @@ define ['flight/component', 'templates/components/navBar', 'load/render'],
 
           render.replace sel, templ, data
 
-        @attr.queryProxy.init 'unreadMessages', (data) =>
+        @attr.queryProxy.attach 'unreadMessages', (data) =>
           sel = $(@node).find('.notifyUnread')
           templ = (data) ->
             return "" unless data?.unreadMessages > 0
@@ -37,7 +37,7 @@ define ['flight/component', 'templates/components/navBar', 'load/render'],
 
           render.replace sel, templ, data
 
-        @attr.queryProxy.init 'username', (data) =>
+        @attr.queryProxy.attach 'username', (data) =>
           sel = $(@node).find('.username')
           templ = (data) ->
             return "#{data?.username}"

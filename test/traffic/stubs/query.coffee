@@ -33,24 +33,23 @@ define ['vendor/eventemitter2', 'load/render'], (EventEmitter2, render) ->
 
           # when the collector emits a change in <path>
           @collector.on def.path, () =>
-            @execute query
+
+            # emit the query event for subscribers
+            @emit query, (@dataFor query)
 
       return @
 
-    execute: (query) ->
+    dataFor: (query) ->
       # get the data needed for update events
       data = @queries[query].get @collector
 
-      # emit the query event for subscribers
-      @emit query, data
-
-    init: (query, updater) ->
-      # set up listener to update on query events
-      @on query, updater
-
-      # fire initial setup
+    attach: (query, updater) ->
       @collector.ready () =>
-        @execute query
+        # set up listener to update on query events
+        @on query, updater
+
+        # directly update right now, without extra event emitting
+        updater (@dataFor query)
 
 
   return {

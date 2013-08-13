@@ -9,5 +9,4 @@ test/traffic/public
 app/public
 issue-dump
 tmp
-*~
 components/*

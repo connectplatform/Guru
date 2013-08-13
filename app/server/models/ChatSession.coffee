@@ -5,6 +5,10 @@ db = require 'mongoose'
 {getString} = config.require 'lib/util'
 
 chatSession = new Schema
+  accountId:
+    type: ObjectId
+    required: true
+
   sessionId:
     type: ObjectId
     required: true
@@ -34,11 +38,11 @@ makePostHook = (event) ->
     chatSession.post event, (_chatSession) ->
     {Chat} = db.models
     {chatId} = _chatSession
-    
+
     Chat.findById chatId, (err, chat) ->
       return config.log.error (new Error "Error in ChatSession post '#{event}' hook."), err if err
       return config.log.error (new Error "Chat not found in in ChatSession post '#{event}' hook.") unless chat
-      
+
       chat?.recalculateStatus()
 
 for event in ['save', 'remove']

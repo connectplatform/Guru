@@ -1,5 +1,7 @@
 should = require 'should'
-logger = config.require 'lib/logger'
+{sample} = require 'ale'
+logger = require 'torch'
+
 {Chat} = config.require('server/load/mongo').models
 {Collector} = require 'particle'
 
@@ -35,12 +37,17 @@ boiler 'Particle', ->
       done()
 
     it 'should show my chats', (done) ->
+
+      sample @collector, 'data', 4, (err, events) =>
+
+        @collector.data.visibleChats.length.should.eql 1
+        @collector.data.visibleChatSessions.length.should.eql 1
+        @collector.data.myChats.length.should.eql 1
+        should.exist @collector.data.myChats[0].history
+        done()
+
       Factory.create 'chatSession', {@sessionId}, (err) =>
         should.not.exist err
-
-      @collector.once 'data', (event) =>
-        @collector.data.myChats.length.should.eql 1
-        done()
 
     it 'should show chat updates', (done) ->
 
@@ -73,27 +80,37 @@ boiler 'Particle', ->
 
     it 'should delete a chat when the relationship is disconnected', (done) ->
 
-      # wait until the chat gets deleted
-      waitForDelete = (data, event) =>
-        if @collector.data.myChats.length is 0
-          @collector.off 'data', waitForDelete
-          done()
+      #@collector.on 'data', (data, event) ->
+        #logger.grey 'event:'.yellow, event
 
-      # wait until we have a chat
-      waitForChat = (data, event) =>
-        if @collector.data.myChats.length > 0
-          @collector.off 'data', waitForChat
-          @collector.on 'data', waitForDelete
+      # when myChat gets removed
+      onRemove = (data, event) =>
+        return unless event.operation is 'unset'
+        @collector.off 'myChats.**', onRemove
 
-      @collector.on 'data', waitForChat
+        data.myChats.length.should.eql 0
+        done()
+
+      # when myChat gets added
+      onAdd = (data, event) =>
+        return unless event.operation is 'set'
+        @collector.off 'myChats.**', onAdd
+
+        data.myChats.length.should.eql 1
+
+        # remove the chatSession
+        @chatSession.remove (err) ->
+          should.not.exist err
+
+        # wait until the myChat gets deleted
+        @collector.on 'myChats.**', onRemove
+
+
+      @collector.on 'myChats.**', onAdd
 
       # create a chatSession (and a chat)
-      Factory.create 'chatSession', {@sessionId}, (err, chatSession) =>
+      Factory.create 'chatSession', {@sessionId}, (err, @chatSession) =>
         should.not.exist err
-
-        # update our chat to add history
-        chatSession.remove (err) ->
-          should.not.exist err
 
     it 'should not show my session in visibleSessions', ->
 
@@ -108,9 +125,9 @@ boiler 'Particle', ->
         should.exist session
 
         @collector.once 'visibleSessions.**', (data, event) =>
-          {data: {accountId, id, username, sessionSecret}} = event
+          {data: {accountId, _id, username, sessionSecret}} = event
           @accountId.should.eql accountId
-          session._id.should.eql id
+          session._id.should.eql _id
           username.should.eql 'Example visitor'
           should.not.exist sessionSecret
           done()

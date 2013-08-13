@@ -126,6 +126,7 @@ Factory.define 'session', Session, {
 }
 
 Factory.define 'chatSession', ChatSession, {
+  accountId: defaultAccountId
   sessionId: Factory.assemble 'session'
   chatId: Factory.assemble 'chat'
   relation: 'Member'

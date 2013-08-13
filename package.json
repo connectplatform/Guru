@@ -1,8 +1,8 @@
 {
   "name": "Guru",
   "description": "Live chat system for website support.",
-  "version": "0.0.1-14",
-  "author": "Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
+  "version": "0.1.0",
+  "author": "Torchlight Software <info@torchlightsoftware.com> (http://torchlightsoftware.com/)",
   "main": "server/start.coffee",
   "dependencies": {
     "coffee-script": "*",
@@ -11,13 +11,14 @@
     "should": "*",
     "connect": "2.3.4",
     "asset-rack": "git+https://github.com/TorchlightSoftware/asset-rack.git#gzip",
-    "async": "*",
-    "queue": "git+https://github.com/bitmage/queue.git",
-    "particle": "*",
-    "mongo-watch": "git+https://github.com/TorchlightSoftware/mongo-watch.git",
-    "vein": "*",
     "sugar": "*",
+    "async": "*",
+    "vein": "*",
     "law": "*",
+    "particle": "*",
+    "mongo-watch": "*",
+    "torch": "*",
+    "ale": "*",
     "restler": "git+https://github.com/bitmage/restler.git",
     "nodemailer": "*",
     "easyxml": "*",
@@ -38,11 +39,9 @@
   "engines": {
     "node": ">= 0.4.0"
   },
-  "subdomain": "guru",
   "private": true,
   "scripts": {
     "start": "scripts/run start",
-    "test": "mocha test/server/specs/*",
-    "stop": "echo 'TODO: add stop script'"
+    "test": "mocha test/server/specs/*"
   }
 }

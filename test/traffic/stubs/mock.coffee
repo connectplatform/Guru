@@ -58,8 +58,8 @@ define [], () ->
       username: 'Graham'
       online: true
       secret: '4444'
-      unansweredChats: 0
-      unreadMessages: 0
+      unansweredChats: 99
+      unreadMessages: 13
     ]
    ,
     root: 'myUser'
@@ -142,6 +142,30 @@ define [], () ->
       id: '1111'
       path: 'unreadMessages'
       data: 1
+    ]
+
+    [
+      root: 'mySession'
+      operation: 'set'
+      id: '1111'
+      path: 'unreadMessages'
+      data: 0
+    ]
+
+    [
+      root: 'mySession'
+      operation: 'set'
+      id: '1111'
+      path: 'unansweredChats'
+      data: 1
+    ]
+
+    [
+      root: 'mySession'
+      operation: 'set'
+      id: '1111'
+      path: 'unansweredChats'
+      data: 0
     ]
   ]
 

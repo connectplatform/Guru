@@ -1,45 +1,58 @@
 define ['vendor/eventemitter2', 'load/render'], (EventEmitter2, render) ->
-  # queryProxyConfigSchema =
-  #   'root.path':
-  #     get: () -> null
-  #     updateUI: (data) -> null
 
-  queryProxyConfig = () ->
-    'mySession.unansweredChats':
-      get: () =>
-        {unansweredChats} = @models.mySession?[0]
+  config =
+    'unansweredChats':
+      path: 'mySession.unansweredChats'
 
-      updateUI: ({unansweredChats}) =>
-        # AD HOC -- should use a render.* method
-        # QUESTION -- do we want to pass a standad DOM node object
-        # to the render method, or a jquery selection (e.g. the
-        # return value of $(@node).find('.notifyUnanswered')
-        $(@node).find('.notifyUnanswered').html unansweredChats
+      get: (coll) ->
+        {unansweredChats} = coll.data.mySession?[0]
+        return {unansweredChats}
 
-    'mySession.unreadMessages':
-      get: () =>
-        {unreadMessages} = @models.mySession?[0]
+    'unreadMessages':
+      path: 'mySession.unreadMessages'
 
-      updateUI: ({unreadMessages}) =>
-        $(@node).find('.notifyUnread').html unreadMessages
+      get: (coll) ->
+        {unreadMessages} = coll.data.mySession?[0]
+        return {unreadMessages}
+
+    'username':
+      path: 'mySession.username'
+
+      get: (coll) ->
+        {username} = coll.data.mySession?[0]
+        return {username}
 
 
-  class QueryProxy # extends EventEmitter2
-    # QUESTION -- wary of all the @-binding. Better patterns?
-    constructor: (@node, @collector, Config) ->
-      @paths = Config.bind(@)()
-      @models = @collector.data
+  class QueryProxy extends EventEmitter2
+    constructor: (@collector, config) ->
+      @queries = config
 
-      # QUESTION -- is this how you want us bubbling Particle events to
-      # UI updates via the proxy?
-      @collector.onAny (_, {root, path}) =>
-        event = "#{root}.#{path}"
-        # console.log 'QueryProxy:', event
+      # given a query event and its path, data getter
+      for query, def of @queries
+        do (query, def) =>
 
-        _data = @paths[event]?.get()
-        @paths[event]?.updateUI _data if _data?
+          # when the collector emits a change in <path>
+          @collector.on def.path, () =>
+
+            # emit the query event for subscribers
+            @emit query, (@dataFor query)
+
+      return @
+
+    dataFor: (query) ->
+      # get the data needed for update events
+      data = @queries[query].get @collector
+
+    attach: (query, updater) ->
+      @collector.ready () =>
+        # set up listener to update on query events
+        @on query, updater
+
+        # directly update right now, without extra event emitting
+        updater (@dataFor query)
+
 
   return {
-    queryProxyConfig
+    config
     QueryProxy
   }

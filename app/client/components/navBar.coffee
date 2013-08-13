@@ -1,44 +1,47 @@
-define ['flight/component', 'templates/components/navBar'],
-  (defineComponent, templ) ->
+define ['flight/component', 'templates/components/navBar', 'load/render'],
+  (defineComponent, templ, render) ->
+
     navBar = () ->
 
       @after 'initialize', () ->
 
         @attr.collector.register()
 
-        @attr.collector.ready () =>
-
-          # render template to DOM if it doesn't exist
-          # QUESTION -- is this idiomatic jquery?
-          if $('.navbar').length == 0
-            @$node.append (templ {
+        prepareUI = () =>
+          if $('.navbar').length is 0
+            $(@node).append (templ {
               role: @attr.role
               appName: @attr.appName
-              username: @attr.models?.mySession?[0]?.username
             })
 
-          # AD HOC -- data-blind UIX scripting should separated
-          # highlight the active route
           $('.nav li').click () ->
             $('.nav li').removeClass 'active'
             $this = $(this)
             $this.addClass 'active' unless $this.hasClass 'active'
 
-          # process initial payload data
-          {
-            unansweredChats
-            unreadMessages
-          } = @attr.models.mySession
+        @attr.collector.ready prepareUI
 
-          # AD HOC -- should be part of a lifecycle step
-          $('.notifyUnanswered').text unansweredChats
-          $('.notifyUnread').text unreadMessages
+        @attr.queryProxy.attach 'unansweredChats', (data) =>
+          sel = $(@node).find('.notifyUnanswered')
+          templ = (data) ->
+            return "" unless data?.unansweredChats > 0
+            return "#{data?.unansweredChats}"
 
-          # TODO: this should come from a cache source
-          # $('#notifyInvites')
+          render.replace sel, templ, data
 
-          @attr.QueryProxy @node,
-                           @attr.collector,
-                           @attr.queryProxyConfig
+        @attr.queryProxy.attach 'unreadMessages', (data) =>
+          sel = $(@node).find('.notifyUnread')
+          templ = (data) ->
+            return "" unless data?.unreadMessages > 0
+            return "#{data?.unreadMessages}"
+
+          render.replace sel, templ, data
+
+        @attr.queryProxy.attach 'username', (data) =>
+          sel = $(@node).find('.username')
+          templ = (data) ->
+            return "#{data?.username}"
+
+          render.replace sel, templ, data
 
     return defineComponent(navBar)

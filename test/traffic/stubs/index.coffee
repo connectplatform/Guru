@@ -30,16 +30,12 @@ require [
       sessionId: '1111'
     onRegister: mock.mockStream mock.deltas
 
-  # console.log 'query.queryProxyConfig:', query.queryProxyConfig
-  # console.log 'query.QueryProxy:', query.QueryProxy
+  queryProxy = new query.QueryProxy collector, query.config
 
-  # AD HOC -- QueryProxy should already be available in
-  # the Component definition
   navBar.attachTo '#navBar', {
     role: 'Owner'
     appName: 'Guru'
     collector: collector
     models: collector.data
-    queryProxyConfig: query.queryProxyConfig
-    QueryProxy: query.QueryProxy
+    queryProxy: queryProxy
   }

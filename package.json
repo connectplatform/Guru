@@ -17,7 +17,7 @@
     "vein": "*",
     "sugar": "*",
     "law": "*",
-    "stoic": "*",
+    "stoic": "git+https://github.com/kostik-noir/stoic.git",
     "restler": "git+https://github.com/bitmage/restler.git",
     "nodemailer": "*",
     "easyxml": "*",

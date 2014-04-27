@@ -41,7 +41,7 @@
   "subdomain": "guru",
   "private": true,
   "scripts": {
-    "start": "scripts/run start",
+    "start": "scripts/run server",
     "test": "mocha test/server/specs/*",
     "stop": "echo 'TODO: add stop script'"
   }

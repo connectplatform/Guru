@@ -3,12 +3,12 @@ should = require 'should'
 {inspect} = require 'util'
 
 boiler 'REST - Print Chat Archive', ->
-  describe 'Chat link image', ->
+  describe 'Chat link image_', ->
 
     it 'should print a chat history', (done) ->
       # TODO: find out reason why it not pass tests
-      done()
-      return
+      #done()
+      #return
 
       Factory.create 'chathistory', (err, history) =>
         should.not.exist err
@@ -20,7 +20,7 @@ boiler 'REST - Print Chat Archive', ->
             headers:
               Cookie: "session=#{sessionId}"
 
-          rest.get(url, options).on 'complete', (data, response) =>
+          rest.get(url, options).once 'complete', (data, response) =>
             response.statusCode.should.eql 200, "Status: #{response.status}. Response failed:\n#{response.rawEncoded}"
             data.should.include history.visitor.username
             data.should.include history.visitor.websiteUrl

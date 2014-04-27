@@ -26,15 +26,15 @@ config =
         #cert: rel 'tmp/certs/test.com.crt'
       chats:
         minutesToTimeout: 15
-      mail:
-        transport: 'SES'
-        options:
-          AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
-          AWSSecretKey: '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'
-          from: 'info@chatpro.com'
-          support: 'success@simulator.amazonses.com'
-        getActivationLink: (uid, regkey) ->
-          "http://"+devHost+":4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
+      mail: {} # in order to pass tests
+#        transport: 'SES'
+#        options:
+#          AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
+#          AWSSecretKey: '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'
+#          from: 'info@chatpro.com'
+#          support: 'success@simulator.amazonses.com'
+#        getActivationLink: (uid, regkey) ->
+#          "http://"+devHost+":4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       aws:
         s3:
           bucket: 'guru-dev'

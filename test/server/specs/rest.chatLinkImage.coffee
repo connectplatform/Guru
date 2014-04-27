@@ -8,7 +8,8 @@ boiler 'REST - Chat Link Image', ->
     beforeEach ->
       statusShouldBe = (status, cb) =>
         link = "http://localhost:#{@testPort}/chatLinkImage/#{@website._id}"
-        rest.get(link).on 'complete', (data, response) =>
+
+        rest.get(link).once 'complete', (data, response) =>
           response.statusCode.should.eql 307, "Status: #{response.statusCode}. Response failed:\n#{response.rawEncoded}"
           response.headers.location.should.match new RegExp "#{@website._id}\/#{status}$"
           cb()
@@ -21,10 +22,6 @@ boiler 'REST - Chat Link Image', ->
         @expectOnline done
 
     it 'should display offline image when operators are offline', (done) ->
-      # TODO: test disabled because this functionality not implemented
-      done()
-      return
-
       @expectOffline =>
         # set online/back offline
         @getAuthed =>
@@ -34,10 +31,6 @@ boiler 'REST - Chat Link Image', ->
             @expectOffline done
 
     it 'should cache results', (done) ->
-      # TODO: test disabled because this functionality not implemented
-      done()
-      return
-
       @timeout 40
       @expectOffline =>
         @expectOffline =>

@@ -33,8 +33,8 @@ config =
 #          AWSSecretKey: '4IdLGyU52rbz3pFrTLJjgZIJnyT7FkrxRQTSrJDr'
 #          from: 'info@chatpro.com'
 #          support: 'success@simulator.amazonses.com'
-#        getActivationLink: (uid, regkey) ->
-#          "http://"+devHost+":4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
+        getActivationLink: (uid, regkey) ->
+          "http://"+devHost+":4000/chat.html#/resetPassword?uid=#{uid}&regkey=#{regkey}"
       aws:
         s3:
           bucket: 'guru-dev'

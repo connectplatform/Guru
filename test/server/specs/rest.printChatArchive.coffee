@@ -6,10 +6,6 @@ boiler 'REST - Print Chat Archive', ->
   describe 'Chat link image_', ->
 
     it 'should print a chat history', (done) ->
-      # TODO: find out reason why it not pass tests
-      #done()
-      #return
-
       Factory.create 'chathistory', (err, history) =>
         should.not.exist err
 

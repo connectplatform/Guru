@@ -9,10 +9,6 @@ boiler 'Model - User', ->
       done err
 
   it 'should let you save an Owner', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     user =
       accountId: @accountId
       email: 'owner2@foo.com'
@@ -24,13 +20,10 @@ boiler 'Model - User', ->
     User.create user, (err, data) ->
       should.not.exist err
       data.email.should.eql 'owner2@foo.com'
+      console.log err
       done()
 
   it 'should let you save a valid user', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     user =
       accountId: @accountId
       email: 'operator1@foo.com'
@@ -45,10 +38,6 @@ boiler 'Model - User', ->
       done()
 
   it 'should let you update a valid user', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     user =
       accountId: @accountId
       email: 'operator1@foo.com'

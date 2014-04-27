@@ -3,12 +3,7 @@ should = require 'should'
 stoic = require 'stoic'
 
 boiler 'Model - Chat Session', ->
-
   it 'should associate an operator and chat', (done)->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     {ChatSession, Chat, Session} = stoic.models
     cs = ChatSession('ab1234567890ab1234567890')
     c = Chat('ab1234567890ab1234567890')
@@ -17,8 +12,8 @@ boiler 'Model - Chat Session', ->
     async.parallel {
       chat1: c.create
       chat2: c.create
-      op1: s.create {role: 'Operator', operatorId: 1}
-      op2: s.create {role: 'Operator', operatorId: 2}
+      op1: s.create {role: 'Operator', operatorId: 1, chatName: "op1"}
+      op2: s.create {role: 'Operator', operatorId: 2, chatName: "op2"}
 
     }, (err, {chat1, chat2, op1, op2}) ->
       should.not.exist err
@@ -52,7 +47,7 @@ boiler 'Model - Chat Session', ->
               relation.isWatching.should.eql 'true' if relation.chatId is 'chat1'
               relation.isWatching.should.eql 'false' if relation.chatId is 'chat2'
 
-              # try to retrieve by chat
+            # try to retrieve by chat
             async.map chatOps, getIsWatching, (err, relations) ->
               should.not.exist err
               for relation in relations

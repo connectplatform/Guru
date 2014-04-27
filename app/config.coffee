@@ -26,9 +26,9 @@ config =
         #cert: rel 'tmp/certs/test.com.crt'
       chats:
         minutesToTimeout: 15
-      mail: {} # in order to pass tests
-#        transport: 'SES'
-#        options:
+      mail: # in order to pass tests
+        transport: 'stub'
+        options: {}
 #          AWSAccessKeyID: 'AKIAILLS5MBMHVD62AEA'
 #          AWSSecretKey: '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'
 #          from: 'info@chatpro.com'

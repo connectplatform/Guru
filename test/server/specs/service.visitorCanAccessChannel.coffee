@@ -13,10 +13,6 @@ boiler 'Service - Visitor Can Access Channel', ->
       done()
 
   it 'should not let a visitor access a channel they were kicked from', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-    
     @owner.kickUser {chatId: @chatId}, (err) =>
       @client.visitorCanAccessChannel {chatId: @chatId}, (err, {accessAllowed}) =>
         should.not.exist err

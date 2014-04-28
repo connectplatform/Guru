@@ -94,7 +94,7 @@ face = (decorators) ->
 
           after ['incrby'], (context, data, next) ->
             notifySession {accountId: accountId, sessionId: session.id, type: 'unread', chime: 'true'}, ->
-            next null, data
+              next null, data
 
           # filter retreived values with a parseInt
           after ['getall', 'retrieve'], (context, unreadMessages, next) ->

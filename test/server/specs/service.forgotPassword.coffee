@@ -7,10 +7,6 @@ badEmail = 'foo@bar.com'
 boiler 'Service - Forgot Password', ->
 
   it 'should let a user reset their password', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     {User} = config.require('load/mongo').models
     client = @getClient()
     client.ready ->

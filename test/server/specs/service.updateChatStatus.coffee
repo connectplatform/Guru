@@ -24,10 +24,6 @@ boiler 'Service - Update Chat Status', ->
           done()
 
   it "should set a chat's status to 'vacant' when there's no visitor", (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     @visitor.leaveChat {chatId: @chatId}, (err) =>
       should.not.exist err
       @chatHandle.status.get (err, status) =>
@@ -36,10 +32,6 @@ boiler 'Service - Update Chat Status', ->
         done()
 
   it "should remove notifications when chat leaves waiting status", (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     {Session} = stoic.models
     @visitor.leaveChat {chatId: @chatId}, (err) =>
       should.not.exist err

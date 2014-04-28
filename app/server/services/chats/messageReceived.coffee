@@ -27,11 +27,12 @@ module.exports =
         timestamp: Date.now()
 
       Chat(accountId).get(chatId).history.rpush said, ->
-        done()
-
         # asynchronous notifications
-        async.forEach operators, (op, next) ->
+        updateUnreadMessages = (op, next) ->
           Session(accountId).get(op).unreadMessages.incrby chatId, 1, next
+        async.forEach operators, updateUnreadMessages, () ->
 
-        channel = pulsar.channel chatId
-        channel.emit 'serverMessage', said
+          channel = pulsar.channel chatId
+          channel.emit 'serverMessage', said
+
+          done()

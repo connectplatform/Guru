@@ -12,7 +12,6 @@
     "should": "*",
     "connect": "2.3.4",
     "asset-rack": "git+https://github.com/TorchlightSoftware/asset-rack.git#gzip",
-    "async": "*",
     "pulsar": "*",
     "vein": "*",
     "sugar": "*",
@@ -33,7 +32,15 @@
     "keypress": "*",
     "zombie": "*",
     "node-log": "*",
-    "jaded": "0.0.6"
+    "jaded": "0.0.6",
+    "grunt": "~0.4.4",
+    "matchdep": "~0.3.0",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-jade": "~0.11.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-compress": "~0.8.0"
   },
   "engines": {
     "node": ">= 0.4.0"

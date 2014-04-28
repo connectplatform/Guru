@@ -36,7 +36,7 @@ module.exports = (grunt) ->
       client_css: {
         expand: true
         cwd: "<%= paths.client.src %>/css"
-        src: "*"
+        src: "**"
         dest: "<%= paths.client.dest %>/css"
       }
       client_audio: {

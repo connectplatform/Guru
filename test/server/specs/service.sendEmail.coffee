@@ -3,6 +3,7 @@ sendEmail = config.require 'services/email/sendEmail'
 
 describe 'sendEmail', ->
 
+  # Purpose of this test?
   it 'should send an email', (done) ->
     options =
       to: 'success@simulator.amazonses.com'
@@ -11,12 +12,8 @@ describe 'sendEmail', ->
 
     body = "Hello, world!"
 
-    # TODO: skip real mail sending in tests
-    done()
-    return
-
     sendEmail body, options, (err, status) ->
       should.not.exist err
       should.exist status
-      status.message.should.match /MessageId/
+      status.message.should.match /Message-Id/
       done()

@@ -96,10 +96,6 @@ boiler 'Service - Clear Old Chats', ->
           done()
 
   it 'should let a visitor create a new chat if their old one was deleted', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     {Chat} = stoic.models
 
     # create the chat
@@ -150,10 +146,6 @@ boiler 'Service - Clear Old Chats', ->
           done()
 
       it 'should remove operators from the deleted chats', (done) ->
-        # TODO: find out reason why it not pass tests
-        done()
-        return
-
         {Chat} = stoic.models
 
         # delete the chat
@@ -170,10 +162,6 @@ boiler 'Service - Clear Old Chats', ->
               done()
 
       it 'should save a history', (done) ->
-        # TODO: find out reason why it not pass tests
-        done()
-        return
-
         {ChatHistory} = db.models
 
         # delete the chat

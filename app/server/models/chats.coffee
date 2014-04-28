@@ -138,7 +138,7 @@ face = (decorators) ->
           {ChatSession} = require('stoic').models
           removeUnanswered = config.require 'services/operator/removeUnanswered'
 
-          async.parallel [
+          async.series [
             chat.visitor.del
             chat.status.del
             chat.websiteId.del
@@ -146,9 +146,9 @@ face = (decorators) ->
             chat.specialtyId.del
             chat.creationDate.del
             chat.history.del
-            faceValue.allChats.srem chat.id
             faceValue.unansweredChats.srem chat.id
             ChatSession(accountId).removeByChat chat.id
+            faceValue.allChats.srem chat.id
             removeUnanswered accountId, chat.id
           ], cb
 

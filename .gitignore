@@ -9,3 +9,4 @@ app/public
 issue-dump
 tmp
 *.iml
+dist

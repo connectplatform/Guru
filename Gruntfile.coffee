@@ -25,6 +25,7 @@ module.exports = (grunt) ->
     }
     clean: {
       client: "<%= paths.client.dest %>"
+      client_archive: "<%= paths.dist %>/*.tar.gz"
     }
     copy: {
       client_img: {
@@ -96,6 +97,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask "client_dist", [
     "clean:client"
+    "clean:client_archive"
     "coffee:client"
     "jade:client"
     "uglify:client_js"

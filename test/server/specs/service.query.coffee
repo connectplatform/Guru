@@ -36,10 +36,6 @@ boiler 'Service - Query', ->
                 next()
 
   it 'should let you get all the sessions for a chat', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     @prep =>
       query = config.require 'services/queries/query'
       query {
@@ -58,10 +54,6 @@ boiler 'Service - Query', ->
         done()
 
   it 'should let you get all the visible sessions for a chat', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     @prep =>
       query = config.require 'services/queries/query'
       query {
@@ -137,6 +129,7 @@ boiler 'Service - Query', ->
 
     it 'should display an error and return no results', (done) ->
       # TODO: find out reason why it not pass tests
+      # throw error: Query received error. error=Model 'chatSession' does not have field 'sessionId'
       done()
       return
 

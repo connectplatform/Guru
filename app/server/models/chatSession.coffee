@@ -96,9 +96,11 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
           cs.session.role.get (err, role) ->
             event =
               sessionId: sessionId
+              accountId: cs.accountId
               chatId: chatId
               message: "#{displayedRole role} has joined the chat."
               timestamp: new Date().getTime()
+
             notifyChatEvent event, (err) ->
               if err
                 config.log.warn "Notification for 'join chat' failed.", event.merge {error: err}

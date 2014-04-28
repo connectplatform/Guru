@@ -29,9 +29,10 @@ boiler 'Service - Get My Chats', ->
               done()
 
   it "orphan chatSession should not shit the bed", (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
+    # Leave this test as is. Test is correct. But
+    # chatId == 'chat_bar' in
+    # ChatSession(accountId).add sessionId, 'chat_bar'
+    # cause 2 'warn' and 1 'error' messages in console and it baffles during the tests.
 
     {ChatSession} = require('stoic').models
     @getAuthed (err, @client, {sessionId, accountId}) =>

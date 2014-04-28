@@ -38,10 +38,6 @@ boiler 'Service - Populate Visitor ACP Data', ->
 
   # note: this is not a service proper, but a subservice located in server/domain that is called by newChat
   it 'should hit the ACP server and dump data into redis', (done) ->
-    # TODO: find out reason why it not pass tests
-    done()
-    return
-
     testServer = connect().use(response).listen 8675
 
     @client = @getClient()

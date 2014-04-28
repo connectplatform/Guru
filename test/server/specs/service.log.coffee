@@ -2,10 +2,6 @@ should = require 'should'
 
 boiler 'Service - Log', ->
   it 'should take a set of optional fields and log data', (done) ->
-    # TODO: find out reason why it log error
-    done()
-    return
-
     @getAuthed =>
       @client.log {message: 'Something Happened', context: {
         service: 'Some service'

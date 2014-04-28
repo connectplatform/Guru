@@ -105,7 +105,7 @@ face = ({account: {chatSession: {chatIndex, sessionIndex, relationMeta}}}) ->
               if err
                 config.log.warn "Notification for 'join chat' failed.", event.merge {error: err}
 
-          cb null, cs
+              cb null, cs
 
       remove: tandoor (sessionId, chatId, cb) ->
         {Session} = require('stoic').models

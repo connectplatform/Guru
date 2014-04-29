@@ -3548,7 +3548,8 @@ require.alias("vein/dist/main.js", "vein/index.js");
 if (typeof exports == "object") {
   module.exports = require("vein");
 } else if (typeof define == "function" && define.amd) {
-  define(function(){ return require("vein"); });
+  define('vein', [], function(){ return require("vein"); });
 } else {
   window["Vein"] = require("vein");
-}})();
+};
+})();

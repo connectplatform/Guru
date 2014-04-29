@@ -1,4 +1,72 @@
-define ["dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar", 'policy/onPageLoad'],
+# dermis use 'require' in order to load 'route' and 'template'.
+# in order to r.js include required routes and templates into result file
+# we need to specify dependencies explicitly
+define [
+    "dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar", "policy/onPageLoad",
+
+    # /newChat route
+    "routes/newChat", "templates/newChat",
+
+    # /visitorChat route
+    "routes/visitorChat", "templates/visitorChat",
+
+    # /submitQuestion route
+    "routes/submitQuestion", "templates/submitQuestion",
+
+    # /submitQuestion route
+    "routes/submitQuestion", "templates/submitQuestion",
+
+    # /createAccount route
+    "routes/createAccount", "templates/createAccount",
+
+    # /thankYou route
+    "routes/thankYou", "templates/thankYou",
+
+    # / route
+    "routes/index", "templates/index",
+
+    # /login route
+    "routes/login", "templates/login",
+
+    # /logout route
+    "routes/logout", # TODO: it have template?
+
+    # /resetPassword route
+    "routes/resetPassword", "templates/resetPassword",
+
+    # /forgotPassword route
+    "routes/forgotPassword", "templates/forgotPassword",
+
+    # /dashboard route
+    "routes/dashboard", "templates/dashboard",
+
+    # /userProfile route
+    "routes/userProfile", "templates/userProfile",
+
+    # /operatorChat route
+    "routes/operatorChat", "templates/operatorChat",
+
+    # /printChat route
+    "routes/printChat", # TODO: it have template?
+
+    # /account route
+    "routes/account", "templates/account",
+
+    # /users route
+    "routes/users", "templates/users",
+
+    # /websites route
+    "routes/websites", "templates/websites",
+
+    # /specialties route
+    "routes/specialties", "templates/specialties",
+
+    # /uploadTest route
+    "routes/uploadTest", "templates/uploadTest", # TODO: see comment for /uploadTest route below
+
+    # /testPulsar route - there are no these files
+    #"routes/testPulsar", "templates/testPulsar"
+  ],
  (dermis, addMiddleware, sidebar, sbTemp, onPageLoad) ->
 
     # routes for visitors to join chat

@@ -1,5 +1,5 @@
-define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws', 'templates/embedLink', 'helpers/util'],
-  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws, embedLink, {formToHash}) ->
+define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/deleteWebsite', 'templates/websiteRow', 'helpers/formBuilder', 'helpers/submitToAws', 'templates/embedLink', 'helpers/util', 'async'],
+  (server, notify, editWebsite, deleteWebsite, websiteRow, formBuilder, submitToAws, embedLink, {formToHash}, async) ->
     (args, templ) ->
       return window.location.hash = '/' unless $.cookies.get 'session'
 
@@ -61,7 +61,7 @@ define ['load/server', 'load/notify', 'templates/editWebsite', 'templates/delete
                     formFields: beforeData[imageName]
                     file: browser.files[0]
                     error: (response, status, reason) ->
-                      message = "Error submitting #{} image."
+                      message = "Error submitting image."
 
                       if response.responseText.match /EntityTooLarge/
                         message += "  Must be under 1 MB."

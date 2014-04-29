@@ -1,6 +1,6 @@
-define ["app/config", "vendor/vein", "helpers/handleError"], (config, vein, handleError) ->
+define ["app/config", "helpers/handleError", "vein"], (config, handleError, Vein) ->
   #TODO change this if vein gets updated to play nice with AMD again
-  vein ||= Vein
+  vein = Vein
   server = vein.createClient {port: config.port, host: config.api}
 
   wrapped = {}

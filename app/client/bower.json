@@ -1,0 +1,10 @@
+{
+  "name": "guru-client",
+  "dependencies": {
+    "jquery": "1.*",
+    "jquery.cookies": "http://cookies.googlecode.com/svn-history/r12/trunk/jquery.cookies.js",
+    "jwerty": "~0.3.2",
+    "jade_runtime": "https://raw.githubusercontent.com/visionmedia/jade/master/runtime.js",
+    "sugar": "~1.4.1"
+  }
+}

@@ -59,9 +59,9 @@ define ['load/server', 'load/notify', 'helpers/util', 'helpers/generateChatLink'
           currentElement.embedLink = generateChatLink(currentElement)
 
           # Event listeners/firing for embed link generator modal
-          $('#editWebsite').live 'shown', ->
+          $('#editWebsite').on 'shown', ->
             $('input.linkGenerator').mouseup()
-          $('input.linkGenerator').live 'mouseup', ->
+          $('input.linkGenerator').on 'mouseup', ->
             setTimeout ->
               $('input.linkGenerator').select()
             , 100

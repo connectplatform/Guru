@@ -1,5 +1,5 @@
-define ['load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
-  (server, notify, {toTitle, button}, renderForm) ->
+define ['async', 'load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
+  (async, server, notify, {toTitle, button}, renderForm) ->
     (args, templ) ->
 
       $('#content').html templ()

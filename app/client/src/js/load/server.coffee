@@ -1,4 +1,4 @@
-define ["app/config", "helpers/handleError", "vein"], (config, handleError, Vein) ->
+define ["app/config", "helpers/handleError", "vein/vein"], (config, handleError, Vein) ->
   #TODO change this if vein gets updated to play nice with AMD again
   vein = Vein
   server = vein.createClient {port: config.port, host: config.api}

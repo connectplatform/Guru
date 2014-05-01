@@ -1,10 +1,14 @@
 {
-  "name": "guru-client",
+  "name": "client",
   "dependencies": {
-    "jquery": "1.*",
-    "jquery.cookies": "http://cookies.googlecode.com/svn-history/r12/trunk/jquery.cookies.js",
-    "jwerty": "~0.3.2",
+    "jquery": "~2.1.0",
+    "async": "~0.8.0",
     "jade_runtime": "https://raw.githubusercontent.com/visionmedia/jade/master/runtime.js",
-    "sugar": "~1.4.1"
+    "sugar": "~1.4.1",
+    "jwerty": "~0.3.2",
+    "jquery.cookies": "http://cookies.googlecode.com/svn-history/r12/trunk/jquery.cookies.js",
+    "noty": "~2.2.2",
+    "requirejs": "~2.1.11",
+    "bootstrap": "2.0.3"
   }
 }

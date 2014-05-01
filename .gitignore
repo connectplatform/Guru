@@ -10,3 +10,4 @@ issue-dump
 tmp
 *.iml
 dist
+app/client/vendor

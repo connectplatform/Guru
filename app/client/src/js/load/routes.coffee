@@ -2,7 +2,7 @@
 # in order to r.js include required routes and templates into result file
 # we need to specify dependencies explicitly
 define [
-    "dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar", "policy/onPageLoad",
+    "vendor/dermis", "policy/addMiddleware", "routes/sidebar", "templates/sidebar", "policy/onPageLoad",
 
     # /newChat route
     "routes/newChat", "templates/newChat",

@@ -1,4 +1,4 @@
-define ['async', 'load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
+define ['vendor/async', 'load/server', 'load/notify', 'helpers/util', 'helpers/renderForm'],
   (async, server, notify, {toTitle, button}, renderForm) ->
     (args, templ) ->
 

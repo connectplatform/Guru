@@ -256,12 +256,12 @@ module.exports = (grunt) ->
     "clean:client_tmp",
 
     # build temp files
-    "build_bootstrap",
     "copy:vendor_tmp",
     "copy:vendor_static_tmp",
+    "build_bootstrap",
     "coffee:client_tmp",
     "jade:tmpl_tmp",
-    "requirejs:client_app",
+    "requirejs:client",
 
     # copy other
     "copy:client_js",

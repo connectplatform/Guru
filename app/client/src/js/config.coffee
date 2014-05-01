@@ -4,8 +4,9 @@ define ["vendor/jquery"], ($) ->
       deferred = $.Deferred()
 
       $.ajax {
-        url: configFileUrl,
-        complete: (data) ->
+        url: configFileUrl
+        dataType: "json"
+        success: (data) ->
           $.extend(api, data)
           deferred.resolve()
         error: (err) ->

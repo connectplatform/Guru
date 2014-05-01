@@ -92,7 +92,7 @@ module.exports = (grunt) ->
       vendor_static_dist:
         expand: true
         cwd: "<%= client_cfg.src_vendor_static_dir %>"
-        src: "**/*"
+        src: "**/*.js"
         dest: "<%= client_cfg.dist_vendor_dir %>"
 
       bootstrap_dist_css:

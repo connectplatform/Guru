@@ -229,6 +229,10 @@ span.field {
   width: 40px;
 }
 
+.modal form {
+  margin-bottom: 0;
+}
+
 /*
 * css media queries
 */

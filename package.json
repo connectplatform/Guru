@@ -38,6 +38,7 @@
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-karma": "^0.8.3",
+    "grunt-mocha-test": "^0.10.2",
     "grunt-recess": "^0.6.1",
     "jaded": "0.0.6",
     "karma": "^0.12.14",

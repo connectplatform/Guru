@@ -200,7 +200,7 @@ module.exports = (grunt) ->
             "../<%= client_cfg.vendor_dir_name %>/<%= client_cfg.bootstrap_dir_name %>/dist/js/bootstrap"
           ]
 
-    # TODO: update 'karma' task for new values
+  # TODO: update 'karma' task for new values
     karma:
       client_unit:
         options:
@@ -242,6 +242,27 @@ module.exports = (grunt) ->
             # tests main file for require.js
             "test/client/test-main.coffee"
           ]
+
+    mochaTest:
+      options:
+        reporter: "spec"
+        ui: "bdd"
+        globals: [
+          "app"
+          "config"
+          "boiler"
+          "___eio"
+        ]
+        require: [
+          "coffee-script"
+          "should"
+          "app/config.coffee"
+          "test/server/util/boilerplate.coffee"
+        ]
+        timeout: 4000
+        ignoreLeaks: true
+      specs:
+        src: "test/server/specs/*"
   }
 
   grunt.registerTask "build_bootstrap", [
@@ -281,9 +302,9 @@ module.exports = (grunt) ->
 
   # TODO: update for new values
   grunt.registerTask "client_unit", [
-#    "clean:tmp"
-#    "jade:tmp"
-#    "karma:client_unit"
+    #    "clean:tmp"
+    #    "jade:tmp"
+    #    "karma:client_unit"
   ]
 
   grunt.registerTask "default", [

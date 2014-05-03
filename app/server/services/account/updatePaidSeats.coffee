@@ -5,7 +5,7 @@ module.exports =
     newSeats ||= 0
 
     getPaidSeats = config.service 'account/getPaidSeats'
-    syncSubscription = config.service 'recurly/syncSubscription'
+    {syncSubscription} = require "../../billing"
 
     getPaidSeats {accountId: accountId}, (err, obj={}) ->
       {paidSeats} = obj

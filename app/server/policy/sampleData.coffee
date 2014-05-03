@@ -114,13 +114,21 @@ module.exports = (done) ->
 
     specialties = [ {name: 'Sales'}, {name: 'Billing'}]
 
-    tasks = {
-      accounts: (next) -> async.map accounts, createAccount, next
-      specialties: ['accounts', (next, {accounts}) -> async.map specialties, createSpecialty(accounts[0]._id), next]
-      websites: ['specialties', (next, {accounts}) -> async.map websites, createWebsite(accounts[0]._id), next]
+    tasks =
+      accounts: (next) ->
+        async.map accounts, createAccount, next
+      specialties: ['accounts', (next, {accounts}) ->
+        async.map specialties, createSpecialty(accounts[0]._id), next
+      ]
+      websites: ['specialties', (next, {accounts}) ->
+        async.map websites, createWebsite(accounts[0]._id), next
+      ]
       operators: ['websites', (next, {websites, accounts}) ->
-        async.map operators, createUser(websites, accounts[0]._id), next]
-      chatHistory: ['accounts', (next, {accounts}) -> Factory.create 'chathistory', {accountId: accounts[0]._id}, next]
-    }
+        async.map operators, createUser(websites, accounts[0]._id), next
+      ]
+      chatHistory: ['accounts', (next, {accounts}) ->
+        Factory.create 'chathistory', {accountId: accounts[0]._id}, next
+      ]
+
 
     async.auto tasks, done

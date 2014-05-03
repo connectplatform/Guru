@@ -30,3 +30,17 @@ describe "billing suite", ->
         done()
 
       billing.syncSubscription data, callback
+
+  describe "createAccount", ->
+    it "should be defined", ->
+      expect(billing.createAccount).to.be.a("function")
+
+    it "should return correct result", (done) ->
+      data = {}
+
+      callback = (err, result) ->
+        expect(err).to.equal(null)
+        expect(result).to.be.a("object")
+        done()
+
+      billing.createAccount data, callback

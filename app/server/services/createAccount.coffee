@@ -3,12 +3,13 @@ db = require 'mongoose'
 {curry, select} = config.require 'load/util'
 {Account, User} = db.models
 
+billing = require "../billing"
+
 module.exports =
   required: ['email', 'firstName', 'lastName', 'password']
   service: (fields, done, processSideEffects) ->
 
     login = config.service 'login'
-    createRecurlyAccount = config.service 'recurly/createAccount'
 
     fields.role = 'Owner'
     owner = new User fields
@@ -30,7 +31,7 @@ module.exports =
       Account.create {accountType: 'Paid'}, cb
 
     createRecurly = (cb, {account, owner}) ->
-      createRecurlyAccount {accountId: account._id, owner: owner}, cb
+      billing.createAccount {accountId: account._id, owner: owner}, cb
 
     async.auto {
       ok: ok

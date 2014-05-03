@@ -44,3 +44,21 @@ describe "billing suite", ->
         done()
 
       billing.createAccount data, callback
+
+  describe "getAccount", ->
+    it "should be defined", ->
+      expect(billing.getAccount).to.be.a("function")
+
+    it "should return correct result", (done) ->
+      data = {}
+
+      callback = (err, result) ->
+        expect(err).to.equal(null)
+        expect(result)
+        .to.have.property("data")
+        .to.have.property("account")
+        .to.have.property("hosted_login_token")
+
+        done()
+
+      billing.getAccount data, callback

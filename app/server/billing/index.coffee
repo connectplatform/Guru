@@ -6,3 +6,10 @@ module.exports.syncSubscription = ({accountId, seatCount}, done) ->
 
 module.exports.createAccount = ({accountId, owner}, done) ->
   done(null, {})
+
+module.exports.getAccount = ({accountId}, done) ->
+  result =
+    data:
+      account:
+        hosted_login_token: "empty"
+  done(null, result)

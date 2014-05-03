@@ -1,5 +1,5 @@
-module.exports = (params, done) ->
-  getRecurlyAccount = config.service 'recurly/getAccount'
+billing =require "../billing"
 
-  getRecurlyAccount params, (err, data) ->
+module.exports = (params, done) ->
+  billing.getAccount params, (err, data) ->
     done err, {token: data?.account?.hosted_login_token}

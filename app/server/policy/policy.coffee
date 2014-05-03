@@ -69,12 +69,12 @@ policy =
       }
 
       {
-        filters: ['isNotVisibleChatMember', 'accountInGoodStanding']
+        filters: ['isNotVisibleChatMember']
         only: ['acceptChat', 'acceptInvite', 'acceptTransfer', 'joinChat']
       }
 
       {
-        filters: ['isNotChatMember', 'accountInGoodStanding']
+        filters: ['isNotChatMember']
         only: ['watchChat']
       }
 

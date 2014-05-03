@@ -12,7 +12,7 @@ module.exports =
   optional: ['specialtyId']
   service: ({websiteId, specialtyId}, done) ->
 
-    accountInGoodStanding = config.service 'recurly/accountInGoodStanding'
+    {accountInGoodStanding} = require "../../billing"
 
     # get accountId.  TODO: refactor this to use required arg
     Website.findOne {_id: websiteId}, {accountId: true}, (err, website) ->
@@ -39,9 +39,13 @@ module.exports =
             # build query to look for matching operators
             opIds = opSessions.map (o) -> o.operatorId
             query =
-              _id: $in: opIds
+              _id:
+                $in: opIds
               accountId: accountId
-              $or: [role: $in: enums.managerRoles]
+              $or: [
+                role:
+                  $in: enums.managerRoles
+              ]
 
             route =
               websites: websiteId

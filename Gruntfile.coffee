@@ -263,6 +263,9 @@ module.exports = (grunt) ->
         ignoreLeaks: true
       specs:
         src: "test/server/specs/*"
+
+      billing:
+        src: "test/server/unit/billing/*.spec.coffee"
   }
 
   grunt.registerTask "build_bootstrap", [

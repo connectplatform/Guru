@@ -1,4 +1,5 @@
 stoic = require 'stoic'
+billing = require "../billing"
 
 removeUnanswered = config.require 'services/operator/removeUnanswered'
 
@@ -8,21 +9,24 @@ module.exports =
     {Chat} = stoic.models
     {chatId, sessionId, accountId} = params
 
-    Chat(accountId).get(chatId).status.getset 'active', (err, status) ->
+    billing.accountInGoodStanding {accountId: accountId}, (err, result) ->
+      return done(err) if err
 
-      if err
-        config.log.warn new Error 'Error getsetting chat status in acceptChat', {error: err, chatId: chatId}
-        done null, {status: "ERROR", chatId: chatId}
+      Chat(accountId).get(chatId).status.getset 'active', (err, status) ->
 
-      else if status is 'active'
-        done null, {status: "ALREADY ACCEPTED", chatId: chatId}
+        if err
+          config.log.warn new Error 'Error getsetting chat status in acceptChat', {error: err, chatId: chatId}
+          done null, {status: "ERROR", chatId: chatId}
 
-      else
+        else if status is 'active'
+          done null, {status: "ALREADY ACCEPTED", chatId: chatId}
 
-        config.services['joinChat'] params, (err) ->
-          return done err if err
+        else
 
-          removeUnanswered accountId, chatId, (err, status) ->
-            if err
-              config.log.error 'Error removing chat from unanswered chats in acceptChat', {error: err, chatId: chatId}
-            done null, {status: "OK", chatId: chatId}
+          config.services['joinChat'] params, (err) ->
+            return done err if err
+
+            removeUnanswered accountId, chatId, (err, status) ->
+              if err
+                config.log.error 'Error removing chat from unanswered chats in acceptChat', {error: err, chatId: chatId}
+              done null, {status: "OK", chatId: chatId}

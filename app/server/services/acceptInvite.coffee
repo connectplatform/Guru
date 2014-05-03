@@ -1,5 +1,6 @@
 stoic = require 'stoic'
 {ChatSession} = stoic.models
+billing = require "../billing"
 
 module.exports =
   required: ['sessionId', 'accountId', 'chatId']
@@ -8,5 +9,8 @@ module.exports =
       type: 'member'
       isWatching: 'false'
 
-    ChatSession(accountId).get(sessionId, chatId).relationMeta.mset newMeta, (err) ->
-      done err
+    billing.accountInGoodStanding {accountId: accountId}, (err, result) ->
+      return done(err) if err
+
+      ChatSession(accountId).get(sessionId, chatId).relationMeta.mset newMeta, (err) ->
+        done err

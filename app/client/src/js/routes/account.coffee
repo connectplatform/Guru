@@ -12,7 +12,7 @@ define ['vendor/async', 'load/server', 'load/notify', 'helpers/util', 'helpers/r
 
       server.ready ->
         async.parallel {
-          recurlyData: (done) -> server.getRecurlyToken {}, done
+          recurlyData: (done) -> server.getBillingToken {}, done
           accounts: (done) -> server.findModel {modelName: 'Account'}, done
 
         }, (err, data) ->

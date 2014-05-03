@@ -7,7 +7,7 @@ policy =
     [
       {
         filters: ['isOwner', 'setIsOnline']
-        only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload', 'getRecurlyToken']
+        only: ['deleteModel', 'findModel', 'saveModel', 'awsUpload', 'getBillingToken']
       }
 
       {
@@ -44,7 +44,7 @@ policy =
 
           # these three are covered by isOwner
           'deleteModel'
-          'getRecurlyToken'
+          'getBillingToken'
           'findModel'
           'saveModel'
         ]

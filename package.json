@@ -27,6 +27,8 @@
     "jade": "*"
   },
   "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-spies": "^0.5.1",
     "factory-worker": "*",
     "grunt": "~0.4.4",
     "grunt-contrib-clean": "~0.5.0",
